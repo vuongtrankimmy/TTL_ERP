@@ -1,0 +1,132 @@
+@page "/recruitment"
+
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+        <!-- Filter Card -->
+        <div class="card mb-8 shadow-sm">
+            <div class="card-body py-4 px-6">
+                <div class="d-flex flex-wrap align-items-center">
+                    <!-- Search -->
+                    <div class="position-relative w-md-250px me-4 my-1">
+                        <span class="svg-icon svg-icon-3 position-absolute top-50 translate-middle-y ms-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
+                            </svg>
+                        </span>
+                        <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm kiếm vị trí..." />
+                    </div>
+
+                    <!-- Department Filter -->
+                    <div class="w-md-175px me-4 my-1">
+                        <select class="form-select form-select-solid fs-7 fw-bold">
+                            <option>Phòng ban: Tất cả</option>
+                            <option>Kỹ thuật</option>
+                            <option>Kinh doanh</option>
+                            <option>Nhân sự</option>
+                        </select>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="w-md-175px me-4 my-1">
+                        <select class="form-select form-select-solid fs-7 fw-bold">
+                            <option>Trạng thái: Tất cả</option>
+                            <option>Đang tuyển</option>
+                            <option>Đã đóng</option>
+                            <option>Tạm dừng</option>
+                        </select>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="ms-auto my-1">
+                        <a href="/recruitment/add" class="btn btn-primary fw-bold fs-7 px-6"><i class="bi bi-plus-lg me-1"></i>Tạo tin tuyển dụng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header border-0 pt-6">
+                <div class="card-title">
+                    <div class="d-flex align-items-center position-relative my-1">
+                        <span class="fs-4 fw-bolder text-dark">Danh sách vị trí tuyển dụng</span>
+                        <span class="badge badge-light-primary fw-bolder fs-7 ms-2">@_jobs.Count tin</span>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="card-body py-4">
+                <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="5" Columns="7">
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-4">
+                            <thead>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="ps-4 min-w-200px rounded-start">Vị trí</th>
+                                    <th class="min-w-150px">Phòng ban</th>
+                                    <th class="min-w-100px">Số lượng</th>
+                                    <th class="min-w-100px">Hạn nộp</th>
+                                    <th class="min-w-100px text-center">Ứng viên</th>
+                                    <th class="min-w-100px text-center">Trạng thái</th>
+                                    <th class="min-w-100px text-end rounded-end pe-4">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var job in _jobs)
+                                {
+                                    <tr class="hover-elevate">
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="d-flex justify-content-start flex-column">
+                                                    <a href="/recruitment/details/@job.Id" class="text-dark fw-bolder text-hover-primary fs-6">@job.Title</a>
+                                                    <span class="text-muted fw-bold d-block fs-7">@job.Code</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="text-gray-800 fw-bold d-block fs-6">@job.Department</span>
+                                            <span class="text-muted fw-bold d-block fs-7">@job.Type</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-gray-800 fw-bold d-block fs-6">@job.HiringCount</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-gray-800 fw-bold d-block fs-6">@job.Deadline.ToString("dd/MM/yyyy")</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge badge-light-info fw-bold fs-7">@job.ApplicantsCount hồ sơ</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge @job.StatusClass fw-bold fs-7">@job.Status</span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <a href="/recruitment/details/@job.Id" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Chi tiết">
+                                                <i class="bi bi-eye-fill fs-3"></i>
+                                            </a>
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Sửa">
+                                                <i class="bi bi-pencil-fill fs-3"></i>
+                                            </button>
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" title="Xóa">
+                                                <i class="bi bi-trash-fill fs-3"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <div class="d-flex flex-stack flex-wrap pt-10">
+                        <div class="fs-6 fw-bold text-gray-700">Hiển thị 1 đến @_jobs.Count của @_jobs.Count bản ghi</div>
+                        <ul class="pagination">
+                            <li class="page-item previous disabled"><a href="#" class="page-link"><i class="previous"></i></a></li>
+                            <li class="page-item active"><a href="#" class="page-link">1</a></li>
+                            <li class="page-item next"><a href="#" class="page-link"><i class="next"></i></a></li>
+                        </ul>
+                    </div>
+                </SkeletonLoading>
+            </div>
+        </div>
+    </div>
+</div>
+
+

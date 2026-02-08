@@ -1,0 +1,273 @@
+@page "/attendance/leave-trip"
+
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+	<div id="kt_content_container" class="container-fluid">
+		<!-- Filters -->
+		<div class="card mb-8 shadow-sm">
+			<div class="card-body py-4 px-6">
+				<div class="d-flex flex-wrap align-items-center">
+					<!-- Search -->
+					<div class="position-relative w-md-250px me-4 my-1">
+						<span class="svg-icon svg-icon-3 position-absolute top-50 translate-middle-y ms-4">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+								<path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
+							</svg>
+						</span>
+						<input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm theo tên, mã NV..." />
+					</div>
+
+					<!-- Department -->
+					<div class="w-md-175px me-4 my-1">
+						<select class="form-select form-select-solid fs-7 fw-bold">
+							<option>Phòng ban: Tất cả</option>
+							<option>Kỹ thuật</option>
+							<option>Marketing</option>
+						</select>
+					</div>
+
+					<!-- Status -->
+					<div class="w-md-175px me-4 my-1">
+						<select class="form-select form-select-solid fs-7 fw-bold">
+							<option>Trạng thái: Tất cả</option>
+							<option>Chờ phê duyệt</option>
+							<option>Đã phê duyệt</option>
+						</select>
+					</div>
+
+					<!-- More Filters -->
+					<div class="ms-auto my-1">
+						<button class="btn btn-light-primary fw-bold fs-7 px-6"><i class="bi bi-funnel me-1"></i>Lọc thêm</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Selection Bar -->
+		<div class="d-flex flex-stack mb-6">
+			<div class="d-flex align-items-center">
+				<div class="form-check form-check-sm form-check-custom form-check-solid me-5">
+					<input class="form-check-input" type="checkbox" id="check_all_requests" />
+					<label class="form-check-label fw-bold text-gray-700 fs-7 ms-2 text-nowrap" for="check_all_requests">Chọn tất cả (24 yêu cầu)</label>
+				</div>
+			</div>
+			<div class="d-flex align-items-center gap-3 text-end justify-content-end">
+				<button class="btn btn-sm btn-light border border-gray-300 px-3 py-2 fs-8 fw-semibold"><i class="bi bi-clock-history fs-6 me-1"></i>Lịch sử yêu cầu</button>
+				<button class="btn btn-sm btn-primary px-4 py-2 fs-8 fw-semibold"><i class="bi bi-plus-lg fs-7 me-1"></i>Tạo yêu cầu mới</button>
+			</div>
+		</div>
+
+		<!-- Table -->
+		<div class="card shadow-sm border-0">
+			<div class="card-body p-0">
+				<SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="10" Columns="7">
+					<div class="table-responsive">
+						<table class="table table-row-dashed table-row-gray-200 align-middle gs-7 gy-6">
+							<thead>
+								<tr class="fw-bold text-muted text-uppercase fs-8 border-bottom-0">
+									<th class="w-10px pe-2"></th>
+									<th class="min-w-200px">NHÂN VIÊN</th>
+									<th class="min-w-125px text-center">LOẠI YÊU CẦU</th>
+									<th class="min-w-150px">THỜI GIAN</th>
+									<th class="min-w-250px">LÝ DO</th>
+									<th class="min-w-150px text-center">TRẠNG THÁI</th>
+									<th class="min-w-150px text-end">THAO TÁC</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in _requests)
+								{
+									<tr class="hover-elevate cursor-pointer" @onclick="() => OpenDetail(item)">
+										<td @onclick:stopPropagation="true">
+											<div class="form-check form-check-sm form-check-custom form-check-solid">
+												<input class="form-check-input" type="checkbox" value="@item.Id" />
+											</div>
+										</td>
+										<td>
+											<div class="d-flex align-items-center cursor-pointer">
+												<div class="symbol symbol-40px symbol-circle me-4">
+													@if (!string.IsNullOrEmpty(item.Avatar))
+													{
+														<img src="@item.Avatar" alt="" />
+													}
+													else
+													{
+														<span class="symbol-label @item.AvatarColor fs-6 fw-bold">@item.EmployeeName.Substring(0, 1)</span>
+													}
+												</div>
+												<div class="d-flex justify-content-start flex-column">
+													<span class="text-dark fw-bolder fs-6 text-hover-primary">@item.EmployeeName</span>
+													<span class="text-muted fw-bold fs-7">@item.Department</span>
+												</div>
+											</div>
+										</td>
+										<td class="text-center cursor-pointer">
+											<span class="badge @item.TypeClass fw-bold px-4 py-2 rounded-pill">@item.Type <span class="fw-normal opacity-75 ms-1">(@item.SubType)</span></span>
+										</td>
+										<td>
+											<div class="d-flex flex-column cursor-pointer">
+												<span class="text-gray-800 fw-bolder fs-7">@item.StartDate - @item.EndDate</span>
+												<span class="text-muted fs-8">@item.Duration</span>
+											</div>
+										</td>
+										<td><span class="text-gray-600 fs-7 text-truncate d-inline-block cursor-pointer" style="max-width: 250px;">@item.Reason</span></td>
+										<td class="text-center">
+											<span class="badge @item.StatusClass fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+												@if (item.IsPending)
+												{
+													<span class="bullet bullet-dot bg-warning w-6px h-6px me-2 pulse pulse-warning"></span>
+												}
+												@item.Status
+											</span>
+										</td>
+										<td class="text-end" @onclick:stopPropagation="true">
+											@if (item.IsPending)
+											{
+												<button class="btn btn-icon btn-sm btn-light-success me-2" title="Phê duyệt" @onclick="() => RequestApprove(item)"><i class="bi bi-check-lg"></i></button>
+												<button class="btn btn-icon btn-sm btn-light-danger me-2" title="Từ chối" @onclick="() => RequestReject(item)"><i class="bi bi-x-lg"></i></button>
+											}
+											<button class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10" title="Chi tiết" @onclick="() => OpenDetail(item)">
+												<i class="bi bi-eye-fill fs-6"></i>
+											</button>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+					<!-- Pagination -->
+					<div class="d-flex flex-stack flex-wrap px-7 py-5">
+						<div class="fs-7 fw-bold text-gray-700">Hiển thị 1 - 4 trong 24 yêu cầu mới</div>
+						<ul class="pagination">
+							<li class="page-item previous disabled"><a href="#" class="page-link">Trước</a></li>
+							<li class="page-item active"><a href="#" class="page-link">1</a></li>
+							<li class="page-item next"><a href="#" class="page-link">Sau</a></li>
+						</ul>
+					</div>
+				</SkeletonLoading>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Detail Drawer -->
+<div class="bg-body drawer drawer-end @(_showDetail ? "drawer-on" : "")" style="width: 500px; max-width: 90vw; transition: transform 0.3s ease-in-out; position: fixed; top: 0; right: 0; bottom: 0; z-index: 110; transform: translateX(@(_showDetail ? "0" : "100%")); box-shadow: -5px 0 15px rgba(0,0,0,0.1); display: block;">
+	@if (_selectedRequest != null)
+	{
+		<div class="card w-100 rounded-0 border-0 h-100">
+			<div class="card-header pe-5 border-0 pt-5">
+				<div class="card-title">
+					<div class="d-flex justify-content-center flex-column me-3">
+						<a href="#" class="fs-4 fw-bold text-gray-900 text-hover-primary me-1 mb-2 lh-1 text-uppercase">Chi tiết yêu cầu</a>
+						<div class="mb-0 fs-7 fw-semibold text-muted">Mã: #REQ-@(202400 + _selectedRequest.Id)</div>
+					</div>
+				</div>
+				<div class="card-toolbar">
+					<button class="btn btn-sm btn-icon btn-active-light-primary bg-light" @onclick="CloseDetail"><i class="ki-outline ki-cross fs-2"></i></button>
+				</div>
+			</div>
+			<div class="card-body hover-scroll-overlay-y">
+				<!-- User Info -->
+				<div class="d-flex align-items-center mb-8 bg-light-primary rounded p-5 border border-primary border-dashed">
+					<div class="symbol symbol-60px symbol-circle me-5">
+						@if (!string.IsNullOrEmpty(_selectedRequest.Avatar))
+						{
+							<img src="@_selectedRequest.Avatar" alt="" />
+						}
+						else
+						{
+							<span class="symbol-label @_selectedRequest.AvatarColor fs-2 fw-bold">@_selectedRequest.EmployeeName.Substring(0, 1)</span>
+						}
+					</div>
+					<div class="flex-grow-1">
+						<span class="text-gray-900 fw-bold text-hover-primary fs-5">@_selectedRequest.EmployeeName</span>
+						<span class="text-muted d-block fw-semibold">@_selectedRequest.Department</span>
+					</div>
+				</div>
+
+				<!-- Request Info -->
+				<div class="mb-6">
+					<h5 class="text-gray-800 fw-bold mb-4">Thông tin đăng ký</h5>
+					<div class="row g-3">
+						<div class="col-6">
+							<div class="border border-gray-300 border-dashed rounded py-3 px-4">
+								<div class="fs-7 text-muted fw-bold">Loại</div>
+								<div class="fs-6 fw-bolder text-gray-800 mt-1">@_selectedRequest.Type</div>
+								<div class="fs-8 text-muted">@_selectedRequest.SubType</div>
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="border border-gray-300 border-dashed rounded py-3 px-4">
+								<div class="fs-7 text-muted fw-bold">Thời lượng</div>
+								<div class="fs-6 fw-bolder text-gray-800 mt-1">@_selectedRequest.Duration</div>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="border border-gray-300 border-dashed rounded py-3 px-4">
+								<div class="fs-7 text-muted fw-bold">Thời gian</div>
+								<div class="fs-6 fw-bolder text-gray-800 mt-1">@_selectedRequest.StartDate - @_selectedRequest.EndDate</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="mb-6">
+					<label class="fw-bold text-gray-800 mb-2">Lý do/Nội dung</label>
+					<div class="bg-light rounded p-4 border border-dashed text-gray-700">
+						@_selectedRequest.Reason
+					</div>
+				</div>
+
+				@if (!string.IsNullOrEmpty(_selectedRequest.ManagerNote))
+				{
+					<div class="mb-6">
+						<label class="fw-bold text-gray-800 mb-2">Phản hồi từ quản lý</label>
+						<div class="bg-light-info rounded p-4 border border-info border-opacity-25 text-gray-700">
+							@_selectedRequest.ManagerNote
+						</div>
+					</div>
+				}
+
+				<div class="mb-6">
+					<label class="fw-bold text-gray-800 mb-2">Trạng thái hiện tại</label>
+					<div>
+						<span class="badge @_selectedRequest.StatusClass fw-bold px-4 py-2 fs-7">
+							@if (_selectedRequest.IsPending)
+							{
+								<span class="bullet bullet-dot bg-warning w-6px h-6px me-2 pulse pulse-warning"></span>
+							}
+							@_selectedRequest.Status
+						</span>
+					</div>
+				</div>
+			</div>
+			@if (_selectedRequest.IsPending)
+			{
+				<div class="card-footer border-0 d-flex gap-3 justify-content-end p-5 bg-light-light">
+					<button class="btn btn-light-danger flex-grow-1 font-weight-bold" @onclick="() => RequestReject(_selectedRequest)">Từ chối</button>
+					<button class="btn btn-primary flex-grow-1 font-weight-bold" @onclick="() => RequestApprove(_selectedRequest)">Phê duyệt</button>
+				</div>
+			}
+		</div>
+	}
+</div>
+
+<!-- Backdrop -->
+@if (_showDetail)
+{
+	<div class="drawer-overlay" style="z-index: 109; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);" @onclick="CloseDetail"></div>
+}
+
+<GenericActionModal IsVisible="_showActionModal"
+                    Title="@_modalTitle"
+                    Heading="@_modalHeading"
+                    Message="@_modalMessage"
+                    Color="@_modalColor"
+                    Icon="@_modalIcon"
+                    ConfirmLabel="@_modalConfirmLabel"
+                    ShowReasonInput="_showReasonInput"
+                    IsReasonRequired="@(_actionType == "REJECT")"
+                    ReasonPlaceholder="@(_actionType == "REJECT" ? "Vui lòng nhập lý do từ chối (bắt buộc)..." : "")"
+                    OnConfirmed="ConfirmAction"
+                    OnCancelled="CloseModal" />
+
+

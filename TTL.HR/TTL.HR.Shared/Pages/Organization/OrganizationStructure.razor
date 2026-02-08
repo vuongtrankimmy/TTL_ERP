@@ -1,0 +1,395 @@
+@page "/organization/structure"
+@using TTL.HR.Shared.Models
+
+
+<style>
+    .org-container {
+        position: relative;
+        overflow: hidden;
+        background: #f8f9fa;
+        height: calc(100vh - 200px);
+        cursor: grab;
+        border-radius: 12px;
+    }
+
+    .org-tree {
+        padding-top: 50px;
+        position: relative;
+        transition: transform 0.1s ease-out;
+        display: inline-block;
+        min-width: 100%;
+        transform-origin: 0 0;
+    }
+
+    .org-tree ul {
+        padding-top: 20px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+
+    .org-tree li {
+        text-align: center;
+        list-style-type: none;
+        position: relative;
+        padding: 20px 5px 0 5px;
+    }
+
+    /* Connectors */
+    .org-tree li::before,
+    .org-tree li::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 50%;
+        border-top: 2px solid #ccc;
+        width: 50%;
+        height: 20px;
+    }
+
+    .org-tree li::after {
+        right: auto;
+        left: 50%;
+        border-left: 2px solid #ccc;
+    }
+
+    .org-tree li:only-child::after,
+    .org-tree li:only-child::before {
+        display: none;
+    }
+
+    .org-tree li:only-child {
+        padding-top: 0;
+    }
+
+    .org-tree li:first-child::before,
+    .org-tree li:last-child::after {
+        border: 0 none;
+    }
+
+    .org-tree li:last-child::before {
+        border-right: 2px solid #ccc;
+        border-radius: 0 5px 0 0;
+    }
+
+    .org-tree li:first-child::after {
+        border-radius: 5px 0 0 0;
+    }
+
+    .org-tree ul ul::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        border-left: 2px solid #ccc;
+        width: 0;
+        height: 20px;
+    }
+
+    /* Card Nodes */
+    .org-node {
+        display: inline-block;
+        padding: 15px;
+        border: 1px solid #e4e6ef;
+        background: #fff;
+        border-radius: 10px;
+        min-width: 220px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        position: relative;
+        z-index: 10;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .org-node:hover {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .org-node.is-manager {
+        border: 2px solid #50cd89;
+    }
+
+    .org-node.is-department {
+        border: 2px solid #009ef7;
+        background: #f1faff;
+    }
+
+    .org-role {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #181c32;
+    }
+
+    .org-name {
+        font-size: 0.95rem;
+        color: #5e6278;
+    }
+
+    .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 8px;
+        margin-right: 12px;
+    }
+
+    .dept-stats {
+        font-size: 0.8rem;
+        color: #a1a5b7;
+        margin-top: 8px;
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+
+<div class="toolbar py-5" id="kt_toolbar">
+    <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack flex-wrap">
+        <div class="d-flex align-items-center gap-2">
+            <div class="position-relative w-md-250px">
+                <i class="bi bi-search position-absolute top-50 translate-middle-y ms-4 text-gray-400"></i>
+                <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm bộ phận, nhân sự..." @bind="searchQuery" @bind:event="oninput" />
+            </div>
+            <div class="separator separator-dashed h-25px mx-2 opacity-50"></div>
+            <div class="d-flex gap-1">
+                <button class="btn btn-icon btn-sm btn-light" title="Phóng to" @onclick="() => ZoomIn()"><i class="bi bi-zoom-in fs-5"></i></button>
+                <button class="btn btn-icon btn-sm btn-light" title="Thu nhỏ" @onclick="() => ZoomOut()"><i class="bi bi-zoom-out fs-5"></i></button>
+                <button class="btn btn-icon btn-sm btn-light" title="Về trung tâm" @onclick="() => ResetPanZoom()"><i class="bi bi-fullscreen-exit fs-5"></i></button>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="btn-group">
+                <button class="btn btn-sm btn-light-info fw-bolder px-4"><i class="bi bi-download me-2"></i>Xuất sơ đồ</button>
+                <button class="btn btn-sm btn-info fw-bolder px-4"><i class="bi bi-printer"></i></button>
+            </div>
+            <button class="btn btn-sm btn-primary fw-bolder px-5" @onclick="ToggleAddModal"><i class="bi bi-plus-lg me-1"></i>Thêm nút mới</button>
+        </div>
+    </div>
+</div>
+
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-fluid org-container">
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card" Rows="3" Columns="2">
+            <div class="org-tree">
+                <ul>
+                    @if (rootNode != null)
+                    {
+                        <OrgNodeView Node="rootNode" OnNodeClick="HandleNodeClick" />
+                    }
+                </ul>
+            </div>
+        </SkeletonLoading>
+    </div>
+</div>
+
+<!-- DRAWER: EMPLOYEE DETAIL -->
+<div id="kt_drawer_employee_detail" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="employee-detail"
+     data-kt-drawer-activate="true" data-kt-drawer-overlay="true"
+     data-kt-drawer-width="{default:'300px', 'md': '650px'}" data-kt-drawer-direction="end"
+     data-kt-drawer-toggle=".kt_drawer_employee_detail_toggle"
+     data-kt-drawer-close="#kt_drawer_employee_detail_close">
+
+    <div class="card shadow-none rounded-0 w-100 h-100">
+        <!-- Header Section -->
+        <div class="card-header border-0 pt-7 pb-5">
+            <div class="d-flex align-items-center">
+                <div class="symbol symbol-70px symbol-2by3 me-5">
+                    <img src="@selectedNode?.Avatar" alt="@selectedNode?.Name" class="rounded-3" />
+                </div>
+                <div class="d-flex flex-column">
+                    <h2 class="fs-1 fw-bolder text-gray-900 mb-1">@selectedNode?.Name</h2>
+                    <div class="text-primary fw-bold fs-6 mb-2">@selectedNode?.Role</div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge badge-light-secondary text-gray-600 fw-bold px-3 py-2">
+                            Mã NV:
+                            NV001
+                        </span>
+                        <span class="badge badge-light-secondary text-gray-600 fw-bold px-3 py-2">Ban TGĐ</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-toolbar">
+                <button type="button" class="btn btn-sm btn-icon btn-active-light-primary"
+                        id="kt_drawer_employee_detail_close">
+                    <i class="bi bi-x-lg fs-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <!-- Navigation Tabs -->
+            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder px-10 mb-5">
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary active py-4" data-bs-toggle="tab"
+                       href="#kt_emp_detail_profile">Thông tin hồ sơ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary py-4" data-bs-toggle="tab"
+                       href="#kt_emp_detail_account">Tài khoản & Phân quyền</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary py-4" data-bs-toggle="tab"
+                       href="#kt_emp_detail_calendar">Lịch & Chấm công</a>
+                </li>
+            </ul>
+
+            <div class="tab-content px-10" id="empDetailTabContent">
+                <!-- TAB: PROFILE -->
+                <div class="tab-pane fade show active" id="kt_emp_detail_profile" role="tabpanel">
+                    <div class="py-5">
+                        <div class="d-flex flex-stack mb-5">
+                            <h3 class="fw-bolder m-0 fs-5 text-uppercase">
+                                <i class="bi bi-person-badge text-primary me-2"></i>Thông tin cá nhân
+                            </h3>
+                            <button class="btn btn-sm btn-light-primary">
+                                <i class="bi bi-qr-code-scan me-2"></i>Quét
+                                thẻ Căn cước (CCCD) AI
+                            </button>
+                        </div>
+
+                        <div class="row g-6 mb-8">
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fs-7 text-uppercase fw-bold">Họ và tên</label>
+                                <input type="text" class="form-control form-control-solid" value="@selectedNode?.Name" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fs-7 text-uppercase fw-bold">
+                                    Số CCCD /
+                                    CMND
+                                </label>
+                                <input type="text" class="form-control form-control-solid" value="001092001234" />
+                            </div>
+                            <!-- Rest of the profile tab content as per the HTML file -->
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fs-7 text-uppercase fw-bold">Ngày sinh</label>
+                                <input type="text" class="form-control form-control-solid" value="05/15/1992" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fs-7 text-uppercase fw-bold">Giới tính</label>
+                                <select class="form-select form-select-solid">
+                                    <option value="1" selected>Nam</option>
+                                    <option value="2">Nữ</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer border-0 d-flex gap-3 justify-content-between p-10">
+            <button type="button" class="btn btn-primary flex-grow-1" id="kt_emp_detail_save">
+                <i class="bi bi-save me-2"></i>Lưu thay đổi
+            </button>
+            <button type="button" class="btn btn-light flex-grow-1"
+                    id="kt_drawer_employee_detail_close">
+                Đóng
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Legend Fixed -->
+<div class="card position-fixed bottom-0 start-0 m-8 shadow-lg border-0" style="z-index: 100; width: 220px; background: rgba(255,255,255,0.9); backdrop-filter: blur(4px);">
+    <div class="card-body p-5">
+        <h6 class="fs-8 text-uppercase fw-bolder text-gray-400 mb-4 tracking-widest">Phân loại</h6>
+        <div class="d-flex align-items-center mb-3">
+            <span class="w-12px h-12px rounded-circle bg-primary me-3"></span>
+            <span class="fs-7 fw-bold text-gray-700">Bộ phận / Khối</span>
+        </div>
+        <div class="d-flex align-items-center mb-3">
+            <span class="w-12px h-12px rounded-circle bg-success me-3"></span>
+            <span class="fs-7 fw-bold text-gray-700">Cấp quản lý (Manager)</span>
+        </div>
+        <div class="d-flex align-items-center mb-0">
+            <span class="w-12px h-12px rounded-circle bg-gray-300 me-3"></span>
+            <span class="fs-7 fw-bold text-gray-700">Nhân viên</span>
+        </div>
+        
+        <div class="separator separator-dashed my-4"></div>
+        <div class="fs-9 text-muted d-flex justify-content-between align-items-center">
+            <span>Tổng nhân sự:</span>
+            <span class="badge badge-light-dark fw-bolder">@AllEmployeesCount</span>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    let scale = 1, pointX = 0, pointY = 0, isDragging = false, startX = 0, startY = 0;
+    
+    function initOrgChartPanZoom() {
+        const orgTree = document.querySelector('.org-tree');
+        const orgContainer = document.querySelector('.org-container');
+        if (!orgTree || !orgContainer) return;
+
+        function setTransform() {
+            orgTree.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+        }
+
+        orgContainer.onmousedown = (e) => {
+            if (e.target.closest('.org-node')) return;
+            isDragging = true;
+            orgContainer.style.cursor = 'grabbing';
+            startX = e.clientX - pointX;
+            startY = e.clientY - pointY;
+        };
+
+        window.onmouseup = () => {
+            isDragging = false;
+            orgContainer.style.cursor = 'grab';
+        };
+
+        window.onmousemove = (e) => {
+            if (!isDragging) return;
+            pointX = e.clientX - startX;
+            pointY = e.clientY - startY;
+            setTransform();
+        };
+
+        orgContainer.onwheel = (e) => {
+            e.preventDefault();
+            const rect = orgContainer.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            const xs = (mouseX - pointX) / scale;
+            const ys = (mouseY - pointY) / scale;
+            const delta = -e.deltaY;
+            if (delta > 0) scale *= 1.1; else scale /= 1.1;
+            scale = Math.min(Math.max(0.2, scale), 3);
+            pointX = mouseX - xs * scale;
+            pointY = mouseY - ys * scale;
+            setTransform();
+        };
+        
+        window.zoomAtCenter = (zoomIn) => {
+            const rect = orgContainer.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const xs = (centerX - pointX) / scale;
+            const ys = (centerY - pointY) / scale;
+            if (zoomIn) scale *= 1.2; else scale /= 1.2;
+            scale = Math.min(3, Math.max(0.2, scale));
+            pointX = centerX - xs * scale;
+            pointY = centerY - ys * scale;
+            setTransform();
+        };
+
+        window.resetPanZoom = () => {
+            scale = 1; pointX = 0; pointY = 20;
+            setTransform();
+        };
+        
+        window.openEmployeeDetail = () => {
+            const drawerElement = document.querySelector('#kt_drawer_employee_detail');
+            const drawer = KTDrawer.getInstance(drawerElement);
+            if (drawer) drawer.show();
+        };
+
+        // Initial set
+        setTransform();
+    }
+</script>
+
+

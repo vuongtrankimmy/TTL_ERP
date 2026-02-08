@@ -1,0 +1,413 @@
+@page "/organization/positions"
+@using System.Collections.Generic
+@using System.Linq
+
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+    <div id="kt_content_container" class="app-container container-fluid">
+
+        <!-- Header / Toolbar -->
+        <div class="d-flex flex-stack mb-6">
+            <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">Danh mục Chức danh
+                <span class="h-20px border-gray-300 border-start ms-3 mx-2"></span>
+                <small class="text-muted fs-7 fw-bold my-1 ms-1">Cơ cấu tổ chức</small>
+            </h1>
+            <div class="d-flex align-items-center gap-2 gap-lg-3">
+                <button class="btn btn-sm btn-light-primary fw-bold" @onclick="openAddPosition">
+                    <i class="ki-outline ki-plus fs-2"></i>Thêm chức danh mới
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-5 g-xl-8 mb-8">
+            <div class="col-xl-4">
+                <div class="card bg-info hoverable card-xl-stretch mb-xl-8 shadow-sm" style="background: linear-gradient(135deg, #7239ea 0%, #5014d0 100%) !important;">
+                    <div class="card-body">
+                        <div class="text-white fw-bolder fs-2 mb-2 mt-5">@_positions.Count</div>
+                        <div class="fw-bold text-white fs-7 opacity-75">Tổng số chức danh</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card bg-success hoverable card-xl-stretch mb-xl-8 shadow-sm" style="background: linear-gradient(135deg, #50cd89 0%, #2bb06a 100%) !important;">
+                    <div class="card-body">
+                        <div class="text-white fw-bolder fs-2 mb-2 mt-5">@_positions.Count(x => x.ActiveEmployees > 0)</div>
+                        <div class="fw-bold text-white fs-7 opacity-75">Chức danh đang sử dụng</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card bg-danger hoverable card-xl-stretch mb-xl-8 shadow-sm" style="background: linear-gradient(135deg, #f1416c 0%, #d9214e 100%) !important;">
+                    <div class="card-body">
+                        <div class="text-white fw-bolder fs-2 mb-2 mt-5">06</div>
+                        <div class="fw-bold text-white fs-7 opacity-75">Yêu cầu bổ sung nhân sự</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="card mb-8 shadow-xs border">
+            <div class="card-body py-4 px-6">
+                <div class="d-flex flex-wrap align-items-center">
+                    <!-- Search -->
+                    <div class="position-relative w-md-300px me-4 my-1">
+                        <i class="ki-outline ki-magnifier fs-3 position-absolute top-50 translate-middle-y ms-4 text-gray-400"></i>
+                        <input type="text" @bind-value="_searchTerm" @bind-value:event="oninput"
+                               class="form-control form-control-solid ps-12 fs-7 fw-semibold" placeholder="Tìm tên chức danh, nhóm..." />
+                    </div>
+
+                    <!-- Level Filter -->
+                    <div class="w-md-175px me-4 my-1">
+                        <select class="form-select form-select-solid fs-7 fw-bold" @bind="_levelFilter">
+                            <option value="All">Cấp bậc: Tất cả</option>
+                            <option value="Lãnh đạo">Lãnh đạo</option>
+                            <option value="Quản lý">Quản lý</option>
+                            <option value="Nhân viên">Nhân viên</option>
+                        </select>
+                    </div>
+
+                    <div class="ms-auto my-1 d-flex gap-2">
+                        <button class="btn btn-icon btn-light btn-sm border" @onclick="resetFilters"><i class="ki-outline ki-arrows-circle fs-5"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="card shadow-sm border">
+            <div class="card-body p-0">
+                <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="7" Columns="7">
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-200 align-middle gs-7 gy-6">
+                            <thead>
+                                <tr class="fw-bolder text-muted text-uppercase fs-8 border-bottom-0 bg-light">
+                                    <th class="w-10px pe-2 ps-7">
+                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                            <input class="form-check-input" type="checkbox" />
+                                        </div>
+                                    </th>
+                                    <th class="min-w-250px">CHỨC DANH / VỊ TRÍ</th>
+                                    <th class="min-w-150px">NHÓM CÔNG VIỆC</th>
+                                    <th class="min-w-100px text-center">CẤP BẬC</th>
+                                    <th class="min-w-100px text-center">NHÂN SỰ</th>
+                                    <th class="min-w-200px">MỨC LƯƠNG CƠ SỞ</th>
+                                    <th class="text-end min-w-100px pe-7">THAO TÁC</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var pos in FilteredPositions)
+                                {
+                                    <tr class="hover-elevate cursor-pointer" @onclick="() => viewDetails(pos)">
+                                        <td class="ps-7" @onclick:stopPropagation="true">
+                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input class="form-check-input" type="checkbox" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-40px me-4">
+                                                    <span class="symbol-label @pos.IconBg"><i class="@pos.Icon fs-3 @pos.IconColor"></i></span>
+                                                </div>
+                                                <div class="d-flex justify-content-start flex-column">
+                                                    <span class="text-dark fw-bolder fs-6 mb-1">@pos.NameVN</span>
+                                                    <span class="text-muted fw-bold fs-7">@pos.NameEN</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="text-gray-800 fw-bold fs-7">@pos.Group</span></td>
+                                        <td class="text-center">
+                                            <span class="badge @pos.LevelBadge fw-bold">@pos.LevelName</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-gray-800 fw-bolder fs-7">@pos.ActiveEmployees</span>
+                                        </td>
+                                        <td><span class="text-gray-800 fw-bold fs-7">@pos.SalaryRange</span></td>
+                                        <td class="text-end pe-7" @onclick:stopPropagation="true">
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 hover-scale shadow-xs border" @onclick="() => editPosition(pos)">
+                                                <i class="ki-outline ki-pencil fs-6"></i>
+                                            </button>
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm hover-scale shadow-xs border" @onclick="() => requestDeletePosition(pos)">
+                                                <i class="ki-outline ki-trash fs-6"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="px-7 py-5">
+                        <div class="d-flex flex-stack flex-wrap">
+                            <div class="fs-7 fw-bold text-gray-700">Hiển thị @FilteredPositions.Count() của @_positions.Count chức danh</div>
+                            <ul class="pagination pagination-circle">
+                                <li class="page-item previous disabled"><a href="javascript:;" class="page-link shadow-xs border mx-1"><i class="ki-outline ki-left"></i></a></li>
+                                <li class="page-item active"><a href="javascript:;" class="page-link shadow-xs border mx-1">1</a></li>
+                                <li class="page-item next"><a href="javascript:;" class="page-link shadow-xs border mx-1"><i class="ki-outline ki-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </SkeletonLoading>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DRAWER: THÊM/SỬA CHỨC DANH -->
+<div class="bg-white drawer drawer-end @(_showEditDrawer ? "drawer-on" : "")"
+     style="width: 600px; position: fixed; right: 0; top: 0; bottom: 0; z-index: 106; box-shadow: -10px 0 30px rgba(0,0,0,0.1); border-left: 1px solid #eff2f5; transition: transform 0.3s ease; transform: @(_showEditDrawer ? "translateX(0)" : "translateX(100%)"); display: block;">
+    <div class="card w-100 rounded-0 border-0 h-100 overflow-hidden">
+        <div class="card-header pe-5 py-6">
+            <div class="card-title">
+                <div class="d-flex justify-content-center flex-column">
+                    <span class="fs-4 fw-bolder text-gray-900 lh-1">@(_isNewPosition ? "Thêm chức danh mới" : "Cập nhật chức danh")</span>
+                    <span class="fs-8 fw-bold text-muted mt-2">Thông tin vị trí và yêu cầu tuyển dụng</span>
+                </div>
+            </div>
+            <div class="card-toolbar">
+                <div class="btn btn-sm btn-icon btn-active-light-primary" @onclick="closeEditDrawer">
+                    <i class="ki-outline ki-cross fs-4"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body hover-scroll-overlay-y py-8 px-10">
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <label class="required fs-7 fw-bold mb-2">Tên chức danh (VN)</label>
+                    <input type="text" class="form-control form-control-solid fs-7" placeholder="VD: Lập trình viên" @bind="_editingPos.NameVN" />
+                </div>
+                <div class="col-md-6">
+                    <label class="required fs-7 fw-bold mb-2">Tên chức danh (EN)</label>
+                    <input type="text" class="form-control form-control-solid fs-7" placeholder="VD: Software Developer" @bind="_editingPos.NameEN" />
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <label class="fs-7 fw-bold mb-2">Nhóm công việc</label>
+                    <select class="form-select form-select-solid fs-7" @bind="_editingPos.Group">
+                        <option value="">Chọn nhóm...</option>
+                        <option value="Công nghệ thông tin">Công nghệ thông tin</option>
+                        <option value="Kinh doanh">Kinh doanh</option>
+                        <option value="Hành chính - Nhân sự">Hành chính - Nhân sự</option>
+                        <option value="Tài chính - Kế toán">Tài chính - Kế toán</option>
+                        <option value="Thiết kế">Thiết kế</option>
+                        <option value="Marketing">Marketing</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="fs-7 fw-bold mb-2">Cấp bậc / Level</label>
+                    <select class="form-select form-select-solid fs-7" @bind="_editingPos.LevelName">
+                        <option value="">Chọn level...</option>
+                        <option value="Level 1">Level 1 (Junior)</option>
+                        <option value="Level 2">Level 2 (Junior+)</option>
+                        <option value="Level 3">Level 3 (Senior)</option>
+                        <option value="Level 4">Level 4 (Senior+)</option>
+                        <option value="Level 5">Level 5 (Lead)</option>
+                        <option value="Manager">Quản lý (Manager)</option>
+                        <option value="Director">Lãnh đạo (Director)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <label class="fs-7 fw-bold mb-2">Dải lương cơ bản (triệu VNĐ)</label>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-solid fs-7" placeholder="Từ..." @bind="_editingPos.SalaryRange" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <label class="fs-7 fw-bold mb-2 text-primary">Mô tả công việc (JD)</label>
+                <textarea class="form-control form-control-solid fs-7" rows="4" placeholder="Mỗi nhiệm vụ nhập một dòng..." @bind="_editingPos.JobDescription"></textarea>
+            </div>
+
+            <div class="mb-8">
+                <label class="fs-7 fw-bold mb-2 text-success">Yêu cầu ứng viên</label>
+                <textarea class="form-control form-control-solid fs-7" rows="4" placeholder="Mỗi yêu cầu nhập một dòng..." @bind="_editingPos.Requirements"></textarea>
+            </div>
+
+            <div class="mb-8">
+                <label class="fs-7 fw-bold mb-2 text-warning">Quyền lợi & Phúc lợi</label>
+                <textarea class="form-control form-control-solid fs-7" rows="4" placeholder="Mỗi quyền lợi nhập một dòng..." @bind="_editingPos.Benefits"></textarea>
+            </div>
+
+            <div class="mb-8">
+                <label class="fs-7 fw-bold mb-2">Icon nhận diện</label>
+                <div class="d-flex flex-wrap gap-3">
+                    @foreach (var icon in _availableIcons)
+                    {
+                        <div class="symbol symbol-40px symbol-light-primary cursor-pointer border @(_editingPos.Icon == icon ? "border-primary border-2" : "")" @onclick="() => _editingPos.Icon = icon">
+                            <span class="symbol-label"><i class="@icon fs-3"></i></span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer py-6 px-10 border-0 bg-light-light d-flex gap-3 justify-content-end">
+            <button type="button" class="btn btn-sm btn-light fw-bold px-6" @onclick="closeEditDrawer">Hủy bỏ</button>
+            <button type="button" class="btn btn-sm btn-primary fw-bold px-6" @onclick="savePosition">Lưu dữ liệu</button>
+        </div>
+    </div>
+</div>
+
+<!-- DRAWER: CHI TIẾT CHỨC DANH -->
+<div class="bg-white drawer drawer-end @(_showDetailDrawer ? "drawer-on" : "")"
+     style="width: 750px; position: fixed; right: 0; top: 0; bottom: 0; z-index: 106; box-shadow: -10px 0 30px rgba(0,0,0,0.1); border-left: 1px solid #eff2f5; transition: transform 0.3s ease; transform: @(_showDetailDrawer ? "translateX(0)" : "translateX(100%)"); display: block;">
+    <div class="card w-100 rounded-0 border-0 h-100 overflow-hidden">
+        @if (_selectedPos != null)
+        {
+            <div class="card-header pe-5 py-8 border-0">
+                <div class="card-title">
+                    <div class="d-flex align-items-center">
+                        <div class="symbol symbol-70px me-5">
+                            <span class="symbol-label @_selectedPos.IconBg">
+                                <i class="@_selectedPos.Icon fs-1 @_selectedPos.IconColor"></i>
+                            </span>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="fs-2 fw-bolder text-gray-900">@_selectedPos.NameVN</span>
+                            <span class="fs-5 fw-bold text-muted">@_selectedPos.NameEN</span>
+                            <div class="d-flex align-items-center mt-2">
+                                <span class="badge @_selectedPos.LevelBadge fw-bold me-2">@_selectedPos.LevelName</span>
+                                <span class="text-gray-400 fs-7 fw-bold">Nhóm: @_selectedPos.Group</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="btn btn-sm btn-icon btn-active-light-primary" @onclick="closeDetailDrawer">
+                        <i class="ki-outline ki-cross fs-4"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body hover-scroll-overlay-y py-5 px-10">
+                <!-- Highlight Info -->
+                <div class="row g-5 mb-10 mt-2">
+                    <div class="col-md-4">
+                        <div class="bg-light-primary rounded p-5 text-center border border-primary border-dashed">
+                            <div class="fs-4 fw-bolder text-gray-800">@_selectedPos.ActiveEmployees</div>
+                            <div class="fw-bold text-muted fs-8 text-uppercase">Nhân sự hiện tại</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light-success rounded p-5 text-center border border-success border-dashed">
+                            <div class="fs-4 fw-bolder text-gray-800">@_selectedPos.SalaryRange</div>
+                            <div class="fw-bold text-muted fs-8 text-uppercase">Dải lương cơ sở</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light-warning rounded p-5 text-center border border-warning border-dashed">
+                            <div class="fs-4 fw-bolder text-gray-800">High</div>
+                            <div class="fw-bold text-muted fs-8 text-uppercase">Độ ưu tiên tuyển dụng</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Sections -->
+                <div class="mb-10">
+                    <h5 class="fw-bolder text-dark mb-4 d-flex align-items-center">
+                        <i class="ki-outline ki-note-2 fs-2 text-primary me-3"></i>Mô tả công việc (JD)
+                    </h5>
+                    <div class="fs-6 text-gray-700 ps-9">
+                        @if (!string.IsNullOrEmpty(_selectedPos.JobDescription))
+                        {
+                            <ul class="list-unstyled mb-8">
+                                @foreach (var line in _selectedPos.JobDescription.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    <li class="d-flex align-items-start mb-2">
+                                        <i class="ki-outline ki-check-circle fs-4 text-primary me-3 mt-1"></i>
+                                        <span>@line</span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="italic text-muted">Chưa có thông tin mô tả.</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-10">
+                    <h5 class="fw-bolder text-dark mb-4 d-flex align-items-center">
+                        <i class="ki-outline ki-verify fs-2 text-success me-3"></i>Yêu cầu ứng viên
+                    </h5>
+                    <div class="fs-6 text-gray-700 ps-9">
+                        @if (!string.IsNullOrEmpty(_selectedPos.Requirements))
+                        {
+                            <ul class="list-unstyled mb-8">
+                                @foreach (var line in _selectedPos.Requirements.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    <li class="d-flex align-items-start mb-2">
+                                        <i class="ki-outline ki-tag fs-4 text-success me-3 mt-1"></i>
+                                        <span>@line</span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="italic text-muted">Chưa có thông tin yêu cầu.</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-10">
+                    <h5 class="fw-bolder text-dark mb-4 d-flex align-items-center">
+                        <i class="ki-outline ki-gift fs-2 text-warning me-3"></i>Quyền lợi & Phúc lợi
+                    </h5>
+                    <div class="fs-6 text-gray-700 ps-9">
+                        @if (!string.IsNullOrEmpty(_selectedPos.Benefits))
+                        {
+                            <ul class="list-unstyled mb-8">
+                                @foreach (var line in _selectedPos.Benefits.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    <li class="d-flex align-items-start mb-2">
+                                        <i class="ki-outline ki-heart fs-4 text-warning me-3 mt-1"></i>
+                                        <span>@line</span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="italic text-muted">Chưa có thông tin quyền lợi.</p>
+                        }
+                    </div>
+                </div>
+
+                <!-- Footer Summary -->
+                <div class="bg-gray-100 rounded p-8 d-flex align-items-center mt-10">
+                    <div class="symbol symbol-45px me-6">
+                        <span class="symbol-label bg-white"><i class="ki-outline ki-information-2 fs-2x text-primary"></i></span>
+                    </div>
+                    <div>
+                        <span class="fs-7 text-gray-600 fw-bold">Vị trí này thuộc biên chế chính thức, hưởng đầy đủ các chế độ bảo hiểm và phúc lợi theo quy định của TTL Corporation.</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (_showEditDrawer || _showDetailDrawer)
+{
+    <div class="drawer-overlay" style="z-index: 105; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);" @onclick="() => { closeEditDrawer(); closeDetailDrawer(); }"></div>
+}
+
+<!-- MODAL: XÁC NHẬN XÓA (Reusable Component) -->
+<DeleteConfirmationModal IsVisible="_showConfirmDeleteModal"
+                         Title="Xác nhận xóa chức danh"
+                         Message="Bạn đang yêu cầu xóa chức danh"
+                         ItemName="@(_positionToDelete?.NameVN ?? "")"
+                         OnConfirmed="confirmDeletePosition"
+                         OnCancelled="closeDeleteModal" />
+
+

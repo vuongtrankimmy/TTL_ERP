@@ -1,0 +1,548 @@
+@page "/attendance/timesheet"
+@using TTL.HR.Shared.Pages.User.Components
+
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+
+        <!-- Filters Bar -->
+        <div class="card mb-8 shadow-sm">
+            <div class="card-body py-4 px-6">
+                <div class="d-flex flex-wrap align-items-center">
+                    <!-- Search -->
+                    <div class="position-relative w-md-250px me-4 my-1">
+                        <span class="svg-icon svg-icon-3 position-absolute top-50 translate-middle-y ms-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
+                            </svg>
+                        </span>
+                        <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm tên, mã nhân viên..." />
+                    </div>
+
+                    <!-- Period -->
+                    <div class="w-md-175px me-4 my-1">
+                        <select class="form-select form-select-solid fs-7 fw-bold">
+                            <option>Tháng 02/2026</option>
+                            <option>Tháng 01/2026</option>
+                            <option>Tháng 12/2025</option>
+                        </select>
+                    </div>
+
+                    <!-- Department -->
+                    <div class="w-md-175px me-4 my-1">
+                        <select class="form-select form-select-solid fs-7 fw-bold">
+                            <option>Phòng ban: Tất cả</option>
+                            <option>Phòng Kỹ thuật</option>
+                            <option>Phòng Nhân sự</option>
+                        </select>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="ms-auto my-1 d-flex gap-2">
+                        <button class="btn btn-icon btn-light-primary btn-sm" title="Làm mới dữ liệu"><i class="bi bi-arrow-repeat fs-5"></i></button>
+                        <button class="btn btn-light-primary fw-bold fs-7 px-6 ms-2"><i class="bi bi-funnel me-1"></i>Lọc thêm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selection Bar -->
+        <div class="d-flex flex-stack mb-6">
+            <div class="d-flex align-items-center">
+                <div class="form-check form-check-sm form-check-custom form-check-solid me-5">
+                    <input class="form-check-input" type="checkbox" id="check_all_timesheet" />
+                    <label class="form-check-label fw-bold text-gray-700 fs-7 ms-2 text-nowrap" for="check_all_timesheet">Chọn tất cả (124 nhân viên)</label>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-3 text-end justify-content-end">
+                <button class="btn btn-sm btn-light border border-gray-300 px-3 py-2 fs-8 fw-semibold"><i class="bi bi-file-earmark-excel fs-6 me-1"></i>Xuất Excel</button>
+                <button class="btn btn-sm btn-primary px-4 py-2 fs-8 fw-semibold"><i class="bi bi-lock fs-7 me-1"></i>Chốt công tháng</button>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="10" Columns="10">
+                    <div class="table-responsive">
+                    <table class="table table-row-dashed table-row-gray-200 align-middle gs-7 gy-5">
+                        <thead>
+                            <tr class="fw-bold text-muted text-uppercase fs-8 border-bottom-0">
+                                <th class="w-10px pe-2"></th>
+                                <th class="min-w-180px">NHÂN VIÊN</th>
+                                <th class="min-w-120px">PHÒNG BAN</th>
+                                <th class="min-w-80px text-center">CÔNG CHUẨN</th>
+                                <th class="min-w-80px text-center">CÔNG THỰC</th>
+                                <th class="min-w-80px text-center">MUỘN/SỚM</th>
+                                <th class="min-w-80px text-center">NGHỈ/LỄ</th>
+                                <th class="min-w-80px text-center">TĂNG CA</th>
+                                <th class="min-w-100px text-center">TRẠNG THÁI</th>
+                                <th class="min-w-100px text-end pe-7">THAO TÁC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Row 1 -->
+                            <tr class="hover-elevate cursor-pointer">
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input timesheet-checkbox" type="checkbox" value="1" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px symbol-circle me-3">
+                                            <img src="assets/media/avatars/300-1.jpg" alt="user" />
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <span class="text-dark fw-bolder fs-6">Nguyễn Văn Lộc</span>
+                                            <span class="text-muted fw-bold fs-7">NV001 • Dev Lead</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-gray-700 fw-bold">Phòng Kỹ thuật</span></td>
+                                <td class="text-center fw-bolder text-gray-800">22</td>
+                                <td class="text-center fw-bolder text-primary">22.0</td>
+                                <td class="text-center">
+                                    <span class="text-danger fw-bold">2</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-warning fw-bold">1</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center fw-bold text-success">4.5h</td>
+                                <td class="text-center">
+                                    <span class="badge badge-light-primary fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-primary w-6px h-6px me-2"></span>Đang mở
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => OpenDetail(1)"><i class="bi bi-eye-fill fs-6"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công"><i class="bi bi-check-lg fs-5"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 2 -->
+                            <tr class="hover-elevate cursor-pointer">
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input timesheet-checkbox" type="checkbox" value="2" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px symbol-circle me-3">
+                                            <img src="assets/media/avatars/300-2.jpg" alt="user" />
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <span class="text-dark fw-bolder fs-6">Trần Thị Lan</span>
+                                            <span class="text-muted fw-bold fs-7">NV002 • Marketing Lead</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-gray-700 fw-bold">Phòng Marketing</span></td>
+                                <td class="text-center fw-bolder text-gray-800">22</td>
+                                <td class="text-center fw-bolder text-primary">21.5</td>
+                                <td class="text-center">
+                                    <span class="text-danger fw-bold">5</span>/<span class="text-gray-600 fw-bold">1</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-warning fw-bold">0</span>/<span class="text-gray-600 fw-bold">0.5</span>
+                                </td>
+                                <td class="text-center fw-bold text-success">0h</td>
+                                <td class="text-center">
+                                    <span class="badge badge-light-warning fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-warning w-6px h-6px me-2"></span>Cảnh báo
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => OpenDetail(2)"><i class="bi bi-eye-fill fs-6"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công"><i class="bi bi-check-lg fs-5"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 3 -->
+                            <tr class="hover-elevate cursor-pointer">
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input timesheet-checkbox" type="checkbox" value="3" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px symbol-circle me-3">
+                                            <img src="assets/media/avatars/300-3.jpg" alt="user" />
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <span class="text-dark fw-bolder fs-6">Lê Văn Minh</span>
+                                            <span class="text-muted fw-bold fs-7">NV005 • HR Specialist</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-gray-700 fw-bold">Phòng Nhân sự</span></td>
+                                <td class="text-center fw-bolder text-gray-800">22</td>
+                                <td class="text-center fw-bolder text-primary">22.0</td>
+                                <td class="text-center">
+                                    <span class="text-danger fw-bold">0</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-warning fw-bold">2</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center fw-bold text-success">1.0h</td>
+                                <td class="text-center">
+                                    <span class="badge badge-light-success fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-success w-6px h-6px me-2"></span>Đã chốt
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => OpenDetail(3)"><i class="bi bi-eye-fill fs-6"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công"><i class="bi bi-check-lg fs-5"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 4 -->
+                            <tr class="hover-elevate cursor-pointer">
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input timesheet-checkbox" type="checkbox" value="4" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px symbol-circle me-3">
+                                            <img src="assets/media/avatars/300-4.jpg" alt="user" />
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <span class="text-dark fw-bolder fs-6">Phạm Quốc Hưng</span>
+                                            <span class="text-muted fw-bold fs-7">NV008 • Sales Manager</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-gray-700 fw-bold">Phòng Kinh doanh</span></td>
+                                <td class="text-center fw-bolder text-gray-800">22</td>
+                                <td class="text-center fw-bolder text-primary">20.0</td>
+                                <td class="text-center">
+                                    <span class="text-danger fw-bold">1</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-warning fw-bold">0</span>/<span class="text-gray-600 fw-bold">2.0</span>
+                                </td>
+                                <td class="text-center fw-bold text-success">12.5h</td>
+                                <td class="text-center">
+                                    <span class="badge badge-light-primary fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-primary w-6px h-6px me-2"></span>Đang mở
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => OpenDetail(4)"><i class="bi bi-eye-fill fs-6"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công"><i class="bi bi-check-lg fs-5"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 5 -->
+                            <tr class="hover-elevate cursor-pointer">
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input timesheet-checkbox" type="checkbox" value="5" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px symbol-circle me-3">
+                                            <span class="symbol-label bg-light-danger text-danger fw-bold">M</span>
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <span class="text-dark fw-bolder fs-6">Hoàng Thị Mai</span>
+                                            <span class="text-muted fw-bold fs-7">NV012 • Frontend Dev</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-gray-700 fw-bold">Phòng Kỹ thuật</span></td>
+                                <td class="text-center fw-bolder text-gray-800">22</td>
+                                <td class="text-center fw-bolder text-primary">22.0</td>
+                                <td class="text-center">
+                                    <span class="text-danger fw-bold">0</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-warning fw-bold">0</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center fw-bold text-success">2.0h</td>
+                                <td class="text-center">
+                                    <span class="badge badge-light-success fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-success w-6px h-6px me-2"></span>Đã chốt
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => OpenDetail(5)"><i class="bi bi-eye-fill fs-6"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công"><i class="bi bi-check-lg fs-5"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 6 -->
+                            <tr class="hover-elevate cursor-pointer">
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input timesheet-checkbox" type="checkbox" value="6" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px symbol-circle me-3">
+                                            <img src="assets/media/avatars/300-5.jpg" alt="user" />
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <span class="text-dark fw-bolder fs-6">Vũ Đức Thắng</span>
+                                            <span class="text-muted fw-bold fs-7">NV015 • Accountant</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-gray-700 fw-bold">Phòng Kế toán</span></td>
+                                <td class="text-center fw-bolder text-gray-800">22</td>
+                                <td class="text-center fw-bolder text-primary">21.0</td>
+                                <td class="text-center">
+                                    <span class="text-danger fw-bold">0</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-warning fw-bold">1</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center fw-bold text-success">0h</td>
+                                <td class="text-center">
+                                    <span class="badge badge-light-primary fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-primary w-6px h-6px me-2"></span>Đang mở
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => OpenDetail(6)"><i class="bi bi-eye-fill fs-6"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công"><i class="bi bi-check-lg fs-5"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 7 -->
+                            <tr class="hover-elevate cursor-pointer">
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input timesheet-checkbox" type="checkbox" value="7" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px symbol-circle me-3">
+                                            <span class="symbol-label bg-light-info text-info fw-bold">V</span>
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <span class="text-dark fw-bolder fs-6">Ngô Thanh Vân</span>
+                                            <span class="text-muted fw-bold fs-7">NV020 • Admin</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-gray-700 fw-bold">Phòng Hành chính</span></td>
+                                <td class="text-center fw-bolder text-gray-800">22</td>
+                                <td class="text-center fw-bolder text-primary">15.0</td>
+                                <td class="text-center">
+                                    <span class="text-danger fw-bold">0</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-warning fw-bold">0</span>/<span class="text-gray-600 fw-bold">7.0</span>
+                                </td>
+                                <td class="text-center fw-bold text-success">0h</td>
+                                <td class="text-center">
+                                    <span class="badge badge-light-warning fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-warning w-6px h-6px me-2"></span>Chờ duyệt
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => OpenDetail(7)"><i class="bi bi-eye-fill fs-6"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công"><i class="bi bi-check-lg fs-5"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 8 -->
+                            <tr class="hover-elevate cursor-pointer">
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input timesheet-checkbox" type="checkbox" value="8" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px symbol-circle me-3">
+                                            <img src="assets/media/avatars/300-6.jpg" alt="user" />
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <span class="text-dark fw-bolder fs-6">Đặng Ngọc Hải</span>
+                                            <span class="text-muted fw-bold fs-7">NV022 • Backend Dev</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-gray-700 fw-bold">Phòng Kỹ thuật</span></td>
+                                <td class="text-center fw-bolder text-gray-800">22</td>
+                                <td class="text-center fw-bolder text-primary">22.0</td>
+                                <td class="text-center">
+                                    <span class="text-danger fw-bold">10</span>/<span class="text-gray-600 fw-bold">5</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-warning fw-bold">0</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center fw-bold text-success">8.0h</td>
+                                <td class="text-center">
+                                    <span class="badge badge-light-danger fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-danger w-6px h-6px me-2"></span>Vi phạm
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => OpenDetail(8)"><i class="bi bi-eye-fill fs-6"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công"><i class="bi bi-check-lg fs-5"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 9 -->
+                            <tr class="hover-elevate cursor-pointer">
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input timesheet-checkbox" type="checkbox" value="9" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px symbol-circle me-3">
+                                            <img src="assets/media/avatars/300-9.jpg" alt="user" />
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <span class="text-dark fw-bolder fs-6">Bùi Thị Hoa</span>
+                                            <span class="text-muted fw-bold fs-7">NV025 • Sales Exec</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-gray-700 fw-bold">Phòng Kinh doanh</span></td>
+                                <td class="text-center fw-bolder text-gray-800">22</td>
+                                <td class="text-center fw-bolder text-primary">18.0</td>
+                                <td class="text-center">
+                                    <span class="text-danger fw-bold">0</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-warning fw-bold">4</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center fw-bold text-success">2.0h</td>
+                                <td class="text-center">
+                                    <span class="badge badge-light-primary fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-primary w-6px h-6px me-2"></span>Đang mở
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => OpenDetail(9)"><i class="bi bi-eye-fill fs-6"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công"><i class="bi bi-check-lg fs-5"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 10 -->
+                            <tr class="hover-elevate cursor-pointer">
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input timesheet-checkbox" type="checkbox" value="10" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px symbol-circle me-3">
+                                            <span class="symbol-label bg-light-success text-success fw-bold">B</span>
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <span class="text-dark fw-bolder fs-6">Lý Quốc Bảo</span>
+                                            <span class="text-muted fw-bold fs-7">NV030 • Recruiter</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-gray-700 fw-bold">Phòng Nhân sự</span></td>
+                                <td class="text-center fw-bolder text-gray-800">22</td>
+                                <td class="text-center fw-bolder text-primary">22.0</td>
+                                <td class="text-center">
+                                    <span class="text-danger fw-bold">1</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-warning fw-bold">0</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center fw-bold text-success">0h</td>
+                                <td class="text-center">
+                                    <span class="badge badge-light-success fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-success w-6px h-6px me-2"></span>Đã chốt
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => OpenDetail(10)"><i class="bi bi-eye-fill fs-6"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công"><i class="bi bi-check-lg fs-5"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Row 11 -->
+                            <tr class="hover-elevate cursor-pointer">
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input timesheet-checkbox" type="checkbox" value="11" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px symbol-circle me-3">
+                                            <img src="assets/media/avatars/300-11.jpg" alt="user" />
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <span class="text-dark fw-bolder fs-6">Trương Mỹ Linh</span>
+                                            <span class="text-muted fw-bold fs-7">NV099 • Director</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-gray-700 fw-bold">Ban Giám đốc</span></td>
+                                <td class="text-center fw-bolder text-gray-800">22</td>
+                                <td class="text-center fw-bolder text-primary">10.0</td>
+                                <td class="text-center">
+                                    <span class="text-danger fw-bold">0</span>/<span class="text-gray-600 fw-bold">0</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-warning fw-bold">0</span>/<span class="text-gray-600 fw-bold">12.0</span>
+                                </td>
+                                <td class="text-center fw-bold text-success">0h</td>
+                                <td class="text-center">
+                                    <span class="badge badge-light-info fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-info w-6px h-6px me-2"></span>Công tác
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => OpenDetail(11)"><i class="bi bi-eye-fill fs-6"></i></button>
+                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công"><i class="bi bi-check-lg fs-5"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="px-7 py-5">
+                    <div class="d-flex flex-stack flex-wrap">
+                        <div class="fs-7 fw-bold text-gray-700">Hiển thị 1 đến 10 của 124 nhân viên</div>
+                        <ul class="pagination">
+                            <li class="page-item previous disabled"><a href="#" class="page-link"><i class="next"></i></a></li>
+                            <li class="page-item active"><a href="#" class="page-link">1</a></li>
+                            <li class="page-item next"><a href="#" class="page-link"><i class="next"></i></a></li>
+                        </ul>
+                    </div>
+                    </div>
+                </SkeletonLoading>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Drawer for Detail -->
+<div class="bg-body drawer drawer-end @(_showDetail ? "drawer-on" : "")" style="width: 1200px; max-width: 95vw; transition: transform 0.3s ease-in-out; position: fixed; top: 0; right: 0; bottom: 0; z-index: 110; transform: translateX(@(_showDetail ? "0" : "100%")); box-shadow: -5px 0 15px rgba(0,0,0,0.1); overflow-y: auto;">
+    <div class="card w-100 rounded-0 border-0">
+        <div class="card-header pe-5 border-0 pt-5">
+             <div class="card-title">
+                 <div class="d-flex justify-content-center flex-column me-3">
+                     <a href="#" class="fs-4 fw-bold text-gray-900 text-hover-primary me-1 mb-2 lh-1">Chi Tiết Chấm Công</a>
+                     <div class="mb-0 fs-7 fw-semibold text-muted">Xem dữ liệu chấm công chi tiết của nhân viên</div>
+                 </div>
+             </div>
+             <div class="card-toolbar">
+                  <button class="btn btn-sm btn-icon btn-active-light-primary bg-light" @onclick="CloseDetail"><i class="ki-outline ki-cross fs-2"></i></button>
+             </div>
+        </div>
+        <div class="card-body hover-scroll-overlay-y">
+             <UserAttendanceHistory UserId="@_selectedUserId" />
+        </div>
+    </div>
+</div>
+
+<!-- Backdrop -->
+@if (_showDetail)
+{
+    <div class="drawer-overlay" style="z-index: 109; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);" @onclick="CloseDetail"></div>
+}
+
+

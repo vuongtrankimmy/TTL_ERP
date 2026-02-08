@@ -1,0 +1,52 @@
+@page "/"
+@page "/auth/login"
+@layout AuthLayout
+@inject NavigationManager Navigation
+
+<PageTitle>Đăng nhập - OrgaX HR</PageTitle>
+
+<!--begin::Form-->
+<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" action="#">
+    <!--begin::Heading-->
+    <div class="text-center mb-11">
+        <!--begin::Title-->
+        <h1 class="text-dark fw-bolder mb-3">Đăng nhập</h1>
+        <!--end::Title-->
+        <!--begin::Subtitle-->
+        <div class="text-gray-500 fw-semibold fs-6">Hệ thống Quản trị Nhân sự TTL</div>
+        <!--end::Subtitle=-->
+    </div>
+    <!--begin::Heading-->
+    
+    <!--begin::Input group=-->
+    <div class="fv-row mb-8">
+        <label class="form-label fs-6 fw-bolder text-dark">Email hoặc Tên đăng nhập</label>
+        <input type="text" placeholder="Nhập email của bạn" name="email" autocomplete="off" class="form-control bg-transparent" @bind="_email" />
+    </div>
+    <!--end::Input group=-->
+    <div class="fv-row mb-3">
+        <div class="d-flex flex-stack mb-2">
+            <label class="form-label fw-bolder text-dark fs-6 mb-0">Mật khẩu</label>
+            <a href="#" class="link-primary fs-6 fw-bolder">Quên mật khẩu?</a>
+        </div>
+        <input type="password" placeholder="Nhập mật khẩu" name="password" autocomplete="off" class="form-control bg-transparent" @bind="_password" />
+    </div>
+    <!--end::Input group=-->
+    
+    <!--begin::Submit button-->
+    <div class="d-grid mb-10 pt-5">
+        <button type="button" id="kt_sign_in_submit" class="btn btn-primary" @onclick="HandleLogin">
+            <span class="indicator-label">Đăng nhập</span>
+            @if (_isLoading)
+            {
+                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+            }
+        </button>
+    </div>
+    <!--end::Submit button-->
+    
+
+</form>
+<!--end::Form-->
+
+

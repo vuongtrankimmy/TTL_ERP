@@ -1,0 +1,341 @@
+@page "/settings/general"
+@inject NavigationManager Navigation
+
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+        
+        <!-- Header with Save Action -->
+        <div class="d-flex flex-wrap flex-stack mb-6">
+            <h3 class="fw-bolder my-2">Cài đặt hệ thống 
+            <span class="fs-6 text-gray-400 fw-bold ms-1">Cấu hình chung toàn hệ thống HR</span></h3>
+            <div class="d-flex my-2">
+                <button class="btn btn-light-primary btn-sm me-3 fw-bolder px-5"><i class="bi bi-arrow-counterclockwise fs-5 me-1"></i>Hủy thay đổi</button>
+                <button class="btn btn-primary btn-sm fw-bolder px-8"><i class="bi bi-check-lg fs-5 me-1"></i>Lưu cấu hình</button>
+            </div>
+        </div>
+
+        <div class="row g-7">
+            <!-- Sidebar Navigation (Optional or visual guide) -->
+            <div class="col-lg-3">
+                <div class="card card-flush shadow-sm border-0 mb-5">
+                    <div class="card-body p-0">
+                        <div class="menu menu-column menu-rounded menu-state-bg menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary mb-10">
+                            <div class="menu-item">
+                                <a class="menu-link py-4 @(activeTab == "company_profile" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("company_profile")'>
+                                    <span class="menu-icon"><i class="bi bi-building fs-3"></i></span>
+                                    <span class="menu-title fw-bold">Thông tin công ty</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link py-4 @(activeTab == "localization" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("localization")'>
+                                    <span class="menu-icon"><i class="bi bi-globe fs-3"></i></span>
+                                    <span class="menu-title fw-bold">Vùng & Ngôn ngữ</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link py-4 @(activeTab == "working_policy" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("working_policy")'>
+                                    <span class="menu-icon"><i class="bi bi-clock-history fs-3"></i></span>
+                                    <span class="menu-title fw-bold">Chính sách làm việc</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link py-4 @(activeTab == "notifications" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("notifications")'>
+                                    <span class="menu-icon"><i class="bi bi-bell fs-3"></i></span>
+                                    <span class="menu-title fw-bold">Thông báo & Email</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-light-info border-0 shadow-none">
+                    <div class="card-body p-6">
+                        <h4 class="text-info fw-bolder mb-3">Lưu ý bảo mật</h4>
+                        <p class="text-gray-600 fs-7 mb-0">Các thay đổi tại đây sẽ áp dụng ngay lập tức cho toàn bộ nhân viên. Vui lòng kiểm tra kỹ trước khi lưu.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Content -->
+            <div class="col-lg-9">
+                @if (activeTab == "company_profile")
+                {
+                    <!-- Company Profile -->
+                    <div class="card card-flush shadow-sm border-0 mb-8" id="company_profile">
+                        <div class="card-header pt-7">
+                            <h3 class="card-title fw-bolder text-gray-800">Thông tin doanh nghiệp</h3>
+                        </div>
+                        <div class="card-body pt-5">
+                            <div class="row mb-7">
+                                <label class="col-lg-3 fw-bold text-muted fs-7">Logo công ty</label>
+                                <div class="col-lg-9">
+                                    <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+                                        <img src="assets/media/logos/demo42.svg" alt="image" class="border p-4 bg-light" />
+                                        <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-body rounded-circle border border-secondary shadow-sm p-2 cursor-pointer hover-scale">
+                                            <i class="bi bi-pencil-fill fs-8 text-muted"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-text mt-2 fs-8">Định dạng hỗ trợ: png, jpg, svg. Dung lượng tối đa 2MB.</div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Tên công ty (Tiếng Việt)</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control form-control-solid fs-7" value="CÔNG TY CỔ PHẦN TÂN TÂN LỘC" />
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Tên công ty (Tiếng Anh)</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control form-control-solid fs-7" value="TAN TAN LOC JOINT STOCK COMPANY" />
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <div class="col-md-6 row">
+                                    <label class="col-lg-6 col-form-label fw-bold fs-7 ps-5">Mã số thuế</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control form-control-solid fs-7" value="0312345678" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 row">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-7">Website</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control form-control-solid fs-7" value="https://tantanloc.com.vn" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Địa chỉ trụ sở</label>
+                                <div class="col-lg-9">
+                                    <textarea class="form-control form-control-solid fs-7" rows="2">Tòa nhà TTL Building, 123 Đường Công Nghệ, Phường 10, Quận 1, TP. Hồ Chí Minh</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (activeTab == "localization")
+                {
+                    <!-- Localization & Formats -->
+                    <div class="card card-flush shadow-sm border-0 mb-8" id="localization">
+                        <div class="card-header pt-7">
+                            <h3 class="card-title fw-bolder text-gray-800">Vùng & Ngôn ngữ</h3>
+                        </div>
+                        <div class="card-body pt-5">
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Múi giờ hệ thống</label>
+                                <div class="col-lg-9">
+                                    <select class="form-select form-select-solid fs-7 fw-bold">
+                                        <option value="Asia/Ho_Chi_Minh" selected>(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+                                        <option value="UTC">Universal Coordinated Time (UTC)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <div class="col-md-6 row">
+                                    <label class="col-lg-6 col-form-label fw-bold fs-7 ps-5">Ngôn ngữ mặc định</label>
+                                    <div class="col-lg-6">
+                                        <select class="form-select form-select-solid fs-7 fw-bold">
+                                            <option value="vi" selected>Tiếng Việt</option>
+                                            <option value="en">English</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 row">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-7">Tiền tệ</label>
+                                    <div class="col-lg-8">
+                                        <select class="form-select form-select-solid fs-7 fw-bold">
+                                            <option value="VND" selected>Việt Nam Đồng (VNĐ)</option>
+                                            <option value="USD">US Dollar ($)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Định dạng ngày tháng</label>
+                                <div class="col-lg-9 d-flex gap-4">
+                                    <div class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="radio" name="date_format" value="DD/MM/YYYY" checked />
+                                        <label class="form-check-label fs-7 fw-bold">DD/MM/YYYY</label>
+                                    </div>
+                                    <div class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="radio" name="date_format" value="MM/DD/YYYY" />
+                                        <label class="form-check-label fs-7 fw-bold">MM/DD/YYYY</label>
+                                    </div>
+                                    <div class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="radio" name="date_format" value="YYYY-MM-DD" />
+                                        <label class="form-check-label fs-7 fw-bold">YYYY-MM-DD</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Định dạng số</label>
+                                <div class="col-lg-9 row g-4">
+                                    <div class="col-md-6">
+                                        <span class="text-muted fs-8 d-block mb-2">Dấu phân cách hàng nghìn</span>
+                                        <select class="form-select form-select-solid fs-7">
+                                            <option value="comma">Dấu phẩy (,)</option>
+                                            <option value="dot">Dấu chấm (.)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="text-muted fs-8 d-block mb-2">Dấu phân cách thập phân</span>
+                                        <select class="form-select form-select-solid fs-7">
+                                            <option value="dot">Dấu chấm (.)</option>
+                                            <option value="comma">Dấu phẩy (,)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-10">
+                                <div class="col-12 bg-light-info rounded p-5 border border-dashed border-info">
+                                    <h5 class="fw-bolder text-info mb-3">Xem trước định dạng</h5>
+                                    <div class="d-flex flex-wrap gap-5">
+                                        <div class="bg-white px-4 py-2 rounded shadow-xs fs-8">Ngày: <b>25/12/2024</b></div>
+                                        <div class="bg-white px-4 py-2 rounded shadow-xs fs-8">Tiền tệ: <b>25,000,000 VNĐ</b></div>
+                                        <div class="bg-white px-4 py-2 rounded shadow-xs fs-8">Múi giờ: <b>Asia/Ho_Chi_Minh (GMT+7)</b></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (activeTab == "working_policy")
+                {
+                    <!-- Working Policy -->
+                    <div class="card card-flush shadow-sm border-0 mb-8" id="working_policy">
+                        <div class="card-header pt-7 d-flex justify-content-between">
+                            <h3 class="card-title fw-bolder text-gray-800">Chính sách thời gian làm việc</h3>
+                            <div class="card-toolbar">
+                                <span class="badge badge-light-primary fw-bolder">Chính sách chuẩn</span>
+                            </div>
+                        </div>
+                        <div class="card-body pt-5">
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Số giờ làm việc / tuần</label>
+                                <div class="col-lg-3">
+                                    <div class="input-group input-group-solid">
+                                        <input type="number" class="form-control fs-7" value="44" />
+                                        <span class="input-group-text fs-8 text-gray-500">Giờ</span>
+                                    </div>
+                                </div>
+                                <label class="col-lg-3 col-form-label fw-bold fs-7 ps-lg-5">Số ngày nghỉ phép / năm</label>
+                                <div class="col-lg-3">
+                                    <div class="input-group input-group-solid">
+                                        <input type="number" class="form-control fs-7" value="12" />
+                                        <span class="input-group-text fs-8 text-gray-500">Ngày</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Các ngày làm việc</label>
+                                <div class="col-lg-9 d-flex flex-wrap gap-3">
+                                    <button class="btn btn-sm btn-light-primary fw-bolder">Thứ 2</button>
+                                    <button class="btn btn-sm btn-light-primary fw-bolder">Thứ 3</button>
+                                    <button class="btn btn-sm btn-light-primary fw-bolder">Thứ 4</button>
+                                    <button class="btn btn-sm btn-light-primary fw-bolder">Thứ 5</button>
+                                    <button class="btn btn-sm btn-light-primary fw-bolder">Thứ 6</button>
+                                    <button class="btn btn-sm btn-light-warning fw-bolder">Sáng Thứ 7</button>
+                                    <button class="btn btn-sm btn-light fw-bolder text-muted">Chủ nhật</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Tính công ngoài giờ (OT)</label>
+                                <div class="col-lg-9">
+                                    <label class="form-check form-switch form-check-custom form-check-solid">
+                                        <input class="form-check-input w-45px h-25px" type="checkbox" checked />
+                                        <span class="form-check-label fs-7 fw-bold text-gray-600">Tự động kích hoạt OT nếu check-out muộn quá 1 giờ</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (activeTab == "notifications")
+                {
+                    <!-- Notifications & Security -->
+                    <div class="card card-flush shadow-sm border-0 mb-8" id="notifications">
+                        <div class="card-header pt-7">
+                            <h3 class="card-title fw-bolder text-gray-800">Thông báo & Email</h3>
+                        </div>
+                        <div class="card-body pt-5">
+                            <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6 mb-7">
+                                <i class="bi bi-shield-lock-fill fs-2tx text-warning me-4"></i>
+                                <div class="d-flex flex-stack flex-grow-1">
+                                    <div class="fw-bold">
+                                        <h4 class="text-gray-900 fw-bolder">Cấu hình SMTP chưa hoàn tất</h4>
+                                        <div class="fs-7 text-gray-700">Hệ thống hiện đang dùng máy chủ mặc định. Email thông báo có thể bị chuyển vào mục spam.</div>
+                                    </div>
+                                    <button class="btn btn-warning btn-sm fw-bolder px-5">Cấu hình ngay</button>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4">
+                                    <thead>
+                                        <tr class="fw-bolder text-muted bg-light text-uppercase fs-9">
+                                            <th class="ps-4">Loại thông báo</th>
+                                            <th class="text-center">Email</th>
+                                            <th class="text-center">Hệ thống (Web)</th>
+                                            <th class="text-center">Mobile Push</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <span class="text-dark fw-bold fs-7">Có nhân viên mới vào làm</span>
+                                            </td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" /></div></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <span class="text-dark fw-bold fs-7">Thông báo bảng lương mới</span>
+                                            </td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <span class="text-dark fw-bold fs-7">Nhắc nhở ngày sinh nhật nhân viên</span>
+                                            </td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" /></div></td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" /></div></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Tab { get; set; }
+
+    private string activeTab = "company_profile";
+
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrEmpty(Tab))
+        {
+            activeTab = Tab;
+        }
+    }
+
+    private void SetActiveTab(string tab)
+    {
+        activeTab = tab;
+        Navigation.NavigateTo($"/settings/general?Tab={tab}", false);
+    }
+}

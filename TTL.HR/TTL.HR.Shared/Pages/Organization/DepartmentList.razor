@@ -1,0 +1,385 @@
+@page "/organization/departments"
+@using System.Collections.Generic
+@using System.Linq
+
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+    <div id="kt_content_container" class="app-container container-fluid">
+
+        <!-- Header / Toolbar -->
+        <div class="d-flex flex-stack mb-6">
+            <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">Danh sách Phòng ban
+                <span class="h-20px border-gray-300 border-start ms-3 mx-2"></span>
+                <small class="text-muted fs-7 fw-bold my-1 ms-1">Cơ cấu tổ chức</small>
+            </h1>
+            <div class="d-flex align-items-center gap-2 gap-lg-3">
+                <button class="btn btn-sm btn-light-primary fw-bold" @onclick="openAddDepartment">
+                    <i class="ki-outline ki-plus fs-2"></i>Thêm phòng ban mới
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-5 g-xl-8 mb-8">
+            <div class="col-xl-4">
+                <div class="card bg-primary hoverable card-xl-stretch mb-xl-8 shadow-sm" style="background: linear-gradient(135deg, #009ef7 0%, #0076b6 100%) !important;">
+                    <div class="card-body">
+                        <div class="text-white fw-bolder fs-2 mb-2 mt-5">@_departments.Count</div>
+                        <div class="fw-bold text-white fs-7 opacity-75">Tổng số phòng ban</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card bg-dark hoverable card-xl-stretch mb-xl-8 shadow-sm">
+                    <div class="card-body">
+                        <div class="text-white fw-bolder fs-2 mb-2 mt-5">@_departments.Sum(d => d.EmployeeCount)</div>
+                        <div class="fw-bold text-white fs-7 opacity-75">Tổng nhân sự hiện tại</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card bg-warning hoverable card-xl-stretch mb-xl-8 shadow-sm" style="background: linear-gradient(135deg, #ffc700 0%, #d4a500 100%) !important;">
+                    <div class="card-body">
+                        <div class="text-white fw-bolder fs-2 mb-2 mt-5">@_departments.Count(d => string.IsNullOrEmpty(d.ManagerName))</div>
+                        <div class="fw-bold text-white fs-7 opacity-75">Vị trí trưởng phòng trống</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="card mb-8 shadow-xs border">
+            <div class="card-body py-4 px-6">
+                <div class="d-flex flex-wrap align-items-center">
+                    <!-- Search -->
+                    <div class="position-relative w-md-300px me-4 my-1">
+                        <i class="ki-outline ki-magnifier fs-3 position-absolute top-50 translate-middle-y ms-4 text-gray-400"></i>
+                        <input type="text" @bind-value="_searchTerm" @bind-value:event="oninput" 
+                               class="form-control form-control-solid ps-12 fs-7 fw-semibold" placeholder="Tìm tên phòng ban, mã PB..." />
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="w-md-175px me-4 my-1">
+                        <select class="form-select form-select-solid fs-7 fw-bold" @bind="_statusFilter">
+                            <option value="All">Trạng thái: Tất cả</option>
+                            <option value="Active">Đang hoạt động</option>
+                            <option value="Inactive">Dừng hoạt động</option>
+                        </select>
+                    </div>
+
+                    <div class="ms-auto my-1 d-flex gap-2">
+                        <button class="btn btn-icon btn-light btn-sm border" @onclick="resetFilters"><i class="ki-outline ki-arrows-circle fs-5"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="card shadow-sm border">
+            <div class="card-body p-0">
+                <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="5" Columns="7">
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-200 align-middle gs-7 gy-6">
+                            <thead>
+                                <tr class="fw-bolder text-muted text-uppercase fs-8 border-bottom-0 bg-light">
+                                    <th class="w-10px pe-2 ps-7">
+                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                            <input class="form-check-input" type="checkbox" />
+                                        </div>
+                                    </th>
+                                    <th class="min-w-250px">PHÒNG BAN</th>
+                                    <th class="min-w-100px text-center">MÃ PB</th>
+                                    <th class="min-w-200px">TRƯỞNG PHÒNG</th>
+                                    <th class="min-w-150px">NHÂN SỰ</th>
+                                    <th class="min-w-125px">TRẠNG THÁI</th>
+                                    <th class="text-end min-w-100px pe-7">THAO TÁC</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var dept in FilteredDepartments)
+                                {
+                                    <tr class="hover-elevate cursor-pointer" @onclick="() => viewDetails(dept)">
+                                        <td class="ps-7" @onclick:stopPropagation="true">
+                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input class="form-check-input" type="checkbox" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-45px me-4">
+                                                    <span class="symbol-label @dept.IconBg">
+                                                        <i class="@dept.Icon fs-3 @dept.IconColor"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex justify-content-start flex-column">
+                                                    <span class="text-dark fw-bolder text-hover-primary fs-6 mb-1">@dept.Name</span>
+                                                    <span class="text-muted fw-bold fs-7">@dept.Block</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge badge-light fw-bolder px-3 py-2 border">@dept.Code</span>
+                                        </td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(dept.ManagerName))
+                                            {
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-35px symbol-circle me-3">
+                                                        @if (!string.IsNullOrEmpty(dept.ManagerAvatar))
+                                                        {
+                                                            <img src="@dept.ManagerAvatar" alt="manager" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="symbol-label bg-light-danger text-danger fw-bolder fs-8">@dept.ManagerName[0]</div>
+                                                        }
+                                                    </div>
+                                                    <div class="d-flex justify-content-start flex-column">
+                                                        <span class="text-dark fw-bolder fs-7">@dept.ManagerName</span>
+                                                        <span class="text-muted fs-8">@dept.ManagerTitle</span>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted fs-8 italic">Đang trống</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-column">
+                                                <div class="d-flex align-items-center mb-1">
+                                                    <span class="text-gray-800 fw-bolder fs-7 me-1">@dept.EmployeeCount</span>
+                                                    <span class="text-muted fs-8">/ @dept.Capacity vị trí</span>
+                                                </div>
+                                                <div class="progress h-4px w-100 bg-light-primary">
+                                                    <div class="progress-bar @dept.ProgressColor" role="progressbar" style="width: @(dept.EmployeeCount * 100 / dept.Capacity)%"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge @(dept.IsActive ? "badge-light-success" : "badge-light-danger") fw-bolder px-4 py-2 rounded-pill">
+                                                <span class="bullet bullet-dot @(dept.IsActive ? "bg-success" : "bg-danger") me-2"></span>
+                                                @(dept.IsActive ? "Hoạt động" : "Dừng")
+                                            </span>
+                                        </td>
+                                        <td class="text-end pe-7" @onclick:stopPropagation="true">
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 hover-scale shadow-xs border" @onclick="() => editDepartment(dept)">
+                                                <i class="ki-outline ki-pencil fs-6"></i>
+                                            </button>
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm hover-scale shadow-xs border" @onclick="() => requestDeleteDepartment(dept)">
+                                                <i class="ki-outline ki-trash fs-6"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="px-7 py-5">
+                        <div class="d-flex flex-stack flex-wrap">
+                            <div class="fs-7 fw-bold text-gray-700">Hiển thị @FilteredDepartments.Count() của @_departments.Count phòng ban</div>
+                            <ul class="pagination pagination-circle">
+                                <li class="page-item previous disabled"><a href="javascript:;" class="page-link shadow-xs border mx-1"><i class="ki-outline ki-left"></i></a></li>
+                                <li class="page-item active"><a href="javascript:;" class="page-link shadow-xs border mx-1">1</a></li>
+                                <li class="page-item next"><a href="javascript:;" class="page-link shadow-xs border mx-1"><i class="ki-outline ki-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </SkeletonLoading>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DRAWER: THÊM/SỬA PHÒNG BAN -->
+<div class="bg-white drawer drawer-end @(_showEditDrawer ? "drawer-on" : "")" 
+     style="width: 550px; position: fixed; right: 0; top: 0; bottom: 0; z-index: 106; box-shadow: -10px 0 30px rgba(0,0,0,0.1); border-left: 1px solid #eff2f5; transition: transform 0.3s ease; transform: @(_showEditDrawer ? "translateX(0)" : "translateX(100%)"); display: block;">
+    <div class="card w-100 rounded-0 border-0 h-100 overflow-hidden">
+        <div class="card-header pe-5 py-6">
+            <div class="card-title">
+                <div class="d-flex justify-content-center flex-column">
+                    <span class="fs-4 fw-bolder text-gray-900 lh-1">@(_isNewDepartment ? "Thêm phòng ban mới" : "Cập nhật phòng ban")</span>
+                    <span class="fs-8 fw-bold text-muted mt-2">Thông tin định danh và cấu hình nhân sự</span>
+                </div>
+            </div>
+            <div class="card-toolbar">
+                <div class="btn btn-sm btn-icon btn-active-light-primary" @onclick="closeEditDrawer">
+                    <i class="ki-outline ki-cross fs-4"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body hover-scroll-overlay-y py-8 px-10">
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <label class="required fs-7 fw-bold mb-2">Tên phòng ban</label>
+                    <input type="text" class="form-control form-control-solid fs-7" placeholder="VD: Phòng Hành chính" @bind="_editingDept.Name" />
+                </div>
+                <div class="col-md-6">
+                    <label class="required fs-7 fw-bold mb-2">Mã phòng ban</label>
+                    <input type="text" class="form-control form-control-solid fs-7 text-uppercase" placeholder="VD: ADM-001" @bind="_editingDept.Code" />
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <label class="fs-7 fw-bold mb-2">Khối / Ban quản lý</label>
+                <select class="form-select form-select-solid fs-7" @bind="_editingDept.Block">
+                    <option value="">Chọn khối...</option>
+                    <option value="Ban Giám Đốc">Ban Giám Đốc</option>
+                    <option value="Khối Công Nghệ (CTO)">Khối Công Nghệ (CTO)</option>
+                    <option value="Khối Kinh Doanh (CBDO)">Khối Kinh Doanh (CBDO)</option>
+                    <option value="Khối Vận Hành (COO)">Khối Vận Hành (COO)</option>
+                </select>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <label class="fs-7 fw-bold mb-2">Trưởng phòng (Manager)</label>
+                    <select class="form-select form-select-solid fs-7" @bind="_editingDept.ManagerName">
+                        <option value="">Chưa bổ nhiệm</option>
+                        <option value="Nguyễn Văn Lộc">Nguyễn Văn Lộc</option>
+                        <option value="Lê Thị Lan">Lê Thị Lan</option>
+                        <option value="Trần Minh Tâm">Trần Minh Tâm</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="required fs-7 fw-bold mb-2">Định biên (Capacity)</label>
+                    <input type="number" class="form-control form-control-solid fs-7" @bind="_editingDept.Capacity" />
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <label class="fs-7 fw-bold mb-2">Biểu tượng (Icon)</label>
+                <div class="d-flex flex-wrap gap-3">
+                    @foreach (var icon in _availableIcons)
+                    {
+                        <div class="symbol symbol-40px symbol-light-primary cursor-pointer border @(_editingDept.Icon == icon ? "border-primary border-2" : "")" @onclick="() => _editingDept.Icon = icon">
+                            <span class="symbol-label"><i class="@icon fs-3"></i></span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-check form-check-custom form-check-solid mb-8">
+                <input class="form-check-input w-20px h-20px" type="checkbox" @bind="_editingDept.IsActive" id="active_check" />
+                <label class="form-check-label fw-bold text-gray-800" for="active_check">Phòng ban đang hoạt động</label>
+            </div>
+        </div>
+
+        <div class="card-footer py-6 px-10 border-0 bg-light-light d-flex gap-3 justify-content-end">
+            <button type="button" class="btn btn-sm btn-light fw-bold px-6" @onclick="closeEditDrawer">Hủy bỏ</button>
+            <button type="button" class="btn btn-sm btn-primary fw-bold px-6" @onclick="saveDepartment">Lưu thay đổi</button>
+        </div>
+    </div>
+</div>
+
+<!-- DRAWER: CHI TIẾT PHÒNG BAN -->
+<div class="bg-white drawer drawer-end @(_showDetailDrawer ? "drawer-on" : "")" 
+     style="width: 700px; position: fixed; right: 0; top: 0; bottom: 0; z-index: 106; box-shadow: -10px 0 30px rgba(0,0,0,0.1); border-left: 1px solid #eff2f5; transition: transform 0.3s ease; transform: @(_showDetailDrawer ? "translateX(0)" : "translateX(100%)"); display: block;">
+    <div class="card w-100 rounded-0 border-0 h-100 overflow-hidden">
+        @if (_selectedDept != null)
+        {
+            <div class="card-header pe-5 py-6 @(_selectedDept.IconBg) border-0">
+                <div class="card-title">
+                    <div class="d-flex align-items-center">
+                        <div class="symbol symbol-60px me-5">
+                            <span class="symbol-label bg-white bg-opacity-50">
+                                <i class="@_selectedDept.Icon fs-1 @_selectedDept.IconColor"></i>
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-center flex-column">
+                            <span class="fs-2 fw-bolder text-gray-900 lh-1">@_selectedDept.Name</span>
+                            <span class="fs-7 fw-bold text-muted mt-2">Mã: @_selectedDept.Code | Khối: @_selectedDept.Block</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="btn btn-sm btn-icon btn-active-light-primary" @onclick="closeDetailDrawer">
+                        <i class="ki-outline ki-cross fs-4"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body hover-scroll-overlay-y py-8 px-10">
+                <!-- Info Grid -->
+                <div class="row g-5 mb-10">
+                    <div class="col-md-4">
+                        <div class="border border-dashed border-gray-300 rounded py-3 px-4 text-center">
+                            <div class="fs-6 fw-bolder text-gray-800">@_selectedDept.EmployeeCount / @_selectedDept.Capacity</div>
+                            <div class="fw-bold text-muted fs-8">Nhân sự hiện tại</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="border border-dashed border-gray-300 rounded py-3 px-4 text-center">
+                            <div class="fs-6 fw-bolder text-success">@(_selectedDept.EmployeeCount * 100 / _selectedDept.Capacity)%</div>
+                            <div class="fw-bold text-muted fs-8">Tỷ lệ lấp đầy</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="border border-dashed border-gray-300 rounded py-3 px-4 text-center">
+                            <div class="fs-6 fw-bolder text-primary">05</div>
+                            <div class="fw-bold text-muted fs-8">Tuyển dụng mới</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manager Section -->
+                <h4 class="fw-bolder text-gray-800 mb-5">Thông tin quản lý</h4>
+                <div class="d-flex align-items-center mb-10 bg-light-light p-5 rounded border border-dashed border-primary">
+                    <div class="symbol symbol-60px symbol-circle me-5">
+                        <img src="@(_selectedDept.ManagerAvatar ?? "assets/media/avatars/300-1.jpg")" alt="" />
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1">
+                        <span class="text-gray-800 fw-bolder fs-5">@(_selectedDept.ManagerName ?? "Chưa bổ nhiệm")</span>
+                        <span class="text-muted fw-bold fs-7">@(_selectedDept.ManagerTitle ?? "Leader / Manager")</span>
+                    </div>
+                    <button class="btn btn-sm btn-light-primary">Thay đổi</button>
+                </div>
+
+                <!-- Member List Placeholder -->
+                <h4 class="fw-bolder text-gray-800 mb-5">Thành viên phòng ban (@_selectedDept.EmployeeCount)</h4>
+                <div class="table-responsive">
+                    <table class="table align-middle table-row-dashed fs-7 gy-3">
+                        <thead>
+                            <tr class="fw-bold text-muted text-uppercase">
+                                <th>Nhân viên</th>
+                                <th>Chức danh</th>
+                                <th class="text-end">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var i in Enumerable.Range(1, 10))
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-30px me-3"><img src="assets/media/avatars/300-@(i%10 + 1).jpg" alt="" /></div>
+                                            <span class="text-gray-800 fw-bold">Nhân viên mẫu @i</span>
+                                        </div>
+                                    </td>
+                                    <td>Chuyên viên</td>
+                                    <td class="text-end"><span class="badge badge-light-success fs-9">Active</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (_showEditDrawer || _showDetailDrawer)
+{
+    <div class="drawer-overlay" style="z-index: 105; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);" @onclick="() => { closeEditDrawer(); closeDetailDrawer(); }"></div>
+}
+
+<DeleteConfirmationModal IsVisible="_showConfirmDeleteModal"
+                         Title="Xác nhận xóa phòng ban"
+                         Message="Bạn đang yêu cầu xóa phòng ban"
+                         ItemName="@(_departmentToDelete?.Name ?? "")"
+                         OnConfirmed="confirmDeleteDepartment"
+                         OnCancelled="closeDeleteModal" />
+
+

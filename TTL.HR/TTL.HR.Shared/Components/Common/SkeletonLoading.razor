@@ -1,0 +1,116 @@
+
+@if (IsLoading)
+{
+    @if (Type == SkeletonType.Table)
+    {
+        <div class="table-responsive">
+            <table class="table table-row-dashed align-middle gs-7 gy-6">
+                <thead>
+                    <tr class="fw-bold text-muted fs-8">
+                        @for (int i = 0; i < Columns; i++)
+                        {
+                            <th><div class="skeleton-line w-50px"></div></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Rows; i++)
+                    {
+                        <tr>
+                            @for (int j = 0; j < Columns; j++)
+                            {
+                                <td>
+                                    @if (j == 0)
+                                    {
+                                        <div class="d-flex align-items-center">
+                                            <div class="skeleton-circle w-40px h-40px me-3"></div>
+                                            <div class="d-flex flex-column">
+                                                <div class="skeleton-line w-100px mb-2"></div>
+                                                <div class="skeleton-line w-50px"></div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="skeleton-line w-75"></div>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else if (Type == SkeletonType.Card)
+    {
+        <div class="card shadow-sm mb-5">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-5">
+                    <div class="skeleton-circle w-50px h-50px me-3"></div>
+                    <div class="d-flex flex-column flex-grow-1">
+                        <div class="skeleton-line w-150px mb-2 h-15px"></div>
+                        <div class="skeleton-line w-100px h-10px"></div>
+                    </div>
+                </div>
+                <div class="skeleton-line w-100 mb-3 h-10px"></div>
+                <div class="skeleton-line w-100 mb-3 h-10px"></div>
+                <div class="skeleton-line w-75 h-10px"></div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    @ChildContent
+}
+
+<style>
+    .skeleton-line {
+        height: 12px;
+        background-color: #f1f1f1;
+        position: relative;
+        overflow: hidden;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .skeleton-circle {
+        background-color: #f1f1f1;
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .skeleton-line::after, .skeleton-circle::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+        animation: skeleton-shimmer 1.5s infinite;
+    }
+
+    @@keyframes skeleton-shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+</style>
+
+@code {
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public SkeletonType Type { get; set; } = SkeletonType.Table;
+    [Parameter] public int Rows { get; set; } = 5;
+    [Parameter] public int Columns { get; set; } = 5;
+
+    public enum SkeletonType
+    {
+        Table,
+        Card,
+        List
+    }
+}

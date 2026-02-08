@@ -1,0 +1,100 @@
+@page "/training/add"
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Tạo khóa đào tạo mới - TTL.HR</PageTitle>
+
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+        <div class="card mb-5 mb-xl-10">
+            <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+                <div class="card-title m-0">
+                    <h3 class="fw-bolder m-0">Tạo khóa đào tạo mới</h3>
+                </div>
+            </div>
+            <div id="kt_account_profile_details" class="collapse show">
+                <form class="form">
+                    <div class="card-body border-top p-9">
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Tên khóa học</label>
+                            <div class="col-lg-8">
+                                <div class="row">
+                                    <div class="col-lg-12 fv-row">
+                                        <input type="text" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Ví dụ: Kỹ năng giao tiếp nâng cao" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Mã khóa học</label>
+                            <div class="col-lg-8 fv-row">
+                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: COM-2024" />
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="required">Giảng viên / Đơn vị đào tạo</span>
+                            </label>
+                            <div class="col-lg-8 fv-row">
+                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: Nguyễn Văn A hoặc Trung tâm ABC" />
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="required">Loại hình đào tạo</span>
+                            </label>
+                            <div class="col-lg-8 fv-row">
+                                <select class="form-select form-select-solid form-select-lg fw-bold">
+                                    <option value="Internal">Nội bộ (Internal)</option>
+                                    <option value="External">Bên ngoài (External)</option>
+                                    <option value="Online">Trực tuyến (E-Learning)</option>
+                                </select>
+                            </div>
+                        </div>
+                         <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Ngày bắt đầu</label>
+                            <div class="col-lg-8 fv-row">
+                                <input type="date" class="form-control form-control-lg form-control-solid" />
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Thời lượng</label>
+                            <div class="col-lg-8 fv-row">
+                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: 3 ngày hoặc 12 giờ" />
+                            </div>
+                        </div>
+                         <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Địa điểm</label>
+                            <div class="col-lg-8 fv-row">
+                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: Phòng họp 1 hoặc Zoom Link" />
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Số lượng học viên tối đa</label>
+                            <div class="col-lg-8 fv-row">
+                                <input type="number" class="form-control form-control-lg form-control-solid" placeholder="30" value="30" />
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Nội dung chi tiết (Syllabus)</label>
+                            <div class="col-lg-8 fv-row">
+                                <textarea class="form-control form-control-lg form-control-solid" rows="5" placeholder="Nhập tóm tắt nội dung khóa học..."></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Yêu cầu người học</label>
+                            <div class="col-lg-8 fv-row">
+                                <textarea class="form-control form-control-lg form-control-solid" rows="3" placeholder="Ví dụ: Đã hoàn thành khóa cơ bản..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end py-6 px-9">
+                        <a href="/training" class="btn btn-light btn-active-light-primary me-2">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Lưu khóa học</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+

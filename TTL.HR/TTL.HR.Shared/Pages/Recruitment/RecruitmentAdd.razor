@@ -1,0 +1,101 @@
+@page "/recruitment/add"
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Tạo tin tuyển dụng - TTL.HR</PageTitle>
+
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+        <div class="card mb-5 mb-xl-10">
+            <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+                <div class="card-title m-0">
+                    <h3 class="fw-bolder m-0">Tạo tin tuyển dụng mới</h3>
+                </div>
+            </div>
+            <div id="kt_account_profile_details" class="collapse show">
+                <form class="form">
+                    <div class="card-body border-top p-9">
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Tiêu đề tuyển dụng</label>
+                            <div class="col-lg-8">
+                                <div class="row">
+                                    <div class="col-lg-12 fv-row">
+                                        <input type="text" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Ví dụ: Senior .NET Developer" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Mã tin</label>
+                            <div class="col-lg-8 fv-row">
+                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: DEV-001" />
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="required">Phòng ban</span>
+                            </label>
+                            <div class="col-lg-8 fv-row">
+                                <select class="form-select form-select-solid form-select-lg fw-bold">
+                                    <option value="">Chọn phòng ban...</option>
+                                    <option value="IT">Kỹ thuật (IT)</option>
+                                    <option value="HR">Nhân sự (HR)</option>
+                                    <option value="Sales">Kinh doanh (Sales)</option>
+                                    <option value="Marketing">Marketing</option>
+                                </select>
+                            </div>
+                        </div>
+                         <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="required">Hình thức làm việc</span>
+                            </label>
+                            <div class="col-lg-8 fv-row">
+                                <select class="form-select form-select-solid form-select-lg fw-bold">
+                                    <option value="Full-time">Toàn thời gian (Full-time)</option>
+                                    <option value="Part-time">Bán thời gian (Part-time)</option>
+                                    <option value="Contract">Hợp đồng (Contract)</option>
+                                    <option value="Internship">Thực tập (Internship)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Số lượng tuyển</label>
+                            <div class="col-lg-8 fv-row">
+                                <input type="number" class="form-control form-control-lg form-control-solid" placeholder="1" value="1" />
+                            </div>
+                        </div>
+                         <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Hạn nộp hồ sơ</label>
+                            <div class="col-lg-8 fv-row">
+                                <input type="date" class="form-control form-control-lg form-control-solid" />
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Mô tả công việc</label>
+                            <div class="col-lg-8 fv-row">
+                                <textarea class="form-control form-control-lg form-control-solid" rows="5" placeholder="Nhập mô tả chi tiết..."></textarea>
+                            </div>
+                        </div>
+                         <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Yêu cầu ứng viên</label>
+                            <div class="col-lg-8 fv-row">
+                                <textarea class="form-control form-control-lg form-control-solid" rows="5" placeholder="Nhập yêu cầu chi tiết..."></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Quyền lợi</label>
+                            <div class="col-lg-8 fv-row">
+                                <textarea class="form-control form-control-lg form-control-solid" rows="5" placeholder="Nhập quyền lợi..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end py-6 px-9">
+                        <a href="/recruitment" class="btn btn-light btn-active-light-primary me-2">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Lưu tin tuyển dụng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+

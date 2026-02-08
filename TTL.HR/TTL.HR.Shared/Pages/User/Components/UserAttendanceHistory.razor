@@ -1,0 +1,121 @@
+@using TTL.HR.Shared.Models
+
+<div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+    <div class="card-header border-0 pt-5">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bold fs-3 mb-1">Dữ liệu chấm công</span>
+            <span class="text-muted mt-1 fw-semibold fs-7">Lịch sử chấm công chi tiết Tháng 02/2026</span>
+        </h3>
+        <div class="card-toolbar">
+            <button type="button" class="btn btn-sm btn-light btn-active-light-primary me-2">
+                <i class="ki-outline ki-calendar-tick fs-3 me-1"></i>Xuất Excel
+            </button>
+            <button type="button" class="btn btn-sm btn-primary">
+                <i class="ki-outline ki-plus fs-3 me-1"></i>Giải trình
+            </button>
+        </div>
+    </div>
+    <div class="card-body py-3">
+        <!-- Summary Stats -->
+        <div class="d-flex flex-wrap gap-4 mb-5">
+            <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 me-2">
+                <div class="fs-6 text-gray-800 fw-bold">22.5 / 24</div>
+                <div class="fw-semibold text-muted fs-7">Ngày công</div>
+            </div>
+            <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 me-2">
+                <div class="fs-6 text-danger fw-bold">3</div>
+                <div class="fw-semibold text-muted fs-7">Đi muộn/Về sớm</div>
+            </div>
+            <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 me-2">
+                <div class="fs-6 text-primary fw-bold">10.5h</div>
+                <div class="fw-semibold text-muted fs-7">Tăng ca</div>
+            </div>
+             <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 me-2">
+                <div class="fs-6 text-success fw-bold">3</div>
+                <div class="fw-semibold text-muted fs-7">Nghỉ phép/Khác</div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                <thead>
+                    <tr class="fw-bold text-muted bg-light">
+                        <th class="ps-4 min-w-120px rounded-start">Ngày</th>
+                        <th class="min-w-100px">Thứ</th>
+                        <th class="min-w-100px">Vào</th>
+                        <th class="min-w-100px">Ra</th>
+                        <th class="min-w-100px">Tổng công</th>
+                        <th class="min-w-120px">Tình trạng</th>
+                        <th class="min-w-100px text-end rounded-end pe-4">Chi tiết</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var record in _attendanceRecords)
+                    {
+                        <tr>
+                            <td><span class="text-gray-800 fw-bold d-block fs-6 ps-4">@record.Date.ToString("dd/MM/yyyy")</span></td>
+                            <td><span class="text-muted fw-semibold d-block fs-6">@record.DayOfWeek</span></td>
+                            <td><span class="@record.CheckInColor fw-bold fs-6">@record.CheckIn</span></td>
+                            <td><span class="@record.CheckOutColor fw-bold fs-6">@record.CheckOut</span></td>
+                            <td><span class="fw-bold @record.TotalWorkColor">@record.TotalWork</span></td>
+                            <td><span class="badge @record.StatusClass fw-bold">@record.Status</span></td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-30px h-30px" @onclick="() => OpenExplanation(record)"><i class="ki-outline ki-eye fs-3"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Explanation Drawer -->
+<div class="bg-body drawer drawer-end @(_showExplanationDrawer ? "drawer-on" : "")" style="width: 400px; max-width: 90vw; position: fixed; right: 0; top: 0; bottom: 0; z-index: 115; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: transform 0.3s ease-in-out; transform: translateX(@(_showExplanationDrawer ? "0" : "100%"));">
+    @if (_selectedRecordForExplanation != null)
+    {
+        <div class="card w-100 rounded-0 border-0 h-100">
+            <div class="card-header pe-5 border-0 pt-5">
+                <div class="card-title">
+                    <div class="d-flex justify-content-center flex-column me-3">
+                        <h3 class="fw-bold text-gray-900 m-0">Giải trình chấm công</h3>
+                        <span class="text-muted fs-7 fw-semibold">Ngày: @_selectedRecordForExplanation.Date.ToString("dd/MM/yyyy")</span>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <button class="btn btn-sm btn-icon btn-active-light-primary bg-light" @onclick="CloseExplanation"><i class="ki-outline ki-cross fs-2"></i></button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="mb-5">
+                     <label class="form-label fw-bold">Lý do:</label>
+                     <select class="form-select form-select-solid">
+                         <option>Quên chấm công (In/Out)</option>
+                         <option>Đi công tác/Ra ngoài</option>
+                         <option>Lý do cá nhân (đột xuất)</option>
+                         <option>Hệ thống lỗi</option>
+                         <option>Khác</option>
+                     </select>
+                </div>
+                 <div class="mb-5">
+                     <label class="form-label fw-bold">Ghi chú chi tiết:</label>
+                     <textarea class="form-control form-control-solid" rows="4" placeholder="Nhập nội dung giải trình..."></textarea>
+                </div>
+                 <div class="mb-5">
+                     <label class="form-label fw-bold">File đính kèm:</label>
+                     <input type="file" class="form-control form-control-solid" />
+                </div>
+            </div>
+             <div class="card-footer border-0 d-flex gap-3 justify-content-end p-5 bg-light-light">
+                <button class="btn btn-light" @onclick="CloseExplanation">Hủy</button>
+                <button class="btn btn-primary" @onclick="CloseExplanation">Gửi giải trình</button>
+            </div>
+        </div>
+    }
+</div>
+
+@if (_showExplanationDrawer)
+{
+    <div class="drawer-overlay" style="z-index: 114; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2);" @onclick="CloseExplanation"></div>
+}
+
+

@@ -1,0 +1,44 @@
+@using Microsoft.AspNetCore.Components
+@if (IsVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5); z-index: 1060;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bolder text-danger">@Title</h5>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="OnCancel">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-5">
+                        <i class="ki-outline ki-shield-cross fs-5tx text-danger mb-3"></i>
+                        <h4 class="fw-bold mb-1">Cảnh báo hành động nguy hiểm!</h4>
+                        <p class="text-muted fs-6">@Message <span class="fw-bolder text-gray-900">@ItemName</span>.</p>
+                    </div>
+                    
+                    <div class="notice d-flex bg-light-danger rounded border-danger border border-dashed mb-5 p-4">
+                        <i class="ki-outline ki-information-5 fs-2tx text-danger me-4"></i>
+                        <div class="d-flex flex-stack flex-grow-1">
+                            <div class="fw-semibold">
+                                <h4 class="text-gray-900 fw-bold">Lưu ý quan trọng</h4>
+                                <div class="fs-6 text-gray-700">Hành động này <span class="fw-bold">KHÔNG THỂ</span> hoàn tác. Tất cả dữ liệu liên quan sẽ bị ảnh hưởng.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label class="form-label fw-bold text-gray-700">Để xác nhận, vui lòng nhập <span class="badge badge-light-danger text-danger fw-bolder fs-7">@ItemName</span> vào ô bên dưới:</label>
+                        <input type="text" class="form-control form-control-solid" placeholder="Nhập lại tên để xác nhận..." @bind="_confirmationInput" @bind:event="oninput" />
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light me-2" @onclick="OnCancel">Hủy bỏ</button>
+                    <button type="button" class="btn btn-danger font-weight-bold" disabled="@(_confirmationInput != ItemName)" @onclick="OnConfirm">
+                        <span class="indicator-label">Xác nhận xóa</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

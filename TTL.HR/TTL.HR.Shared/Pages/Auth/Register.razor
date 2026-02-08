@@ -1,0 +1,77 @@
+@page "/auth/register"
+@layout AuthLayout
+@inject NavigationManager Navigation
+
+<PageTitle>Đăng ký - OrgaX HR</PageTitle>
+
+<!--begin::Form-->
+<form class="form w-100" novalidate="novalidate" id="kt_sign_up_form">
+    <!--begin::Heading-->
+    <div class="text-center mb-11">
+        <!--begin::Title-->
+        <h1 class="text-dark fw-bolder mb-3">Đăng ký tài khoản</h1>
+        <!--end::Title-->
+        <!--begin::Subtitle-->
+        <div class="text-gray-500 fw-semibold fs-6">Tham gia vào hệ thống quản trị OrgaX</div>
+        <!--end::Subtitle=-->
+    </div>
+    <!--begin::Heading-->
+
+    <!--begin::Input group=-->
+    <div class="fv-row mb-8">
+        <label class="form-label fs-7 fw-bolder text-dark">Họ và tên</label>
+        <input type="text" placeholder="Nhập họ tên đầy đủ" name="fullname" autocomplete="off" class="form-control bg-transparent fs-7" />
+    </div>
+    <!--end::Input group=-->
+
+    <!--begin::Input group=-->
+    <div class="fv-row mb-8">
+        <label class="form-label fs-7 fw-bolder text-dark">Email công việc</label>
+        <input type="text" placeholder="Nhập email doanh nghiệp" name="email" autocomplete="off" class="form-control bg-transparent fs-7" />
+    </div>
+    <!--end::Input group=-->
+
+    <!--begin::Input group-->
+    <div class="fv-row mb-8">
+        <label class="form-label fs-7 fw-bolder text-dark">Mật khẩu</label>
+        <input class="form-control bg-transparent fs-7" type="password" placeholder="Tối thiểu 8 ký tự" name="password" autocomplete="off" />
+    </div>
+    <!--end::Input group=-->
+
+    <!--begin::Input group-->
+    <div class="fv-row mb-8">
+        <label class="form-label fs-7 fw-bolder text-dark">Xác nhận mật khẩu</label>
+        <input class="form-control bg-transparent fs-7" type="password" placeholder="Nhập lại mật khẩu" name="confirm-password" autocomplete="off" />
+    </div>
+    <!--end::Input group=-->
+
+    <!--begin::Accept-->
+    <div class="fv-row mb-8">
+        <label class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="toc" value="1" />
+            <span class="form-check-label fw-semibold text-gray-700 fs-base ms-1">Tôi đồng ý với 
+            <a href="#" class="ms-1 link-primary">Điều khoản & Chính sách</a></span>
+        </label>
+    </div>
+    <!--end::Accept-->
+
+    <!--begin::Submit button-->
+    <div class="d-grid mb-10">
+        <button type="button" id="kt_sign_up_submit" class="btn btn-primary" @onclick="HandleRegister">
+            <span class="indicator-label">Đăng ký ngay</span>
+            @if (_isLoading)
+            {
+                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+            }
+        </button>
+    </div>
+    <!--end::Submit button-->
+
+    <!--begin::Sign up-->
+    <div class="text-gray-500 text-center fw-semibold fs-6">Đã có tài khoản? 
+    <a href="/auth/login" class="link-primary fw-bolder">Đăng nhập</a></div>
+    <!--end::Sign up-->
+</form>
+<!--end::Form-->
+
+

@@ -1,0 +1,202 @@
+@page "/recruitment/details/{Id:int}"
+@using System.Globalization
+
+<PageTitle>Chi tiết tuyển dụng - TTL.HR</PageTitle>
+
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card">
+            <!-- Header -->
+            <div class="card mb-5 mb-xl-10">
+            <div class="card-body pt-9 pb-0">
+                <!-- Details -->
+                <div class="d-flex flex-wrap flex-sm-nowrap mb-3">
+                    <!-- Image -->
+                    <div class="me-7 mb-4">
+                        <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+                            <span class="symbol-label bg-light-primary text-primary fs-2x fw-bolder">@Job?.Code.Substring(0, Math.Min(3, Job.Code.Length))</span>
+                            <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px"></div>
+                        </div>
+                    </div>
+                    <!-- Info -->
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center mb-2">
+                                    <a href="#" class="text-gray-900 text-hover-primary fs-2 fw-bolder me-1">@Job?.Title</a>
+                                    <a href="#">
+                                        <i class="ki-duotone ki-verify fs-1 text-primary">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </a>
+                                </div>
+                                <div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
+                                    <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
+                                        <i class="ki-duotone ki-profile-circle fs-4 me-1">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                            <span class="path3"></span>
+                                        </i>@Job?.Department
+                                    </a>
+                                    <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
+                                        <i class="ki-duotone ki-geolocation fs-4 me-1">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>Hồ Chí Minh
+                                    </a>
+                                    <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
+                                        <i class="ki-duotone ki-sms fs-4 me-1">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>@Job?.Type
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="d-flex my-4">
+                                <a href="#" class="btn btn-sm btn-light me-2" id="kt_user_follow_button">
+                                    <i class="ki-duotone ki-check fs-3 d-none"></i>
+                                    <span class="indicator-label">Sửa tin</span>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_offer_a_deal">Đóng tuyển dụng</a>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap flex-stack">
+                            <div class="d-flex flex-column flex-grow-1 pe-8">
+                                <div class="d-flex flex-wrap">
+                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bolder" data-kt-countup="true" data-kt-countup-value="@Job?.HiringCount">@Job?.HiringCount</div>
+                                        </div>
+                                        <div class="fw-bold fs-6 text-gray-400">Số lượng tuyển</div>
+                                    </div>
+                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bolder" data-kt-countup="true" data-kt-countup-value="@Job?.ApplicantsCount">@Job?.ApplicantsCount</div>
+                                        </div>
+                                        <div class="fw-bold fs-6 text-gray-400">Hồ sơ ứng tuyển</div>
+                                    </div>
+                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bolder">@Job?.Deadline.ToString("dd/MM/yyyy")</div>
+                                        </div>
+                                        <div class="fw-bold fs-6 text-gray-400">Hạn nộp</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center w-200px w-sm-300px flex-column mt-3">
+                                <div class="d-flex justify-content-between w-100 mt-auto mb-2">
+                                    <span class="fw-bold fs-6 text-gray-400">Tiến độ tuyển dụng</span>
+                                    <span class="fw-bolder fs-6">50%</span>
+                                </div>
+                                <div class="h-5px mx-3 w-100 bg-light mb-3">
+                                    <div class="bg-success rounded h-5px" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="row g-5 g-xl-8">
+            <div class="col-xl-4">
+                <div class="card card-xl-stretch mb-xl-8">
+                    <div class="card-header border-0 pt-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder text-dark">Thông tin chi tiết</span>
+                            <span class="text-muted mt-1 fw-bold fs-7">Mô tả và yêu cầu công việc</span>
+                        </h3>
+                    </div>
+                    <div class="card-body pt-5">
+                        <div class="d-flex align-items-center mb-7">
+                             <div class="flex-grow-1">
+                                <a href="#" class="text-gray-800 text-hover-primary fw-bolder fs-6">Mô tả công việc</a>
+                                <span class="text-gray-400 fw-bold d-block pt-1 fs-7">
+                                    - Tham gia phát triển các dự án phần mềm của công ty.<br/>
+                                    - Phân tích yêu cầu, thiết kế và lập trình.<br/>
+                                    - Review code, tối ưu hiệu suất.
+                                </span>
+                             </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-7">
+                             <div class="flex-grow-1">
+                                <a href="#" class="text-gray-800 text-hover-primary fw-bolder fs-6">Yêu cầu ứng viên</a>
+                                <span class="text-gray-400 fw-bold d-block pt-1 fs-7">
+                                    - Có ít nhất 2 năm kinh nghiệm với .NET Core.<br/>
+                                    - Hiểu biết về SQL Server, Entity Framework.<br/>
+                                    - Khả năng làm việc nhóm tốt.
+                                </span>
+                             </div>
+                        </div>
+                         <div class="d-flex align-items-center mb-7">
+                             <div class="flex-grow-1">
+                                <a href="#" class="text-gray-800 text-hover-primary fw-bolder fs-6">Quyền lợi</a>
+                                <span class="text-gray-400 fw-bold d-block pt-1 fs-7">
+                                    - Lương thưởng hấp dẫn.<br/>
+                                    - Môi trường làm việc năng động.<br/>
+                                    - Bảo hiểm y tế đầy đủ.
+                                </span>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8">
+                <div class="card card-xl-stretch mb-5 mb-xl-8">
+                    <div class="card-header border-0 pt-5">
+                         <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder text-dark">Danh sách ứng viên</span>
+                            <span class="text-muted mt-1 fw-bold fs-7">@Applicants.Count ứng viên mới nhất</span>
+                        </h3>
+                    </div>
+                    <div class="card-body py-3">
+                         <div class="table-responsive">
+                            <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-4">
+                                <thead>
+                                    <tr class="fw-bolder text-muted">
+                                        <th class="min-w-150px">Ứng viên</th>
+                                        <th class="min-w-140px">Vị trí ứng tuyển</th>
+                                        <th class="min-w-120px">Ngày nộp</th>
+                                        <th class="min-w-100px text-end">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach(var app in Applicants)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-45px me-5">
+                                                        <img src="@app.Avatar" alt="" />
+                                                    </div>
+                                                    <div class="d-flex justify-content-start flex-column">
+                                                        <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">@app.Name</a>
+                                                        <span class="text-muted fw-bold text-muted d-block fs-7">@app.Email</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <a href="#" class="text-dark fw-bolder text-hover-primary d-block fs-6">@Job?.Title</a>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="text-dark fw-bolder d-block fs-6">@app.AppliedDate.ToString("dd/MM/yyyy")</span>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="badge @app.StatusBadge fs-7 fw-bolder">@app.Status</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </SkeletonLoading>
+    </div>
+</div>
+
+

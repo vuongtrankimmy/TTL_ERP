@@ -1,0 +1,819 @@
+@page "/employees"
+
+<div class="card">
+    <div class="card-header border-0 pt-6">
+        <div class="card-title">
+            <div class="d-flex align-items-center position-relative my-1">
+                <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
+                        <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
+                    </svg>
+                </span>
+                <input type="text" @bind="searchQuery" @bind:event="oninput" class="form-control form-control-solid w-250px ps-14" placeholder="Tìm kiếm nhân viên" />
+            </div>
+        </div>
+        <div class="card-toolbar">
+            <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                <span class="svg-icon svg-icon-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
+                    </svg>
+                </span>
+                Lọc
+            </button>
+            <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true">
+                <div class="px-7 py-5">
+                    <div class="fs-5 text-dark fw-bolder">Tùy chọn lọc</div>
+                </div>
+                <div class="separator border-gray-200"></div>
+                <div class="px-7 py-5" data-kt-user-table-filter="form">
+                    <div class="mb-10">
+                        <label class="form-label fs-6 fw-bold">Phòng ban:</label>
+                        <select class="form-select form-select-solid fw-bolder" @bind="filterDept">
+                            <option value="">Vui lòng chọn</option>
+                            <option value="Kỹ thuật">Kỹ thuật</option>
+                            <option value="Nhân sự">Nhân sự</option>
+                            <option value="Tài chính">Tài chính</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Kinh doanh">Kinh doanh</option>
+                        </select>
+                    </div>
+                    <div class="mb-10">
+                        <label class="form-label fs-6 fw-bold">Trạng thái:</label>
+                        <select class="form-select form-select-solid fw-bolder" @bind="filterStatus">
+                            <option value="">Vui lòng chọn</option>
+                            <option value="Chính thức">Chính thức</option>
+                            <option value="Thử việc">Thử việc</option>
+                            <option value="Nghỉ việc">Nghỉ việc</option>
+                            <option value="Thai sản">Thai sản</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" @onclick="ResetFilters">Reset</button>
+                        <button type="submit" class="btn btn-primary fw-bold px-6" @onclick="ApplyFilters">Áp dụng</button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-light-success me-3" @onclick="ExportExcel">
+                <span class="svg-icon svg-icon-2"><i class="bi bi-file-earmark-spreadsheet"></i></span> Xuất Excel
+            </button>
+            <a href="/employees/add" class="btn btn-primary">
+                <span class="svg-icon svg-icon-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
+                        <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
+                    </svg>
+                </span>
+                Thêm nhân viên
+            </a>
+        </div>
+    </div>
+    <div class="card-body py-4">
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="10" Columns="8">
+            <table class="table align-middle table-row-dashed fs-7 gy-5" id="kt_table_users">
+                <thead>
+                    <tr class="text-start text-muted fw-bold fs-8 text-uppercase gs-0">
+                        <th class="w-10px pe-2">
+                            <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                                <input class="form-check-input" type="checkbox" @onchange="ToggleSelectAll" checked="@isAllSelected" />
+                            </div>
+                        </th>
+                        <th class="min-w-125px">Nhân viên</th>
+                        <th class="min-w-125px">Mã NV</th>
+                        <th class="min-w-125px">Phòng ban</th>
+                        <th class="min-w-125px">Chức vụ</th>
+                        <th class="min-w-125px">Ngày vào làm</th>
+                        <th class="min-w-125px">Trạng thái</th>
+                        <th class="text-end min-w-100px">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-600 fw-bold" id="kt_table_users_body">
+                    @foreach(var emp in FilteredEmployees)
+                    {
+                        <tr class="@(selectedIds.Contains(emp.Id) ? "bg-light-primary" : "")">
+                            <td><div class="form-check form-check-sm form-check-custom form-check-solid"><input class="form-check-input" type="checkbox" checked="@selectedIds.Contains(emp.Id)" @onchange="(e) => ToggleSelection(emp.Id, e.Value)" /></div></td>
+                            <td class="d-flex align-items-center">
+                                <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                                    <a href="javascript:;" class="kt_drawer_employee_detail_toggle" @onclick="() => SelectEmployeeByObj(emp)">
+                                        @if(!string.IsNullOrEmpty(emp.Avatar)) {
+                                            <div class="symbol-label"><img src="@emp.Avatar" alt="@emp.Name" class="w-100" /></div>
+                                        } else {
+                                            <div class="symbol-label bg-light-primary text-primary fw-bolder">@emp.Name.Substring(0,2).ToUpper()</div>
+                                        }
+                                    </a>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <a href="javascript:;" class="kt_drawer_employee_detail_toggle text-gray-800 text-hover-primary mb-1" @onclick="() => SelectEmployeeByObj(emp)">@emp.Name</a>
+                                    <span>@emp.CompanyEmail</span>
+                                </div>
+                            </td>
+                            <td>@emp.Id</td>
+                            <td>@emp.Dept</td>
+                            <td>@emp.Role</td>
+                            <td>@emp.JoinDate?.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <div class="badge @(emp.Status == "Chính thức" ? "badge-light-success" : emp.Status == "Nghỉ việc" ? "badge-light-danger" : "badge-light-warning") fw-bolder">@emp.Status</div>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end flex-shrink-0">
+                                    <a href="javascript:;" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 kt_drawer_employee_detail_toggle" title="Xem chi tiết" @onclick="() => SelectEmployeeByObj(emp)">
+                                        <i class="ki-outline ki-eye fs-3"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-icon btn-bg-light btn-active-color-success btn-sm me-1" title="Tạo thẻ QR" @onclick="() => { selectedEmployee = emp; GenerateQR(); }">
+                                        <i class="ki-outline ki-barcode fs-3"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" title="Quy trình nghỉ việc" @onclick="() => { selectedEmployee = emp; Offboarding(); }">
+                                        <i class="ki-outline ki-trash fs-3"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="d-flex flex-stack flex-wrap pt-10">
+                <div class="fs-6 fw-bold text-gray-700">Hiển thị @FilteredEmployees.Count() của @employees.Count() nhân viên</div>
+                <ul class="pagination">
+                    <li class="page-item previous disabled"><a href="javascript:;" class="page-link" @onclick="() => GoToPage(currentPage - 1)"><i class="previous"></i></a></li>
+                    @for (int i = 1; i <= 3; i++)
+                    {
+                        var pageNum = i;
+                        <li class="page-item @(currentPage == pageNum ? "active" : "")"><a href="javascript:;" class="page-link" @onclick="() => GoToPage(pageNum)">@pageNum</a></li>
+                    }
+                    <li class="page-item next"><a href="javascript:;" class="page-link" @onclick="() => GoToPage(currentPage + 1)"><i class="next"></i></a></li>
+                </ul>
+            </div>
+        </SkeletonLoading>
+    </div>
+</div>
+
+<!-- DRAWER: EMPLOYEE DETAIL -->
+<div id="kt_drawer_employee_detail" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="employee-detail" data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '650px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle=".kt_drawer_employee_detail_toggle" data-kt-drawer-close="#kt_drawer_employee_detail_close">
+    <div class="card shadow-none rounded-0 w-100 h-100">
+        <div class="card-header border-0 pt-7 pb-5">
+            <div class="d-flex align-items-center">
+                <div class="symbol symbol-70px symbol-2by3 me-5">
+                    <img src="@(selectedEmployee?.Avatar ?? "assets/media/avatars/300-1.jpg")" alt="@selectedEmployee?.Name" class="rounded-3" />
+                </div>
+                <div class="d-flex flex-column">
+                    <h2 class="fs-1 fw-bolder text-gray-900 mb-1">@(selectedEmployee?.Name ?? "N/A")</h2>
+                    <div class="text-primary fw-bold fs-6 mb-2">@(selectedEmployee?.Role ?? "N/A")</div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge badge-light-secondary text-gray-600 fw-bold px-3 py-2">Mã NV: @(selectedEmployee?.Id ?? "---")</span>
+                        <span class="badge badge-light-secondary text-gray-600 fw-bold px-3 py-2">Phòng @(selectedEmployee?.Dept ?? "---")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-toolbar">
+                <button type="button" class="btn btn-sm btn-icon btn-active-light-primary" id="kt_drawer_employee_detail_close">
+                    <i class="bi bi-x-lg fs-2"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder px-10 mb-5">
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary @(activeTab == "profile" ? "active" : "") py-4" href="javascript:;" @onclick='() => activeTab = "profile"'>Thông tin hồ sơ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary @(activeTab == "account" ? "active" : "") py-4" href="javascript:;" @onclick='() => activeTab = "account"'>Tài khoản & Phân quyền</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary @(activeTab == "calendar" ? "active" : "") py-4" href="javascript:;" @onclick='() => activeTab = "calendar"'>Lịch & Chấm công</a>
+                </li>
+            </ul>
+            <div class="tab-content px-10">
+                @if (activeTab == "profile")
+                {
+                    <div class="tab-pane fade show active">
+                        <div class="py-5">
+                            <div class="d-flex flex-stack mb-5">
+                                <h3 class="fw-bolder m-0 fs-5 text-uppercase"><i class="bi bi-person-badge text-primary me-2"></i>Thông tin cá nhân</h3>
+                                <button type="button" class="btn btn-sm btn-light-primary border border-primary border-dashed" @onclick="ScanCCCD">
+                                    <i class="bi bi-qr-code-scan me-2"></i>Quét thẻ căn cước (CCCD) chip
+                                </button>
+                            </div>
+                            <div class="row g-6 mb-8">
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fs-7 text-uppercase fw-bold">Họ và tên</label>
+                                    <input type="text" class="form-control form-control-solid" @bind="selectedEmployee.Name" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fs-7 text-uppercase fw-bold">Số CCCD / CMND</label>
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control form-control-solid" value="@(isIdCardVisible ? selectedEmployee?.IdCard : "********" + selectedEmployee?.IdCard?.Substring(Math.Max(0, (selectedEmployee?.IdCard?.Length ?? 0) - 4)))" readonly />
+                                        <button type="button" class="btn btn-icon btn-sm btn-active-color-primary position-absolute top-50 end-0 translate-middle-y me-2" @onclick="() => isIdCardVisible = !isIdCardVisible">
+                                            <i class="bi @(isIdCardVisible ? "bi-eye" : "bi-eye-slash") fs-6"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fs-7 text-uppercase fw-bold">Ngày sinh</label>
+                                    <input type="date" class="form-control form-control-solid" @bind="selectedEmployee.DOB" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fs-7 text-uppercase fw-bold">Giới tính</label>
+                                    <select class="form-select form-select-solid" @bind="selectedEmployee.Gender">
+                                        <option value="Nam">Nam</option>
+                                        <option value="Nữ">Nữ</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fs-7 text-uppercase fw-bold">Số điện thoại</label>
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control form-control-solid" value="@(isPhoneVisible ? selectedEmployee?.Phone : selectedEmployee?.Phone?.Substring(0, Math.Min(4, selectedEmployee?.Phone?.Length ?? 0)) + "***-***")" readonly />
+                                        <button type="button" class="btn btn-icon btn-sm btn-active-color-primary position-absolute top-50 end-0 translate-middle-y me-2" @onclick="() => isPhoneVisible = !isPhoneVisible">
+                                            <i class="bi @(isPhoneVisible ? "bi-eye" : "bi-eye-slash") fs-6"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fs-7 text-uppercase fw-bold">Email cá nhân</label>
+                                    <input type="text" class="form-control form-control-solid" @bind="selectedEmployee.Email" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fs-7 text-uppercase fw-bold">Email công ty</label>
+                                    <input type="text" class="form-control form-control-solid" @bind="selectedEmployee.CompanyEmail" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-muted fs-7 text-uppercase fw-bold">Địa chỉ thường trú (theo CCCD)</label>
+                                    <textarea class="form-control form-control-solid" rows="2" @bind="selectedEmployee.Address"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="card bg-light border-0 mb-8">
+                                <div class="card-body p-6">
+                                    <div class="d-flex flex-stack mb-5">
+                                        <h3 class="fw-bolder m-0 fs-5 text-uppercase"><i class="bi bi-file-earmark-text text-primary me-2"></i>Hợp đồng lao động</h3>
+                                        <span class="badge badge-light-success fs-8 fw-bolder">ĐANG HIỆU LỰC</span>
+                                    </div>
+                                    <div class="row g-4 mb-6">
+                                        <div class="col-4">
+                                            <div class="bg-white rounded p-4 border border-dashed text-center">
+                                                <div class="fs-8 text-muted fw-bold mb-1">LOẠI HỢP ĐỒNG</div>
+                                                <div class="fs-7 fw-bolder text-gray-800">@selectedEmployee?.ContractType</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="bg-white rounded p-4 border border-dashed text-center">
+                                                <div class="fs-8 text-muted fw-bold mb-1">MỨC LƯƠNG ĐÓNG BH</div>
+                                                <div class="fs-7 fw-bolder text-gray-900">@(isSalaryVisible ? selectedEmployee?.Salary : "********** VNĐ")</div>
+                                                <button type="button" class="btn btn-link btn-xs p-0 fs-10 text-primary" @onclick="() => isSalaryVisible = !isSalaryVisible">@(isSalaryVisible ? "Ẩn" : "Hiển thị")</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="bg-white rounded p-4 border border-dashed text-center">
+                                                <div class="fs-8 text-muted fw-bold mb-1">NGÀY HẾT HẠN HD</div>
+                                                <div class="fs-7 fw-bolder text-danger">@selectedEmployee?.ContractExpiry</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-3">
+                                        <button class="btn btn-sm btn-outline btn-outline-primary bg-white flex-grow-1"><i class="bi bi-printer me-2"></i>In hợp đồng</button>
+                                        <button class="btn btn-sm btn-primary flex-grow-1"><i class="bi bi-eye me-2"></i>Xem hiện tại</button>
+                                        <button class="btn btn-sm btn-light flex-grow-1 border border-dashed"><i class="bi bi-upload me-2"></i>Tải lên (đã ký)</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3 class="fw-bolder m-0 fs-5 text-uppercase mb-5"><i class="bi bi-clock-history text-gray-600 me-2"></i>Nhật ký thay đổi (Audit Log)</h3>
+                            <div class="timeline-label">
+                                <div class="timeline-item">
+                                    <div class="timeline-label fw-bolder text-gray-800 fs-8 w-75px">14:30</div>
+                                    <div class="timeline-badge"><i class="fa fa-genderless text-warning fs-1"></i></div>
+                                    <div class="timeline-content fw-bold text-gray-800 ps-3">Cập nhật số điện thoại bởi <span class="text-primary">Admin (Trần Nam)</span></div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-label fw-bolder text-gray-800 fs-8 w-75px">10:15</div>
+                                    <div class="timeline-badge"><i class="fa fa-genderless text-success fs-1"></i></div>
+                                    <div class="timeline-content text-muted fs-8 ps-3">Gia hạn hợp đồng (Phụ lục 02)</div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-label fw-bolder text-gray-800 fs-8 w-75px">Hôm qua</div>
+                                    <div class="timeline-badge"><i class="fa fa-genderless text-primary fs-1"></i></div>
+                                    <div class="timeline-content text-muted fs-8 ps-3">Được thêm vào hệ thống thông qua Onboarding Wizard.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (activeTab == "account")
+                {
+                    <div class="tab-pane fade show active">
+                        <div class="py-5">
+                            <div class="bg-light-primary rounded p-6 d-flex flex-stack mb-8 border border-primary border-dashed">
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-40px bg-white rounded me-4 d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-power fs-2 text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bolder text-gray-900 fs-6">Kích hoạt tài khoản ERP</div>
+                                        <div class="text-muted fs-7">Cho phép nhân viên này truy cập vào hệ thống ERP</div>
+                                    </div>
+                                </div>
+                                <div class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input w-45px h-25px" type="checkbox" @bind="selectedEmployee.IsActive" />
+                                </div>
+                            </div>
+
+                            <h3 class="fw-bolder mb-5 fs-5 text-uppercase"><i class="bi bi-shield-lock text-primary me-2"></i>Thông tin tài khoản</h3>
+                            <div class="card border border-gray-300 border-dashed mb-10">
+                                <div class="card-body p-6">
+                                    <div class="row g-6 mb-6">
+                                        <div class="col-md-6">
+                                            <label class="form-label text-muted fs-7 text-uppercase fw-bold">Tên đăng nhập (Username)</label>
+                                            <input type="text" class="form-control form-control-solid" @bind="selectedEmployee.Username" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label text-muted fs-7 text-uppercase fw-bold">Mật khẩu (Password)</label>
+                                            <div class="position-relative">
+                                                <input type="password" class="form-control form-control-solid" @bind="selectedEmployee.Password" />
+                                                <i class="bi bi-eye position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer text-muted"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-sm btn-light"><i class="bi bi-arrow-repeat me-2"></i>Tạo mới / Reset mật khẩu</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3 class="fw-bolder mb-5 fs-5 text-uppercase"><i class="bi bi-diagram-3 text-primary me-2"></i>Cấu hình phân quyền</h3>
+                            <div class="card border border-gray-300 border-dashed">
+                                <div class="card-body p-6">
+                                    <div class="nav-group nav-group-outline justify-content-center mb-8">
+                                        <button class="btn btn-sm btn-color-gray-400 btn-active btn-active-secondary px-6 py-2 active">Phân quyền theo vai trò</button>
+                                        <button class="btn btn-sm btn-color-gray-400 btn-active btn-active-secondary px-6 py-2">Tùy chỉnh quyền chi tiết</button>
+                                    </div>
+                                    
+                                    <label class="form-label text-muted fs-8 text-uppercase fw-bold">Chọn vai trò hệ thống</label>
+                                    <select class="form-select form-select-solid mb-4">
+                                        <option value="1" selected>Nhân viên (Staff)</option>
+                                        <option value="2">Quản lý (Manager)</option>
+                                    </select>
+                                    <div class="text-muted fs-8 italic mb-8">* Vai trò này sẽ tự động áp dụng bộ quyền mặc định cho các module.</div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-3">
+                                            <thead>
+                                                <tr class="fw-bold fs-8 text-muted text-uppercase">
+                                                    <th class="min-w-150px">Module</th>
+                                                    <th class="text-center">Xem</th>
+                                                    <th class="text-center">Thêm</th>
+                                                    <th class="text-center">Sửa</th>
+                                                    <th class="text-center">Xóa</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="fs-7 fw-bold">
+                                                <tr><td>Nhân sự</td><td class="text-center"><input class="form-check-input" type="checkbox" checked /></td><td class="text-center"><input class="form-check-input" type="checkbox" /></td><td class="text-center"><input class="form-check-input" type="checkbox" /></td><td class="text-center"><input class="form-check-input" type="checkbox" /></td></tr>
+                                                <tr><td>Chấm công</td><td class="text-center"><input class="form-check-input" type="checkbox" checked /></td><td class="text-center"><input class="form-check-input" type="checkbox" checked /></td><td class="text-center"><input class="form-check-input" type="checkbox" /></td><td class="text-center"><input class="form-check-input" type="checkbox" /></td></tr>
+                                                <tr><td>Tiền lương</td><td class="text-center"><input class="form-check-input" type="checkbox" checked /></td><td class="text-center"><input class="form-check-input" type="checkbox" /></td><td class="text-center"><input class="form-check-input" type="checkbox" /></td><td class="text-center"><input class="form-check-input" type="checkbox" /></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (activeTab == "calendar")
+                {
+                    <div class="tab-pane fade show active">
+                        <div class="py-5">
+                            <div class="d-flex flex-stack mb-5">
+                                <h3 class="fw-bolder m-0 fs-5 text-uppercase"><i class="bi bi-calendar-check text-primary me-2"></i>Lịch chấm công chi tiết</h3>
+                                <div class="d-flex align-items-center gap-4">
+                                    <button class="btn btn-icon btn-sm btn-light"><i class="bi bi-chevron-left"></i></button>
+                                    <span class="fw-bolder fs-6">Tháng 02/2026</span>
+                                    <button class="btn btn-icon btn-sm btn-light"><i class="bi bi-chevron-right"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="bg-light-info rounded p-4 mb-8 border border-info border-dashed">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-info-circle-fill text-info me-3 fs-3"></i>
+                                    <span class="fs-7 fw-bold text-gray-700">Ghi chú: Dữ liệu này được cập nhật tự động từ hệ thống máy chấm công khuôn mặt FaceID tại cổng chính.</span>
+                                </div>
+                            </div>
+
+                            <div class="card border border-gray-300 border-dashed mb-8">
+                                <div class="card-body p-4 text-center">
+                                    <div class="calendar-grid mb-4" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;">
+                                        @foreach(var day in new[]{"CN","T2","T3","T4","T5","T6","T7"}) { 
+                                            <div class="text-muted fs-8 fw-bold p-2 text-center">@day</div> 
+                                        }
+                                        @for(int i=1; i<=31; i++) {
+                                            <div class="p-1 text-center">
+                                                <div class="rounded-circle w-30px h-30px d-flex align-items-center justify-content-center fs-8 fw-bold @(i % 7 == 0 ? "bg-light-danger text-danger" : i % 5 == 0 ? "bg-light-warning text-warning" : "bg-light-success text-success") mx-auto cursor-pointer border border-transparent hover-border-primary">@i</div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="d-flex justify-content-center gap-6">
+                                        <div class="d-flex align-items-center fs-8 fw-bold text-muted"><span class="w-8px h-8px rounded-circle bg-success me-2"></span>Đúng giờ</div>
+                                        <div class="d-flex align-items-center fs-8 fw-bold text-muted"><span class="w-8px h-8px rounded-circle bg-warning me-2"></span>Đi muộn</div>
+                                        <div class="d-flex align-items-center fs-8 fw-bold text-muted"><span class="w-8px h-8px rounded-circle bg-danger me-2"></span>Nghỉ/Không phép</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h3 class="fw-bolder mb-5 fs-5 text-uppercase"><i class="bi bi-graph-up-arrow text-primary me-2"></i>Thống kê nhanh tháng</h3>
+                            <div class="row g-4 mb-8">
+                                <div class="col-6">
+                                    <div class="card border border-gray-300 border-dashed">
+                                        <div class="card-body p-4 d-flex flex-stack">
+                                            <div>
+                                                <div class="fs-8 text-muted fw-bold">SỐ CÔNG CHUẨN</div>
+                                                <div class="fs-4 fw-bolder text-gray-900">20 <span class="fs-8 fw-normal">ngày</span></div>
+                                            </div>
+                                            <i class="bi bi-calendar4-week fs-1 text-gray-400"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card border border-gray-300 border-dashed">
+                                        <div class="card-body p-4 d-flex flex-stack">
+                                            <div>
+                                                <div class="fs-8 text-muted fw-bold">SỐ CÔNG THỰC TẾ</div>
+                                                <div class="fs-4 fw-bolder text-gray-900">18.5 <span class="fs-8 fw-normal">ngày</span></div>
+                                            </div>
+                                            <i class="bi bi-patch-check fs-1 text-success"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card border border-gray-300 border-dashed">
+                                        <div class="card-body p-4 d-flex flex-stack">
+                                            <div>
+                                                <div class="fs-8 text-muted fw-bold">TĂNG CA (OT)</div>
+                                                <div class="fs-4 fw-bolder text-gray-900">4.5 <span class="fs-8 fw-normal">giờ</span></div>
+                                            </div>
+                                            <i class="bi bi-clock-history fs-1 text-primary"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card border border-gray-300 border-dashed">
+                                        <div class="card-body p-4 d-flex flex-stack">
+                                            <div>
+                                                <div class="fs-8 text-muted fw-bold">ĐI MUỘN (Lần)</div>
+                                                <div class="fs-4 fw-bolder text-gray-900">02 <span class="fs-8 fw-normal">lần</span></div>
+                                            </div>
+                                            <i class="bi bi-exclamation-triangle fs-1 text-warning"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="card-footer border-0 d-flex gap-3 justify-content-between p-10">
+            @if (activeTab == "profile")
+            {
+                <button type="button" class="btn btn-primary flex-grow-1" @onclick="SaveChanges">
+                    <span class="indicator-label"><i class="bi bi-save me-2"></i>Lưu thay đổi</span>
+                </button>
+            }
+            else if (activeTab == "account")
+            {
+                <button type="button" class="btn btn-primary flex-grow-1" @onclick='() => JSRuntime.InvokeVoidAsync("Swal.fire", "Thành công", "Đã cập nhật cấu hình phân quyền", "success")'>
+                    <i class="bi bi-check2-circle me-2"></i>Cập nhật cấu hình
+                </button>
+            }
+            else if (activeTab == "calendar")
+            {
+                <button type="button" class="btn btn-primary flex-grow-1" @onclick='() => JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Hệ thống đang xuất file báo cáo PDF...", "info")'>
+                    <i class="bi bi-file-earmark-pdf me-2"></i>Xuất báo cáo cá nhân
+                </button>
+            }
+            <button type="button" class="btn btn-light flex-grow-1" id="kt_drawer_employee_detail_close">@(activeTab == "account" ? "Hủy" : "Đóng")</button>
+        </div>
+    </div>
+</div>
+
+
+
+<CccdScanner @ref="cccdScanner" />
+
+@inject IJSRuntime JSRuntime
+
+@code {
+    private string searchQuery = "";
+    private string filterDept = "";
+    private string filterStatus = "";
+    private bool isContextMenuVisible = false;
+    private double contextMenuX = 0;
+    private double contextMenuY = 0;
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate API loading
+        await Task.Delay(1400);
+        _isLoading = false;
+    }
+
+    private int currentPage = 1;
+    private bool isPhoneVisible = false;
+    private bool isIdCardVisible = false;
+    private bool isSalaryVisible = false;
+
+    private CccdScanner cccdScanner;
+
+    private string activeTab = "profile";
+
+    private HashSet<string> selectedIds = new();
+    private bool isAllSelected => FilteredEmployees.Any() && selectedIds.Count >= FilteredEmployees.Count();
+
+    private EmployeeModel selectedEmployee = new();
+    private List<EmployeeModel> employees = new()
+    {
+        new EmployeeModel { 
+            Id = "NV001", Name = "Nguyễn Văn An", Email = "an.nv@personal.com", CompanyEmail = "an.nv@ttlloc.vn", Dept = "Kỹ thuật", Role = "Kỹ sư Backend", JoinDate = new DateTime(2021, 5, 1), Status = "Chính thức", Avatar = "assets/media/avatars/300-1.jpg",
+            IdCard = "001092001234", DOB = new DateTime(1992, 5, 15), Gender = "Nam", Phone = "0987654321", Address = "123 Đường Láng, Hà Nội", ContractType = "Xác định thời hạn (3 năm)", Salary = "25,000,000 VNĐ", ContractExpiry = new DateTime(2024, 5, 12), Username = "an.nv.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV002", Name = "Lê Thị Mai", Email = "mai.lt@personal.com", CompanyEmail = "mai.lt@ttlloc.vn", Dept = "Marketing", Role = "Chuyên viên Content", JoinDate = new DateTime(2022, 6, 15), Status = "Thử việc", Avatar = "assets/media/avatars/300-2.jpg",
+            IdCard = "001095005678", DOB = new DateTime(1995, 8, 20), Gender = "Nữ", Phone = "0912345678", Address = "456 Cầu Giấy, Hà Nội", ContractType = "Thử việc", Salary = "12,000,000 VNĐ", ContractExpiry = new DateTime(2022, 8, 15), Username = "mai.lt.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV003", Name = "Phạm Hoàng", Email = "hoang.p@personal.com", CompanyEmail = "hoang.p@ttlloc.vn", Dept = "Kỹ thuật", Role = "Team Lead", JoinDate = new DateTime(2020, 1, 10), Status = "Chính thức", Avatar = "",
+            IdCard = "001088009900", DOB = new DateTime(1988, 1, 10), Gender = "Nam", Phone = "0909090909", Address = "789 Hai Bà Trưng, HCM", ContractType = "Không thời hạn", Salary = "45,000,000 VNĐ", ContractExpiry = null, Username = "hoang.p.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV004", Name = "Trần Minh", Email = "minh.t@personal.com", CompanyEmail = "minh.t@ttlloc.vn", Dept = "Nhân sự", Role = "Trưởng phòng NS", JoinDate = new DateTime(2019, 3, 5), Status = "Chính thức", Avatar = "assets/media/avatars/300-3.jpg",
+            IdCard = "001085001122", DOB = new DateTime(1985, 3, 5), Gender = "Nam", Phone = "0988888888", Address = "321 Tây Sơn, Hà Nội", ContractType = "Không thời hạn", Salary = "35,000,000 VNĐ", ContractExpiry = null, Username = "minh.t.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV005", Name = "Đặng Hồng Nhung", Email = "nhung.dh@personal.com", CompanyEmail = "nhung.dh@ttlloc.vn", Dept = "Kế toán", Role = "Kế toán trưởng", JoinDate = new DateTime(2020, 11, 20), Status = "Chính thức", Avatar = "assets/media/avatars/300-5.jpg",
+            IdCard = "001090003344", DOB = new DateTime(1990, 11, 20), Gender = "Nữ", Phone = "0977777777", Address = "15 Khâm Thiên, Hà Nội", ContractType = "Không thời hạn", Salary = "28,000,000 VNĐ", ContractExpiry = null, Username = "nhung.dh.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV006", Name = "Hoàng Văn Thái", Email = "thai.hv@personal.com", CompanyEmail = "thai.hv@ttlloc.vn", Dept = "Kỹ thuật", Role = "Kỹ sư DevOps", JoinDate = new DateTime(2021, 8, 12), Status = "Chính thức", Avatar = "assets/media/avatars/300-6.jpg",
+            IdCard = "001093005566", DOB = new DateTime(1993, 8, 12), Gender = "Nam", Phone = "0966666666", Address = "78 Lê Duẩn, Hà Nội", ContractType = "Xác định thời hạn (3 năm)", Salary = "30,000,000 VNĐ", ContractExpiry = new DateTime(2024, 8, 12), Username = "thai.hv.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV007", Name = "Bùi Kim Liên", Email = "lien.bk@personal.com", CompanyEmail = "lien.bk@ttlloc.vn", Dept = "Nhân sự", Role = "Chuyên viên Tuyển dụng", JoinDate = new DateTime(2023, 3, 1), Status = "Chính thức", Avatar = "assets/media/avatars/300-7.jpg",
+            IdCard = "001097007788", DOB = new DateTime(1997, 1, 1), Gender = "Nữ", Phone = "0955555555", Address = "22 Trần Duy Hưng, Hà Nội", ContractType = "Xác định thời hạn (1 năm)", Salary = "15,000,000 VNĐ", ContractExpiry = new DateTime(2024, 3, 1), Username = "lien.bk.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV008", Name = "Vũ Anh Tuấn", Email = "tuan.va@personal.com", CompanyEmail = "tuan.va@ttlloc.vn", Dept = "Kỹ thuật", Role = "Frontend Developer", JoinDate = new DateTime(2023, 9, 15), Status = "Thử việc", Avatar = "assets/media/avatars/300-8.jpg",
+            IdCard = "001099009911", DOB = new DateTime(1999, 9, 15), Gender = "Nam", Phone = "0944444444", Address = "101 Láng Hạ, Hà Nội", ContractType = "Thử việc", Salary = "18,000,000 VNĐ", ContractExpiry = new DateTime(2023, 11, 15), Username = "tuan.va.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV009", Name = "Ngô Gia Bảo", Email = "bao.ng@personal.com", CompanyEmail = "bao.ng@ttlloc.vn", Dept = "Marketing", Role = "Digital Marketing", JoinDate = new DateTime(2022, 10, 10), Status = "Chính thức", Avatar = "assets/media/avatars/300-9.jpg",
+            IdCard = "001096002233", DOB = new DateTime(1996, 10, 10), Gender = "Nam", Phone = "0933333333", Address = "88 Thái Hà, Hà Nội", ContractType = "Xác định thời hạn (2 năm)", Salary = "20,000,000 VNĐ", ContractExpiry = new DateTime(2024, 10, 10), Username = "bao.ng.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV010", Name = "Phan Tuyết Nhi", Email = "nhi.pt@personal.com", CompanyEmail = "nhi.pt@ttlloc.vn", Dept = "Kế toán", Role = "Kế toán viên", JoinDate = new DateTime(2024, 1, 5), Status = "Thử việc", Avatar = "assets/media/avatars/300-10.jpg",
+            IdCard = "001001004455", DOB = new DateTime(2001, 1, 5), Gender = "Nữ", Phone = "0922222222", Address = "55 Kim Mã, Hà Nội", ContractType = "Thử việc", Salary = "10,000,000 VNĐ", ContractExpiry = new DateTime(2024, 3, 5), Username = "nhi.pt.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV011", Name = "Lý Minh Triết", Email = "triet.lm@personal.com", CompanyEmail = "triet.lm@ttlloc.vn", Dept = "Kỹ thuật", Role = "Mobile Developer", JoinDate = new DateTime(2022, 2, 20), Status = "Chính thức", Avatar = "assets/media/avatars/300-11.jpg",
+            IdCard = "001094002233", DOB = new DateTime(1994, 2, 20), Gender = "Nam", Phone = "0911223344", Address = "12 Chùa Bộc, Hà Nội", ContractType = "Xác định thời hạn (2 năm)", Salary = "22,000,000 VNĐ", ContractExpiry = new DateTime(2024, 2, 20), Username = "triet.lm.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV012", Name = "Trương Mỹ Linh", Email = "linh.tm@personal.com", CompanyEmail = "linh.tm@ttlloc.vn", Dept = "Marketing", Role = "Designer", JoinDate = new DateTime(2023, 7, 10), Status = "Chính thức", Avatar = "assets/media/avatars/300-12.jpg",
+            IdCard = "001098006677", DOB = new DateTime(1998, 7, 10), Gender = "Nữ", Phone = "0922334455", Address = "45 Nguyễn Trãi, Thanh Xuân", ContractType = "Xác định thời hạn (1 năm)", Salary = "16,000,000 VNĐ", ContractExpiry = new DateTime(2024, 7, 10), Username = "linh.tm.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV013", Name = "Bùi Anh Đức", Email = "duc.ba@personal.com", CompanyEmail = "duc.ba@ttlloc.vn", Dept = "Kinh doanh", Role = "Account Manager", JoinDate = new DateTime(2021, 12, 1), Status = "Chính thức", Avatar = "assets/media/avatars/300-13.jpg",
+            IdCard = "001091008899", DOB = new DateTime(1991, 12, 1), Gender = "Nam", Phone = "0933445566", Address = "78 Lạc Long Quân, Hà Nội", ContractType = "Không thời hạn", Salary = "20,000,000 VNĐ", ContractExpiry = null, Username = "duc.ba.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV014", Name = "Vương Thu Thủy", Email = "thuy.vt@personal.com", CompanyEmail = "thuy.vt@ttlloc.vn", Dept = "Hành chính", Role = "Lễ tân", JoinDate = new DateTime(2024, 2, 1), Status = "Thử việc", Avatar = "assets/media/avatars/300-14.jpg",
+            IdCard = "002002001122", DOB = new DateTime(2002, 5, 10), Gender = "Nữ", Phone = "0944556677", Address = "101 Đê La Thành, Hà Nội", ContractType = "Thử việc", Salary = "8,000,000 VNĐ", ContractExpiry = new DateTime(2024, 4, 1), Username = "thuy.vt.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV015", Name = "Đỗ Cao Cường", Email = "cuong.dc@personal.com", CompanyEmail = "cuong.dc@ttlloc.vn", Dept = "Kỹ thuật", Role = "QA/QC", JoinDate = new DateTime(2023, 1, 15), Status = "Chính thức", Avatar = "assets/media/avatars/300-15.jpg",
+            IdCard = "001096004455", DOB = new DateTime(1996, 1, 15), Gender = "Nam", Phone = "0955667788", Address = "22 Hàng Bạc, Hoàn Kiếm", ContractType = "Xác định thời hạn (3 năm)", Salary = "18,000,000 VNĐ", ContractExpiry = new DateTime(2026, 1, 15), Username = "cuong.dc.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV016", Name = "Ngô Bích Phương", Email = "phuong.nb@personal.com", CompanyEmail = "phuong.nb@ttlloc.vn", Dept = "Nhân sự", Role = "C&B Specialist", JoinDate = new DateTime(2022, 9, 20), Status = "Chính thức", Avatar = "assets/media/avatars/300-16.jpg",
+            IdCard = "001094007788", DOB = new DateTime(1994, 9, 20), Gender = "Nữ", Phone = "0966778899", Address = "67 Trần Phú, Ba Đình", ContractType = "Không thời hạn", Salary = "22,000,000 VNĐ", ContractExpiry = null, Username = "phuong.nb.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV017", Name = "Lương Thế Thành", Email = "thanh.lt@personal.com", CompanyEmail = "thanh.lt@ttlloc.vn", Dept = "Kinh doanh", Role = "Sales Executive", JoinDate = new DateTime(2023, 11, 10), Status = "Chính thức", Avatar = "assets/media/avatars/300-17.jpg",
+            IdCard = "001095001133", DOB = new DateTime(1995, 3, 22), Gender = "Nam", Phone = "0977889900", Address = "34 Định Công, Hà Nội", ContractType = "Xác định thời hạn (1 năm)", Salary = "14,000,000 VNĐ", ContractExpiry = new DateTime(2024, 11, 10), Username = "thanh.lt.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV018", Name = "Tạ Minh Quân", Email = "quan.tm@personal.com", CompanyEmail = "quan.tm@ttlloc.vn", Dept = "Kỹ thuật", Role = "Security Engineer", JoinDate = new DateTime(2021, 4, 1), Status = "Chính thức", Avatar = "assets/media/avatars/300-18.jpg",
+            IdCard = "001092003344", DOB = new DateTime(1992, 10, 5), Gender = "Nam", Phone = "0988990011", Address = "89 Trường Chinh, Hà Nội", ContractType = "Không thời hạn", Salary = "32,000,000 VNĐ", ContractExpiry = null, Username = "quan.tm.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV019", Name = "Hà Thu Hà", Email = "ha.ht@personal.com", CompanyEmail = "ha.ht@ttlloc.vn", Dept = "Marketing", Role = "Social Media", JoinDate = new DateTime(2024, 1, 15), Status = "Thử việc", Avatar = "assets/media/avatars/300-19.jpg",
+            IdCard = "003001005566", DOB = new DateTime(2001, 12, 12), Gender = "Nữ", Phone = "0999001122", Address = "56 Kim Ngưu, Hai Bà Trưng", ContractType = "Thử việc", Salary = "11,000,000 VNĐ", ContractExpiry = new DateTime(2024, 3, 15), Username = "ha.ht.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV020", Name = "Bạch Vĩnh Hưng", Email = "hung.bv@personal.com", CompanyEmail = "hung.bv@ttlloc.vn", Dept = "Tài chính", Role = "Phân tích tài chính", JoinDate = new DateTime(2020, 5, 20), Status = "Chính thức", Avatar = "assets/media/avatars/300-20.jpg",
+            IdCard = "001089007788", DOB = new DateTime(1989, 5, 20), Gender = "Nam", Phone = "0912121212", Address = "11 Lý Thường Kiệt, Hà Nội", ContractType = "Không thời hạn", Salary = "38,000,000 VNĐ", ContractExpiry = null, Username = "hung.bv.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV021", Name = "Mai Phương Thảo", Email = "thao.mp@personal.com", CompanyEmail = "thao.mp@ttlloc.vn", Dept = "Kỹ thuật", Role = "Front-end Dev", JoinDate = new DateTime(2023, 10, 1), Status = "Chính thức", Avatar = "assets/media/avatars/300-21.jpg",
+            IdCard = "001099003311", DOB = new DateTime(1999, 1, 18), Gender = "Nữ", Phone = "0923232323", Address = "23 Tôn Thất Tùng, Hà Nội", ContractType = "Xác định thời hạn (2 năm)", Salary = "20,000,000 VNĐ", ContractExpiry = new DateTime(2025, 10, 1), Username = "thao.mp.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV022", Name = "Dương Quốc Anh", Email = "anh.dq@personal.com", CompanyEmail = "anh.dq@ttlloc.vn", Dept = "Kinh doanh", Role = "Telesales", JoinDate = new DateTime(2024, 1, 20), Status = "Thử việc", Avatar = "assets/media/avatars/300-22.jpg",
+            IdCard = "001002008899", DOB = new DateTime(2002, 8, 30), Gender = "Nam", Phone = "0934343434", Address = "45 Bạch Mai, Hà Nội", ContractType = "Thử việc", Salary = "7,500,000 VNĐ", ContractExpiry = new DateTime(2024, 3, 20), Username = "anh.dq.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV023", Name = "Phạm Lê Uyên", Email = "uyen.pl@personal.com", CompanyEmail = "uyen.pl@ttlloc.vn", Dept = "Kế toán", Role = "Kế toán tổng hợp", JoinDate = new DateTime(2022, 1, 10), Status = "Chính thức", Avatar = "assets/media/avatars/300-23.jpg",
+            IdCard = "001093001122", DOB = new DateTime(1993, 1, 10), Gender = "Nữ", Phone = "0945454545", Address = "78 Giải Phóng, Hà Nội", ContractType = "Không thời hạn", Salary = "19,000,000 VNĐ", ContractExpiry = null, Username = "uyen.pl.erp", Password = "password123", IsActive = true
+        },
+        new EmployeeModel { 
+            Id = "NV024", Name = "Trần Thanh Bình", Email = "binh.tt@personal.com", CompanyEmail = "binh.tt@ttlloc.vn", Dept = "Kỹ thuật", Role = "Product Owner", JoinDate = new DateTime(2020, 8, 15), Status = "Chính thức", Avatar = "assets/media/avatars/300-24.jpg",
+            IdCard = "001087005566", DOB = new DateTime(1987, 8, 15), Gender = "Nam", Phone = "0956565656", Address = "90 Nguyễn Chí Thanh, Hà Nội", ContractType = "Không thời hạn", Salary = "50,000,000 VNĐ", ContractExpiry = null, Username = "binh.tt.erp", Password = "password123", IsActive = true
+        }
+    };
+
+    private IEnumerable<EmployeeModel> FilteredEmployees => employees
+        .Where(e => (string.IsNullOrEmpty(searchQuery) || e.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || e.Id.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                && (string.IsNullOrEmpty(filterDept) || e.Dept == filterDept)
+                && (string.IsNullOrEmpty(filterStatus) || e.Status == filterStatus));
+
+    private void ResetFilters() {
+        filterDept = "";
+        filterStatus = "";
+        searchQuery = "";
+    }
+
+    private void ApplyFilters() {
+        currentPage = 1;
+        selectedIds.Clear();
+        StateHasChanged();
+    }
+
+    private void ToggleSelectAll(ChangeEventArgs e) {
+        bool isChecked = (bool)(e.Value ?? false);
+        if (isChecked) {
+            foreach (var emp in FilteredEmployees) selectedIds.Add(emp.Id);
+        } else {
+            selectedIds.Clear();
+        }
+    }
+
+    private void ToggleSelection(string id, object value) {
+        bool isChecked = (bool)(value ?? false);
+        if (isChecked) selectedIds.Add(id);
+        else selectedIds.Remove(id);
+    }
+
+    private void GoToPage(int page) {
+        if (page < 1 || page > 3) return;
+        currentPage = page;
+        StateHasChanged();
+    }
+
+    private async Task ExportExcel() {
+        await JSRuntime.InvokeVoidAsync("Swal.fire", new {
+            title = "Xuất dữ liệu Excel",
+            text = "Hệ thống đang trích xuất dữ liệu của " + FilteredEmployees.Count() + " nhân viên...",
+            timer = 1500,
+            icon = "info",
+            showConfirmButton = false
+        });
+    }
+
+    private async Task SaveChanges() {
+        await JSRuntime.InvokeVoidAsync("Swal.fire", new {
+            title = "Thành công!",
+            text = "Dữ liệu hồ sơ của " + selectedEmployee?.Name + " đã được cập nhật.",
+            icon = "success",
+            confirmButtonText = "Đóng"
+        });
+    }
+
+    private async Task ScanCCCD() {
+        if (selectedEmployee == null) return;
+
+        var scannedData = await cccdScanner.ScanAsync();
+        
+        if (scannedData != null)
+        {
+            selectedEmployee.Name = scannedData.Name;
+            selectedEmployee.DOB = scannedData.DOB ?? selectedEmployee.DOB;
+            selectedEmployee.Gender = scannedData.Gender;
+            selectedEmployee.IdCard = scannedData.IdCard;
+            selectedEmployee.Address = scannedData.Address;
+            selectedEmployee.Hometown = scannedData.Hometown;
+            
+            await JSRuntime.InvokeVoidAsync("Swal.fire", new {
+                title = "Cập nhật thành công!",
+                text = $"Hồ sơ nhân viên {selectedEmployee.Name} đã được đồng bộ dữ liệu từ thẻ CCCD.",
+                icon = "success",
+                timer = 2000,
+                showConfirmButton = false
+            });
+
+            StateHasChanged();
+        } else {
+            await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Quá trình quét bị gián đoạn. Vui lòng thử lại.", "info");
+        }
+    }
+
+    private void SelectEmployee(int index) {
+        selectedEmployee = employees[index - 1];
+        StateHasChanged();
+    }
+
+    private void SelectEmployeeByObj(EmployeeModel emp) {
+        selectedEmployee = emp;
+        isPhoneVisible = false;
+        isIdCardVisible = false;
+        isSalaryVisible = false;
+        StateHasChanged();
+    }
+
+    private void ShowContextMenu(MouseEventArgs e, EmployeeModel emp) {
+        selectedEmployee = emp;
+        contextMenuX = e.ClientX;
+        contextMenuY = e.ClientY;
+        isContextMenuVisible = true;
+    }
+
+    private void HideContextMenu() {
+        isContextMenuVisible = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender) {
+            await JSRuntime.InvokeVoidAsync("KTMenu.createInstances");
+            await JSRuntime.InvokeVoidAsync("KTDrawer.createInstances");
+        }
+    }
+
+    private void ViewProfile() {
+        isContextMenuVisible = false;
+        // The drawer is toggled by class, but we need to ensure State is updated
+        StateHasChanged();
+        JSRuntime.InvokeVoidAsync("openEmployeeDetail");
+    }
+
+    private async Task GenerateQR() {
+        isContextMenuVisible = false;
+        await JSRuntime.InvokeVoidAsync("Swal.fire", new {
+            title = "Thẻ Nhân viên Kỹ thuật số",
+            html = "<div class='text-center'><img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + selectedEmployee?.Id + "' class='rounded mb-3' /><div class='fw-bolder fs-4'>" + selectedEmployee?.Name + "</div><div class='text-muted fs-7'>" + selectedEmployee?.Role + "</div></div>",
+            showConfirmButton = false,
+            showCloseButton = true
+        });
+    }
+
+    private async Task Offboarding() {
+        if (selectedEmployee == null) return;
+        
+        var result = await JSRuntime.InvokeAsync<bool>("eval", $@"
+            (async () => {{
+                const result = await Swal.fire({{
+                    text: 'Bạn có chắc chắn muốn kích hoạt quy trình nghỉ việc cho nhân viên {selectedEmployee.Name} (Mã: {selectedEmployee.Id})?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: 'Đúng, Kích hoạt ngay',
+                    cancelButtonText: 'Hủy bỏ',
+                    customClass: {{
+                        confirmButton: 'btn fw-bold btn-danger',
+                        cancelButton: 'btn fw-bold btn-active-light-primary'
+                    }}
+                }});
+                return result.isConfirmed;
+            }})()
+        ");
+
+        if (result) {
+            // Giả lập xóa nhân viên khỏi danh sách
+            var empToRemove = employees.FirstOrDefault(e => e.Id == selectedEmployee.Id);
+            if (empToRemove != null)
+            {
+                employees.Remove(empToRemove);
+            }
+            
+            await JSRuntime.InvokeVoidAsync("Swal.fire", new {
+                title = "Đã xử lý!",
+                text = $"Quy trình nghỉ việc cho nhân viên {selectedEmployee.Name} đã được khởi tạo.",
+                icon = "success",
+                buttonsStyling = false,
+                confirmButtonText = "Hoàn tất",
+                customClass = new {
+                    confirmButton = "btn fw-bold btn-primary"
+                }
+            });
+
+            StateHasChanged();
+        }
+    }
+
+    }
+<style>
+    .hover-border-primary:hover {
+        border-color: var(--kt-primary) !important;
+        background-color: var(--kt-primary-light) !important;
+        color: var(--kt-primary) !important;
+    }
+    /* Đảm bảo grid hiển thị chuẩn trên mọi màn hình */
+    .calendar-grid {
+        min-width: 100%;
+    }
+</style>

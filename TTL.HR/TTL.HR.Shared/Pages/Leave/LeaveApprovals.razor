@@ -1,0 +1,345 @@
+@page "/leave/approvals"
+@inject IJSRuntime JSRuntime
+
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+        <!-- Toolbar -->
+        <div class="card mb-7 shadow-sm">
+            <div class="card-header border-0 pt-6">
+                <div class="card-title">
+                    <div class="d-flex align-items-center position-relative my-1">
+                        <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4"></i>
+                        <input type="text" @bind="searchQuery" @bind:event="oninput" 
+                               class="form-control form-control-solid w-250px ps-12" 
+                               placeholder="Tìm kiếm nhân viên..." />
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <button type="button" class="btn btn-light-primary btn-sm me-3">
+                        <i class="ki-outline ki-filter fs-4 me-1"></i>Bộ lọc
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm">
+                        <i class="ki-outline ki-plus fs-4 me-1"></i>New Request
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-5">
+                <div class="row g-5">
+                    <div class="col-md-5">
+                        <label class="fs-7 fw-bolder text-uppercase text-muted mb-3 d-block">Loại nghỉ</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button class="btn btn-sm btn-light active px-5">Tất cả</button>
+                            <button class="btn btn-sm btn-light px-5">Nghỉ phép năm</button>
+                            <button class="btn btn-sm btn-light px-5">Nghỉ ốm</button>
+                            <button class="btn btn-sm btn-light px-5">Không lương</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="fs-7 fw-bolder text-uppercase text-muted mb-3 d-block">Phòng ban</label>
+                        <select class="form-select form-select-sm form-select-solid">
+                            <option>Tất cả phòng ban</option>
+                            <option value="1">Kỹ thuật</option>
+                            <option value="2">Marketing</option>
+                            <option value="3">Nhân sự</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="fs-7 fw-bolder text-uppercase text-muted mb-3 d-block">Trạng thái</label>
+                        <select class="form-select form-select-sm form-select-solid">
+                            <option value="pending">Đang chờ duyệt</option>
+                            <option value="approved">Đã duyệt</option>
+                            <option value="rejected">Từ chối</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card shadow-sm mb-9">
+            <div class="card-body p-0">
+                <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="10" Columns="8">
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-7 gy-6">
+                            <thead>
+                                <tr class="fw-bolder text-muted text-uppercase fs-8 border-bottom">
+                                    <th class="w-25px">
+                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                            <input class="form-check-input" type="checkbox" />
+                                        </div>
+                                    </th>
+                                    <th class="min-w-200px">Nhân viên</th>
+                                    <th class="min-w-125px text-center">Loại nghỉ</th>
+                                    <th class="min-w-100px text-center">Thời gian</th>
+                                    <th class="min-w-100px text-center">Số ngày</th>
+                                    <th class="min-w-200px">Lý do</th>
+                                    <th class="min-w-125px text-center">Trạng thái</th>
+                                    <th class="min-w-150px text-end">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in _approvals)
+                                {
+                                    <tr class="hover-elevate cursor-pointer" @onclick="() => ViewDetail(item.Id)">
+                                        <td>
+                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input class="form-check-input" type="checkbox" @onclick:stopPropagation />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-45px me-5">
+                                                    @if (!string.IsNullOrEmpty(item.Avatar))
+                                                    {
+                                                        <img src="@item.Avatar" alt="avatar" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="symbol-label bg-light-info text-info fw-bolder">@item.Name.Substring(0, 1)</div>
+                                                    }
+                                                </div>
+                                                <div class="d-flex justify-content-start flex-column">
+                                                    <span class="text-dark fw-bolder text-hover-primary fs-6">@item.Name</span>
+                                                    <span class="text-muted fw-bold d-block fs-7">@item.Department</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            @{
+                                                var typeBadge = item.Type == "Nghỉ phép năm" ? "badge-light-primary" : 
+                                                                item.Type == "Nghỉ ốm" ? "badge-light-danger" : 
+                                                                item.Type == "Đi công tác" ? "badge-light-info" : "badge-light-dark";
+                                            }
+                                            <span class="badge @typeBadge fw-bold px-4 py-3">@item.Type</span>
+                                        </td>
+                                        <td class="text-center"><span class="text-gray-800 fw-bold fs-7">@item.DateRange</span></td>
+                                        <td class="text-center"><span class="text-gray-800 fw-bolder fs-6">@item.Duration</span></td>
+                                        <td><span class="text-gray-600 fs-7 text-truncate d-inline-block" style="max-width: 200px;">@item.Reason</span></td>
+                                        <td class="text-center">
+                                            <span class="badge badge-light-warning fw-bold px-3 py-2">
+                                                <span class="status-dot bg-warning"></span>Chờ duyệt
+                                            </span>
+                                        </td>
+                                        <td class="text-end">
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 hover-scale" @onclick="() => ViewDetail(item.Id)" @onclick:stopPropagation title="Xem chi tiết">
+                                                <i class="ki-outline ki-eye fs-5"></i>
+                                            </button>
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1 hover-scale" @onclick="() => RequestReject(item)" @onclick:stopPropagation title="Từ chối">
+                                                <i class="ki-outline ki-cross fs-5"></i>
+                                            </button>
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm hover-scale" @onclick="() => RequestApprove(item)" @onclick:stopPropagation title="Phê duyệt">
+                                                <i class="ki-outline ki-check fs-4"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                                
+                                @if (!_approvals.Any())
+                                {
+                                    <tr>
+                                        <td colspan="8" class="text-center p-10">
+                                            <span class="text-muted fs-6">Không có yêu cầu nào cần phê duyệt.</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex flex-stack flex-wrap px-7 py-5">
+                        <div class="fs-7 fw-bold text-gray-700">Hiển thị 1-10 trên 42 yêu cầu</div>
+                        <ul class="pagination">
+                            <li class="page-item previous disabled"><a href="#" class="page-link"><i class="previous"></i></a></li>
+                            <li class="page-item active"><a href="#" class="page-link">1</a></li>
+                            <li class="page-item next"><a href="#" class="page-link"><i class="next"></i></a></li>
+                        </ul>
+                    </div>
+                </SkeletonLoading>
+            </div>
+        </div>
+
+        <!-- Notification -->
+        <div class="alert alert-dismissible bg-light-primary d-flex flex-column flex-sm-row p-5 mb-10 border border-primary border-dashed">
+            <i class="ki-outline ki-information-2 fs-2hx text-primary me-4 mb-5 mb-sm-0"></i>
+            <div class="d-flex flex-column pe-0 pe-sm-10">
+                <h4 class="fw-bold text-gray-900 mb-1">Mẹo phê duyệt nhanh</h4>
+                <span class="fs-7 text-gray-700">Bạn có thể chọn nhiều dòng và sử dụng thanh công cụ bên dưới để phê duyệt hàng loạt các yêu cầu hợp lệ.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BULK ACTIONS TOOLBAR -->
+<style>
+    .floating-bulk-actions {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 105;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+    }
+</style>
+
+<div class="floating-bulk-actions rounded-pill bg-dark py-4 px-8 shadow-lg">
+    <div class="d-flex align-items-center">
+        <span class="text-white fs-7 fw-bold me-8">Đã chọn 2 yêu cầu</span>
+        <div class="separator separator-dashed border-gray-600 h-25px mx-4"></div>
+        <button class="btn btn-link btn-color-white btn-active-color-danger fs-7 fw-bold me-4 text-decoration-none">
+            <i class="ki-outline ki-trash me-2"></i>Từ chối hàng loạt
+        </button>
+        <button class="btn btn-primary btn-sm rounded-pill px-6 fw-bold">
+            <i class="ki-outline ki-double-check me-1"></i>Phê duyệt nhanh
+        </button>
+    </div>
+</div>
+
+<!-- LEAVE DETAIL DRAWER -->
+<div class="bg-body drawer drawer-end @(_showDetail ? "drawer-on" : "")" 
+     style="width: 600px; max-width: 90vw; position: fixed; right: 0; top: 0; bottom: 0; z-index: 106; box-shadow: -10px 0 30px rgba(0,0,0,0.1); border-left: 1px solid #eff2f5; transition: transform 0.3s ease; transform: @(_showDetail ? "translateX(0)" : "translateX(100%)"); display: block;">
+    @if (_selectedRequest != null)
+    {
+        <div class="card w-100 rounded-0 border-0 h-100 overflow-hidden">
+            <div class="card-header pe-5 pt-5 border-0">
+                <div class="card-title">
+                    <div class="d-flex justify-content-center flex-column me-3">
+                        <span class="fs-4 fw-bolder text-gray-900 lh-1 mb-1">CHI TIẾT YÊU CẦU</span>
+                         <div class="fs-7 fw-bold text-muted">Mã đơn: <span class="text-gray-900">#REQ-2026-@(_selectedRequest.Id.ToString().PadLeft(4, '0'))</span></div>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="btn btn-sm btn-icon btn-active-light-primary bg-light" @onclick="CloseDetail">
+                        <i class="ki-outline ki-cross fs-2"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body hover-scroll-overlay-y">
+                <!-- User Profile -->
+                <div class="d-flex align-items-center mb-8">
+                    <div class="symbol symbol-60px symbol-circle me-5">
+                         @if (!string.IsNullOrEmpty(_selectedRequest.Avatar))
+                        {
+                            <img src="@_selectedRequest.Avatar" alt="" />
+                        }
+                        else
+                        {
+                            <span class="symbol-label fs-2 fw-bold bg-light-primary text-primary">@_selectedRequest.Name.Substring(0, 1)</span>
+                        }
+                    </div>
+                    <div class="flex-grow-1">
+                        <a href="#" class="text-dark fw-bolder text-hover-primary fs-5">@_selectedRequest.Name</a>
+                        <span class="text-muted d-block fw-bold display-7">@_selectedRequest.Department</span>
+                        <div class="d-flex align-items-center mt-1">
+                            <i class="ki-outline ki-geolocation fs-7 text-muted me-1"></i>
+                            <span class="text-muted fs-8 fw-bold">Văn phòng chính</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="separator separator-dashed my-5"></div>
+
+                <!-- Leave Info Grid -->
+                <div class="row mb-5">
+                    <div class="col-6 mb-5">
+                        <div class="fs-7 text-muted fw-bold mb-1">Loại nghỉ</div>
+                        <div class="fs-6 fw-bolder text-gray-800">@_selectedRequest.Type</div>
+                    </div>
+                     <div class="col-6 mb-5">
+                        <div class="fs-7 text-muted fw-bold mb-1">Thời gian</div>
+                        <div class="fs-6 fw-bolder text-gray-800">@_selectedRequest.DateRange</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="fs-7 text-muted fw-bold mb-1">Tổng số ngày</div>
+                        <div class="fs-6 fw-bolder text-primary">@_selectedRequest.Duration ngày</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="fs-7 text-muted fw-bold mb-1">Trạng thái</div>
+                        <span class="badge badge-light-warning fw-bold fs-7 px-3 py-1">Chờ phê duyệt</span>
+                    </div>
+                </div>
+
+                 <!-- Reason -->
+                <div class="mb-8">
+                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                        <span class="required">Lý do nghỉ</span>
+                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Lý do chi tiết từ nhân viên"></i>
+                    </label>
+                    <div class="bg-light-info rounded border-info border border-dashed p-4">
+                        <div class="d-flex align-items-center">
+                            <i class="ki-outline ki-message-text-2 fs-2 text-info me-3"></i>
+                            <div class="text-gray-700 fw-bold fs-6">
+                                "@_selectedRequest.Reason"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leave Balance Context -->
+                <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6 mb-8">
+                    <i class="ki-outline ki-information-5 fs-2tx text-warning me-4"></i>
+                    <div class="d-flex flex-stack flex-grow-1">
+                        <div class="fw-bold">
+                            <h4 class="text-gray-900 fw-bolder">Thông tin phép năm</h4>
+                            <div class="fs-6 text-gray-700">Đã dùng: <span class="text-gray-900 fw-bolder">8.5</span> / 12.0 ngày phép</div>
+                            <div class="fs-6 text-gray-700">Còn lại: <span class="text-success fw-bolder">3.5</span> ngày</div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Attachments -->
+                <div class="mb-0">
+                    <label class="fs-6 fw-bold mb-2">Tệp đính kèm</label>
+                     <div class="d-flex align-items-center border border-dashed border-gray-300 rounded p-3 bg-white">
+                        <div class="symbol symbol-35px me-3">
+                            <span class="symbol-label bg-light-primary">
+                                <i class="ki-outline ki-file fs-3 text-primary"></i>
+                            </span>
+                        </div>
+                        <div class="d-flex flex-column flex-grow-1">
+                             <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold">Giay_kham_benh.pdf</a>
+                             <span class="text-muted fw-bold fs-7">2.4 MB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-footer border-0 d-flex gap-3 justify-content-end p-5 bg-light-light">
+                 <button type="button" class="btn btn-light btn-active-light-danger fw-bold flex-grow-1" @onclick="() => RequestReject(_selectedRequest)">
+                    <i class="ki-outline ki-cross fs-2 me-1"></i>Từ chối
+                </button>
+                <button type="button" class="btn btn-primary fw-bold flex-grow-1" @onclick="() => RequestApprove(_selectedRequest)">
+                    <i class="ki-outline ki-check fs-2 me-1"></i>Duyệt ngay
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Backdrop -->
+@if (_showDetail)
+{
+    <div class="drawer-overlay" style="z-index: 105; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);" @onclick="CloseDetail"></div>
+}
+
+<GenericActionModal IsVisible="_showActionModal"
+                    Title="@_modalTitle"
+                    Heading="@_modalHeading"
+                    Message="@_modalMessage"
+                    Color="@_modalColor"
+                    Icon="@_modalIcon"
+                    ConfirmLabel="@_modalConfirmLabel"
+                    ShowReasonInput="_showReasonInput"
+                    IsReasonRequired="@(_actionType == "REJECT")"
+                    ReasonPlaceholder="@(_actionType == "REJECT" ? "Vui lòng nhập lý do từ chối (bắt buộc)..." : "")"
+                    OnConfirmed="ConfirmAction"
+                    OnCancelled="CloseModal" />
+
+

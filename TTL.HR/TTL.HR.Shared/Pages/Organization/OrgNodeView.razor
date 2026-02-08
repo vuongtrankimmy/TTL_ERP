@@ -1,0 +1,39 @@
+@using TTL.HR.Shared.Models
+@using System.Linq
+
+<li>
+    <div class="org-node kt_drawer_employee_detail_toggle @(Node.Type == "Department" ? "is-department" : "") @(Node.IsManager ? "is-manager" : "")" 
+         @onclick="() => OnNodeClick.InvokeAsync(Node)">
+        <div class="node-tools">
+            <button class="btn btn-icon btn-xs btn-light-primary"><i class="bi bi-pencil fs-9"></i></button>
+        </div>
+        
+        <div class="d-flex align-items-center">
+            <img src="@Node.Avatar" class="avatar" alt="@Node.Name" />
+            <div class="d-flex flex-column align-items-start">
+                <div class="org-role">@Node.Role</div>
+                <div class="org-name">@Node.Name</div>
+            </div>
+        </div>
+
+        @if (Node.Type == "Department")
+        {
+            <div class="dept-stats">
+                <span><i class="bi bi-diagram-3 me-1"></i>@Node.Children.Count(c => c.Type == "Department")</span>
+                <span><i class="bi bi-people me-1"></i>@CountTotalEmployees(Node)</span>
+            </div>
+        }
+    </div>
+
+    @if (Node.Children != null && Node.Children.Any())
+    {
+        <ul>
+            @foreach (var child in Node.Children)
+            {
+                <OrgNodeView Node="child" OnNodeClick="OnNodeClick" />
+            }
+        </ul>
+    }
+</li>
+
+

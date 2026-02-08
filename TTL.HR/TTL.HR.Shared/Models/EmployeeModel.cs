@@ -1,0 +1,27 @@
+namespace TTL.HR.Shared.Models
+{
+    public class EmployeeModel
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string CompanyEmail { get; set; }
+        public string Dept { get; set; }
+        public string Role { get; set; }
+        public DateTime? JoinDate { get; set; }
+        public string Status { get; set; }
+        public string Avatar { get; set; }
+        public string IdCard { get; set; }
+        public DateTime? DOB { get; set; }
+        public string Gender { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+        public string Hometown { get; set; }
+        public string ContractType { get; set; }
+        public string Salary { get; set; }
+        public DateTime? ContractExpiry { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public bool IsActive { get; set; }
+    }
+}

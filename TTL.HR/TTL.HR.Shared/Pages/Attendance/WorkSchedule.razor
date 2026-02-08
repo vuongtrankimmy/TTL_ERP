@@ -1,0 +1,280 @@
+@page "/attendance/schedule"
+
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+        <!-- Filters -->
+        <div class="card mb-8 shadow-sm">
+            <div class="card-body py-4 px-6">
+                <div class="d-flex flex-wrap align-items-center">
+                    <!-- Search -->
+                    <div class="position-relative w-md-250px me-4 my-1">
+                        <span class="svg-icon svg-icon-3 position-absolute top-50 translate-middle-y ms-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
+                            </svg>
+                        </span>
+                        <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm theo tên, mã NV..." />
+                    </div>
+
+                    <!-- Department -->
+                    <div class="w-md-175px me-4 my-1">
+                        <select class="form-select form-select-solid fs-7 fw-bold">
+                            <option>Phòng ban: Tất cả</option>
+                            <option>Kỹ thuật Phần mềm</option>
+                            <option>Hành chính</option>
+                            <option>Sản xuất</option>
+                        </select>
+                    </div>
+
+                    <!-- Type -->
+                    <div class="w-md-150px me-4 my-1">
+                        <select class="form-select form-select-solid fs-7 fw-bold">
+                            <option>Loại ca: Tất cả</option>
+                            <option>Ca hành chính</option>
+                            <option>Ca sản xuất</option>
+                            <option>Ca đặc thù</option>
+                        </select>
+                    </div>
+
+                    <div class="ms-auto my-1">
+                        <button class="btn btn-light-primary fw-bold fs-7 px-6"><i class="bi bi-funnel me-1"></i>Lọc thêm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selection Bar -->
+        <div class="d-flex flex-stack mb-6">
+            <div class="d-flex align-items-center">
+                <div class="form-check form-check-sm form-check-custom form-check-solid me-5">
+                    <input class="form-check-input" type="checkbox" id="check_all_staff" />
+                    <label class="form-check-label fw-bold text-gray-700 fs-7 ms-2 text-nowrap" for="check_all_staff">Chọn tất cả (124 nhân viên)</label>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-sm btn-primary px-4 py-2 fs-8 fw-semibold"><i class="bi bi-calendar-check fs-7 me-1"></i>Cập nhật lịch</button>
+                <button class="btn btn-sm btn-light fw-bolder px-5 text-gray-700 border"><i class="bi bi-file-earmark-excel me-2"></i>Xuất Excel</button>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="10" Columns="5">
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-200 align-middle gs-7 gy-5">
+                            <thead>
+                                <tr class="fw-bold text-muted text-uppercase fs-8 border-bottom-0">
+                                    <th class="w-10px pe-2"></th>
+                                    <th class="min-w-200px">NHÂN VIÊN</th>
+                                    <th class="min-w-150px">PHÒNG BAN</th>
+                                    <th class="min-w-250px">CA LÀM VIỆC HIỆN TẠI</th>
+                                    <th class="min-w-150px">GÁN CA MỚI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var emp in _schedules)
+                                {
+                                    <tr class="hover-elevate cursor-pointer" @onclick="() => openDetail(emp)">
+                                        <td>
+                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input class="form-check-input staff-checkbox" type="checkbox" value="1" @onclick:stopPropagation />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-35px symbol-circle me-3">
+                                                    @if (!string.IsNullOrEmpty(emp.Avatar))
+                                                    {
+                                                        <img src="@emp.Avatar" alt="user" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="symbol-label @emp.AvatarBg text-white fw-bold fs-7">@emp.Name.Substring(0, 1)</div>
+                                                    }
+                                                </div>
+                                                <div class="d-flex justify-content-start flex-column">
+                                                    <span class="text-dark fw-bolder fs-7">@emp.Name</span>
+                                                    <span class="text-muted fw-bold fs-9">ID: @emp.Id</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="text-gray-700 fs-7 fw-bold">@emp.Department</span></td>
+                                        <td>
+                                            <span class="badge @emp.ShiftColor fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                                <span class="bullet bullet-dot @emp.BulletBg w-6px h-6px me-2"></span>@emp.CurrentShift
+                                            </span>
+                                            @if (emp.IsNextShiftAssigned)
+                                            {
+                                                <i class="bi bi-arrow-right text-gray-400 mx-2"></i>
+                                                <span class="badge badge-light-secondary fw-bold px-3 py-1 fs-9">@emp.NextShift</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm form-select-solid fs-8 py-1.5 fw-semibold" @onclick:stopPropagation>
+                                                <option value="">-- Chọn ca mới --</option>
+                                                <option>Ca hành chính</option>
+                                                <option>Ca sáng (06:00-14:00)</option>
+                                                <option>Ca chiều (14:00-22:00)</option>
+                                                <option>Ca đêm (22:00-06:00)</option>
+                                                <option>Ca gãy</option>
+                                                <option>Ca 12h</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <div class="d-flex flex-stack flex-wrap px-7 py-5">
+                        <div class="fs-7 fw-bold text-gray-700">Hiển thị 10 trong tổng số 124 nhân viên</div>
+                        <ul class="pagination">
+                            <li class="page-item previous disabled"><a href="#" class="page-link"><i class="ki-outline ki-left fs-6"></i></a></li>
+                            <li class="page-item active"><a href="#" class="page-link">1</a></li>
+                            <li class="page-item"><a href="#" class="page-link">2</a></li>
+                            <li class="page-item next"><a href="#" class="page-link"><i class="ki-outline ki-right fs-6"></i></a></li>
+                        </ul>
+                    </div>
+                </SkeletonLoading>
+            </div>
+        </div>
+
+        <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6 mb-8 mt-5">
+            <i class="ki-outline ki-information-5 fs-2hx text-primary me-4"></i>
+            <div class="d-flex flex-stack flex-grow-1">
+                <div class="fw-bold">
+                    <h4 class="text-gray-900 fw-bolder fs-6 mb-1">Lưu ý khi gán ca làm việc</h4>
+                    <div class="fs-7 text-gray-700 lh-lg">
+                        1. Lịch làm việc mới sẽ có hiệu lực từ ngày kế tiếp sau khi được phê duyệt.<br/>
+                        2. Đối với các ca đặc thù (ca đêm, ca gãy), hệ thống sẽ tự động tính toán phụ cấp tương ứng.<br/>
+                        3. Đảm bảo nhân viên có đủ thời gian nghỉ ngơi ít nhất 11 tiếng giữa 2 ca làm việc.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SCHEDULE DETAIL DRAWER -->
+<div class="bg-white drawer drawer-end @(_showDetail ? "drawer-on" : "")" 
+     style="width: 500px; position: fixed; right: 0; top: 0; bottom: 0; z-index: 106; box-shadow: -10px 0 30px rgba(0,0,0,0.1); border-left: 1px solid #eff2f5; transition: transform 0.3s ease; transform: @(_showDetail ? "translateX(0)" : "translateX(100%)"); display: block;">
+    <div class="card w-100 rounded-0 border-0 h-100 overflow-hidden">
+        <!-- Header -->
+        <div class="card-header pe-5">
+            <div class="card-title">
+                <div class="d-flex justify-content-center flex-column me-3">
+                    <span class="fs-4 fw-bolder text-gray-900 lh-1">Chi tiết lịch làm việc</span>
+                    <span class="fs-7 fw-bold text-muted mt-2">Mã NV: @(_selectedSchedule?.Id ?? "---")</span>
+                </div>
+            </div>
+            <div class="card-toolbar">
+                <div class="btn btn-sm btn-icon btn-active-light-primary" @onclick="closeDetail">
+                    <i class="ki-outline ki-cross fs-4"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body hover-scroll-overlay-y">
+            @if (_selectedSchedule != null)
+            {
+                <!-- Employee Info -->
+                <div class="d-flex align-items-center bg-light-info rounded p-5 mb-8 border border-info border-dashed">
+                    <div class="symbol symbol-60px symbol-circle me-5 border border-white border-3 shadow-sm">
+                        @if (!string.IsNullOrEmpty(_selectedSchedule.Avatar))
+                        {
+                            <img src="@_selectedSchedule.Avatar" alt="" />
+                        }
+                        else
+                        {
+                            <div class="symbol-label fs-2 fw-bold @_selectedSchedule.AvatarBg text-white">@_selectedSchedule.Name.Substring(0, 1)</div>
+                        }
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span class="text-gray-900 fw-bolder fs-5">@_selectedSchedule.Name</span>
+                        <span class="text-muted fw-bold fs-7">@_selectedSchedule.Department</span>
+                        <span class="badge @_selectedSchedule.ShiftColor fw-bold fs-9 mt-1 px-2 py-1 overflow-hidden" style="max-width: fit-content">@_selectedSchedule.CurrentShift</span>
+                    </div>
+                </div>
+
+                <!-- Shift Details Card -->
+                <div class="card bg-light-light mb-8 border-0">
+                    <div class="card-body p-6">
+                        <h3 class="fw-bolder fs-6 mb-5 text-gray-800 text-uppercase">Thông tin ca hiện tại</h3>
+                        <div class="d-flex flex-column gap-4">
+                            <div class="d-flex flex-stack fs-7">
+                                <span class="text-muted fw-bold">Mã ca:</span>
+                                <span class="text-gray-800 fw-bolder">@(_selectedSchedule.CurrentShift.Contains("hành chính") ? "HC-01" : (_selectedSchedule.CurrentShift.Contains("đêm") ? "NS-02" : "SS-03"))</span>
+                            </div>
+                            <div class="d-flex flex-stack fs-7">
+                                <span class="text-muted fw-bold">Thời gian:</span>
+                                <span class="text-gray-800 fw-bolder">@(_selectedSchedule.CurrentShift.Contains("(") ? _selectedSchedule.CurrentShift.Split('(')[1].Replace(")", "") : "Theo lịch công tác")</span>
+                            </div>
+                            <div class="d-flex flex-stack fs-7">
+                                <span class="text-muted fw-bold">Nghỉ giữa ca:</span>
+                                <span class="text-gray-800 fw-bolder">60 phút</span>
+                            </div>
+                            <div class="d-flex flex-stack fs-7">
+                                <span class="text-muted fw-bold">Tính công:</span>
+                                <span class="text-gray-800 fw-bolder">1.0 ngày công</span>
+                            </div>
+                            <div class="d-flex flex-stack fs-7">
+                                <span class="text-muted fw-bold">Phụ cấp ca:</span>
+                                <span class="text-success fw-bolder">@(_selectedSchedule.CurrentShift.Contains("đêm") ? "130% lương" : "Mặc định")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schedule History / Calendar Mini -->
+                <h3 class="fw-bolder fs-6 mb-5 text-gray-800 text-uppercase">Lịch làm việc tuần này</h3>
+                <div class="row g-3 mb-8">
+                    @foreach (var day in new[] { "T2", "T3", "T4", "T5", "T6", "T7", "CN" })
+                    {
+                        <div class="col">
+                            <div class="border rounded py-3 px-1 text-center bg-white @(day == "CN" ? "bg-light-danger opacity-50" : "")">
+                                <div class="fs-9 fw-bold text-muted mb-1">@day</div>
+                                <div class="fs-8 fw-bolder @(day == "CN" ? "text-danger" : "text-gray-800")">@(day == "CN" ? "OFF" : "CA")</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Assignment Section -->
+                <div class="border-top pt-5">
+                    <h3 class="fw-bolder fs-6 mb-5 text-gray-800 text-uppercase">Gán lịch làm việc tháng tới</h3>
+                    <div class="mb-5">
+                        <label class="form-label fs-7 fw-bold text-gray-700">Chọn ca làm việc mới</label>
+                        <select class="form-select form-select-solid fs-7">
+                            <option value="">Giữ nguyên ca hiện tại</option>
+                            <option>Ca hành chính (08h00 - 17h00)</option>
+                            <option>Ca sáng (06h00 - 14h00)</option>
+                            <option>Ca chiều (14h00 - 22h00)</option>
+                            <option>Ca đêm (22h00 - 06h00)</option>
+                            <option>Ca gãy (Split)</option>
+                        </select>
+                    </div>
+                    <div class="mb-5">
+                        <label class="form-label fs-7 fw-bold text-gray-700">Ngày bắt đầu áp dụng</label>
+                        <input type="date" class="form-control form-control-solid fs-7" value="2026-03-01" />
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer border-0 d-flex gap-3 justify-content-between p-10">
+            <button type="button" class="btn btn-light flex-grow-1 fs-7 fw-bold" @onclick="closeDetail">Hủy bỏ</button>
+            <button type="button" class="btn btn-primary flex-grow-1 fs-7 fw-bold">Lưu thay đổi</button>
+        </div>
+    </div>
+</div>
+
+<!-- Backdrop -->
+@if (_showDetail)
+{
+    <div class="drawer-overlay" style="z-index: 105; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);" @onclick="closeDetail"></div>
+}
+
+

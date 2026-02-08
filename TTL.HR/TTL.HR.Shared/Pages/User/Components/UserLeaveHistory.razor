@@ -1,0 +1,37 @@
+@using TTL.HR.Shared.Models
+
+<div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+    <div class="card-header border-0 pt-5">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bold fs-3 mb-1">Lịch sử nghỉ phép & công tác</span>
+            <span class="text-muted mt-1 fw-semibold fs-7">Danh sách các yêu cầu nghỉ phép và công tác gần đây</span>
+        </h3>
+    </div>
+    <div class="card-body py-3">
+        <div class="table-responsive">
+            <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                <thead>
+                    <tr class="fw-bold text-muted bg-light">
+                        <th class="ps-4 min-w-150px rounded-start">Loại yêu cầu</th>
+                        <th class="min-w-150px">Thời gian</th>
+                        <th class="min-w-120px">Số lượng</th>
+                        <th class="min-w-200px">Lý do</th>
+                        <th class="min-w-100px text-end rounded-end pe-4">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in _leaveHistory)
+                    {
+                        <tr>
+                            <td><span class="badge @item.TypeColor fw-bold fs-7 ps-4 ms-2">@item.Type</span></td>
+                            <td><span class="text-muted fw-semibold d-block fs-6">@item.DateRange</span></td>
+                            <td><span class="text-gray-800 fw-bold d-block fs-6">@item.Duration</span></td>
+                            <td><span class="text-muted fw-semibold d-block fs-6 text-truncate w-200px">@item.Reason</span></td>
+                            <td class="text-end pe-4"><span class="badge @(item.StatusColor)">@item.Status</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,447 @@
+@page "/user/profile"
+@layout MainLayout
+@using TTL.HR.Shared.Pages.User.Components
+
+<PageTitle>Thông tin cá nhân - TTL.HR</PageTitle>
+
+<div class="d-flex flex-column flex-column-fluid">
+    <!--begin::Content-->
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-fluid">
+            <!--begin::Navbar-->
+            <div class="card mb-5 mb-xl-10 shadow-sm">
+                <div class="card-body pt-9 pb-0">
+                    <!--begin::Details-->
+                    <div class="d-flex flex-wrap flex-sm-nowrap">
+                        <!--begin: Pic-->
+                        <div class="me-7 mb-4">
+                            <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+                                <img src="assets/media/avatars/300-1.jpg" alt="image" />
+                                <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-body h-20px w-20px"></div>
+                            </div>
+                        </div>
+                        <!--end::Pic-->
+                        <!--begin::Info-->
+                        <div class="flex-grow-1">
+                            <!--begin::Title-->
+                            <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                                <!--begin::User-->
+                                <div class="d-flex flex-column">
+                                    <!--begin::Name-->
+                                    <div class="d-flex align-items-center mb-2">
+                                        <a href="javascript:void(0)" class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">Phan Thanh Tùng</a>
+                                        <a href="javascript:void(0)">
+                                            <i class="ki-outline ki-verify fs-1 text-primary"></i>
+                                        </a>
+                                    </div>
+                                    <!--end::Name-->
+                                    <!--begin::Info-->
+                                    <div class="d-flex flex-wrap fw-semibold fs-6 mb-4 pe-2">
+                                        <a href="javascript:void(0)" class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
+                                            <i class="ki-outline ki-profile-circle fs-4 me-1"></i>Trưởng phòng CNTT
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
+                                            <i class="ki-outline ki-geolocation fs-4 me-1"></i>TP. Hồ Chí Minh
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
+                                            <i class="ki-outline ki-sms fs-4 me-1"></i>tung.pt@tantanloc.com.vn
+                                        </a>
+                                    </div>
+                                    <!--end::Info-->
+                                </div>
+                                <!--end::User-->
+                                <!--begin::Actions-->
+                                <div class="d-flex my-4">
+                                    <button class="btn btn-sm btn-light me-2" @onclick="ShowChangePasswordModal">
+                                        <i class="ki-outline ki-lock fs-3 me-1"></i>Đổi mật khẩu
+                                    </button>
+                                    <button class="btn btn-sm btn-primary me-3" @onclick="ShowEditProfileModal">
+                                        <i class="ki-outline ki-pencil fs-3 me-1"></i>Chỉnh sửa hồ sơ
+                                    </button>
+                                </div>
+                                <!--end::Actions-->
+                            </div>
+                            <!--end::Title-->
+                            <!--begin::Stats-->
+                            <div class="d-flex flex-wrap flex-stack">
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-column flex-grow-1 pe-8">
+                                    <div class="d-flex flex-wrap">
+                                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <i class="ki-outline ki-calendar fs-3 text-success me-2"></i>
+                                                <div class="fs-2 fw-bold">12 Ngày</div>
+                                            </div>
+                                            <div class="fw-semibold fs-6 text-gray-400">Phép năm còn lại</div>
+                                        </div>
+                                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <i class="ki-outline ki-briefcase fs-3 text-primary me-2"></i>
+                                                <div class="fs-2 fw-bold">5 Năm</div>
+                                            </div>
+                                            <div class="fw-semibold fs-6 text-gray-400">Thâm niên</div>
+                                        </div>
+                                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <i class="ki-outline ki-medal-star fs-3 text-warning me-2"></i>
+                                                <div class="fs-2 fw-bold">A+</div>
+                                            </div>
+                                            <div class="fw-semibold fs-6 text-gray-400">Xếp loại năm</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end::Wrapper-->
+                            </div>
+                            <!--end::Stats-->
+                        </div>
+                        <!--end::Info-->
+                    </div>
+                    <!--end::Details-->
+                    <!--begin::Navs-->
+                    <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
+                        <li class="nav-item mt-2">
+                            <a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "overview" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("overview")'>Tổng quan</a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "contracts" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("contracts")'>Hợp đồng</a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "salary" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("salary")'>Lương & Thưởng</a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "documents" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("documents")'>Tài liệu</a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "leave" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("leave")'>Nghỉ phép & Công tác</a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "attendance" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("attendance")'>Chấm công</a>
+                        </li>
+                    </ul>
+                    <!--begin::Navs-->
+                </div>
+            </div>
+            <!--end::Navbar-->
+
+            @if (activeTab == "overview")
+            {
+                <!--begin::details View-->
+                <div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+                    <div class="card-header">
+                        <div class="card-title m-0">
+                            <h3 class="fw-bold m-0">Chi tiết hồ sơ nhân sự</h3>
+                        </div>
+                        <div class="card-toolbar">
+                            <button class="btn btn-sm btn-primary" @onclick="ShowEditProfileModal">Chỉnh sửa</button>
+                        </div>
+                    </div>
+                    <div class="card-body p-9">
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-semibold text-muted">Mã nhân viên</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold fs-6 text-gray-800">TTL-9999</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-semibold text-muted">Họ và tên</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold fs-6 text-gray-800">Phan Thanh Tùng</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-semibold text-muted">Phòng ban</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold fs-6 text-gray-800">Phòng Công nghệ thông tin</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-semibold text-muted">Vị trí</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold fs-6 text-gray-800">Trưởng phòng</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-semibold text-muted">Ngày vào làm</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold fs-6 text-gray-800">01/01/2021</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-semibold text-muted">Số điện thoại</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold fs-6 text-gray-800">0987 654 321</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-semibold text-muted">Email cá nhân</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold fs-6 text-gray-800">tungpt.dev@gmail.com</span>
+                            </div>
+                        </div>
+                        <div class="row mb-10">
+                            <label class="col-lg-4 fw-semibold text-muted">Địa chỉ thường trú</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold fs-6 text-gray-800">123 Đường ABC, Quận 1, TP. Hồ Chí Minh</span>
+                            </div>
+                        </div>
+                        <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6">
+                            <i class="ki-outline ki-shield-tick fs-2tx text-primary me-4"></i>
+                            <div class="d-flex flex-stack flex-grow-1">
+                                <div class="fw-semibold">
+                                    <h4 class="text-gray-900 fw-bold">Xác thực hồ sơ</h4>
+                                    <div class="fs-6 text-gray-700">Hồ sơ của bạn đã được bộ phận HR xác thực hoàn tất vào ngày 05/01/2021.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::details View-->
+            }
+            else if (activeTab == "contracts")
+            {
+                <div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+                    <div class="card-header border-0 pt-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bold fs-3 mb-1">Lịch sử hợp đồng</span>
+                            <span class="text-muted mt-1 fw-semibold fs-7">Danh sách các hợp đồng lao động đã ký</span>
+                        </h3>
+                    </div>
+                    <div class="card-body py-3">
+                        <div class="table-responsive">
+                            <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                                <thead>
+                                    <tr class="fw-bold text-muted bg-light">
+                                        <th class="ps-4 min-w-150px rounded-start">Số hợp đồng</th>
+                                        <th class="min-w-150px">Loại hợp đồng</th>
+                                        <th class="min-w-120px">Ngày bắt đầu</th>
+                                        <th class="min-w-120px">Ngày kết thúc</th>
+                                        <th class="min-w-100px text-end rounded-end pe-4">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="text-dark fw-bold text-hover-primary d-block fs-6 ps-4">HĐLD-2023-001</span></td>
+                                        <td><span class="text-muted fw-semibold d-block fs-6">Vô thời hạn</span></td>
+                                        <td><span class="text-muted fw-semibold d-block fs-6">01/01/2023</span></td>
+                                        <td><span class="text-muted fw-semibold d-block fs-6">-</span></td>
+                                        <td class="text-end pe-4"><span class="badge badge-light-success">Đang hiệu lực</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="text-dark fw-bold text-hover-primary d-block fs-6 ps-4">HĐLD-2021-001</span></td>
+                                        <td><span class="text-muted fw-semibold d-block fs-6">Xác định thời hạn (2 năm)</span></td>
+                                        <td><span class="text-muted fw-semibold d-block fs-6">01/01/2021</span></td>
+                                        <td><span class="text-muted fw-semibold d-block fs-6">31/12/2022</span></td>
+                                        <td class="text-end pe-4"><span class="badge badge-light-secondary">Đã hết hạn</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (activeTab == "salary")
+            {
+                <div class="row g-5 g-xl-10 animate__animated animate__fadeIn">
+                    <div class="col-xl-4">
+                        <div class="card card-flush h-xl-100 shadow-sm border-0 bg-primary mb-5 mb-xl-10">
+                            <div class="card-header pt-5">
+                                <div class="card-title d-flex flex-column">
+                                    <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">35.000.000 đ</span>
+                                    <span class="text-white opacity-75 pt-1 fw-semibold fs-6">Lương cơ bản thực tế</span>
+                                </div>
+                            </div>
+                            <div class="card-body d-flex align-items-end pt-0 pb-6">
+                                <div class="text-white fw-bold fs-6">Hiệu lực từ: 01/01/2024</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-8">
+                        <div class="card card-flush h-xl-100 shadow-sm">
+                            <div class="card-header pt-7">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <span class="card-label fw-bold text-dark">Lịch sử phiếu lương (6 tháng gần nhất)</span>
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-row-dashed align-middle gs-0 gy-3">
+                                        <thead>
+                                            <tr class="fw-bold text-muted">
+                                                <th class="min-w-100px">Tháng/Năm</th>
+                                                <th class="min-w-120px">Lương NET</th>
+                                                <th class="min-w-100px">Thưởng</th>
+                                                <th class="min-w-100px text-end">Chi tiết</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="text-gray-800 fw-bold d-block fs-6">01/2026</span></td>
+                                                <td><span class="text-gray-800 fw-bold d-block fs-6">32.450.000 đ</span></td>
+                                                <td><span class="text-success fw-bold d-block fs-6">+2.500.000 đ</span></td>
+                                                <td class="text-end"><button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"><i class="ki-outline ki-document fs-2"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="text-gray-800 fw-bold d-block fs-6">12/2025</span></td>
+                                                <td><span class="text-gray-800 fw-bold d-block fs-6">31.200.000 đ</span></td>
+                                                <td><span class="text-muted fw-bold d-block fs-6">0 đ</span></td>
+                                                <td class="text-end"><button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"><i class="ki-outline ki-document fs-2"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="text-gray-800 fw-bold d-block fs-6">11/2025</span></td>
+                                                <td><span class="text-gray-800 fw-bold d-block fs-6">31.200.000 đ</span></td>
+                                                <td><span class="text-muted fw-bold d-block fs-6">0 đ</span></td>
+                                                <td class="text-end"><button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"><i class="ki-outline ki-document fs-2"></i></button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (activeTab == "documents")
+            {
+                <div class="row g-6 g-xl-9 animate__animated animate__fadeIn">
+                    <div class="col-md-6 col-lg-4 col-xl-3">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body d-flex justify-content-center text-center flex-column p-8">
+                                <a href="javascript:void(0)" class="text-gray-800 text-hover-primary d-flex flex-column">
+                                    <div class="symbol symbol-60px mb-5">
+                                        <img src="assets/media/svg/files/pdf.svg" alt="" />
+                                    </div>
+                                    <div class="fs-5 fw-bold mb-2">CMND/CCCD.pdf</div>
+                                </a>
+                                <div class="fs-7 fw-semibold text-gray-400">1.2 MB, 05/01/2021</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body d-flex justify-content-center text-center flex-column p-8">
+                                <a href="javascript:void(0)" class="text-gray-800 text-hover-primary d-flex flex-column">
+                                    <div class="symbol symbol-60px mb-5">
+                                        <img src="assets/media/svg/files/pdf.svg" alt="" />
+                                    </div>
+                                    <div class="fs-5 fw-bold mb-2">Bang_Dai_Hoc.pdf</div>
+                                </a>
+                                <div class="fs-7 fw-semibold text-gray-400">2.5 MB, 05/01/2021</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body d-flex justify-content-center text-center flex-column p-8">
+                                <a href="javascript:void(0)" class="text-gray-800 text-hover-primary d-flex flex-column">
+                                    <div class="symbol symbol-60px mb-5">
+                                        <img src="assets/media/svg/files/doc.svg" alt="" />
+                                    </div>
+                                    <div class="fs-5 fw-bold mb-2">So_Yeu_Ly_Lich.docx</div>
+                                </a>
+                                <div class="fs-7 fw-semibold text-gray-400">0.8 MB, 05/01/2021</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3">
+                        <div class="card border border-2 border-gray-300 border-dashed h-100 shadow-none">
+                            <div class="card-body d-flex flex-center text-center flex-column p-8">
+                                <button class="btn btn-icon btn-active-color-primary w-40px h-40px mb-2">
+                                    <i class="ki-outline ki-plus fs-2 text-primary"></i>
+                                </button>
+                                <div class="fs-6 fw-bold text-gray-800 mb-1">Tải lên tài liệu</div>
+                                <div class="fs-7 fw-semibold text-gray-400">Định dạng: PDF, JPG, DOC</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            else if (activeTab == "leave")
+            {
+                <UserLeaveHistory />
+            }
+            else if (activeTab == "attendance")
+            {
+                <UserAttendanceHistory />
+            }
+        </div>
+    </div>
+    <!--end::Content-->
+</div>
+
+<!--begin::Edit Profile Modal-->
+<div class="modal fade @(isEditModalOpen ? "show d-block" : "")" tabindex="-1" style='background: rgba(0,0,0,0.5);'>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header">
+                <h3 class="modal-title fw-bold text-dark">Chỉnh sửa hồ sơ cá nhân</h3>
+                <button type="button" class="btn-close" @onclick="CloseModals"></button>
+            </div>
+            <div class="modal-body py-10 px-lg-17">
+                <div class="row g-9 mb-8">
+                    <div class="col-md-6 fv-row">
+                        <label class="required fs-6 fw-semibold mb-2">Họ và tên</label>
+                        <input type="text" class="form-control form-control-solid" value="Phan Thanh Tùng" />
+                    </div>
+                    <div class="col-md-6 fv-row">
+                        <label class="required fs-6 fw-semibold mb-2">Số điện thoại</label>
+                        <input type="text" class="form-control form-control-solid" value="0987 654 321" />
+                    </div>
+                </div>
+                <div class="row g-9 mb-8">
+                    <div class="col-md-6 fv-row">
+                        <label class="required fs-6 fw-semibold mb-2">Email cá nhân</label>
+                        <input type="email" class="form-control form-control-solid" value="tungpt.dev@gmail.com" />
+                    </div>
+                    <div class="col-md-6 fv-row">
+                        <label class="fs-6 fw-semibold mb-2">Ngày sinh</label>
+                        <input type="date" class="form-control form-control-solid" value="1990-01-01" />
+                    </div>
+                </div>
+                <div class="fv-row mb-8">
+                    <label class="fs-6 fw-semibold mb-2">Địa chỉ thường trú</label>
+                    <textarea class="form-control form-control-solid" rows="3">123 Đường ABC, Quận 1, TP. Hồ Chí Minh</textarea>
+                </div>
+            </div>
+            <div class="modal-footer flex-center">
+                <button type="reset" class="btn btn-light me-3" @onclick="CloseModals">Hủy</button>
+                <button type="submit" class="btn btn-primary" @onclick="HandleSaveProfile">Lưu thay đổi</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end::Edit Profile Modal-->
+
+<!--begin::Change Password Modal-->
+<div class="modal fade @(isPasswordModalOpen ? "show d-block" : "")" tabindex="-1" style='background: rgba(0,0,0,0.5);'>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header">
+                <h3 class="modal-title fw-bold text-dark">Đổi mật khẩu tài khoản</h3>
+                <button type="button" class="btn-close" @onclick="CloseModals"></button>
+            </div>
+            <div class="modal-body py-10 px-lg-10">
+                <div class="fv-row mb-8">
+                    <label class="required fs-6 fw-semibold mb-2">Mật khẩu hiện tại</label>
+                    <input type="password" class="form-control form-control-solid" placeholder="********" />
+                </div>
+                <div class="fv-row mb-8">
+                    <label class="required fs-6 fw-semibold mb-2">Mật khẩu mới</label>
+                    <input type="password" class="form-control form-control-solid" placeholder="********" />
+                    <div class="text-muted fs-8 mt-2">Sử dụng ít nhất 8 ký tự, bao gồm chữ cái, chữ số và ký hiệu.</div>
+                </div>
+                <div class="fv-row mb-8">
+                    <label class="required fs-6 fw-semibold mb-2">Xác nhận mật khẩu mới</label>
+                    <input type="password" class="form-control form-control-solid" placeholder="********" />
+                </div>
+            </div>
+            <div class="modal-footer flex-center">
+                <button type="reset" class="btn btn-light me-3" @onclick="CloseModals">Hủy</button>
+                <button type="submit" class="btn btn-primary" @onclick="HandleChangePassword">Cập nhật mật khẩu</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end::Change Password Modal-->
+
+
