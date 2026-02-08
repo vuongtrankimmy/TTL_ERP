@@ -1,473 +1,125 @@
-@page "/payroll/list"
+@page "/payroll/periods"
+@inject NavigationManager Navigation
+@using System.Linq
 
-<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
-    <div id="kt_content_container" class="container-fluid">
-        <!-- Filters Bar -->
-        <div class="card mb-8 shadow-sm">
-            <div class="card-body py-4 px-6">
-                <div class="d-flex flex-wrap align-items-center">
-                    <!-- Search -->
-                    <div class="position-relative w-md-250px me-4 my-1">
-                        <span class="svg-icon svg-icon-3 position-absolute top-50 translate-middle-y ms-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
-                            </svg>
-                        </span>
-                        <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm theo tên, mã NV..." />
-                    </div>
-
-                    <!-- Period -->
-                    <div class="w-md-175px me-4 my-1">
-                        <select class="form-select form-select-solid fs-7 fw-bold">
-                            <option>Tháng 10/2023</option>
-                            <option>Tháng 09/2023</option>
-                        </select>
-                    </div>
-
-                    <!-- Department -->
-                    <div class="w-md-175px me-4 my-1">
-                        <select class="form-select form-select-solid fs-7 fw-bold">
-                            <option>Phòng ban: Tất cả</option>
-                            <option>Kỹ thuật</option>
-                            <option>Kinh doanh</option>
-                        </select>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="ms-auto my-1 d-flex gap-2">
-                        <button class="btn btn-icon btn-light-primary btn-sm" title="Khóa bảng lương"><i class="bi bi-lock fs-5"></i></button>
-                        <button class="btn btn-icon btn-light-primary btn-sm" title="Tải xuống"><i class="bi bi-download fs-5"></i></button>
-                        <button class="btn btn-icon btn-light-primary btn-sm" title="In"><i class="bi bi-printer fs-5"></i></button>
-                        <button class="btn btn-light-primary fw-bold fs-7 px-6 ms-2"><i class="bi bi-funnel me-1"></i>Lọc thêm</button>
-                    </div>
-                </div>
+<div class="card card-flush">
+    <div class="card-header align-items-center py-5 gap-2 gap-md-5">
+        <div class="card-title">
+            <div class="d-flex align-items-center position-relative my-1">
+                <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4"></i>
+                <input type="text" data-kt-ecommerce-order-filter="search" class="form-control form-control-solid w-250px ps-12" placeholder="Search Payroll">
             </div>
         </div>
-
-        <!-- Selection Bar -->
-        <div class="d-flex flex-stack mb-6">
-            <div class="d-flex align-items-center">
-                <div class="form-check form-check-sm form-check-custom form-check-solid me-5">
-                    <input class="form-check-input" type="checkbox" id="check_all_staff" @onchange="@(e => ToggleSelectAll(e.Value))" />
-                    <label class="form-check-label fw-bold text-gray-700 fs-7 ms-2" for="check_all_staff">Chọn tất cả (@_payrolls.Count nhân viên)</label>
-                </div>
-            </div>
-            <div class="d-flex align-items-center gap-3 text-end justify-content-end w-100">
-                <button class="btn btn-sm btn-light border border-gray-300 px-3 py-2 fs-8 fw-semibold" @onclick="ExportExcel"><i class="bi bi-download fs-6 me-1"></i>Xuất Excel</button>
-                <button class="btn btn-sm btn-primary px-4 py-2 fs-8 fw-semibold" @onclick="FinalizePayroll"><i class="bi bi-calculator fs-7 me-1"></i>Chốt lương</button>
-            </div>
+        <div class="card-toolbar">
+            <button type="button" class="btn btn-primary" @onclick="CreateNewPeriod">
+                <i class="ki-outline ki-plus fs-2"></i> Generate Payroll
+            </button>
         </div>
-
-        <!-- Payroll Table -->
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-0">
-                <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="10" Columns="8">
-                    <div class="table-responsive">
-                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-7 gy-5 mb-0">
-                            <thead>
-                                <tr class="fw-bold text-muted text-uppercase fs-8 border-bottom-0">
-                                    <th class="w-10px pe-2"></th>
-                                    <th class="min-w-150px">NHÂN VIÊN</th>
-                                    <th class="min-w-120px">LƯƠNG CƠ BẢN</th>
-                                    <th class="min-w-120px">PHỤ CẤP</th>
-                                    <th class="min-w-100px text-center">NGÀY CÔNG</th>
-                                    <th class="min-w-120px">GIẢM TRỪ</th>
-                                    <th class="min-w-120px">THỰC LĨNH</th>
-                                    <th class="min-w-120px text-center">TRẠNG THÁI</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var p in _payrolls)
-                                {
-                                    <tr class="hover-elevate cursor-pointer" @onclick="() => ViewDetail(p.Id)">
-                                        <td>
-                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                <input class="form-check-input" type="checkbox" checked="@IsSelected(p.Id)" @onchange="@(e => ToggleSelect(p.Id, e.Value))" @onclick:stopPropagation />
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="symbol symbol-40px symbol-circle me-4">
-                                                    @if (!string.IsNullOrEmpty(p.Avatar))
-                                                    {
-                                                        <img src="@p.Avatar" alt="user" />
-                                                    }
-                                                    else
-                                                    {
-                                                        <div class="symbol-label @p.AvatarBg fw-bolder">@p.Name.Substring(0, 1)</div>
-                                                    }
-                                                </div>
-                                                <div class="d-flex justify-content-start flex-column">
-                                                    <span class="text-dark fw-bolder text-hover-primary fs-6">@p.Name</span>
-                                                    <span class="text-muted fw-bold fs-7">@p.Code • @p.Department</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="fw-bold fs-7">@p.BaseSalary.ToString("N0") đ</td>
-                                        <td class="fw-bold fs-7 text-success">@((p.Allowances > 0 ? "+" : ""))@p.Allowances.ToString("N0") đ</td>
-                                        <td class="text-center fw-bold fs-7">@p.WorkingDays</td>
-                                        <td class="fw-bold fs-7 text-danger">-@p.Deductions.ToString("N0") đ</td>
-                                        <td class="fw-bolder fs-6 text-primary">@p.NetPay.ToString("N0") đ</td>
-                                        <td class="text-center">
-                                            @{
-                                                var badgeClass = p.Status == "Dự thảo" ? "badge-light-warning" : "badge-light-success";
-                                                var bulletClass = p.Status == "Dự thảo" ? "bg-warning" : "bg-success";
-                                                var displayStatus = p.Status == "Dự thảo" ? "Dự thảo" : "Đã chốt";
-                                            }
-                                            <span class="badge @badgeClass fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
-                                                <span class="bullet bullet-dot @bulletClass w-6px h-6px me-2"></span>@displayStatus
-                                            </span>
-                                        </td>
-                                    </tr>
-                                }
-                                <tr class="total-row border-top border-2 border-gray-300 bg-light-primary bg-opacity-10">
-                                    <td colspan="2" class="fs-7 fw-bolder ps-7">TỔNG CỘNG (@_payrolls.Count Nhân viên)</td>
-                                    <td class="fs-7 fw-bolder">@_payrolls.Sum(x => x.BaseSalary).ToString("N0") đ</td>
-                                    <td class="fs-7 fw-bolder text-success">+@_payrolls.Sum(x => x.Allowances).ToString("N0") đ</td>
-                                    <td class="text-center fs-7">--</td>
-                                    <td class="fs-7 fw-bolder text-danger">-@_payrolls.Sum(x => x.Deductions).ToString("N0") đ</td>
-                                    <td class="fs-5 fw-bolder text-primary">@_payrolls.Sum(x => x.NetPay).ToString("N0") đ</td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </SkeletonLoading>
-            </div>
-        </div>
-
-        <!-- Bottom Actions -->
-        <div class="mt-8 d-flex flex-stack flex-wrap gap-4">
-            <div class="security-badge text-muted fs-8 fw-bold">
-                <i class="bi bi-shield-lock-fill fs-3 text-gray-400 me-2"></i>Dữ liệu được mã hóa và bảo mật theo chuẩn ISO/IEC 27001
-            </div>
-            <div class="d-flex gap-3">
-                <button class="btn btn-sm btn-light fw-bold px-6 py-3" @onclick="ExportExcel"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Xuất file Excel thanh toán</button>
-                <button class="btn btn-sm btn-dark fw-bold px-8 py-3 shadow" @onclick="FinalizeAll"><i class="bi bi-patch-check me-2"></i>Chốt bảng lương</button>
-            </div>
+    </div>
+    <div class="card-body pt-0">
+        <div class="table-responsive">
+            <table class="table align-middle table-row-dashed fs-6 gy-5">
+                <thead>
+                    <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                        <th class="min-w-100px">Period Name</th>
+                        <th class="min-w-100px">Month/Year</th>
+                        <th class="min-w-100px">Status</th>
+                        <th class="min-w-100px">Total Payout</th>
+                        <th class="text-end min-w-100px">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="fw-semibold text-gray-600">
+                    @foreach (var period in Periods)
+                    {
+                        <tr>
+                            <td>
+                                <a href="javascript:void(0)" @onclick="() => ViewDetail(period.Name)" class="text-gray-800 text-hover-primary fw-bold">@period.Name</a>
+                            </td>
+                            <td>
+                                <span class="fw-bold">@period.Month/@period.Year</span>
+                            </td>
+                            <td>
+                                <div class="badge badge-light-@(period.Status == "Closed" ? "success" : "warning") fw-bold">@period.Status</div>
+                            </td>
+                            <td>
+                                <span class="fw-bold">@period.TotalAmount.ToString("N0") VND</span>
+                            </td>
+                            <td class="text-end">
+                                <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" title="View Details" @onclick="() => ViewDetail(period.Name)">
+                                    <i class="ki-outline ki-eye fs-3"></i>
+                                </button>
+                                <button class="btn btn-icon btn-active-light-danger w-30px h-30px" title="Delete" @onclick="() => DeletePeriod(period)">
+                                    <i class="ki-outline ki-trash fs-3"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-
-<!-- PAYROLL DETAIL DRAWER -->
-<div class="bg-white drawer drawer-end @(_showDetail ? "drawer-on" : "")" 
-     style="width: 550px; position: fixed; right: 0; top: 0; bottom: 0; z-index: 106; box-shadow: -10px 0 30px rgba(0,0,0,0.1); border-left: 1px solid #eff2f5; transition: transform 0.3s ease; transform: @(_showDetail ? "translateX(0)" : "translateX(100%)"); display: block;">
-    <div class="card w-100 rounded-0 border-0 h-100 overflow-hidden">
-        <!-- Header -->
-        <div class="card-header pe-5 py-6">
-            <div class="card-title">
-                <div class="d-flex justify-content-center flex-column me-3">
-                    <span class="fs-4 fw-bolder text-gray-900 lh-1">Phiếu lương chi tiết</span>
-                    <span class="badge badge-light-success fw-bold fs-9 mt-2 w-fit">Đã quyết toán</span>
-                </div>
-            </div>
-            <div class="card-toolbar">
-                <div class="btn btn-sm btn-icon btn-active-light-primary" @onclick="CloseDetail">
-                    <i class="ki-outline ki-cross fs-4"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Body -->
-        <div class="card-body hover-scroll-overlay-y py-8 px-10">
-            @if (_selectedItem != null)
-            {
-                <!-- Info Section -->
-                <div class="d-flex align-items-center mb-8">
-                    <div class="symbol symbol-65px symbol-circle me-6">
-                        @if (!string.IsNullOrEmpty(_selectedItem.Avatar))
-                        {
-                            <img src="@_selectedItem.Avatar" alt="" />
-                        }
-                        else
-                        {
-                            <div class="symbol-label fs-1 fw-bold @_selectedItem.AvatarBg">@_selectedItem.Name.Substring(0, 1)</div>
-                        }
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="text-dark fw-bolder fs-3 mb-1">@_selectedItem.Name</span>
-                        <span class="text-muted fw-bold fs-7 mb-2">ID: @_selectedItem.Code • @_selectedItem.Department</span>
-                        <span class="text-gray-600 fs-8">Kỳ lương: 10/2023 (01/10/2023 - 31/10/2023)</span>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="d-flex gap-3 mb-10">
-                    <button class="btn btn-sm btn-light-primary flex-grow-1"><i class="bi bi-file-pdf me-2"></i>Tải phiếu lương (PDF)</button>
-                    <button class="btn btn-sm btn-primary flex-grow-1"><i class="bi bi-envelope me-2"></i>Gửi qua Email</button>
-                </div>
-
-                <!-- Metrics Summary -->
-                <div class="bg-light-light rounded border border-dashed border-gray-300 p-6 mb-8">
-                    <h3 class="fw-bolder fs-6 mb-5 text-uppercase">Tóm tắt công suất</h3>
-                    <div class="d-flex flex-stack flex-wrap gap-4">
-                        <div class="d-flex flex-column text-center flex-grow-1 border-end border-gray-200">
-                            <span class="fs-5 fw-bolder text-dark">@_selectedItem.WorkSummary.Standard</span>
-                            <span class="fs-9 fw-bold text-muted text-uppercase">Ngày công</span>
-                        </div>
-                        <div class="d-flex flex-column text-center flex-grow-1 border-end border-gray-200">
-                            <span class="fs-5 fw-bolder text-dark">@_selectedItem.WorkSummary.Overtime</span>
-                            <span class="fs-9 fw-bold text-muted text-uppercase">Tăng ca</span>
-                        </div>
-                        <div class="d-flex flex-column text-center flex-grow-1">
-                            <span class="fs-5 fw-bolder text-danger">@_selectedItem.WorkSummary.LateEarly</span>
-                            <span class="fs-9 fw-bold text-muted text-uppercase">Muộn/Sớm</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Earnings -->
-                <div class="mb-8">
-                    <div class="d-flex flex-stack mb-4">
-                        <h3 class="fw-bolder fs-6 text-uppercase text-gray-800">1. Các khoản thu nhập</h3>
-                        <span class="text-success fw-bolder fs-6">+@_selectedItem.IncomeDetails.Sum(x => x.Amount).ToString("N0") đ</span>
-                    </div>
-                    <div class="separator separator-dashed border-gray-300 mb-4"></div>
-                    <div class="d-flex flex-column gap-4">
-                        @foreach (var detail in _selectedItem.IncomeDetails)
-                        {
-                            <div class="d-flex flex-stack">
-                                <span class="text-gray-700 fw-bold fs-7">@detail.Title</span>
-                                <span class="text-dark fw-bolder fs-7">@detail.Amount.ToString("N0") đ</span>
-                            </div>
-                        }
-                    </div>
-                </div>
-
-                <!-- Deductions -->
-                <div class="mb-10">
-                    <div class="d-flex flex-stack mb-4">
-                        <h3 class="fw-bolder fs-6 text-uppercase text-gray-800">2. Các khoản giảm trừ</h3>
-                        <span class="text-danger fw-bolder fs-6">-@_selectedItem.DeductionDetails.Sum(x => x.Amount).ToString("N0") đ</span>
-                    </div>
-                    <div class="separator separator-dashed border-gray-300 mb-4"></div>
-                    <div class="d-flex flex-column gap-4">
-                        @foreach (var detail in _selectedItem.DeductionDetails)
-                        {
-                            <div class="d-flex flex-stack">
-                                <span class="text-gray-700 fw-bold fs-7">@detail.Title</span>
-                                <span class="text-dark fw-bolder fs-7">@detail.Amount.ToString("N0") đ</span>
-                            </div>
-                        }
-                    </div>
-                </div>
-
-                <!-- Net Pay -->
-                <div class="card bg-dark rounded-3 px-8 py-6">
-                    <div class="d-flex flex-stack">
-                        <div class="d-flex flex-column">
-                            <span class="text-gray-400 fw-bold fs-8 text-uppercase mb-1">Thực lĩnh cuối cùng (Net Pay)</span>
-                            <span class="text-white fs-7 opacity-50">Đã bao gồm các khoản thuế & bảo hiểm bắt buộc</span>
-                        </div>
-                        <div class="text-end">
-                            <span class="text-white fw-bolder fs-2x">@_selectedItem.NetPay.ToString("N0") đ</span>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-        
-        <!-- Footer -->
-        <div class="card-footer py-6 px-10 border-0 bg-light-light text-center">
-            <span class="text-muted fs-8">Người duyệt: Bùi Quang Tuấn • Ngày duyệt: 14/10/2023 10:30</span>
-        </div>
-    </div>
-</div>
-
-<!-- Drawer Backdrop -->
-@if (_showDetail)
-{
-    <div class="drawer-overlay" style="z-index: 105; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);" @onclick="CloseDetail"></div>
-}
 
 @code {
-    private bool _showDetail = false;
-    private PayrollItem? _selectedItem;
-    private bool _isLoading = true;
+    private List<PayrollPeriodViewModel> Periods = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        // Simulate API loading
-        await Task.Delay(1450);
-        _isLoading = false;
-    }
-
-    private void ViewDetail(int id)
-    {
-        _selectedItem = _payrolls.FirstOrDefault(x => x.Id == id);
-        _showDetail = true;
-    }
-
-    private void CloseDetail() => _showDetail = false;
-
-    private List<PayrollItem> _payrolls = new()
-    {
-        new() { 
-            Id = 1, Name = "Nguyễn Văn Lộc", Code = "NV001", Department = "Phòng Kỹ thuật", 
-            Avatar = "", AvatarBg = "bg-light-primary text-primary",
-            BaseSalary = 15000000, Allowances = 7500000, WorkingDays = "22/22", Deductions = 1650000, NetPay = 20850000, Status = "Dự thảo",
-            IncomeDetails = new() { new("Lương cơ bản", 15000000), new("Lương OT (15h)", 4500000), new("Thưởng dự án", 2000000), new("Phụ cấp ăn trưa", 1000000) },
-            DeductionDetails = new() { new("BHXH (10.5%)", 1500000), new("Thuế TNCN", 150000) },
-            WorkSummary = new() { Standard = "22/22", Overtime = "15 giờ", LateEarly = "0 lần" }
-        },
-        new() { 
-            Id = 2, Name = "Phạm Minh Tuấn", Code = "NV002", Department = "Phòng Kinh doanh", 
-            Avatar = "assets/media/avatars/300-1.jpg", AvatarBg = "",
-            BaseSalary = 10000000, Allowances = 15500000, WorkingDays = "20/22", Deductions = 1200000, NetPay = 24300000, Status = "Dự thảo",
-            IncomeDetails = new() { new("Lương cơ bản", 10000000), new("Hoa hồng doanh số", 15000000), new("Phụ cấp xăng xe", 500000) },
-            DeductionDetails = new() { new("BHXH", 1050000), new("Phạt đi muộn", 150000) },
-            WorkSummary = new() { Standard = "20/22", Overtime = "0 giờ", LateEarly = "3 lần" }
-        },
-        new() { 
-            Id = 3, Name = "Trần Thị Thu", Code = "NV003", Department = "Phòng Marketing", 
-            Avatar = "assets/media/avatars/300-2.jpg", AvatarBg = "",
-            BaseSalary = 18000000, Allowances = 3000000, WorkingDays = "22/22", Deductions = 2100000, NetPay = 18900000, Status = "Dự thảo",
-            IncomeDetails = new() { new("Lương cơ bản", 18000000), new("Thưởng KPI", 2000000), new("Phụ cấp điện thoại", 1000000) },
-            DeductionDetails = new() { new("BHXH", 1890000), new("Thuế TNCN", 210000) },
-            WorkSummary = new() { Standard = "22/22", Overtime = "5 giờ", LateEarly = "0 lần" }
-        },
-        new() { 
-            Id = 4, Name = "Bùi Quang Tuấn", Code = "NV004", Department = "Ban Giám Đốc", 
-            Avatar = "assets/media/avatars/300-3.jpg", AvatarBg = "",
-            BaseSalary = 45000000, Allowances = 10000000, WorkingDays = "22/22", Deductions = 5500000, NetPay = 49500000, Status = "Dự thảo",
-            IncomeDetails = new() { new("Lương cơ bản", 45000000), new("Phụ cấp trách nhiệm", 8000000), new("Thưởng quí", 2000000) },
-            DeductionDetails = new() { new("BHXH (Max)", 3500000), new("Thuế TNCN", 2000000) },
-            WorkSummary = new() { Standard = "22/22", Overtime = "0 giờ", LateEarly = "0 lần" }
-        },
-        new() { 
-            Id = 5, Name = "Lê Hoàng Long", Code = "NV005", Department = "Phòng Kỹ thuật", 
-            Avatar = "", AvatarBg = "bg-light-info text-info",
-            BaseSalary = 22000000, Allowances = 6000000, WorkingDays = "22/22", Deductions = 2500000, NetPay = 25500000, Status = "Dự thảo",
-            IncomeDetails = new() { new("Lương cơ bản", 22000000), new("Lương OT (25h)", 5000000), new("Phụ cấp độc hại", 1000000) },
-            DeductionDetails = new() { new("BHXH", 2310000), new("Thuế TNCN", 190000) },
-            WorkSummary = new() { Standard = "22/22", Overtime = "25 giờ", LateEarly = "0 lần" }
-        },
-        new() { 
-            Id = 6, Name = "Đỗ Thùy Trang", Code = "NV006", Department = "Phòng Kế toán", 
-            Avatar = "assets/media/avatars/300-5.jpg", AvatarBg = "",
-            BaseSalary = 14000000, Allowances = 1500000, WorkingDays = "22/22", Deductions = 1470000, NetPay = 14030000, Status = "Dự thảo",
-            IncomeDetails = new() { new("Lương cơ bản", 14000000), new("Phụ cấp ăn trưa", 1000000), new("Thưởng chuyên cần", 500000) },
-            DeductionDetails = new() { new("BHXH", 1470000) },
-            WorkSummary = new() { Standard = "22/22", Overtime = "0 giờ", LateEarly = "0 lần" }
-        },
-        new() { 
-            Id = 7, Name = "Ngô Chí Công", Code = "NV007", Department = "Phòng Nhân sự", 
-            Avatar = "", AvatarBg = "bg-light-success text-success",
-            BaseSalary = 13000000, Allowances = 2000000, WorkingDays = "22/22", Deductions = 1365000, NetPay = 13635000, Status = "Dự thảo",
-            IncomeDetails = new() { new("Lương cơ bản", 13000000), new("Thưởng tuyển dụng", 1500000), new("Phụ cấp", 500000) },
-            DeductionDetails = new() { new("BHXH", 1365000) },
-            WorkSummary = new() { Standard = "22/22", Overtime = "2 giờ", LateEarly = "0 lần" }
-        },
-        new() { 
-            Id = 8, Name = "Vũ Thị Mai", Code = "NV008", Department = "Phòng Marketing", 
-            Avatar = "assets/media/avatars/300-6.jpg", AvatarBg = "",
-            BaseSalary = 12000000, Allowances = 5000000, WorkingDays = "18/22", Deductions = 1260000, NetPay = 15740000, Status = "Dự thảo",
-            IncomeDetails = new() { new("Lương thực tế (18 ngày)", 9818181), new("Thưởng chiến dịch", 5000000), new("Phụ cấp khác", 1181819) },
-            DeductionDetails = new() { new("BHXH", 1260000) },
-            WorkSummary = new() { Standard = "18/22", Overtime = "0 giờ", LateEarly = "1 lần" }
-        },
-        new() { 
-            Id = 9, Name = "Hoàng Gia Bảo", Code = "NV009", Department = "IT Support", 
-            Avatar = "", AvatarBg = "bg-light-warning text-warning",
-            BaseSalary = 11000000, Allowances = 2000000, WorkingDays = "22/22", Deductions = 1155000, NetPay = 11845000, Status = "Dự thảo",
-            IncomeDetails = new() { new("Lương cơ bản", 11000000), new("Phụ cấp trực ca", 1500000), new("Thưởng", 500000) },
-            DeductionDetails = new() { new("BHXH", 1155000) },
-            WorkSummary = new() { Standard = "22/22", Overtime = "10 giờ", LateEarly = "2 lần" }
-        },
-        new() { 
-            Id = 10, Name = "Lý Minh Anh", Code = "NV010", Department = "Phòng Hành chính", 
-            Avatar = "assets/media/avatars/300-9.jpg", AvatarBg = "",
-            BaseSalary = 9000000, Allowances = 1000000, WorkingDays = "22/22", Deductions = 945000, NetPay = 9055000, Status = "Dự thảo",
-            IncomeDetails = new() { new("Lương cơ bản", 9000000), new("Phụ cấp", 1000000) },
-            DeductionDetails = new() { new("BHXH", 945000) },
-            WorkSummary = new() { Standard = "22/22", Overtime = "0 giờ", LateEarly = "0 lần" }
-        }
-    };
-
-    private class PayrollItem
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string Code { get; set; } = "";
-        public string Department { get; set; } = "";
-        public string Avatar { get; set; } = "";
-        public string AvatarBg { get; set; } = "";
-        public decimal BaseSalary { get; set; }
-        public decimal Allowances { get; set; }
-        public string WorkingDays { get; set; } = "";
-        public decimal Deductions { get; set; }
-        public decimal NetPay { get; set; }
-        public string Status { get; set; } = "";
-        public List<DetailItem> IncomeDetails { get; set; } = new();
-        public List<DetailItem> DeductionDetails { get; set; } = new();
-        public WorkSummaryData WorkSummary { get; set; } = new();
-    }
-
-    private class DetailItem
-    {
-        public string Title { get; set; }
-        public decimal Amount { get; set; }
-        public DetailItem(string title, decimal amount) { Title = title; Amount = amount; }
-    }
-
-    private class WorkSummaryData
-    {
-        public string Standard { get; set; } = "";
-        public string Overtime { get; set; } = "";
-        public string LateEarly { get; set; } = "";
-    }
-
-    private HashSet<int> _selectedIds = new();
-
-    private void ToggleSelectAll(object? checkedValue)
-    {
-        if (checkedValue is bool isChecked && isChecked)
+        Periods = new List<PayrollPeriodViewModel>
         {
-            _selectedIds = _payrolls.Select(x => x.Id).ToHashSet();
-        }
-        else
-        {
-            _selectedIds.Clear();
-        }
+            new PayrollPeriodViewModel { Name = "Payroll Jan 2026", Month = 1, Year = 2026, Status = "Closed", TotalAmount = 500000000 },
+            new PayrollPeriodViewModel { Name = "Payroll Feb 2026", Month = 2, Year = 2026, Status = "Draft", TotalAmount = 520000000 }
+        };
     }
 
-    private void ToggleSelect(int id, object? checkedValue)
-    {
-        if (checkedValue is bool isChecked && isChecked)
-        {
-            _selectedIds.Add(id);
-        }
-        else
-        {
-            _selectedIds.Remove(id);
-        }
-    }
+    private void CreateNewPeriod() 
+    { 
+        // Mock logic: Add a new period
+        var lastPeriod = Periods.OrderByDescending(p => p.Year).ThenByDescending(p => p.Month).FirstOrDefault();
+        var nextMonth = 1;
+        var nextYear = 2026;
 
-    private bool IsSelected(int id) => _selectedIds.Contains(id);
-
-    private void FinalizePayroll()
-    {
-        if (_selectedIds.Any())
+        if (lastPeriod != null)
         {
-            var itemsToUpdate = _payrolls.Where(p => _selectedIds.Contains(p.Id)).ToList();
-            foreach (var item in itemsToUpdate)
+            if (lastPeriod.Month == 12)
             {
-                item.Status = "Đã chốt";
+                nextMonth = 1;
+                nextYear = lastPeriod.Year + 1;
+            }
+            else
+            {
+                nextMonth = lastPeriod.Month + 1;
+                nextYear = lastPeriod.Year;
             }
         }
+
+        Periods.Add(new PayrollPeriodViewModel 
+        { 
+            Name = $"Payroll {System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(nextMonth)} {nextYear}", 
+            Month = nextMonth, 
+            Year = nextYear, 
+            Status = "Draft", 
+            TotalAmount = 0 
+        });
     }
 
-    private void FinalizeAll()
+    private void DeletePeriod(PayrollPeriodViewModel period)
     {
-        foreach (var item in _payrolls)
-        {
-            item.Status = "Đã chốt";
-        }
+        Periods.Remove(period);
     }
 
-    private void ExportExcel()
+    private void ViewDetail(string periodName)
     {
-        // Mock export functionality
-        // In a real app, this would trigger a file download
+        // For demo, passing periodName as ID
+        Navigation.NavigateTo($"/payroll/period/{periodName}");
+    }
+
+    public class PayrollPeriodViewModel
+    {
+        public string Name { get; set; }
+        public int Month { get; set; }
+        public int Year { get; set; }
+        public string Status { get; set; }
+        public decimal TotalAmount { get; set; }
     }
 }

@@ -1,0 +1,202 @@
+[
+    {
+        "_id": {
+            "$oid": "65fc3c3c0000000000000001"
+        },
+        "Name": "Laptop Dell XPS 15",
+        "Code": "AST-IT-001",
+        "SerialNumber": "DELL-XPS-9510-001",
+        "Type": "Computer",
+        "PurchaseDate": {
+            "$date": "2023-01-10T00:00:00Z"
+        },
+        "PurchasePrice": 45000000,
+        "DepreciationPerYear": 15000000,
+        "Status": "Assigned",
+        "CurrentlyAssignedTo": "Phạm Minh Hùng (CEO)",
+        "CreatedAt": {
+            "$date": "2023-01-10T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc3c3c0000000000000002"
+        },
+        "Name": "Macbook Pro M3 16 inch",
+        "Code": "AST-IT-002",
+        "SerialNumber": "APPLE-M3-PRO-055",
+        "Type": "Computer",
+        "PurchaseDate": {
+            "$date": "2024-01-05T00:00:00Z"
+        },
+        "PurchasePrice": 65000000,
+        "DepreciationPerYear": 20000000,
+        "Status": "Assigned",
+        "CurrentlyAssignedTo": "Trần Thanh Bình (Dev)",
+        "CreatedAt": {
+            "$date": "2024-01-05T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc3c3c0000000000000003"
+        },
+        "Name": "Màn hình LG UltraGear 27''",
+        "Code": "AST-IT-003",
+        "SerialNumber": "LG-27GP850",
+        "Type": "Accessory",
+        "PurchaseDate": {
+            "$date": "2024-01-05T00:00:00Z"
+        },
+        "PurchasePrice": 9000000,
+        "DepreciationPerYear": 3000000,
+        "Status": "Assigned",
+        "CurrentlyAssignedTo": "Trần Thanh Bình (Dev)",
+        "CreatedAt": {
+            "$date": "2024-01-05T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc3c3c0000000000000004"
+        },
+        "Name": "Toyota Innova 7 chỗ",
+        "Code": "AST-VH-001",
+        "SerialNumber": "51G-123.45",
+        "Type": "Vehicle",
+        "PurchaseDate": {
+            "$date": "2020-05-20T00:00:00Z"
+        },
+        "PurchasePrice": 850000000,
+        "DepreciationPerYear": 85000000,
+        "Status": "Available",
+        "CurrentlyAssignedTo": "Pool (General use)",
+        "CreatedAt": {
+            "$date": "2020-05-20T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc3c3c0000000000000005"
+        },
+        "Name": "Máy Chiếu Sony 4K",
+        "Code": "AST-OFF-001",
+        "SerialNumber": "SONY-PJ-4K-99",
+        "Type": "Furniture",
+        "PurchaseDate": {
+            "$date": "2022-03-15T00:00:00Z"
+        },
+        "PurchasePrice": 25000000,
+        "DepreciationPerYear": 5000000,
+        "Status": "Available",
+        "CurrentlyAssignedTo": "Meeting Room A",
+        "CreatedAt": {
+            "$date": "2022-03-15T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc3c3c0000000000000006"
+        },
+        "Name": "Bàn Làm Việc E-Dra (Gaming)",
+        "Code": "AST-FUR-001",
+        "SerialNumber": "N/A",
+        "Type": "Furniture",
+        "PurchaseDate": {
+            "$date": "2023-11-20T00:00:00Z"
+        },
+        "PurchasePrice": 3500000,
+        "DepreciationPerYear": 700000,
+        "Status": "Assigned",
+        "CurrentlyAssignedTo": "IT Manager",
+        "CreatedAt": {
+            "$date": "2023-11-20T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc3c3c0000000000000007"
+        },
+        "Name": "Ghế Công Thái Học Herman Miller",
+        "Code": "AST-FUR-002",
+        "SerialNumber": "HM-AERON-01",
+        "Type": "Furniture",
+        "PurchaseDate": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "PurchasePrice": 35000000,
+        "DepreciationPerYear": 3500000,
+        "Status": "Assigned",
+        "CurrentlyAssignedTo": "CEO",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc3c3c0000000000000008"
+        },
+        "Name": "PC Văn Phòng Dell Optiplex",
+        "Code": "AST-IT-010",
+        "SerialNumber": "DELL-OPT-3090",
+        "Type": "Computer",
+        "PurchaseDate": {
+            "$date": "2023-06-01T00:00:00Z"
+        },
+        "PurchasePrice": 12000000,
+        "DepreciationPerYear": 4000000,
+        "Status": "Assigned",
+        "CurrentlyAssignedTo": "Kế Toán Trưởng",
+        "CreatedAt": {
+            "$date": "2023-06-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc3c3c0000000000000009"
+        },
+        "Name": "Xe Máy Honda Wave Alpha (Giao hàng)",
+        "Code": "AST-VH-002",
+        "SerialNumber": "59-X1 999.99",
+        "Type": "Vehicle",
+        "PurchaseDate": {
+            "$date": "2022-01-01T00:00:00Z"
+        },
+        "PurchasePrice": 22000000,
+        "DepreciationPerYear": 4000000,
+        "Status": "Assigned",
+        "CurrentlyAssignedTo": "NV Kho Vận",
+        "CreatedAt": {
+            "$date": "2022-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc3c3c0000000000000010"
+        },
+        "Name": "Máy In Canon 2900",
+        "Code": "AST-OFF-005",
+        "SerialNumber": "CANON-2900-VN",
+        "Type": "Accessory",
+        "PurchaseDate": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "PurchasePrice": 3500000,
+        "DepreciationPerYear": 1000000,
+        "Status": "Available",
+        "CurrentlyAssignedTo": "Pantry Area",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    }
+]

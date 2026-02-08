@@ -1,0 +1,186 @@
+[
+    {
+        "_id": {
+            "$oid": "65bf0a1e0000000000000001"
+        },
+        "Name": "Ban Giám Đốc",
+        "Code": "BGD",
+        "Description": "Cơ quan quản lý cấp cao nhất",
+        "ParentId": null,
+        "ManagerId": {
+            "$oid": "65bf0c300000000000000001"
+        },
+        "Level": 0,
+        "Path": "/65bf0a1e0000000000000001/",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0a1e0000000000000002"
+        },
+        "Name": "Phòng Nhân Sự (HR)",
+        "Code": "HR",
+        "Description": "Quản lý tuyển dụng, nhân sự, C&B",
+        "ParentId": {
+            "$oid": "65bf0a1e0000000000000001"
+        },
+        "ManagerId": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "Level": 1,
+        "Path": "/65bf0a1e0000000000000001/65bf0a1e0000000000000002/",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0a1e0000000000000003"
+        },
+        "Name": "Phòng Công Nghệ (IT)",
+        "Code": "IT",
+        "Description": "Phát triển phần mềm và hạ tầng",
+        "ParentId": {
+            "$oid": "65bf0a1e0000000000000001"
+        },
+        "ManagerId": {
+            "$oid": "65bf0c300000000000000003"
+        },
+        "Level": 1,
+        "Path": "/65bf0a1e0000000000000001/65bf0a1e0000000000000003/",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0a1e0000000000000004"
+        },
+        "Name": "Phòng Tài Chính Kế Toán",
+        "Code": "TCKT",
+        "Description": "Quản lý tài chính, thu chi, thuế",
+        "ParentId": {
+            "$oid": "65bf0a1e0000000000000001"
+        },
+        "ManagerId": null,
+        "Level": 1,
+        "Path": "/65bf0a1e0000000000000001/65bf0a1e0000000000000004/",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0a1e0000000000000005"
+        },
+        "Name": "Phòng Kinh Doanh (Sales)",
+        "Code": "SALES",
+        "Description": "Tìm kiếm khách hàng và bán hàng",
+        "ParentId": {
+            "$oid": "65bf0a1e0000000000000001"
+        },
+        "ManagerId": null,
+        "Level": 1,
+        "Path": "/65bf0a1e0000000000000001/65bf0a1e0000000000000005/",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0a1e0000000000000006"
+        },
+        "Name": "Phòng Marketing",
+        "Code": "MKT",
+        "Description": "Truyền thông và thương hiệu",
+        "ParentId": {
+            "$oid": "65bf0a1e0000000000000001"
+        },
+        "ManagerId": null,
+        "Level": 1,
+        "Path": "/65bf0a1e0000000000000001/65bf0a1e0000000000000006/",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0a1e0000000000000007"
+        },
+        "Name": "Kho Vận (Logistics)",
+        "Code": "LOG",
+        "Description": "Quản lý kho hàng và vận chuyển",
+        "ParentId": {
+            "$oid": "65bf0a1e0000000000000001"
+        },
+        "ManagerId": null,
+        "Level": 1,
+        "Path": "/65bf0a1e0000000000000001/65bf0a1e0000000000000007/",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0a1e0000000000000008"
+        },
+        "Name": "Phòng Mua Hàng",
+        "Code": "PUR",
+        "Description": "Thu mua vật tư và trang thiết bị",
+        "ParentId": {
+            "$oid": "65bf0a1e0000000000000001"
+        },
+        "ManagerId": null,
+        "Level": 1,
+        "Path": "/65bf0a1e0000000000000001/65bf0a1e0000000000000008/",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0a1e0000000000000009"
+        },
+        "Name": "Phòng R&D",
+        "Code": "RND",
+        "Description": "Nghiên cứu và phát triển sản phẩm mới",
+        "ParentId": {
+            "$oid": "65bf0a1e0000000000000001"
+        },
+        "ManagerId": null,
+        "Level": 1,
+        "Path": "/65bf0a1e0000000000000001/65bf0a1e0000000000000009/",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0a1e0000000000000010"
+        },
+        "Name": "Tổ Bảo Vệ",
+        "Code": "SEC",
+        "Description": "An ninh trật tự",
+        "ParentId": {
+            "$oid": "65bf0a1e0000000000000002"
+        },
+        "ManagerId": null,
+        "Level": 2,
+        "Path": "/65bf0a1e0000000000000001/65bf0a1e0000000000000002/65bf0a1e0000000000000010/",
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    }
+]

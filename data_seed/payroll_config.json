@@ -1,0 +1,142 @@
+[
+    {
+        "_id": {
+            "$oid": "65fc1a1a0000000000000001"
+        },
+        "Name": "Lương Cơ Bản (Gross)",
+        "Code": "SAL-BASE",
+        "Type": "Earning",
+        "IsFixed": true,
+        "IsTaxable": true,
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc1a1a0000000000000002"
+        },
+        "Name": "Phụ Cấp Ăn Trưa",
+        "Code": "ALL-LUNCH",
+        "Type": "Earning",
+        "IsFixed": true,
+        "IsTaxable": false,
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc1a1a0000000000000003"
+        },
+        "Name": "Phụ Cấp Xăng Xe",
+        "Code": "ALL-FUEL",
+        "Type": "Earning",
+        "IsFixed": true,
+        "IsTaxable": true,
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc1a1a0000000000000004"
+        },
+        "Name": "Thưởng Doanh Số (KPI)",
+        "Code": "BONUS-KPI",
+        "Type": "Earning",
+        "IsFixed": false,
+        "IsTaxable": true,
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc1a1a0000000000000005"
+        },
+        "Name": "Khấu Trừ BHXH (8%)",
+        "Code": "DED-BHXH",
+        "Type": "Deduction",
+        "IsFixed": false,
+        "IsTaxable": false,
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc1a1a0000000000000006"
+        },
+        "Name": "Khấu Trừ BHYT (1.5%)",
+        "Code": "DED-BHYT",
+        "Type": "Deduction",
+        "IsFixed": false,
+        "IsTaxable": false,
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc1a1a0000000000000007"
+        },
+        "Name": "Khấu Trừ BHTN (1%)",
+        "Code": "DED-BHTN",
+        "Type": "Deduction",
+        "IsFixed": false,
+        "IsTaxable": false,
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc1a1a0000000000000008"
+        },
+        "Name": "Thuế Thu Nhập Cá Nhân (PIT)",
+        "Code": "DED-TAX",
+        "Type": "Deduction",
+        "IsFixed": false,
+        "IsTaxable": false,
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc1a1a0000000000000009"
+        },
+        "Name": "Công Đoàn Phí",
+        "Code": "DED-UNION",
+        "Type": "Deduction",
+        "IsFixed": true,
+        "IsTaxable": false,
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc1a1a0000000000000010"
+        },
+        "Name": "Tạm Ứng Lương",
+        "Code": "ADV-SALARY",
+        "Type": "Deduction",
+        "IsFixed": false,
+        "IsTaxable": false,
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    }
+]

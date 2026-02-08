@@ -1,101 +1,108 @@
 @page "/recruitment/add"
 @using Microsoft.AspNetCore.Components.Forms
+@using TTL.HR.Shared.Components.Common
 
-<PageTitle>Tạo tin tuyển dụng - TTL.HR</PageTitle>
+<PageTitle>@(_isEdit ? "Chỉnh sửa tin tuyển dụng" : "Tạo tin tuyển dụng") - TTL.HR</PageTitle>
 
-<div class="post d-flex flex-column-fluid" id="kt_post">
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
     <div id="kt_content_container" class="container-fluid">
-        <div class="card mb-5 mb-xl-10">
-            <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+        <div class="card shadow-sm border-0">
+            <div class="card-header border-0 py-6">
                 <div class="card-title m-0">
-                    <h3 class="fw-bolder m-0">Tạo tin tuyển dụng mới</h3>
+                    <h3 class="fw-bolder m-0 text-primary">
+                        <i class="ki-outline ki-document fs-1 me-2 text-primary"></i>
+                        @(_isEdit ? $"Chỉnh sửa tin: {Model.Code}" : "Tạo tin tuyển dụng mới")
+                    </h3>
                 </div>
             </div>
-            <div id="kt_account_profile_details" class="collapse show">
-                <form class="form">
+            
+            <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card">
+                <EditForm Model="@Model" OnValidSubmit="SaveRecruitment">
                     <div class="card-body border-top p-9">
                         <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Tiêu đề tuyển dụng</label>
-                            <div class="col-lg-8">
-                                <div class="row">
-                                    <div class="col-lg-12 fv-row">
-                                        <input type="text" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Ví dụ: Senior .NET Developer" />
-                                    </div>
-                                </div>
+                            <label class="col-lg-3 col-form-label required fw-bold fs-6">Tiêu đề tuyển dụng</label>
+                            <div class="col-lg-9">
+                                <InputText class="form-control form-control-solid" @bind-Value="Model.Title" placeholder="Ví dụ: Senior .NET Developer" />
                             </div>
                         </div>
+                        
                         <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Mã tin</label>
-                            <div class="col-lg-8 fv-row">
-                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: DEV-001" />
+                            <label class="col-lg-3 col-form-label required fw-bold fs-6">Mã tin & Phòng ban</label>
+                            <div class="col-lg-4 mb-3 mb-lg-0">
+                                <InputText class="form-control form-control-solid" @bind-Value="Model.Code" placeholder="Mã tin (VD: DEV-001)" />
                             </div>
-                        </div>
-                        <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">
-                                <span class="required">Phòng ban</span>
-                            </label>
-                            <div class="col-lg-8 fv-row">
-                                <select class="form-select form-select-solid form-select-lg fw-bold">
+                            <div class="col-lg-5">
+                                <InputSelect class="form-select form-select-solid fw-bold" @bind-Value="Model.Department">
                                     <option value="">Chọn phòng ban...</option>
                                     <option value="IT">Kỹ thuật (IT)</option>
                                     <option value="HR">Nhân sự (HR)</option>
                                     <option value="Sales">Kinh doanh (Sales)</option>
                                     <option value="Marketing">Marketing</option>
-                                </select>
+                                </InputSelect>
                             </div>
                         </div>
-                         <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">
-                                <span class="required">Hình thức làm việc</span>
-                            </label>
-                            <div class="col-lg-8 fv-row">
-                                <select class="form-select form-select-solid form-select-lg fw-bold">
+
+                        <div class="row mb-6">
+                            <label class="col-lg-3 col-form-label required fw-bold fs-6">Hình thức & Số lượng</label>
+                            <div class="col-lg-4 mb-3 mb-lg-0">
+                                <InputSelect class="form-select form-select-solid fw-bold" @bind-Value="Model.Type">
                                     <option value="Full-time">Toàn thời gian (Full-time)</option>
                                     <option value="Part-time">Bán thời gian (Part-time)</option>
                                     <option value="Contract">Hợp đồng (Contract)</option>
                                     <option value="Internship">Thực tập (Internship)</option>
-                                </select>
+                                </InputSelect>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="input-group input-group-solid">
+                                    <span class="input-group-text">Số lượng tuyển:</span>
+                                    <InputNumber class="form-control" @bind-Value="Model.HiringCount" />
+                                </div>
                             </div>
                         </div>
+
                         <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">Số lượng tuyển</label>
-                            <div class="col-lg-8 fv-row">
-                                <input type="number" class="form-control form-control-lg form-control-solid" placeholder="1" value="1" />
+                            <label class="col-lg-3 col-form-label required fw-bold fs-6">Hạn nộp hồ sơ</label>
+                            <div class="col-lg-9 fv-row">
+                                <div class="position-relative">
+                                    <i class="ki-outline ki-calendar fs-2 position-absolute top-50 translate-middle-y ms-4"></i>
+                                    <InputDate class="form-control form-control-solid ps-12" @bind-Value="Model.Deadline" />
+                                </div>
                             </div>
                         </div>
-                         <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">Hạn nộp hồ sơ</label>
-                            <div class="col-lg-8 fv-row">
-                                <input type="date" class="form-control form-control-lg form-control-solid" />
-                            </div>
-                        </div>
+
+                        <div class="separator separator-dashed my-10"></div>
+
                         <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">Mô tả công việc</label>
-                            <div class="col-lg-8 fv-row">
-                                <textarea class="form-control form-control-lg form-control-solid" rows="5" placeholder="Nhập mô tả chi tiết..."></textarea>
+                            <label class="col-lg-3 col-form-label fw-bold fs-6">Mô tả công việc</label>
+                            <div class="col-lg-9">
+                                <InputTextArea class="form-control form-control-solid" rows="5" @bind-Value="Model.Description" placeholder="Nhập mô tả chi tiết nhiệm vụ..." />
                             </div>
                         </div>
-                         <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">Yêu cầu ứng viên</label>
-                            <div class="col-lg-8 fv-row">
-                                <textarea class="form-control form-control-lg form-control-solid" rows="5" placeholder="Nhập yêu cầu chi tiết..."></textarea>
-                            </div>
-                        </div>
+
                         <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">Quyền lợi</label>
-                            <div class="col-lg-8 fv-row">
-                                <textarea class="form-control form-control-lg form-control-solid" rows="5" placeholder="Nhập quyền lợi..."></textarea>
+                            <label class="col-lg-3 col-form-label fw-bold fs-6">Yêu cầu ứng viên</label>
+                            <div class="col-lg-9">
+                                <InputTextArea class="form-control form-control-solid" rows="5" @bind-Value="Model.Requirements" placeholder="Nhập yêu cầu về kỹ năng, kinh nghiệm..." />
+                            </div>
+                        </div>
+
+                        <div class="row mb-6">
+                            <label class="col-lg-3 col-form-label fw-bold fs-6">Quyền lợi</label>
+                            <div class="col-lg-9">
+                                <InputTextArea class="form-control form-control-solid" rows="4" @bind-Value="Model.Benefits" placeholder="Chế độ lương thưởng, bảo hiểm..." />
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer d-flex justify-content-end py-6 px-9">
-                        <a href="/recruitment" class="btn btn-light btn-active-light-primary me-2">Hủy bỏ</a>
-                        <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Lưu tin tuyển dụng</button>
+
+                    <div class="card-footer d-flex justify-content-end py-6 px-9 border-0">
+                        <a href="/recruitment" class="btn btn-light fw-bold me-2">Quay lại</a>
+                        <button type="submit" class="btn btn-primary fw-bold shadow-sm px-10">
+                            <i class="ki-outline ki-check fs-2 me-1"></i>
+                            @(_isEdit ? "Cập nhật thay đổi" : "Đăng tin tuyển dụng")
+                        </button>
                     </div>
-                </form>
-            </div>
+                </EditForm>
+            </SkeletonLoading>
         </div>
     </div>
 </div>
-
-

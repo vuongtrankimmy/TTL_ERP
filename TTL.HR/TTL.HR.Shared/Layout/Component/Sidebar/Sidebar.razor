@@ -179,6 +179,9 @@
 								<span class="menu-title">Quản lý công tác</span>
 							</NavLink>
 						</div>
+						<div class="menu-item">
+
+						</div>
 					</div>
 				</div>
 				<!--begin:Menu item-->
@@ -192,7 +195,7 @@
 					</span>
 					<div class="menu-sub menu-sub-accordion">
 						<div class="menu-item">
-							<NavLink class="menu-link" href="/payroll/list" Match="NavLinkMatch.Prefix" title="Bảng tính lương" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+							<NavLink class="menu-link" href="/payroll/periods" Match="NavLinkMatch.Prefix" title="Bảng tính lương" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
 								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
 								<span class="menu-title">Bảng tính lương</span>
 							</NavLink>
@@ -223,6 +226,34 @@
 						<span class="menu-title">Đào tạo nội bộ</span>
 					</NavLink>
 				</div>
+				<div class="menu-item pt-5">
+					<div class="menu-content">
+						<span class="menu-heading fw-bold text-uppercase fs-7">Tài sản & Thiết bị</span>
+					</div>
+				</div>
+				<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+					<span class="menu-link text-active-primary py-3" title="Quản lý tài sản" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+						<span class="menu-icon">
+							<i class="ki-outline ki-monitor-mobile fs-2"></i>
+						</span>
+						<span class="menu-title">Quản lý tài sản</span>
+						<span class="menu-arrow"></span>
+					</span>
+					<div class="menu-sub menu-sub-accordion">
+						<div class="menu-item">
+							<NavLink class="menu-link" href="/assets/inventory" Match="NavLinkMatch.Prefix" title="Danh sách tài sản" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+								<span class="menu-title">Danh sách tài sản</span>
+							</NavLink>
+						</div>
+						<div class="menu-item">
+							<NavLink class="menu-link" href="/assets/allocation" Match="NavLinkMatch.Prefix" title="Cấp phát & Thu hồi" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+								<span class="menu-title">Cấp phát & Thu hồi</span>
+							</NavLink>
+						</div>
+					</div>
+				</div>
 				<!--begin:Menu item-->
 				<div class="menu-item pt-5">
 					<div class="menu-content">
@@ -240,7 +271,7 @@
 					</span>
 					<div class="menu-sub menu-sub-accordion">
 						<div class="menu-item">
-							<NavLink class="menu-link" href="/roles" Match="NavLinkMatch.Prefix" title="Vai trò & Nhóm" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+							<NavLink class="menu-link" href="/administration/roles" Match="NavLinkMatch.Prefix" title="Vai trò & Nhóm" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
 								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
 								<span class="menu-title">Vai trò & Nhóm</span>
 							</NavLink>
@@ -280,7 +311,7 @@
 				 id="kt_user_menu_toggle" 
 				 data-kt-menu-trigger="{default: 'click', lg: 'hover'}" 
 				 data-kt-menu-overflow="true" 
-				 data-kt-menu-placement="right-end">
+				 data-kt-menu-placement="top-start">
 				<!--begin::Avatar-->
 				<div class="symbol symbol-circle symbol-40px">
 					<img src="assets/media/avatars/300-1.jpg" alt="user" />

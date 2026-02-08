@@ -1,0 +1,108 @@
+@page "/training/courses"
+@inject NavigationManager Navigation
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5 g-xl-9">
+    @foreach(var course in Courses) {
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    <h3 class="card-title fw-bold text-gray-800">Title</h3>
+                    <div class="card-toolbar">
+                        <button type="button" class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                            <i class="ki-outline ki-category fs-6"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-9">
+                    <div class="fs-2hx fw-bold text-gray-800 mb-4">@course.Title</div> 
+                    <div class="d-flex flex-wrap mb-5">
+                       <span class="badge badge-light-primary me-2">@course.Duration</span>
+                       <span class="badge badge-light-success">@course.Trainer</span>
+                    </div>
+
+                    <div class="fs-6 fw-semibold text-gray-600 mb-7">
+                        @course.Description
+                    </div>
+
+                    <div class="d-flex align-items-center mb-5">
+                        <div class="symbol symbol-circle symbol-40px overflow-hidden me-3">
+                            <div class="symbol-label">
+                                <img src="/assets/media/avatars/300-6.jpg" alt="Emma Smith" class="w-100">
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold">Trainer</a>
+                            <span class="text-gray-400 fw-semibold">@course.Trainer</span>
+                        </div>
+                    </div>
+
+                    <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+                        <i class="ki-outline ki-information-5 fs-2tx text-warning me-4"></i>
+                        <div class="d-flex flex-stack flex-grow-1">
+                            <div class="fw-semibold">
+                                <div class="fs-6 text-gray-700">Deadline: @course.Deadline.ToShortDateString()</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-end pt-0">
+                     <a href="javascript:void(0)" @onclick="() => ViewDetail(course.Title)" class="btn btn-sm btn-light-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<CourseViewModel> Courses = new();
+
+    protected override void OnInitialized()
+    {
+        Courses = new List<CourseViewModel>
+        {
+            new CourseViewModel { 
+                Title = "Onboarding 101", 
+                Description = "Essential training for all new hires covering company culture and policies.", 
+                Duration = "4 Hours", 
+                Trainer = "HR Dept", 
+                Deadline = DateTime.Now.AddDays(7) 
+            },
+            new CourseViewModel { 
+                Title = "Advanced Excel", 
+                Description = "Master Pivot Tables, VLOOKUP and macros.", 
+                Duration = "2 Days", 
+                Trainer = "External", 
+                Deadline = DateTime.Now.AddDays(30) 
+            },
+            new CourseViewModel { 
+                Title = "Leadership Skills", 
+                Description = "Developing core leadership competencies for new managers.", 
+                Duration = "1 Week", 
+                Trainer = "CEO", 
+                Deadline = DateTime.Now.AddMonths(2) 
+            },
+            new CourseViewModel { 
+                Title = "Cybersecurity Basics", 
+                Description = "Protecting company data and recognizing phishing attempts.", 
+                Duration = "2 Hours", 
+                Trainer = "IT Dept", 
+                Deadline = DateTime.Now.AddDays(14) 
+            }
+        };
+    }
+
+    private void ViewDetail(string courseTitle)
+    {
+        // For demo, passing title as ID
+        Navigation.NavigateTo($"/training/course/{courseTitle}");
+    }
+
+    public class CourseViewModel
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Duration { get; set; }
+        public string Trainer { get; set; }
+        public DateTime Deadline { get; set; }
+    }
+}

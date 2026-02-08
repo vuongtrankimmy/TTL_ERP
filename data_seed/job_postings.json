@@ -1,0 +1,332 @@
+[
+    {
+        "_id": {
+            "$oid": "65cad1e20000000000000001"
+        },
+        "Title": "Giám Đốc Kinh Doanh Vùng",
+        "Code": "JOB-001",
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000005"
+        },
+        "DepartmentName": "Phòng Kinh Doanh (Sales)",
+        "Description": "<p>Quản lý và phát triển thị trường miền Nam.</p>",
+        "Requirements": "- 5 năm kinh nghiệm quản lý\n- Kỹ năng đàm phán",
+        "Quantity": 1,
+        "FilledQuantity": 0,
+        "StartDate": {
+            "$date": "2024-02-01T00:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-04-30T00:00:00Z"
+        },
+        "Status": "Published",
+        "Skills": [
+            "Sales",
+            "Management",
+            "B2B"
+        ],
+        "AssigneeId": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "CreatedAt": {
+            "$date": "2024-02-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65cad1e20000000000000002"
+        },
+        "Title": "Senior .NET Developer",
+        "Code": "JOB-002",
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000003"
+        },
+        "DepartmentName": "Phòng Công Nghệ (IT)",
+        "Description": "<p>Phat triển hệ thống ERP backend.</p>",
+        "Requirements": "- .NET Core 8, MongoDB, Microservices",
+        "Quantity": 3,
+        "FilledQuantity": 1,
+        "StartDate": {
+            "$date": "2024-02-15T00:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-03-31T00:00:00Z"
+        },
+        "Status": "Published",
+        "Skills": [
+            ".NET",
+            "C#",
+            "MongoDB"
+        ],
+        "AssigneeId": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "CreatedAt": {
+            "$date": "2024-02-15T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65cad1e20000000000000003"
+        },
+        "Title": "Digital Marketing Executive",
+        "Code": "JOB-003",
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000006"
+        },
+        "DepartmentName": "Phòng Marketing",
+        "Description": "<p>Chạy quảng cáo FB/Google Ads</p>",
+        "Requirements": "- Kinh nghiệm chạy Ads ngân sách lớn",
+        "Quantity": 2,
+        "FilledQuantity": 2,
+        "StartDate": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-01-31T00:00:00Z"
+        },
+        "Status": "Closed",
+        "Skills": [
+            "Facebook Ads",
+            "Google Ads"
+        ],
+        "AssigneeId": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65cad1e20000000000000004"
+        },
+        "Title": "Kế Toán Tổng Hợp",
+        "Code": "JOB-004",
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000004"
+        },
+        "DepartmentName": "Phòng Tài Chính Kế Toán",
+        "Description": "<p>Xử lý chứng từ, báo cáo thuế</p>",
+        "Requirements": "- Chứng chỉ Kế toán trưởng là lợi thế",
+        "Quantity": 1,
+        "FilledQuantity": 0,
+        "StartDate": {
+            "$date": "2024-03-01T00:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-03-31T00:00:00Z"
+        },
+        "Status": "Draft",
+        "Skills": [
+            "Excel",
+            "MISA",
+            "Tax"
+        ],
+        "AssigneeId": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "CreatedAt": {
+            "$date": "2024-03-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65cad1e20000000000000005"
+        },
+        "Title": "Nhân Viên Kho",
+        "Code": "JOB-005",
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000007"
+        },
+        "DepartmentName": "Kho Vận (Logistics)",
+        "Description": "<p>Sắp xếp hàng hóa, soạn đơn</p>",
+        "Requirements": "- Sức khỏe tốt",
+        "Quantity": 5,
+        "FilledQuantity": 0,
+        "StartDate": {
+            "$date": "2024-03-10T00:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-04-10T00:00:00Z"
+        },
+        "Status": "Published",
+        "Skills": [
+            "Communication",
+            "Organization"
+        ],
+        "AssigneeId": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "CreatedAt": {
+            "$date": "2024-03-10T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65cad1e20000000000000006"
+        },
+        "Title": "Chuyên Viên Mua Hàng",
+        "Code": "JOB-006",
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000008"
+        },
+        "DepartmentName": "Phòng Mua Hàng",
+        "Description": "<p>Tìm kiếm nhà cung cấp vật tư</p>",
+        "Requirements": "- Tiếng Anh tốt",
+        "Quantity": 1,
+        "FilledQuantity": 0,
+        "StartDate": {
+            "$date": "2024-03-05T00:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-04-05T00:00:00Z"
+        },
+        "Status": "OnHold",
+        "Skills": [
+            "Negotiation",
+            "English"
+        ],
+        "AssigneeId": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "CreatedAt": {
+            "$date": "2024-03-05T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65cad1e20000000000000007"
+        },
+        "Title": "UI/UX Designer",
+        "Code": "JOB-007",
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000009"
+        },
+        "DepartmentName": "Phòng R&D",
+        "Description": "<p>Thiết kế giao diện sản phẩm mobile app</p>",
+        "Requirements": "- Figma, Photoshop",
+        "Quantity": 1,
+        "FilledQuantity": 1,
+        "StartDate": {
+            "$date": "2023-12-01T00:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2023-12-31T00:00:00Z"
+        },
+        "Status": "Closed",
+        "Skills": [
+            "Figma",
+            "UI/UX"
+        ],
+        "AssigneeId": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "CreatedAt": {
+            "$date": "2023-12-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65cad1e20000000000000008"
+        },
+        "Title": "Bảo Vệ Nội Bộ",
+        "Code": "JOB-008",
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000010"
+        },
+        "DepartmentName": "Tổ Bảo Vệ",
+        "Description": "<p>Trực ca đêm</p>",
+        "Requirements": "- Trung thực",
+        "Quantity": 2,
+        "FilledQuantity": 0,
+        "StartDate": {
+            "$date": "2024-03-20T00:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-04-20T00:00:00Z"
+        },
+        "Status": "Published",
+        "Skills": [],
+        "AssigneeId": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "CreatedAt": {
+            "$date": "2024-03-20T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65cad1e20000000000000009"
+        },
+        "Title": "Thực Tập Sinh HR",
+        "Code": "JOB-009",
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000002"
+        },
+        "DepartmentName": "Phòng Nhân Sự (HR)",
+        "Description": "<p>Hỗ trợ tuyển dụng và paperwork</p>",
+        "Requirements": "- Sinh viên năm cuối",
+        "Quantity": 2,
+        "FilledQuantity": 0,
+        "StartDate": {
+            "$date": "2024-04-01T00:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-04-15T00:00:00Z"
+        },
+        "Status": "Draft",
+        "Skills": [
+            "Office",
+            "Communication"
+        ],
+        "AssigneeId": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "CreatedAt": {
+            "$date": "2024-04-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65cad1e20000000000000010"
+        },
+        "Title": "Trưởng Phòng R&D",
+        "Code": "JOB-010",
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000009"
+        },
+        "DepartmentName": "Phòng R&D",
+        "Description": "<p>Định hướng sản phẩm công nghệ mới</p>",
+        "Requirements": "- 7+ năm kinh nghiệm Tech Lead",
+        "Quantity": 1,
+        "FilledQuantity": 0,
+        "StartDate": {
+            "$date": "2024-02-01T00:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-05-31T00:00:00Z"
+        },
+        "Status": "Published",
+        "Skills": [
+            "Strategy",
+            "Leadership"
+        ],
+        "AssigneeId": {
+            "$oid": "65bf0c300000000000000001"
+        },
+        "CreatedAt": {
+            "$date": "2024-02-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    }
+]

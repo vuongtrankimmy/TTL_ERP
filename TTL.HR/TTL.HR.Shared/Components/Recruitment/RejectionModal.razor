@@ -1,0 +1,40 @@
+@using TTL.HR.Shared.Models
+
+@if (IsOpen && Applicant != null)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0">
+                <div class="modal-header border-0 pb-0">
+                    <h3 class="modal-title fw-bolder text-danger">Loại hồ sơ ứng viên</h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="OnClose">
+                         <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body py-5">
+                    <div class="mb-5 text-gray-700">
+                        Bạn đang thực hiện loại hồ sơ của ứng viên <span class="fw-bolder text-dark">@Applicant.Name</span>. Vui lòng nhập lý do.
+                    </div>
+                    <div class="mb-5">
+                        <label class="form-label fw-bold">Lý do loại</label>
+                        <textarea class="form-control form-control-solid" rows="3" @bind="Reason" placeholder="Vd: Kỹ năng chuyên môn chưa phù hợp, Không đạt phỏng vấn..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" @onclick="OnClose">Hủy</button>
+                    <button type="button" class="btn btn-danger fw-bold" @onclick="() => OnSave.InvokeAsync(Reason)">
+                        Xác nhận loại
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public ApplicantItem? Applicant { get; set; }
+    [Parameter] public string Reason { get; set; } = "";
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<string> OnSave { get; set; }
+}

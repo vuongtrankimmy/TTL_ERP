@@ -6,6 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// standard-api-setup
+builder.Services.Configure<TTL.HR.Web.Data.MongoDbSettings>(
+    builder.Configuration.GetSection("MongoDbSettings"));
+
+builder.Services.AddSingleton(typeof(TTL.HR.Shared.Interfaces.IRepository<>), typeof(TTL.HR.Web.Data.MongoRepository<>));
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -21,6 +28,7 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+app.MapControllers(); // Enable API endpoints
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()

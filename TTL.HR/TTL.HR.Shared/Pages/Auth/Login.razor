@@ -6,7 +6,7 @@
 <PageTitle>Đăng nhập - OrgaX HR</PageTitle>
 
 <!--begin::Form-->
-<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" action="#">
+<div class="form w-100" id="ttl_sign_in_form">
     <!--begin::Heading-->
     <div class="text-center mb-11">
         <!--begin::Title-->
@@ -35,18 +35,22 @@
     
     <!--begin::Submit button-->
     <div class="d-grid mb-10 pt-5">
-        <button type="button" id="kt_sign_in_submit" class="btn btn-primary" @onclick="HandleLogin">
-            <span class="indicator-label">Đăng nhập</span>
+        <button type="button" class="btn btn-primary" @onclick="HandleLogin" disabled="@_isLoading">
             @if (_isLoading)
             {
-                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                <span class="indicator-progress" style="display: block;">
+                    Vui lòng đợi...
+                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                </span>
+            }
+            else
+            {
+                <span class="indicator-label">Đăng nhập</span>
             }
         </button>
     </div>
     <!--end::Submit button-->
-    
-
-</form>
+</div>
 <!--end::Form-->
 
 

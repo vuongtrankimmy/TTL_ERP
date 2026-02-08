@@ -1,0 +1,226 @@
+[
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000001"
+        },
+        "Name": "Ca Hành Chính (Thứ 2 - Thứ 6)",
+        "Code": "HC-T2-T6",
+        "StartTime": "08:00:00",
+        "EndTime": "17:30:00",
+        "BreakStartTime": "12:00:00",
+        "BreakEndTime": "13:30:00",
+        "IsOvernight": false,
+        "WorkingDays": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+        ],
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000002"
+        },
+        "Name": "Ca Hành Chính (Thứ 7 Sáng)",
+        "Code": "HC-T7",
+        "StartTime": "08:00:00",
+        "EndTime": "12:00:00",
+        "BreakStartTime": "00:00:00",
+        "BreakEndTime": "00:00:00",
+        "IsOvernight": false,
+        "WorkingDays": [
+            "Saturday"
+        ],
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000003"
+        },
+        "Name": "Ca Sáng (Kho/SX)",
+        "Code": "CS-01",
+        "StartTime": "06:00:00",
+        "EndTime": "14:00:00",
+        "BreakStartTime": "10:00:00",
+        "BreakEndTime": "10:30:00",
+        "IsOvernight": false,
+        "WorkingDays": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ],
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000004"
+        },
+        "Name": "Ca Chiều (Kho/SX)",
+        "Code": "CC-01",
+        "StartTime": "14:00:00",
+        "EndTime": "22:00:00",
+        "BreakStartTime": "18:00:00",
+        "BreakEndTime": "18:30:00",
+        "IsOvernight": false,
+        "WorkingDays": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ],
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000005"
+        },
+        "Name": "Ca Đêm (Bảo Vệ)",
+        "Code": "CD-BV",
+        "StartTime": "22:00:00",
+        "EndTime": "06:00:00",
+        "BreakStartTime": "02:00:00",
+        "BreakEndTime": "02:30:00",
+        "IsOvernight": true,
+        "WorkingDays": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+        ],
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000006"
+        },
+        "Name": "Ca Gãy Sáng (Nhà hàng)",
+        "Code": "CG-S",
+        "StartTime": "09:00:00",
+        "EndTime": "14:00:00",
+        "BreakStartTime": "00:00:00",
+        "BreakEndTime": "00:00:00",
+        "IsOvernight": false,
+        "WorkingDays": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+        ],
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000007"
+        },
+        "Name": "Ca Gãy Chiều (Nhà hàng)",
+        "Code": "CG-C",
+        "StartTime": "17:00:00",
+        "EndTime": "22:00:00",
+        "BreakStartTime": "00:00:00",
+        "BreakEndTime": "00:00:00",
+        "IsOvernight": false,
+        "WorkingDays": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+        ],
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000008"
+        },
+        "Name": "Ca 12 Tiếng Sáng",
+        "Code": "12H-S",
+        "StartTime": "06:00:00",
+        "EndTime": "18:00:00",
+        "BreakStartTime": "11:30:00",
+        "BreakEndTime": "12:30:00",
+        "IsOvernight": false,
+        "WorkingDays": [
+            "Monday",
+            "Wednesday",
+            "Friday"
+        ],
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000009"
+        },
+        "Name": "Ca 12 Tiếng Tối",
+        "Code": "12H-T",
+        "StartTime": "18:00:00",
+        "EndTime": "06:00:00",
+        "BreakStartTime": "23:30:00",
+        "BreakEndTime": "00:30:00",
+        "IsOvernight": true,
+        "WorkingDays": [
+            "Tuesday",
+            "Thursday",
+            "Saturday"
+        ],
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000010"
+        },
+        "Name": "Ca Part-time Sáng",
+        "Code": "PT-S",
+        "StartTime": "08:00:00",
+        "EndTime": "12:00:00",
+        "BreakStartTime": "00:00:00",
+        "BreakEndTime": "00:00:00",
+        "IsOvernight": false,
+        "WorkingDays": [
+            "Monday",
+            "Wednesday",
+            "Friday"
+        ],
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    }
+]

@@ -1,0 +1,372 @@
+[
+    {
+        "_id": {
+            "$oid": "65bf0c300000000000000001"
+        },
+        "Code": "GD-001",
+        "FullName": "Phạm Minh Hùng",
+        "Email": "hung.pham@orga-x.com",
+        "CompanyEmail": "hung.pham@orga-x.com",
+        "Username": "ceo",
+        "PasswordHash": "HASHED_PASSWORD",
+        "Roles": [
+            "Admin",
+            "Director"
+        ],
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000001"
+        },
+        "PositionId": {
+            "$oid": "65bf0b2f0000000000000001"
+        },
+        "Status": "Active",
+        "Type": "FullTime",
+        "JoinDate": {
+            "$date": "2020-01-01T00:00:00Z"
+        },
+        "PersonalDetails": {
+            "Gender": "Male",
+            "Address": "Vincom Center, Q1, TP.HCM",
+            "Phone": "0909000001"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "Code": "NS-001",
+        "FullName": "Nguyễn Thị Mai",
+        "Email": "mai.nguyen@orga-x.com",
+        "CompanyEmail": "mai.nguyen@orga-x.com",
+        "Username": "hr_manager",
+        "PasswordHash": "HASHED_PASSWORD",
+        "Roles": [
+            "Manager",
+            "HR"
+        ],
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000002"
+        },
+        "PositionId": {
+            "$oid": "65bf0b2f0000000000000002"
+        },
+        "ReportToId": {
+            "$oid": "65bf0c300000000000000001"
+        },
+        "Status": "Active",
+        "Type": "FullTime",
+        "JoinDate": {
+            "$date": "2021-03-15T00:00:00Z"
+        },
+        "PersonalDetails": {
+            "Gender": "Female",
+            "Address": "Phú Nhuận, TP.HCM",
+            "Phone": "0909000002"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0c300000000000000003"
+        },
+        "Code": "IT-001",
+        "FullName": "Lê Văn Tuấn",
+        "Email": "tuan.le@orga-x.com",
+        "CompanyEmail": "tuan.le@orga-x.com",
+        "Username": "it_manager",
+        "PasswordHash": "HASHED_PASSWORD",
+        "Roles": [
+            "Manager",
+            "IT"
+        ],
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000003"
+        },
+        "PositionId": {
+            "$oid": "65bf0b2f0000000000000003"
+        },
+        "ReportToId": {
+            "$oid": "65bf0c300000000000000001"
+        },
+        "Status": "Active",
+        "Type": "FullTime",
+        "JoinDate": {
+            "$date": "2021-05-20T00:00:00Z"
+        },
+        "PersonalDetails": {
+            "Gender": "Male",
+            "Address": "Q7, TP.HCM",
+            "Phone": "0909000003"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0c300000000000000004"
+        },
+        "Code": "IT-002",
+        "FullName": "Trần Thanh Bình",
+        "Email": "binh.tran@orga-x.com",
+        "CompanyEmail": "binh.tran@orga-x.com",
+        "Username": "dev_senior_1",
+        "PasswordHash": "HASHED_PASSWORD",
+        "Roles": [
+            "Employee"
+        ],
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000003"
+        },
+        "PositionId": {
+            "$oid": "65bf0b2f0000000000000004"
+        },
+        "ReportToId": {
+            "$oid": "65bf0c300000000000000003"
+        },
+        "Status": "Active",
+        "Type": "FullTime",
+        "JoinDate": {
+            "$date": "2022-02-10T00:00:00Z"
+        },
+        "PersonalDetails": {
+            "Gender": "Male",
+            "Address": "Gò Vấp, TP.HCM",
+            "Phone": "0909000004"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0c300000000000000005"
+        },
+        "Code": "IT-003",
+        "FullName": "Hoàng Thu Phương",
+        "Email": "phuong.hoang@orga-x.com",
+        "CompanyEmail": "phuong.hoang@orga-x.com",
+        "Username": "dev_junior_1",
+        "PasswordHash": "HASHED_PASSWORD",
+        "Roles": [
+            "Employee"
+        ],
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000003"
+        },
+        "PositionId": {
+            "$oid": "65bf0b2f0000000000000005"
+        },
+        "ReportToId": {
+            "$oid": "65bf0c300000000000000003"
+        },
+        "Status": "Probation",
+        "Type": "Intern",
+        "JoinDate": {
+            "$date": "2024-01-05T00:00:00Z"
+        },
+        "PersonalDetails": {
+            "Gender": "Female",
+            "Address": "Thủ Đức, TP.HCM",
+            "Phone": "0909000005"
+        },
+        "CreatedAt": {
+            "$date": "2024-01-05T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0c300000000000000006"
+        },
+        "Code": "TCKT-001",
+        "FullName": "Vũ Thị Lan",
+        "Email": "lan.vu@orga-x.com",
+        "CompanyEmail": "lan.vu@orga-x.com",
+        "Username": "chief_accountant",
+        "PasswordHash": "HASHED_PASSWORD",
+        "Roles": [
+            "Manager"
+        ],
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000004"
+        },
+        "PositionId": {
+            "$oid": "65bf0b2f0000000000000006"
+        },
+        "ReportToId": {
+            "$oid": "65bf0c300000000000000001"
+        },
+        "Status": "Active",
+        "Type": "FullTime",
+        "JoinDate": {
+            "$date": "2021-06-01T00:00:00Z"
+        },
+        "PersonalDetails": {
+            "Gender": "Female",
+            "Address": "Q3, TP.HCM",
+            "Phone": "0909000006"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0c300000000000000007"
+        },
+        "Code": "SALES-001",
+        "FullName": "Ngô Văn Long",
+        "Email": "long.ngo@orga-x.com",
+        "CompanyEmail": "long.ngo@orga-x.com",
+        "Username": "sales_manager",
+        "PasswordHash": "HASHED_PASSWORD",
+        "Roles": [
+            "Manager"
+        ],
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000005"
+        },
+        "PositionId": {
+            "$oid": "65bf0b2f0000000000000007"
+        },
+        "ReportToId": {
+            "$oid": "65bf0c300000000000000001"
+        },
+        "Status": "Active",
+        "Type": "FullTime",
+        "JoinDate": {
+            "$date": "2022-04-15T00:00:00Z"
+        },
+        "PersonalDetails": {
+            "Gender": "Male",
+            "Address": "Bình Thạnh, TP.HCM",
+            "Phone": "0909000007"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0c300000000000000008"
+        },
+        "Code": "MKT-001",
+        "FullName": "Đặng Thị Ngọc",
+        "Email": "ngoc.dang@orga-x.com",
+        "CompanyEmail": "ngoc.dang@orga-x.com",
+        "Username": "mkt_specialist",
+        "PasswordHash": "HASHED_PASSWORD",
+        "Roles": [
+            "Employee"
+        ],
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000006"
+        },
+        "PositionId": {
+            "$oid": "65bf0b2f0000000000000008"
+        },
+        "ReportToId": {
+            "$oid": "65bf0c300000000000000001"
+        },
+        "Status": "MaternityLeave",
+        "Type": "FullTime",
+        "JoinDate": {
+            "$date": "2022-08-01T00:00:00Z"
+        },
+        "PersonalDetails": {
+            "Gender": "Female",
+            "Address": "Q10, TP.HCM",
+            "Phone": "0909000008"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0c300000000000000009"
+        },
+        "Code": "WH-001",
+        "FullName": "Lý Văn Tùng",
+        "Email": "tung.ly@orga-x.com",
+        "CompanyEmail": "tung.ly@orga-x.com",
+        "Username": "wh_keeper",
+        "PasswordHash": "HASHED_PASSWORD",
+        "Roles": [
+            "Employee"
+        ],
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000007"
+        },
+        "PositionId": {
+            "$oid": "65bf0b2f0000000000000009"
+        },
+        "ReportToId": {
+            "$oid": "65bf0c300000000000000001"
+        },
+        "Status": "Active",
+        "Type": "FullTime",
+        "JoinDate": {
+            "$date": "2023-02-28T00:00:00Z"
+        },
+        "PersonalDetails": {
+            "Gender": "Male",
+            "Address": "Bình Tân, TP.HCM",
+            "Phone": "0909000009"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0c300000000000000010"
+        },
+        "Code": "BV-001",
+        "FullName": "Trương Minh Đạt",
+        "Email": "dat.truong@orga-x.com",
+        "CompanyEmail": "dat.truong@orga-x.com",
+        "Username": "security_1",
+        "PasswordHash": "HASHED_PASSWORD",
+        "Roles": [
+            "Employee"
+        ],
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000010"
+        },
+        "PositionId": {
+            "$oid": "65bf0b2f0000000000000010"
+        },
+        "ReportToId": {
+            "$oid": "65bf0c300000000000000002"
+        },
+        "Status": "Active",
+        "Type": "FullTime",
+        "JoinDate": {
+            "$date": "2023-05-10T00:00:00Z"
+        },
+        "PersonalDetails": {
+            "Gender": "Male",
+            "Address": "Q12, TP.HCM",
+            "Phone": "0909000010"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    }
+]

@@ -1,18 +1,19 @@
 @page "/training/details/{Id:int}"
+@using TTL.HR.Shared.Components.Common
 
 <PageTitle>Chi tiết khóa học - TTL.HR</PageTitle>
 
-<div class="post d-flex flex-column-fluid" id="kt_post">
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
     <div id="kt_content_container" class="container-fluid">
         <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card" Rows="5" Columns="3">
-        <!-- Header -->
-        <div class="card mb-5 mb-xl-10">
+        <!-- Header (Giao diện cũ) -->
+        <div class="card mb-5 mb-xl-10 shadow-sm">
             <div class="card-body pt-9 pb-0">
                 <div class="d-flex flex-wrap flex-sm-nowrap mb-3">
                     <!-- Image/Icon -->
                     <div class="me-7 mb-4">
                         <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                            <span class="symbol-label bg-light-info text-info fs-2x fw-bolder">@Course?.Code.Substring(0, Math.Min(3, Course.Code.Length))</span>
+                            <span class="symbol-label bg-light-info text-info fs-2x fw-bolder">@Course?.Code.Substring(0, Math.Min(3, Course?.Code?.Length ?? 0))</span>
                             <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px"></div>
                         </div>
                     </div>
@@ -22,56 +23,40 @@
                              <div class="d-flex flex-column">
                                 <div class="d-flex align-items-center mb-2">
                                     <h3 class="text-gray-900 fs-2 fw-bolder me-1">@Course?.Title</h3>
+                                    @if(Course?.IsMandatory == true) {
+                                        <span class="badge badge-light-danger ms-2">Bắt buộc</span>
+                                    }
                                 </div>
                                 <div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
                                     <span class="d-flex align-items-center text-gray-400 me-5 mb-2">
-                                        <i class="ki-duotone ki-teacher fs-4 me-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>@Course?.Trainer
+                                        <i class="bi bi-person-badge me-1"></i>@Course?.Trainer
                                     </span>
                                     <span class="d-flex align-items-center text-gray-400 me-5 mb-2">
-                                        <i class="ki-duotone ki-geolocation fs-4 me-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>@Course?.Location
+                                        <i class="bi bi-geo-alt me-1"></i>@Course?.Location
                                     </span>
                                     <span class="d-flex align-items-center text-gray-400 mb-2">
-                                        <i class="ki-duotone ki-calendar-tick fs-4 me-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                            <span class="path3"></span>
-                                        </i>@Course?.StartDate.ToString("dd/MM/yyyy") (@Course?.Duration)
+                                        <i class="bi bi-calendar-check me-1"></i>@Course?.StartDate.ToString("dd/MM/yyyy") (@Course?.Duration)
                                     </span>
                                 </div>
                              </div>
                              <div class="d-flex my-4">
-                                <a href="#" class="btn btn-sm btn-light me-2">
-                                    <i class="ki-duotone ki-pencil fs-3 d-none"></i>
-                                    <span class="indicator-label">Sửa thông tin</span>
-                                </a>
-                                <a href="#" class="btn btn-sm btn-primary me-3">Đăng ký học viên</a>
+                                <button class="btn btn-sm btn-light me-2" @onclick="HandleEdit">Sửa thông tin</button>
+                                <button class="btn btn-sm btn-primary" @onclick="HandleRegisterAttendee">Đăng ký học viên</button>
                              </div>
                         </div>
                         <div class="d-flex flex-wrap flex-stack">
                             <div class="d-flex flex-column flex-grow-1 pe-8">
                                 <div class="d-flex flex-wrap">
                                      <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <div class="fs-2 fw-bolder" data-kt-countup="true" data-kt-countup-value="@Course?.ParticipantsCount">@Course?.ParticipantsCount</div>
-                                        </div>
+                                        <div class="fs-2 fw-bolder">@Course?.ParticipantsCount</div>
                                         <div class="fw-bold fs-6 text-gray-400">Đã đăng ký</div>
                                     </div>
                                     <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <div class="fs-2 fw-bolder" data-kt-countup="true" data-kt-countup-value="@Course?.MaxParticipants">@Course?.MaxParticipants</div>
-                                        </div>
+                                        <div class="fs-2 fw-bolder">@Course?.MaxParticipants</div>
                                         <div class="fw-bold fs-6 text-gray-400">Số lượng tối đa</div>
                                     </div>
                                     <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <div class="fs-2 fw-bolder">@Course?.Status</div>
-                                        </div>
+                                        <div class="fs-2 fw-bolder">@Course?.Status</div>
                                         <div class="fw-bold fs-6 text-gray-400">Trạng thái</div>
                                     </div>
                                 </div>
@@ -82,9 +67,10 @@
             </div>
         </div>
 
+        <!-- Content & Attendees (Giao diện cũ) -->
         <div class="row g-5 g-xl-8">
             <div class="col-xl-4">
-                <div class="card card-xl-stretch mb-xl-8">
+                <div class="card card-xl-stretch mb-xl-8 shadow-sm">
                     <div class="card-header border-0 pt-5">
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bolder text-dark">Nội dung khóa học</span>
@@ -95,9 +81,7 @@
                         <div class="timeline-label">
                             <div class="timeline-item">
                                 <div class="timeline-label fw-bolder text-gray-800 fs-6">08:00</div>
-                                <div class="timeline-badge">
-                                    <i class="fa fa-genderless text-primary fs-1"></i>
-                                </div>
+                                <div class="timeline-badge"><i class="fa fa-genderless text-primary fs-1"></i></div>
                                 <div class="timeline-content d-flex flex-column ps-3">
                                     <span class="fw-bolder text-gray-800 fs-6">Giới thiệu & Khai mạc</span>
                                     <span class="text-gray-400 fw-bold fs-7">Chào đón học viên và phổ biến nội quy</span>
@@ -105,9 +89,7 @@
                             </div>
                             <div class="timeline-item">
                                 <div class="timeline-label fw-bolder text-gray-800 fs-6">09:00</div>
-                                <div class="timeline-badge">
-                                    <i class="fa fa-genderless text-success fs-1"></i>
-                                </div>
+                                <div class="timeline-badge"><i class="fa fa-genderless text-success fs-1"></i></div>
                                 <div class="timeline-content d-flex flex-column ps-3">
                                     <span class="fw-bolder text-gray-800 fs-6">Phần 1: Lý thuyết cơ bản</span>
                                     <span class="text-gray-400 fw-bold fs-7">Các khái niệm nền tảng quan trọng</span>
@@ -115,9 +97,7 @@
                             </div>
                             <div class="timeline-item">
                                 <div class="timeline-label fw-bolder text-gray-800 fs-6">13:30</div>
-                                <div class="timeline-badge">
-                                    <i class="fa fa-genderless text-warning fs-1"></i>
-                                </div>
+                                <div class="timeline-badge"><i class="fa fa-genderless text-warning fs-1"></i></div>
                                 <div class="timeline-content d-flex flex-column ps-3">
                                     <span class="fw-bolder text-gray-800 fs-6">Phần 2: Thực hành nhóm</span>
                                     <span class="text-gray-400 fw-bold fs-7">Thảo luận và giải quyết tình huống</span>
@@ -125,9 +105,7 @@
                             </div>
                             <div class="timeline-item">
                                 <div class="timeline-label fw-bolder text-gray-800 fs-6">16:00</div>
-                                <div class="timeline-badge">
-                                    <i class="fa fa-genderless text-danger fs-1"></i>
-                                </div>
+                                <div class="timeline-badge"><i class="fa fa-genderless text-danger fs-1"></i></div>
                                 <div class="timeline-content d-flex flex-column ps-3">
                                     <span class="fw-bolder text-gray-800 fs-6">Tổng kết & Đánh giá</span>
                                     <span class="text-gray-400 fw-bold fs-7">Kiểm tra kiến thức cuối khóa</span>
@@ -138,7 +116,7 @@
                 </div>
             </div>
             <div class="col-xl-8">
-                <div class="card card-xl-stretch mb-5 mb-xl-8">
+                <div class="card card-xl-stretch mb-5 mb-xl-8 shadow-sm">
                     <div class="card-header border-0 pt-5">
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bolder text-dark">Danh sách học viên</span>
@@ -149,25 +127,26 @@
                         <div class="table-responsive">
                             <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-4">
                                 <thead>
-                                    <tr class="fw-bolder text-muted">
-                                        <th class="min-w-150px">Học viên</th>
+                                    <tr class="fw-bolder text-muted bg-light">
+                                        <th class="ps-4 min-w-150px rounded-start">Học viên</th>
                                         <th class="min-w-140px">Phòng ban</th>
                                         <th class="min-w-120px">Trạng thái</th>
-                                        <th class="min-w-100px text-end">Điểm số</th>
+                                        <th class="min-w-100px text-center">Điểm số</th>
+                                        <th class="min-w-100px text-end rounded-end pe-4">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach(var attendee in Attendees)
                                     {
                                         <tr>
-                                            <td>
+                                            <td class="ps-4">
                                                 <div class="d-flex align-items-center">
                                                     <div class="symbol symbol-45px me-5">
                                                         <img src="@attendee.Avatar" alt="" />
                                                     </div>
                                                     <div class="d-flex justify-content-start flex-column">
                                                         <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">@attendee.Name</a>
-                                                        <span class="text-muted fw-bold text-muted d-block fs-7">@attendee.Email</span>
+                                                        <span class="text-muted fw-bold d-block fs-7">@attendee.Email</span>
                                                     </div>
                                                 </div>
                                             </td>
@@ -177,8 +156,15 @@
                                             <td>
                                                 <span class="badge @attendee.StatusBadge fs-7 fw-bolder">@attendee.Status</span>
                                             </td>
-                                            <td class="text-end">
+                                            <td class="text-center">
                                                 <span class="text-dark fw-bolder d-block fs-6">@attendee.Score</span>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" 
+                                                        title="Hủy đăng ký" 
+                                                        @onclick="() => PromptRemoveAttendee(attendee)">
+                                                    <i class="ki-outline ki-trash fs-3"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     }
@@ -193,4 +179,20 @@
     </div>
 </div>
 
+@using TTL.HR.Shared.Components.Training
 
+<!-- Registration Selection Popup -->
+<TrainingRegistrationPopup 
+    IsVisible="@IsRegisterModalOpen"
+    CourseTitle="@Course?.Title"
+    OnConfirm="ConfirmRegister"
+    OnCancel="CloseRegisterModal" />
+
+<!-- Delete Confirmation Modal -->
+<DeleteConfirmationModal 
+    IsVisible="@IsDeleteModalOpen"
+    Title="Hủy đăng ký học viên"
+    Message="Bạn đang yêu cầu hủy đăng ký cho học viên"
+    ItemName="@(ItemToRemoveAttendee?.Name ?? "")"
+    OnConfirmed="ConfirmRemoveAttendee"
+    OnCancelled="CloseRemoveModal" />

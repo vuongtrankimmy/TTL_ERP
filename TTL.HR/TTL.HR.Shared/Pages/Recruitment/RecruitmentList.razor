@@ -1,17 +1,56 @@
 @page "/recruitment"
+@using TTL.HR.Shared.Components.Common
 
 <div class="post d-flex flex-column-fluid pt-8" id="kt_post">
     <div id="kt_content_container" class="container-fluid">
+        <!-- Stats Dashboard -->
+        <div class="row g-5 g-xl-8 mb-8">
+            <div class="col-xl-3">
+                <div class="card card-xl-stretch shadow-sm bg-light-primary border-0">
+                    <div class="card-body">
+                        <i class="ki-outline ki-briefcase fs-2x text-primary mb-5"></i>
+                        <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">@_jobs.Count</div>
+                        <div class="fw-bold text-gray-400">Tin đang tuyển</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div class="card card-xl-stretch shadow-sm bg-light-info border-0">
+                    <div class="card-body">
+                        <i class="ki-outline ki-people fs-2x text-info mb-5"></i>
+                        <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">45</div>
+                        <div class="fw-bold text-gray-400">Hồ sơ chờ duyệt</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div class="card card-xl-stretch shadow-sm bg-light-success border-0">
+                    <div class="card-body">
+                        <i class="ki-outline ki-check-circle fs-2x text-success mb-5"></i>
+                        <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">12</div>
+                        <div class="fw-bold text-gray-400">Đã tuyển trong tháng</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div class="card card-xl-stretch shadow-sm bg-light-warning border-0">
+                    <div class="card-body">
+                        <i class="ki-outline ki-chart-line-star fs-2x text-warning mb-5"></i>
+                        <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">85%</div>
+                        <div class="fw-bold text-gray-400">Tỷ lệ hoàn thành</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Filter Card -->
         <div class="card mb-8 shadow-sm">
             <div class="card-body py-4 px-6">
                 <div class="d-flex flex-wrap align-items-center">
                     <!-- Search -->
                     <div class="position-relative w-md-250px me-4 my-1">
-                        <span class="svg-icon svg-icon-3 position-absolute top-50 translate-middle-y ms-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
-                            </svg>
+                        <span class="svg-icon svg-icon-3 position-absolute top-50 translate-middle-y ms-4 text-gray-400">
+                           <i class="ki-outline ki-magnifier fs-2"></i>
                         </span>
                         <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm kiếm vị trí..." />
                     </div>
@@ -38,7 +77,8 @@
 
                     <!-- Action Button -->
                     <div class="ms-auto my-1">
-                        <a href="/recruitment/add" class="btn btn-primary fw-bold fs-7 px-6"><i class="bi bi-plus-lg me-1"></i>Tạo tin tuyển dụng</a>
+                        <a href="/recruitment/kanban" class="btn btn-light-info fw-bold fs-7 px-6 me-3 border-0 shadow-sm"><i class="ki-outline ki-kanban fs-2 me-1"></i>Bảng Kanban</a>
+                        <a href="/recruitment/add" class="btn btn-primary fw-bold fs-7 px-6 shadow-sm"><i class="ki-outline ki-plus-square fs-2 me-1"></i>Đăng tin mới</a>
                     </div>
                 </div>
             </div>
@@ -53,7 +93,6 @@
                         <span class="badge badge-light-primary fw-bolder fs-7 ms-2">@_jobs.Count tin</span>
                     </div>
                 </div>
-               
             </div>
             <div class="card-body py-4">
                 <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="5" Columns="7">
@@ -63,8 +102,8 @@
                                 <tr class="fw-bolder text-muted bg-light">
                                     <th class="ps-4 min-w-200px rounded-start">Vị trí</th>
                                     <th class="min-w-150px">Phòng ban</th>
-                                    <th class="min-w-100px">Số lượng</th>
-                                    <th class="min-w-100px">Hạn nộp</th>
+                                    <th class="min-w-100px text-center">Số lượng</th>
+                                    <th class="min-w-100px text-center">Hạn nộp</th>
                                     <th class="min-w-100px text-center">Ứng viên</th>
                                     <th class="min-w-100px text-center">Trạng thái</th>
                                     <th class="min-w-100px text-end rounded-end pe-4">Thao tác</th>
@@ -77,19 +116,19 @@
                                         <td class="ps-4">
                                             <div class="d-flex align-items-center">
                                                 <div class="d-flex justify-content-start flex-column">
-                                                    <a href="/recruitment/details/@job.Id" class="text-dark fw-bolder text-hover-primary fs-6">@job.Title</a>
-                                                    <span class="text-muted fw-bold d-block fs-7">@job.Code</span>
+                                                    <a href="/recruitment/details/@job.Id" class="text-dark fw-bold text-hover-primary fs-6">@job.Title</a>
+                                                    <span class="text-muted fw-semibold d-block fs-7">@job.Code</span>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <span class="text-gray-800 fw-bold d-block fs-6">@job.Department</span>
-                                            <span class="text-muted fw-bold d-block fs-7">@job.Type</span>
+                                            <span class="text-muted fw-semibold d-block fs-7">@job.Type</span>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <span class="text-gray-800 fw-bold d-block fs-6">@job.HiringCount</span>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <span class="text-gray-800 fw-bold d-block fs-6">@job.Deadline.ToString("dd/MM/yyyy")</span>
                                         </td>
                                         <td class="text-center">
@@ -100,13 +139,13 @@
                                         </td>
                                         <td class="text-end pe-4">
                                             <a href="/recruitment/details/@job.Id" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Chi tiết">
-                                                <i class="bi bi-eye-fill fs-3"></i>
+                                                <i class="ki-outline ki-eye fs-3"></i>
                                             </a>
-                                            <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Sửa">
-                                                <i class="bi bi-pencil-fill fs-3"></i>
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Sửa" @onclick="() => HandleEdit(job.Id)">
+                                                <i class="ki-outline ki-pencil fs-3"></i>
                                             </button>
-                                            <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" title="Xóa">
-                                                <i class="bi bi-trash-fill fs-3"></i>
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" title="Xóa" @onclick="() => PromptDelete(job)">
+                                                <i class="ki-outline ki-trash fs-3"></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -114,19 +153,16 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- Pagination -->
-                    <div class="d-flex flex-stack flex-wrap pt-10">
-                        <div class="fs-6 fw-bold text-gray-700">Hiển thị 1 đến @_jobs.Count của @_jobs.Count bản ghi</div>
-                        <ul class="pagination">
-                            <li class="page-item previous disabled"><a href="#" class="page-link"><i class="previous"></i></a></li>
-                            <li class="page-item active"><a href="#" class="page-link">1</a></li>
-                            <li class="page-item next"><a href="#" class="page-link"><i class="next"></i></a></li>
-                        </ul>
-                    </div>
                 </SkeletonLoading>
             </div>
         </div>
     </div>
 </div>
 
-
+<DeleteConfirmationModal 
+    IsVisible="@IsDeleteModalOpen"
+    Title="Xóa tin tuyển dụng"
+    Message="Bạn đang yêu cầu xóa tin tuyển dụng"
+    ItemName="@(ItemToDelete?.Title ?? "")"
+    OnConfirmed="ConfirmDelete"
+    OnCancelled="CloseDeleteModal" />

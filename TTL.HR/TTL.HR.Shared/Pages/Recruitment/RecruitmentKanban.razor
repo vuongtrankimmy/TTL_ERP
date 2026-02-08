@@ -1,0 +1,130 @@
+@page "/recruitment/kanban"
+@using TTL.HR.Shared.Components.Common
+
+<PageTitle>Bảng theo dõi ứng viên - TTL.HR</PageTitle>
+
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+        <!-- Header -->
+        <div class="d-flex flex-wrap flex-stack mb-6">
+            <h3 class="fw-bolder my-2">Bảng theo dữ liệu ứng viên
+                <span class="badge badge-light-primary fw-bold ms-2">@KanbanBoard.Sum(c => c.Applicants.Count) ứng viên</span>
+            </h3>
+            <div class="d-flex my-2">
+                <!-- Vị trí tuyển dụng selector -->
+                <div class="me-4 min-w-200px">
+                    <select class="form-select form-select-sm form-select-white" @onchange="OnJobSelected">
+                        <option value="">Tất cả vị trí tuyển dụng</option>
+                        @foreach (var job in Jobs)
+                        {
+                            <option value="@job.Id">@job.Title</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="d-flex align-items-center position-relative me-4">
+                    <i class="ki-outline ki-magnifier fs-3 position-absolute ms-3"></i>
+                    <input type="text" class="form-control form-control-white form-control-sm w-200px ps-9" 
+                           placeholder="Tìm ứng viên..." @oninput="OnSearch" />
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/recruitment" class="btn btn-light-primary btn-sm fw-bold">
+                        <i class="ki-outline ki-burger-menu-2 fs-3"></i>Danh sách
+                    </a>
+                    <a href="/recruitment/add" class="btn btn-primary btn-sm fw-bold">
+                        <i class="ki-outline ki-plus fs-3"></i>Thêm mới
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanban Board -->
+        <div class="row g-5">
+            @foreach (var column in KanbanBoard)
+            {
+                <div class="col-md-3">
+                    <div class="card bg-light shadow-none border-0 h-100">
+                        <div class="card-header border-0 py-5 bg-transparent">
+                            <h3 class="card-title fw-bolder text-gray-800">
+                                @column.Title
+                                <span class="badge badge-light-@column.ColorClass fs-8 ms-2">@column.Applicants.Count</span>
+                            </h3>
+                        </div>
+                        <div class="card-body p-4 pt-0 overflow-auto" style="min-height: 500px; max-height: 700px;">
+                            @if (!column.Applicants.Any())
+                            {
+                                <div class="d-flex flex-column flex-center h-200px border border-dashed border-gray-300 rounded-3">
+                                    <div class="text-gray-400 fs-7">Trống</div>
+                                </div>
+                            }
+                            
+                            @foreach (var app in column.Applicants)
+                            {
+                                <div class="card shadow-sm mb-4 border-0 hover-elevate cursor-pointer" @onclick="() => ViewProfile(app)">
+                                    <div class="card-body p-5">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="symbol symbol-40px me-3">
+                                                <img src="@app.Avatar" alt="@app.Name" />
+                                            </div>
+                                            <div class="d-flex flex-column flex-grow-1">
+                                                <span class="text-gray-800 text-hover-primary fw-bolder fs-6">@app.Name</span>
+                                                <span class="text-muted fw-bold fs-8">@app.JobTitle</span>
+                                            </div>
+                                            @if (app.Status == "Từ chối")
+                                            {
+                                                <span class="badge badge-light-danger fs-9">Loại</span>
+                                            }
+                                            else if (app.Status == "Đã tuyển")
+                                            {
+                                                <span class="badge badge-light-success fs-9">Hợp đồng</span>
+                                            }
+                                        </div>
+
+                                        <div class="d-flex flex-stack mt-auto">
+                                            <div class="d-flex align-items-center">
+                                                <i class="ki-outline ki-calendar fs-6 text-gray-400 me-1"></i>
+                                                <span class="text-gray-400 fw-bold fs-9">@app.DaysInStage ngày</span>
+                                            </div>
+                                            <div class="symbol-group symbol-hover">
+                                                <div class="symbol symbol-25px symbol-circle" title="Xem chi tiết">
+                                                    <span class="symbol-label bg-light-primary text-primary fw-bold fs-9">
+                                                        <i class="ki-outline ki-eye fs-8 text-primary"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Shared UI Components -->
+<ApplicantProfileModal 
+    IsOpen="IsProfileModalOpen" 
+    Applicant="SelectedApplicant" 
+    OnClose="() => IsProfileModalOpen = false" 
+    OnSchedule="OpenScheduleModal" />
+
+<InterviewScheduleModal 
+    IsOpen="IsScheduleModalOpen" 
+    Model="ScheduleModel" 
+    OnClose="() => IsScheduleModalOpen = false" 
+    OnSave="SaveInterviewSchedule" />
+
+<RejectionModal 
+    IsOpen="IsRejectionModalOpen" 
+    Applicant="ApplicantToReject" 
+    OnClose="() => IsRejectionModalOpen = false" 
+    OnSave="SaveRejection" />
+
+<HiringSuccessModal 
+    IsOpen="IsSuccessModalOpen" 
+    Applicant="ApplicantToSuccess" 
+    OnClose="() => IsSuccessModalOpen = false" 
+    OnSave="SaveSuccess" />

@@ -1,202 +1,272 @@
 @page "/recruitment/details/{Id:int}"
 @using System.Globalization
+@using Microsoft.AspNetCore.Components.Forms
+@using TTL.HR.Shared.Components.Recruitment
 
 <PageTitle>Chi tiết tuyển dụng - TTL.HR</PageTitle>
 
-<div class="post d-flex flex-column-fluid" id="kt_post">
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
     <div id="kt_content_container" class="container-fluid">
         <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card">
             <!-- Header -->
-            <div class="card mb-5 mb-xl-10">
-            <div class="card-body pt-9 pb-0">
-                <!-- Details -->
-                <div class="d-flex flex-wrap flex-sm-nowrap mb-3">
-                    <!-- Image -->
-                    <div class="me-7 mb-4">
-                        <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                            <span class="symbol-label bg-light-primary text-primary fs-2x fw-bolder">@Job?.Code.Substring(0, Math.Min(3, Job.Code.Length))</span>
-                            <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px"></div>
-                        </div>
-                    </div>
-                    <!-- Info -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
-                            <div class="d-flex flex-column">
-                                <div class="d-flex align-items-center mb-2">
-                                    <a href="#" class="text-gray-900 text-hover-primary fs-2 fw-bolder me-1">@Job?.Title</a>
-                                    <a href="#">
-                                        <i class="ki-duotone ki-verify fs-1 text-primary">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </a>
-                                </div>
-                                <div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
-                                    <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
-                                        <i class="ki-duotone ki-profile-circle fs-4 me-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                            <span class="path3"></span>
-                                        </i>@Job?.Department
-                                    </a>
-                                    <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
-                                        <i class="ki-duotone ki-geolocation fs-4 me-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>Hồ Chí Minh
-                                    </a>
-                                    <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
-                                        <i class="ki-duotone ki-sms fs-4 me-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>@Job?.Type
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="d-flex my-4">
-                                <a href="#" class="btn btn-sm btn-light me-2" id="kt_user_follow_button">
-                                    <i class="ki-duotone ki-check fs-3 d-none"></i>
-                                    <span class="indicator-label">Sửa tin</span>
-                                </a>
-                                <a href="#" class="btn btn-sm btn-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_offer_a_deal">Đóng tuyển dụng</a>
+            <div class="card mb-5 mb-xl-10 shadow-sm">
+                <div class="card-body pt-9 pb-0">
+                    <div class="d-flex flex-wrap flex-sm-nowrap mb-3">
+                        <div class="me-7 mb-4">
+                            <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+                                <span class="symbol-label bg-light-primary text-primary fs-2x fw-bolder">@(Job?.Code?.Length >= 3 ? Job.Code.Substring(0, 3) : "JOB")</span>
+                                <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px"></div>
                             </div>
                         </div>
-                        <div class="d-flex flex-wrap flex-stack">
-                            <div class="d-flex flex-column flex-grow-1 pe-8">
-                                <div class="d-flex flex-wrap">
-                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <div class="fs-2 fw-bolder" data-kt-countup="true" data-kt-countup-value="@Job?.HiringCount">@Job?.HiringCount</div>
-                                        </div>
-                                        <div class="fw-bold fs-6 text-gray-400">Số lượng tuyển</div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                                <div class="d-flex flex-column">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <h3 class="text-gray-900 fs-2 fw-bolder me-1">@Job?.Title</h3>
+                                        <span class="badge badge-light-success fw-bold ms-2">Đang tuyển</span>
                                     </div>
-                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <div class="fs-2 fw-bolder" data-kt-countup="true" data-kt-countup-value="@Job?.ApplicantsCount">@Job?.ApplicantsCount</div>
-                                        </div>
-                                        <div class="fw-bold fs-6 text-gray-400">Hồ sơ ứng tuyển</div>
+                                    <div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
+                                        <span class="d-flex align-items-center text-gray-400 me-5 mb-2">
+                                            <i class="ki-outline ki-profile-circle fs-4 me-1"></i>@Job?.Department
+                                        </span>
+                                        <span class="d-flex align-items-center text-gray-400 me-5 mb-2">
+                                            <i class="ki-outline ki-geolocation fs-4 me-1"></i>Hồ Chí Minh
+                                        </span>
+                                        <span class="d-flex align-items-center text-gray-400 mb-2">
+                                            <i class="ki-outline ki-time fs-4 me-1"></i>@Job?.Type
+                                        </span>
                                     </div>
-                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <div class="fs-2 fw-bolder">@Job?.Deadline.ToString("dd/MM/yyyy")</div>
-                                        </div>
-                                        <div class="fw-bold fs-6 text-gray-400">Hạn nộp</div>
-                                    </div>
+                                </div>
+                                <div class="d-flex my-4">
+                                    <button class="btn btn-sm btn-light me-2 fw-bold" @onclick="HandleEditJob">Chỉnh sửa</button>
+                                    <button class="btn btn-sm btn-primary fw-bold px-6 shadow-sm" @onclick="OpenAddApplicantModal">
+                                        <i class="ki-outline ki-plus-square fs-3 me-1"></i>Thêm ứng viên
+                                    </button>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center w-200px w-sm-300px flex-column mt-3">
-                                <div class="d-flex justify-content-between w-100 mt-auto mb-2">
-                                    <span class="fw-bold fs-6 text-gray-400">Tiến độ tuyển dụng</span>
-                                    <span class="fw-bolder fs-6">50%</span>
-                                </div>
-                                <div class="h-5px mx-3 w-100 bg-light mb-3">
-                                    <div class="bg-success rounded h-5px" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="d-flex flex-wrap flex-stack">
+                                <div class="d-flex flex-column flex-grow-1 pe-8">
+                                    <div class="d-flex flex-wrap">
+                                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                            <div class="fs-2 fw-bolder">@Job?.HiringCount</div>
+                                            <div class="fw-bold fs-6 text-gray-400">Chỉ tiêu</div>
+                                        </div>
+                                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                            <div class="fs-2 fw-bolder text-primary">@Job?.ApplicantsCount</div>
+                                            <div class="fw-bold fs-6 text-gray-400">Ứng viên</div>
+                                        </div>
+                                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                            <div class="fs-2 fw-bolder text-danger">@Job?.Deadline.ToString("dd/MM/yyyy")</div>
+                                            <div class="fw-bold fs-6 text-gray-400">Hạn chót</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Content -->
-        <div class="row g-5 g-xl-8">
-            <div class="col-xl-4">
-                <div class="card card-xl-stretch mb-xl-8">
-                    <div class="card-header border-0 pt-5">
-                        <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bolder text-dark">Thông tin chi tiết</span>
-                            <span class="text-muted mt-1 fw-bold fs-7">Mô tả và yêu cầu công việc</span>
-                        </h3>
-                    </div>
-                    <div class="card-body pt-5">
-                        <div class="d-flex align-items-center mb-7">
-                             <div class="flex-grow-1">
-                                <a href="#" class="text-gray-800 text-hover-primary fw-bolder fs-6">Mô tả công việc</a>
-                                <span class="text-gray-400 fw-bold d-block pt-1 fs-7">
-                                    - Tham gia phát triển các dự án phần mềm của công ty.<br/>
-                                    - Phân tích yêu cầu, thiết kế và lập trình.<br/>
-                                    - Review code, tối ưu hiệu suất.
-                                </span>
-                             </div>
+
+            <div class="row g-5 g-xl-8">
+                <!-- Job Descriptions -->
+                <div class="col-xl-4">
+                    <div class="card card-xl-stretch mb-xl-8 shadow-sm">
+                        <div class="card-header border-0 pt-5">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bolder text-dark">Mô tả công việc</span>
+                                <span class="text-muted mt-1 fw-bold fs-7">Yêu cầu & Quyền lợi</span>
+                            </h3>
                         </div>
-                        <div class="d-flex align-items-center mb-7">
-                             <div class="flex-grow-1">
-                                <a href="#" class="text-gray-800 text-hover-primary fw-bolder fs-6">Yêu cầu ứng viên</a>
-                                <span class="text-gray-400 fw-bold d-block pt-1 fs-7">
-                                    - Có ít nhất 2 năm kinh nghiệm với .NET Core.<br/>
-                                    - Hiểu biết về SQL Server, Entity Framework.<br/>
-                                    - Khả năng làm việc nhóm tốt.
-                                </span>
-                             </div>
-                        </div>
-                         <div class="d-flex align-items-center mb-7">
-                             <div class="flex-grow-1">
-                                <a href="#" class="text-gray-800 text-hover-primary fw-bolder fs-6">Quyền lợi</a>
-                                <span class="text-gray-400 fw-bold d-block pt-1 fs-7">
-                                    - Lương thưởng hấp dẫn.<br/>
-                                    - Môi trường làm việc năng động.<br/>
-                                    - Bảo hiểm y tế đầy đủ.
-                                </span>
-                             </div>
+                        <div class="card-body pt-5">
+                            <div class="mb-5">
+                                <h6 class="fw-bold text-gray-800">Nhiệm vụ chính:</h6>
+                                <p class="text-gray-600 fs-7">Phát triển và duy trì các hệ thống backend sử dụng .NET Core. Thiết kế cơ sở dữ liệu và API cho ứng dụng di động.</p>
+                            </div>
+                            <div class="mb-5">
+                                <h6 class="fw-bold text-gray-800">Yêu cầu ứng viên:</h6>
+                                <p class="text-gray-600 fs-7">Ít nhất 2 năm kinh nghiệm. Thành thạo C#, EF Core, SQL Server. Khả năng tư duy logic tốt.</p>
+                            </div>
+                            <div class="separator separator-dashed my-5"></div>
+                            <div class="mb-5">
+                                <h3 class="fs-6 fw-bold text-gray-800 mb-4">Hoạt động gần đây</h3>
+                                <div class="timeline-label">
+                                    <div class="timeline-item">
+                                        <div class="timeline-label fw-bold text-gray-800 fs-8 w-50px">09:30</div>
+                                        <div class="timeline-badge">
+                                            <i class="fa fa-genderless text-warning fs-1"></i>
+                                        </div>
+                                        <div class="fw-semibold text-gray-700 ps-3 fs-7">Tiếp nhận hồ sơ mới từ <span class="text-primary fw-bold">Nguyễn Văn Anh</span></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-8">
-                <div class="card card-xl-stretch mb-5 mb-xl-8">
-                    <div class="card-header border-0 pt-5">
-                         <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bolder text-dark">Danh sách ứng viên</span>
-                            <span class="text-muted mt-1 fw-bold fs-7">@Applicants.Count ứng viên mới nhất</span>
-                        </h3>
-                    </div>
-                    <div class="card-body py-3">
-                         <div class="table-responsive">
-                            <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-4">
-                                <thead>
-                                    <tr class="fw-bolder text-muted">
-                                        <th class="min-w-150px">Ứng viên</th>
-                                        <th class="min-w-140px">Vị trí ứng tuyển</th>
-                                        <th class="min-w-120px">Ngày nộp</th>
-                                        <th class="min-w-100px text-end">Trạng thái</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach(var app in Applicants)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="symbol symbol-45px me-5">
-                                                        <img src="@app.Avatar" alt="" />
-                                                    </div>
-                                                    <div class="d-flex justify-content-start flex-column">
-                                                        <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">@app.Name</a>
-                                                        <span class="text-muted fw-bold text-muted d-block fs-7">@app.Email</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <a href="#" class="text-dark fw-bolder text-hover-primary d-block fs-6">@Job?.Title</a>
-                                            </td>
-                                            <td class="text-end">
-                                                <span class="text-dark fw-bolder d-block fs-6">@app.AppliedDate.ToString("dd/MM/yyyy")</span>
-                                            </td>
-                                            <td class="text-end">
-                                                <span class="badge @app.StatusBadge fs-7 fw-bolder">@app.Status</span>
-                                            </td>
+
+                <!-- Applicants List -->
+                <div class="col-xl-8">
+                    <div class="card card-xl-stretch mb-5 mb-xl-8 shadow-sm">
+                        <div class="card-header border-0 pt-5">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bolder text-dark">Danh sách ứng viên</span>
+                                <span class="text-muted mt-1 fw-bold fs-7">Tổng số @Applicants.Count hồ sơ</span>
+                            </h3>
+                            <div class="card-toolbar">
+                                <div class="d-flex align-items-center position-relative my-1">
+                                    <i class="ki-outline ki-magnifier fs-3 position-absolute ms-3"></i>
+                                    <input type="text" class="form-control form-control-solid form-control-sm w-200px ps-9 fs-7" 
+                                           placeholder="Tìm theo tên..." 
+                                           @bind-value="SearchTerm" 
+                                           @bind-value:event="oninput" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body py-3">
+                            <div class="table-responsive">
+                                <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-4">
+                                    <thead>
+                                        <tr class="fw-bolder text-muted bg-light">
+                                            <th class="ps-4 min-w-200px rounded-start">Họ tên & Thông tin</th>
+                                            <th class="min-w-120px text-center">Ngày ứng tuyển</th>
+                                            <th class="min-w-150px text-center">Trạng thái</th>
+                                            <th class="min-w-100px text-end rounded-end pe-4">Thao tác</th>
                                         </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach(var app in FilteredApplicants)
+                                        {
+                                            <tr class="hover-elevate cursor-pointer">
+                                                <td class="ps-4" @onclick="() => ViewProfile(app)">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="symbol symbol-45px me-3">
+                                                            <img src="@app.Avatar" alt="" />
+                                                        </div>
+                                                        <div class="d-flex justify-content-start flex-column">
+                                                            <span class="text-gray-800 fw-bold text-hover-primary fs-6">@app.Name</span>
+                                                            <span class="text-muted fw-semibold d-block fs-7">@app.Email</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center" @onclick="() => ViewProfile(app)">
+                                                    <span class="text-gray-800 fw-bold d-block fs-6">@app.AppliedDate.ToString("dd/MM/yyyy")</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="dropdown">
+                                                        <button class="badge @app.StatusBadge border-0 d-flex align-items-center mx-auto cursor-pointer" type="button" data-bs-toggle="dropdown">
+                                                            @app.Status <i class="ki-outline ki-down fs-8 ms-1"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu shadow-sm">
+                                                            <li><button class="dropdown-item py-2 fs-7" @onclick='() => UpdateStatus(app, "Tiếp nhận")'>Tiếp nhận</button></li>
+                                                            <li><button class="dropdown-item py-2 fs-7 text-warning fw-bold" @onclick='() => OpenScheduleModal(app)'>Đặt lịch phỏng vấn</button></li>
+                                                            <li><button class="dropdown-item py-2 fs-7 text-success fw-bold" @onclick='() => UpdateStatus(app, "Đã tuyển")'>Đã tuyển</button></li>
+                                                            <li><button class="dropdown-item py-2 fs-7 text-danger fw-bold" @onclick='() => UpdateStatus(app, "Từ chối")'>Từ chối</button></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td class="text-end pe-4">
+                                                    @if (app.HasInterviewScheduled)
+                                                    {
+                                                        <button class="btn btn-icon btn-bg-light btn-active-color-warning btn-sm me-1" title="Chỉnh sửa lịch" @onclick="() => OpenScheduleModal(app)">
+                                                            <i class="ki-outline ki-calendar-tick fs-3"></i>
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Xem hồ sơ" @onclick="() => ViewProfile(app)">
+                                                            <i class="ki-outline ki-eye fs-3"></i>
+                                                        </button>
+                                                    }
+                                                    <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" title="Xóa" @onclick="() => PromptDeleteApplicant(app)">
+                                                        <i class="ki-outline ki-trash fs-3"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </SkeletonLoading>
     </div>
 </div>
 
+<!-- Shared UI Components -->
+<ApplicantProfileModal 
+    IsOpen="IsProfileModalOpen" 
+    Applicant="SelectedApplicant" 
+    OnClose="CloseProfileModal" 
+    OnSchedule="OpenScheduleModal" />
 
+<InterviewScheduleModal 
+    IsOpen="IsScheduleModalOpen" 
+    Model="ScheduleModel" 
+    OnClose="CloseScheduleModal" 
+    OnSave="SaveInterviewSchedule" />
+
+<RejectionModal 
+    IsOpen="IsRejectionModalOpen" 
+    Applicant="ApplicantToReject" 
+    OnClose="CloseRejectionModal" 
+    OnSave="SaveRejection" />
+
+<HiringSuccessModal 
+    IsOpen="IsSuccessModalOpen" 
+    Applicant="ApplicantToSuccess" 
+    OnClose="CloseSuccessModal" 
+    OnSave="SaveSuccess" />
+
+@if (IsDeleteModalOpen)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h3 class="modal-title fw-bolder">Xác nhận xóa</h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="CloseDeleteModal">
+                         <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body py-5">
+                    Bạn có chắc chắn muốn xóa ứng viên <span class="fw-bolder">@ApplicantToDelete?.Name</span>?
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" @onclick="CloseDeleteModal">Hủy</button>
+                    <button type="button" class="btn btn-danger fw-bold" @onclick="ConfirmDeleteApplicant">Xóa ngay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (IsAddApplicantModalOpen)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Thêm ứng viên mới</h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="CloseAddApplicantModal">
+                         <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body py-5">
+                    <div class="mb-5">
+                        <label class="form-label fw-bold">Họ và tên</label>
+                        <input type="text" class="form-control form-control-solid" placeholder="Nhập họ tên" />
+                    </div>
+                    <div class="mb-5">
+                        <label class="form-label fw-bold">Email</label>
+                        <input type="email" class="form-control form-control-solid" placeholder="email@example.com" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" @onclick="CloseAddApplicantModal">Đóng</button>
+                    <button type="button" class="btn btn-primary" @onclick="SaveApplicant">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

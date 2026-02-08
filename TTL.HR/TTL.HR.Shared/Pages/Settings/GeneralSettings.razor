@@ -39,6 +39,18 @@
                                 </a>
                             </div>
                             <div class="menu-item">
+                                <a class="menu-link py-4 @(activeTab == "recruitment_config" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("recruitment_config")'>
+                                    <span class="menu-icon"><i class="bi bi-person-plus fs-3"></i></span>
+                                    <span class="menu-title fw-bold">Cấu hình Tuyển dụng</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link py-4 @(activeTab == "training_config" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("training_config")'>
+                                    <span class="menu-icon"><i class="bi bi-journal-check fs-3"></i></span>
+                                    <span class="menu-title fw-bold">Cấu hình Đào tạo</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
                                 <a class="menu-link py-4 @(activeTab == "notifications" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("notifications")'>
                                     <span class="menu-icon"><i class="bi bi-bell fs-3"></i></span>
                                     <span class="menu-title fw-bold">Thông báo & Email</span>
@@ -247,6 +259,101 @@
                                         <input class="form-check-input w-45px h-25px" type="checkbox" checked />
                                         <span class="form-check-label fs-7 fw-bold text-gray-600">Tự động kích hoạt OT nếu check-out muộn quá 1 giờ</span>
                                     </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (activeTab == "recruitment_config")
+                {
+                    <!-- Recruitment Configuration -->
+                    <div class="card card-flush shadow-sm border-0 mb-8">
+                        <div class="card-header pt-7">
+                            <h3 class="card-title fw-bolder text-gray-800">Cấu hình Tuyển dụng</h3>
+                        </div>
+                        <div class="card-body pt-5">
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Các bước tuyển dụng</label>
+                                <div class="col-lg-9">
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        <span class="badge badge-light-primary fw-bold p-3">Tiếp nhận <i class="bi bi-x ms-2 cursor-pointer"></i></span>
+                                        <span class="badge badge-light-warning fw-bold p-3">Phỏng vấn <i class="bi bi-x ms-2 cursor-pointer"></i></span>
+                                        <span class="badge badge-light-info fw-bold p-3">Đề nghị <i class="bi bi-x ms-2 cursor-pointer"></i></span>
+                                        <span class="badge badge-light-success fw-bold p-3">Đã tuyển <i class="bi bi-lock-fill ms-2"></i></span>
+                                        <span class="badge badge-light-danger fw-bold p-3">Từ chối <i class="bi bi-lock-fill ms-2"></i></span>
+                                        <button class="btn btn-icon btn-sm btn-light-primary rounded-circle"><i class="bi bi-plus"></i></button>
+                                    </div>
+                                    <div class="form-text fs-8 text-muted">Kéo thả để sắp xếp thứ tự các bước trong bảng Kanban.</div>
+                                </div>
+                            </div>
+                            <div class="separator separator-dashed my-6"></div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Thông báo ứng viên</label>
+                                <div class="col-lg-9">
+                                    <label class="form-check form-switch form-check-custom form-check-solid mb-3">
+                                        <input class="form-check-input w-40px h-20px" type="checkbox" checked />
+                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Tự động gửi email xác nhận khi nhận hồ sơ</span>
+                                    </label>
+                                    <label class="form-check form-switch form-check-custom form-check-solid mb-3">
+                                        <input class="form-check-input w-40px h-20px" type="checkbox" checked />
+                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Gửi nhắc nhở phỏng vấn trước 24h</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Lý do từ chối mẫu</label>
+                                <div class="col-lg-9">
+                                    <textarea class="form-control form-control-solid fs-7" rows="3">Kinh nghiệm chưa phù hợp;Kỹ năng mềm còn yếu;Mức lương mong đợi vượt ngân sách;Không đạt bài test chuyên môn</textarea>
+                                    <div class="form-text fs-8 text-muted">Các lý do cách nhau bởi dấu chấm phẩy (;).</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (activeTab == "training_config")
+                {
+                    <!-- Training Configuration -->
+                    <div class="card card-flush shadow-sm border-0 mb-8">
+                        <div class="card-header pt-7">
+                            <h3 class="card-title fw-bolder text-gray-800">Cấu hình Đào tạo</h3>
+                        </div>
+                        <div class="card-body pt-5">
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Danh mục khóa học</label>
+                                <div class="col-lg-9">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <span class="badge badge-light-info fw-bold p-3">Technical</span>
+                                        <span class="badge badge-light-info fw-bold p-3">Soft Skills</span>
+                                        <span class="badge badge-light-info fw-bold p-3">Management</span>
+                                        <span class="badge badge-light-info fw-bold p-3">Onboarding</span>
+                                        <button class="btn btn-icon btn-sm btn-light-primary rounded-circle"><i class="bi bi-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="separator separator-dashed my-6"></div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Chứng chỉ & Đánh giá</label>
+                                <div class="col-lg-9">
+                                    <label class="form-check form-switch form-check-custom form-check-solid mb-3">
+                                        <input class="form-check-input w-40px h-20px" type="checkbox" checked />
+                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Tự động cấp chứng chỉ PDF sau khi hoàn thành</span>
+                                    </label>
+                                    <label class="form-check form-switch form-check-custom form-check-solid mb-3">
+                                        <input class="form-check-input w-40px h-20px" type="checkbox" />
+                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Bắt buộc đánh giá khóa học để nhận chứng chỉ</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Nhắc nhở đào tạo</label>
+                                <div class="col-lg-9">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <span class="fs-7 fw-bold text-gray-700 me-3">Nhắc nhở khóa học bắt buộc trước</span>
+                                        <input type="number" class="form-control form-control-solid w-70px me-2" value="7" />
+                                        <span class="fs-7 text-muted">ngày</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

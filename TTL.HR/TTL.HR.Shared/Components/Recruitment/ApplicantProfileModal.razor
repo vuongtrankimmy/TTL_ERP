@@ -1,0 +1,183 @@
+@using TTL.HR.Shared.Models
+
+@if (IsOpen && Applicant != null)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0">
+                <div class="modal-header border-0 pb-0">
+                    <h3 class="modal-title fw-bolder text-primary">Hồ sơ ứng viên: @Applicant.Name</h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="OnClose">
+                         <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body py-8">
+                    <!-- Header -->
+                    <div class="d-flex flex-wrap flex-sm-nowrap mb-8">
+                        <div class="me-7 mb-4">
+                            <div class="symbol symbol-100px symbol-lg-120px symbol-fixed position-relative">
+                                <img src="@Applicant.Avatar" alt="image" />
+                                <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px"></div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                                <div class="d-flex flex-column">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="text-gray-900 fs-2 fw-bolder me-1">@Applicant.Name</span>
+                                        <span class="badge @Applicant.StatusBadge fw-bold ms-2">@Applicant.Status</span>
+                                    </div>
+                                    <div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
+                                        <span class="d-flex align-items-center text-gray-400 me-5 mb-2">
+                                            <i class="ki-outline ki-sms fs-4 me-1"></i>@Applicant.Email
+                                        </span>
+                                        <span class="d-flex align-items-center text-gray-400 mb-2">
+                                            <i class="ki-outline ki-calendar fs-4 me-1"></i>Ngày nộp: @Applicant.AppliedDate.ToString("dd/MM/yyyy")
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-wrap">
+                                <span class="badge badge-light-info fw-bold me-2 mb-2">@Applicant.JobTitle</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="separator separator-dashed my-5"></div>
+                    
+                    <div class="row">
+                        @if (Applicant.HasInterviewScheduled)
+                        {
+                            <div class="col-12 mb-7">
+                                <div class="bg-light-warning rounded border-warning border border-dashed p-6">
+                                    <h5 class="fw-bolder text-warning mb-4 d-flex align-items-center">
+                                        <i class="ki-outline ki-calendar-8 fs-2 me-2"></i>Thông tin lịch phỏng vấn
+                                    </h5>
+                                    <div class="row g-4">
+                                        <div class="col-sm-6">
+                                            <div class="fw-bold text-gray-400 fs-8 uppercase">Thời gian</div>
+                                            <div class="fw-bolder text-gray-800 fs-7">@Applicant.InterviewDate?.ToString("dd/MM/yyyy") lúc @Applicant.InterviewTime?.ToString("HH:mm")</div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="fw-bold text-gray-400 fs-8 uppercase">Người phỏng vấn</div>
+                                            <div class="fw-bolder text-gray-800 fs-7">@Applicant.Interviewer</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="fw-bold text-gray-400 fs-8 uppercase">Địa điểm / Link</div>
+                                            <div class="fw-bolder text-gray-800 fs-7">@Applicant.Location</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Applicant.Status == "Từ chối" && !string.IsNullOrEmpty(Applicant.RejectionReason))
+                        {
+                            <div class="col-12 mb-7">
+                                <div class="bg-light-danger rounded border-danger border border-dashed p-6">
+                                    <h5 class="fw-bolder text-danger mb-2 d-flex align-items-center">
+                                        <i class="ki-outline ki-trash fs-2 me-2"></i>Hồ sơ đã bị loại
+                                    </h5>
+                                    <div class="text-gray-700 fw-bold fs-7">Lý do: <span class="text-danger">@Applicant.RejectionReason</span></div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Applicant.Status == "Đã tuyển")
+                        {
+                            <div class="col-12 mb-7">
+                                <div class="bg-light-success rounded border-success border border-dashed p-6">
+                                    <h5 class="fw-bolder text-success mb-2 d-flex align-items-center">
+                                        <i class="ki-outline ki-check-circle fs-2 me-2"></i>Tuyển dụng thành công
+                                    </h5>
+                                    <div class="text-gray-700 fw-bold fs-7">Ghi chú: <span class="text-success">@(!string.IsNullOrEmpty(Applicant.HiringNote) ? Applicant.HiringNote : "Đã đạt yêu cầu tuyển dụng")</span></div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="col-md-6">
+                            <h5 class="fw-bolder mb-3 text-dark">Thông tin liên hệ</h5>
+                            <div class="text-gray-600 fs-7 mb-1">Số điện thoại: 090x xxx xxx</div>
+                            <div class="text-gray-600 fs-7 mb-1">Địa chỉ: TP. Hồ Chí Minh</div>
+                            <div class="text-gray-600 fs-7">Học vấn: Đại học Bách Khoa TP.HCM</div>
+
+                            <div class="mt-8">
+                                <h5 class="fw-bolder mb-4 text-dark">Lịch sử trạng thái</h5>
+                                <div class="timeline-label ms-2">
+                                    @{
+                                        var sortedHistory = Applicant.History.OrderByDescending(h => h.Date).ToList();
+                                        for (int i = 0; i < sortedHistory.Count; i++)
+                                        {
+                                            var hist = sortedHistory[i];
+                                            var isLatest = i == 0;
+                                            var badgeColor = hist.Status switch
+                                            {
+                                                "Tiếp nhận" => "text-primary",
+                                                "Phỏng vấn" => "text-warning",
+                                                "Đã tuyển" => "text-success",
+                                                "Từ chối" => "text-danger",
+                                                _ => "text-muted"
+                                            };
+
+                                            <div class="timeline-item">
+                                                <div class="timeline-label fw-bold text-gray-800 fs-8 w-60px">@hist.Date.ToString("dd/MM HH:mm")</div>
+                                                <div class="timeline-badge">
+                                                    <i class="fa fa-genderless @badgeColor @(isLatest ? "fs-1" : "fs-3")"></i>
+                                                </div>
+                                                <div class="timeline-content ps-3">
+                                                    <span class="fw-bold @(isLatest ? "text-gray-900 fs-6" : "text-gray-700 fs-7")">@hist.Status</span>
+                                                    @if (isLatest)
+                                                    {
+                                                        <span class="badge badge-light-success fs-9 px-2 py-1 ms-2">Mới nhất</span>
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(hist.Note))
+                                                    {
+                                                        <div class="text-muted fs-8 fw-semibold mt-1">@hist.Note</div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-bolder mb-3 text-dark">Tài liệu đính kèm</h5>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="symbol symbol-40px me-3">
+                                    <span class="symbol-label bg-light-danger"><i class="ki-outline ki-file-up text-danger fs-2"></i></span>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <a href="#" class="text-gray-800 text-hover-primary fw-bold fs-7">CV_@(Applicant.Name.Replace(" ", "_").ToLower()).pdf</a>
+                                    <span class="text-muted fw-semibold fs-8">2.4 MB - PDF Document</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light fw-bold" @onclick="OnClose">Đóng</button>
+                    @if (Applicant.HasInterviewScheduled)
+                    {
+                        <button type="button" class="btn btn-warning fw-bold shadow-sm" @onclick="() => OnSchedule.InvokeAsync(Applicant)">
+                            <i class="ki-outline ki-calendar-tick fs-2 me-1"></i>Chỉnh sửa lịch phỏng vấn
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary fw-bold shadow-sm" @onclick="() => OnSchedule.InvokeAsync(Applicant)">
+                            <i class="ki-outline ki-calendar-8 fs-2 me-1"></i>Đặt lịch phỏng vấn
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public ApplicantItem? Applicant { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<ApplicantItem> OnSchedule { get; set; }
+}

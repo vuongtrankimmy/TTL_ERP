@@ -1,132 +1,215 @@
 @page "/training"
+@using TTL.HR.Shared.Components.Common
+@using TTL.HR.Shared.Components.Training
 
 <div class="post d-flex flex-column-fluid pt-8" id="kt_post">
     <div id="kt_content_container" class="container-fluid">
-        <!-- Filter Card -->
-        <div class="card mb-8 shadow-sm">
-            <div class="card-body py-4 px-6">
-                <div class="d-flex flex-wrap align-items-center">
-                    <!-- Search -->
-                    <div class="position-relative w-md-250px me-4 my-1">
-                        <span class="svg-icon svg-icon-3 position-absolute top-50 translate-middle-y ms-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
-                            </svg>
-                        </span>
-                        <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm kiếm khóa học..." />
-                    </div>
-
-                    <!-- Type Filter -->
-                    <div class="w-md-175px me-4 my-1">
-                        <select class="form-select form-select-solid fs-7 fw-bold">
-                            <option>Loại hình: Tất cả</option>
-                            <option>Nội bộ</option>
-                            <option>Bên ngoài</option>
-                            <option>Online</option>
+        
+        <!-- HEADER & FILTER CARD (Nơi chứa nút chuyển đổi) -->
+        <div class="card mb-7 shadow-sm">
+            <div class="card-body p-5">
+                <div class="d-flex flex-stack flex-wrap gap-4">
+                    <!-- Left Side: Search & Filter -->
+                    <div class="d-flex align-items-center flex-wrap gap-3">
+                        <div class="position-relative w-md-250px">
+                            <i class="ki-outline ki-magnifier fs-2 position-absolute top-50 translate-middle-y ms-4 text-gray-500"></i>
+                            <input type="text" class="form-control form-control-solid ps-12" placeholder="Tìm kiếm khóa đào tạo..." @bind="SearchTerm" @bind:event="oninput" />
+                        </div>
+                        
+                        <select class="form-select form-select-solid w-md-200px" @bind="SelectedType">
+                            <option value="Tất cả">Tất cả danh mục</option>
+                            <option value="Technical">Technical</option>
+                            <option value="Soft Skills">Soft Skills</option>
+                            <option value="Management">Management</option>
+                            <option value="Onboarding">Onboarding</option>
                         </select>
                     </div>
 
-                     <!-- Date Filter -->
-                    <div class="w-md-175px me-4 my-1">
-                         <input class="form-control form-control-solid" placeholder="Chọn ngày" id="kt_datepicker_1"/>
-                    </div>
+                    <!-- Right Side: View Toggle & Action -->
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- NÚT CHUYỂN ĐỔI CHẾ ĐỘ XEM -->
+                        <div class="bg-light rounded p-1 d-flex">
+                            <button class="btn btn-icon btn-sm @(!_isGridView ? "btn-white shadow-sm" : "btn-transparent") me-1" 
+                                    @onclick="() => SetViewMode(false)" title="Xem dạng bảng">
+                                <i class="ki-outline ki-abstract-14 fs-2 @(!_isGridView ? "text-primary" : "text-gray-600")"></i>
+                            </button>
+                            <button class="btn btn-icon btn-sm @(_isGridView ? "btn-white shadow-sm" : "btn-transparent")" 
+                                    @onclick="() => SetViewMode(true)" title="Xem dạng lưới">
+                                <i class="ki-outline ki-element-11 fs-2 @(_isGridView ? "text-primary" : "text-gray-600")"></i>
+                            </button>
+                        </div>
 
-                    <!-- Action Button -->
-                    <div class="ms-auto my-1">
-                        <a href="/training/add" class="btn btn-primary fw-bold fs-7 px-6"><i class="bi bi-plus-lg me-1"></i>Thêm khóa đào tạo</a>
+                        <div class="px-1 border-end h-25px"></div>
+
+                        <a href="/training/add" class="btn btn-primary fw-bold">
+                            <i class="ki-outline ki-plus fs-2 me-1"></i>Tạo khóa học mới
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="card shadow-sm border-0">
-             <div class="card-header border-0 pt-6">
-                <div class="card-title">
-                    <div class="d-flex align-items-center position-relative my-1">
-                        <span class="fs-4 fw-bolder text-dark">Danh sách khóa đào tạo</span>
-                         <span class="badge badge-light-primary fw-bolder fs-7 ms-2">@_courses.Count khóa</span>
+        <!-- CONTENT AREA -->
+        <SkeletonLoading IsLoading="_isLoading" Type="_isGridView ? SkeletonLoading.SkeletonType.Card : SkeletonLoading.SkeletonType.Table" Rows="3" Columns="3">
+            @if (!_isGridView)
+            {
+                <!-- TABLE VIEW -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-body py-4">
+                        <div class="table-responsive">
+                            <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-4">
+                                <thead>
+                                    <tr class="fw-bolder text-muted bg-light">
+                                        <th class="ps-4 min-w-250px rounded-start">Khóa học</th>
+                                        <th class="min-w-150px text-center">Giảng viên</th>
+                                        <th class="min-w-100px text-center">Thời lượng</th>
+                                        <th class="min-w-150px text-center">Sĩ số</th>
+                                        <th class="min-w-120px text-center">Trạng thái</th>
+                                        <th class="min-w-100px text-end rounded-end pe-4">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var course in FilteredTrainings)
+                                    {
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex flex-column">
+                                                    <a href="/training/details/@course.Id" class="text-dark fw-bolder text-hover-primary fs-6">@course.Title</a>
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="text-muted fs-7">@course.Code</span>
+                                                        @if (course.IsMandatory)
+                                                        {
+                                                            <span class="badge badge-light-danger fs-9 ms-2">Bắt buộc</span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="text-gray-800 fw-bold">@course.Trainer</span>
+                                                <div class="text-muted fs-7">@course.Category</div>
+                                            </td>
+                                            <td class="text-center fw-bold text-gray-700">@course.Duration</td>
+                                            <td class="text-center">
+                                                <div class="d-flex flex-column w-100 align-items-center">
+                                                    <span class="text-gray-800 fw-bold fs-7 mb-1">@course.Participants/@course.MaxParticipants</span>
+                                                    <div class="progress h-4px w-100 max-w-100px">
+                                                        <div class="progress-bar bg-primary" style="width: @((course.Participants * 100) / course.MaxParticipants)%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge @course.StatusBadge fw-bold px-3 py-2">@course.Status</span>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm me-1" 
+                                                        style="z-index: 10; position: relative;" 
+                                                        title="Đăng ký tham gia" @onclick="() => HandleRegister(course)">
+                                                    <i class="ki-outline ki-plus-square fs-3"></i>
+                                                </button>
+                                                <a href="/training/details/@course.Id" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Chi tiết"><i class="ki-outline ki-eye fs-3"></i></a>
+                                                <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Sửa" @onclick="() => HandleEdit(course.Id)"><i class="ki-outline ki-pencil fs-3"></i></button>
+                                                <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" title="Xóa" @onclick="() => HandleDelete(course)"><i class="ki-outline ki-trash fs-3"></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body py-4">
-                <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="5" Columns="7">
-                <div class="table-responsive">
-                    <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-4">
-                        <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="ps-4 min-w-200px rounded-start">Tên khóa học</th>
-                                <th class="min-w-150px">Giảng viên</th>
-                                <th class="min-w-100px">Thời gian</th>
-                                <th class="min-w-100px">Địa điểm</th>
-                                <th class="min-w-100px text-center">Học viên</th>
-                                <th class="min-w-100px text-center">Trạng thái</th>
-                                <th class="min-w-100px text-end rounded-end pe-4">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var course in _courses)
-                            {
-                                <tr class="hover-elevate">
-                                    <td class="ps-4">
-                                        <div class="d-flex align-items-center">
-                                            <div class="d-flex justify-content-start flex-column">
-                                                <a href="/training/details/@course.Id" class="text-dark fw-bolder text-hover-primary fs-6">@course.Title</a>
-                                                <span class="text-muted fw-bold d-block fs-7">@course.Code</span>
-                                            </div>
+            }
+            else
+            {
+                <!-- GRID VIEW -->
+                <div class="row g-6 g-xl-9">
+                    @foreach (var course in FilteredTrainings)
+                    {
+                        <div class="col-md-6 col-xl-4 text-start">
+                            <div class="card shadow-sm border-0 h-100 hover-elevate">
+                                <div class="card-body p-9 d-flex flex-column h-100">
+                                    <div class="d-flex flex-stack mb-5">
+                                        <div class="symbol symbol-50px symbol-circle">
+                                            <div class="symbol-label bg-light-primary text-primary fw-bold fs-2">@course.Code.Substring(0, 1)</div>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-gray-800 fw-bold d-block fs-6">@course.Trainer</span>
-                                        <span class="text-muted fw-bold d-block fs-7">@course.Type</span>
-                                    </td>
-                                    <td>
+                                        <span class="badge @course.StatusBadge fw-bold px-3 py-2">@course.Status</span>
+                                    </div>
+
+                                    <div class="mb-5 flex-grow-1">
+                                        <a href="/training/details/@course.Id" class="fs-4 text-gray-800 text-hover-primary fw-bolder mb-1">@course.Title</a>
+                                        <div class="d-flex align-items-center mt-1">
+                                            <span class="fw-bold text-gray-500 fs-7">@course.Code</span>
+                                            @if (course.IsMandatory)
+                                            {
+                                                <span class="badge badge-light-danger fs-9 ms-2">Bắt buộc</span>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center mb-5">
+                                        <div class="symbol symbol-35px symbol-circle me-3">
+                                            <div class="symbol-label bg-light-info text-info fs-7 fw-bold">@course.Trainer.Substring(0, 1)</div>
+                                        </div>
                                         <div class="d-flex flex-column">
-                                            <span class="text-gray-800 fw-bold fs-6">@course.StartDate.ToString("dd/MM/yyyy")</span>
-                                            <span class="text-muted fs-7">@course.Duration</span>
+                                            <span class="text-gray-800 fw-bold fs-7">@course.Trainer</span>
+                                            <span class="text-muted fs-8">@course.Category • @course.Type</span>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-gray-800 fw-bold d-block fs-6">@course.Location</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <span class="badge badge-light-primary fw-bold fs-7 mb-1">@course.ParticipantsCount registered</span>
-                                            <span class="text-muted fs-8">Max: @course.MaxParticipants</span>
+                                    </div>
+
+                                    <div class="bg-light-warning rounded border border-warning border-dashed p-3 mb-5">
+                                        <div class="d-flex align-items-center">
+                                            <i class="ki-outline ki-calendar-tick fs-2 text-warning me-3"></i>
+                                            <span class="text-gray-700 fw-bold fs-7">Thời lượng: @course.Duration</span>
                                         </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge @course.StatusClass fw-bold fs-7">@course.Status</span>
-                                    </td>
-                                    <td class="text-end pe-4">
-                                        <a href="/training/details/@course.Id" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Chi tiết">
-                                            <i class="bi bi-eye-fill fs-3"></i>
-                                        </a>
-                                        <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Điểm danh">
-                                           <i class="bi bi-person-check-fill fs-3"></i>
-                                        </button>
-                                        <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" title="Hủy">
-                                            <i class="bi bi-x-circle-fill fs-3"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                                    </div>
+
+                                    <div class="d-flex flex-column mb-5">
+                                        <div class="d-flex flex-stack mb-2">
+                                            <span class="text-gray-800 fw-bold fs-7">@course.Participants/@course.MaxParticipants học viên</span>
+                                            <span class="text-muted fs-8">@((course.Participants * 100) / course.MaxParticipants)%</span>
+                                        </div>
+                                        <div class="progress h-6px w-100 mt-1">
+                                            <div class="progress-bar bg-primary" style="width: @((course.Participants * 100) / course.MaxParticipants)%"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-stack mt-auto pt-4 border-top">
+                                        <div class="d-flex align-items-center">
+                                            <a href="/training/details/@course.Id" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Chi tiết">
+                                                <i class="ki-outline ki-eye fs-3"></i>
+                                            </a>
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Sửa" @onclick="() => HandleEdit(course.Id)">
+                                                <i class="ki-outline ki-pencil fs-3"></i>
+                                            </button>
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" title="Xóa" @onclick="() => HandleDelete(course)">
+                                                <i class="ki-outline ki-trash fs-3"></i>
+                                            </button>
+                                        </div>
+                                        <button class="btn btn-sm btn-light-primary fw-bold" 
+                                                style="position: relative; z-index: 10;"
+                                                @onclick="() => HandleRegister(course)">Đăng ký tham gia</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
-                 <!-- Pagination -->
-                <div class="d-flex flex-stack flex-wrap pt-10">
-                    <div class="fs-6 fw-bold text-gray-700">Hiển thị 1 đến @_courses.Count của @_courses.Count bản ghi</div>
-                    <ul class="pagination">
-                        <li class="page-item previous disabled"><a href="#" class="page-link"><i class="previous"></i></a></li>
-                        <li class="page-item active"><a href="#" class="page-link">1</a></li>
-                        <li class="page-item next"><a href="#" class="page-link"><i class="next"></i></a></li>
-                    </ul>
-                </div>
-                </SkeletonLoading>
-            </div>
-        </div>
+            }
+        </SkeletonLoading>
     </div>
 </div>
 
+<!-- Delete Confirmation Modal -->
+<DeleteConfirmationModal 
+    IsVisible="@IsDeleteModalOpen"
+    Title="Xóa khóa đào tạo"
+    Message="Bạn đang yêu cầu xóa khóa học"
+    ItemName="@(ItemToDelete?.Title ?? "")"
+    OnConfirmed="ConfirmDelete"
+    OnCancelled="CloseDeleteModal" />
 
+<!-- Registration Selection Popup -->
+<TrainingRegistrationPopup 
+    IsVisible="@IsRegisterModalOpen"
+    CourseTitle="@ItemToRegister?.Title"
+    OnConfirm="ConfirmRegister"
+    OnCancel="CloseRegisterModal" />

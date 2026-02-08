@@ -16,6 +16,10 @@ namespace TTL.HR
 
             builder.Services.AddMauiBlazorWebView();
 
+// standard-client-setup
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7000") });
+            builder.Services.AddScoped<TTL.HR.Shared.Interfaces.IEmployeeService, TTL.HR.Shared.Services.Client.EmployeeService>();
+
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();

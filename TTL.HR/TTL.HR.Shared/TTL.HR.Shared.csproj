@@ -4,9 +4,16 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>26.2.7.334</AssemblyVersion>
-    <FileVersion>26.2.7.334</FileVersion>
+    <AssemblyVersion>26.2.8.366</AssemblyVersion>
+    <FileVersion>26.2.8.366</FileVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Pages\Administration\**" />
+    <Content Remove="Pages\Administration\**" />
+    <EmbeddedResource Remove="Pages\Administration\**" />
+    <None Remove="Pages\Administration\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
@@ -14,6 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+    <PackageReference Include="MongoDB.Bson" Version="3.6.0" />
   </ItemGroup>
 
 </Project>

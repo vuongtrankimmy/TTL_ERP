@@ -1,0 +1,158 @@
+[
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000001"
+        },
+        "Name": "Truy cập Dashboard",
+        "Code": "SYS_DASHBOARD",
+        "Module": "SYSTEM",
+        "Description": "Xem trang tổng quan",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000002"
+        },
+        "Name": "Quản lý Cấu hình",
+        "Code": "SYS_CONFIG",
+        "Module": "SYSTEM",
+        "Description": "Sửa thông tin công ty và tham số hệ thống",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000010"
+        },
+        "Name": "Xem danh sách nhân viên",
+        "Code": "HR_EMP_VIEW",
+        "Module": "HR",
+        "Description": "Quyền xem hồ sơ nhân sự",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000011"
+        },
+        "Name": "Thêm mới nhân viên",
+        "Code": "HR_EMP_CREATE",
+        "Module": "HR",
+        "Description": "Tạo hồ sơ nhân viên mới",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000012"
+        },
+        "Name": "Chỉnh sửa nhân viên",
+        "Code": "HR_EMP_EDIT",
+        "Module": "HR",
+        "Description": "Cập nhật thông tin nhân viên",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000013"
+        },
+        "Name": "Xóa nhân viên",
+        "Code": "HR_EMP_DELETE",
+        "Module": "HR",
+        "Description": "Xóa hoặc vô hiệu hóa nhân viên",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000020"
+        },
+        "Name": "Quản lý Tin tuyển dụng",
+        "Code": "REC_JOB",
+        "Module": "RECRUITMENT",
+        "Description": "Đăng tin, sửa tin tuyển dụng",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000021"
+        },
+        "Name": "Quản lý Ứng viên",
+        "Code": "REC_CANDIDATE",
+        "Module": "RECRUITMENT",
+        "Description": "Xem CV, đặt lịch phỏng vấn",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000030"
+        },
+        "Name": "Quản lý Bảng lương",
+        "Code": "PAY_ADMIN",
+        "Module": "PAYROLL",
+        "Description": "Tính lương, chốt lương toàn công ty",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000031"
+        },
+        "Name": "Xem Lương Cá nhân (Self)",
+        "Code": "PAY_SELF",
+        "Module": "PAYROLL",
+        "Description": "Chỉ xem phiếu lương của chính mình",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000040"
+        },
+        "Name": "Quản lý Kho tài sản",
+        "Code": "AST_MANAGE",
+        "Module": "ASSETS",
+        "Description": "Nhập kho, cấp phát thiết bị",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc4a4a0000000000000050"
+        },
+        "Name": "Quản lý Đào tạo",
+        "Code": "TRN_MANAGE",
+        "Module": "TRAINING",
+        "Description": "Tạo khóa học, gán nhân viên học",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    }
+]

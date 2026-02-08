@@ -1,0 +1,369 @@
+@page "/assets/allocation"
+@using System.ComponentModel.DataAnnotations
+@using TTL.HR.Shared.Components.Common
+
+<div class="card card-flush shadow-sm">
+    <div class="card-header border-0 pt-6">
+        <div class="card-title">
+            <div class="d-flex align-items-center position-relative my-1">
+                <i class="ki-outline ki-magnifier fs-3 position-absolute ms-5 text-gray-500"></i>
+                <input type="text" class="form-control form-control-solid w-250px ps-13" placeholder="Tìm kiếm cấp phát..." />
+            </div>
+        </div>
+        <div class="card-toolbar">
+            <button type="button" class="btn btn-primary fw-bold" @onclick="OpenAllocationModal">
+                <i class="ki-outline ki-plus fs-2 me-1"></i> Cấp phát tài sản
+            </button>
+        </div>
+    </div>
+    
+    <div class="card-body pt-0">
+        <!-- Tabs -->
+        <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold mb-8">
+            <li class="nav-item">
+                <a class="nav-link text-active-primary ms-0 me-10 py-5 active" data-bs-toggle="tab" href="#kt_allocation_active">
+                    Đang sử dụng <span class="badge badge-light-primary ms-2">@ActiveAllocations.Count</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab" href="#kt_allocation_history">
+                    Lịch sử thu hồi <span class="badge badge-light-secondary ms-2">@HistoryAllocations.Count</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- Active Allocations Tab -->
+            <div class="tab-pane fade show active" id="kt_allocation_active" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table align-middle table-row-dashed fs-6 gy-5">
+                        <thead>
+                            <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                                <th class="min-w-200px">Tài sản</th>
+                                <th class="min-w-200px">Nhân viên</th>
+                                <th class="min-w-150px">Ngày cấp phát</th>
+                                <th class="min-w-120px">Tình trạng</th>
+                                <th class="text-end min-w-100px">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="fw-semibold text-gray-600">
+                            @foreach (var item in ActiveAllocations)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-40px me-3">
+                                                <div class="symbol-label bg-light-primary">
+                                                    <i class="@GetAssetIcon(item.AssetType) text-primary fs-2"></i>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-start flex-column">
+                                                <a href="#" class="text-gray-800 text-hover-primary mb-1 fs-6 fw-bold">@item.AssetName</a>
+                                                <span class="text-gray-400 fw-semibold d-block fs-7">@item.AssetCode</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-35px symbol-circle me-3">
+                                                <img src="@item.EmployeeAvatar" alt="" />
+                                            </div>
+                                            <div class="d-flex justify-content-start flex-column">
+                                                <span class="text-gray-800 fw-bold fs-6">@item.EmployeeName</span>
+                                                <span class="text-gray-400 fw-semibold d-block fs-7">@item.Department</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-gray-700">@item.AssignedDate.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <span class="badge badge-light-success fw-bold">@item.Condition</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-light-danger btn-active-danger fw-bold" @onclick="() => OpenReturnModal(item)">
+                                            <i class="ki-outline ki-arrow-left fs-4 me-1"></i> Thu hồi
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div class="tab-pane fade" id="kt_allocation_history" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table align-middle table-row-dashed fs-6 gy-5">
+                         <thead>
+                            <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                                <th class="min-w-200px">Tài sản</th>
+                                <th class="min-w-200px">Nhân viên</th>
+                                <th class="min-w-150px">Ngày cấp</th>
+                                <th class="min-w-150px">Ngày thu hồi</th>
+                                <th class="min-w-150px">Lý do/Tình trạng</th>
+                            </tr>
+                        </thead>
+                        <tbody class="fw-semibold text-gray-600">
+                            @foreach (var item in HistoryAllocations)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-40px me-3">
+                                                <div class="symbol-label bg-light-secondary">
+                                                    <i class="@GetAssetIcon(item.AssetType) text-gray-600 fs-2"></i>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-start flex-column">
+                                                <span class="text-gray-800 mb-1 fs-6">@item.AssetName</span>
+                                                <span class="text-gray-400 d-block fs-7">@item.AssetCode</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="text-gray-700">@item.EmployeeName</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-gray-600">@item.AssignedDate.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-gray-800 fw-bold">@item.ReturnedDate?.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <span class="badge @(item.ReturnCondition == "Hỏng" ? "badge-light-danger" : "badge-light-info")">@item.ReturnCondition</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Cấp phát mới -->
+@if (IsAllocationModalOpen)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5); z-index: 1055;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0">
+                <div class="modal-header border-0">
+                    <h3 class="modal-title fw-bolder text-primary">Cấp phát tài sản</h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="CloseAllocationModal">
+                         <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+                <EditForm Model="@NewAllocation" OnValidSubmit="SaveAllocation">
+                    <div class="modal-body py-5">
+                        <DataAnnotationsValidator />
+                        
+                        <div class="mb-5">
+                            <label class="required form-label fw-bold">Nhân viên tiếp nhận</label>
+                            <InputSelect class="form-select form-select-solid" @bind-Value="NewAllocation.EmployeeId">
+                                <option value="">-- Chọn nhân viên --</option>
+                                <option value="EMP001">Phạm Minh Hùng (CEO)</option>
+                                <option value="EMP002">Nguyễn Thị Mai (HR)</option>
+                                <option value="EMP003">Lê Văn Tuấn (IT)</option>
+                            </InputSelect>
+                            <ValidationMessage For="@(() => NewAllocation.EmployeeId)" />
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="required form-label fw-bold">Tài sản hiện có</label>
+                            <InputSelect class="form-select form-select-solid" @bind-Value="NewAllocation.AssetCode">
+                                <option value="">-- Chọn tài sản --</option>
+                                <option value="IT-003">Màn hình LG Ultrawide (IT-003)</option>
+                                <option value="VH-001">Toyota Camry (VH-001)</option>
+                                <option value="AS-105">Tai nghe Logitech (AS-105)</option>
+                            </InputSelect>
+                            <ValidationMessage For="@(() => NewAllocation.AssetCode)" />
+                        </div>
+
+                        <div class="row mb-5">
+                            <div class="col-md-6">
+                                <label class="required form-label fw-bold">Ngày cấp phát</label>
+                                <InputDate class="form-control form-control-solid" @bind-Value="NewAllocation.AssignedDate" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Tình trạng</label>
+                                <select class="form-select form-select-solid">
+                                    <option value="Mới">Mới 100%</option>
+                                    <option value="Tốt" selected>Đang dùng tốt</option>
+                                    <option value="Cũ">Cũ</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-5">
+                            <label class="form-label fw-bold">Ghi chú / Thỏa thuận</label>
+                            <InputTextArea class="form-control form-control-solid" @bind-Value="NewAllocation.Note" rows="2" placeholder="Nhập ghi chú nếu có..." />
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-light fw-bold" @onclick="CloseAllocationModal">Hủy bỏ</button>
+                        <button type="submit" class="btn btn-primary fw-bold shadow-sm">Xác nhận cấp phát</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Modal: Thu hồi tài sản -->
+@if (IsReturnModalOpen)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5); z-index: 1055;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0">
+                <div class="modal-header border-0">
+                    <h3 class="modal-title fw-bolder text-warning">Thu hồi tài sản</h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="CloseReturnModal">
+                         <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body py-5">
+                     <div class="d-flex align-items-center bg-light-warning rounded p-5 mb-5">
+                         <i class="ki-outline ki-information-5 text-warning fs-1 me-4"></i>
+                         <div class="text-gray-700 fw-bold">Xác nhận thu hồi tài sản từ nhân viên <strong>@AllocationToReturn?.EmployeeName</strong>.</div>
+                     </div>
+
+                     <div class="mb-5">
+                        <label class="form-label fw-bold">Tài sản thu hồi</label>
+                        <div class="form-control form-control-solid fw-bold text-dark">@AllocationToReturn?.AssetName (@AllocationToReturn?.AssetCode)</div>
+                    </div>
+
+                    <div class="row mb-5">
+                        <div class="col-md-6">
+                            <label class="required form-label fw-bold">Ngày thu hồi</label>
+                            <input type="date" class="form-control form-control-solid" @bind="ReturnDate" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="required form-label fw-bold">Tình trạng thực tế</label>
+                            <select class="form-select form-select-solid" @bind="ReturnCondition">
+                                <option value="Bình thường">Bình thường</option>
+                                <option value="Hỏng">Hỏng hóc</option>
+                                <option value="Mất">Thất lạc</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                         <label class="form-label fw-bold">Lý do thu hồi</label>
+                         <textarea class="form-control form-control-solid" rows="2" placeholder="Nghỉ việc, thay đổi thiết bị..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light fw-bold" @onclick="CloseReturnModal">Hủy bỏ</button>
+                    <button type="button" class="btn btn-warning fw-bold shadow-sm text-white" @onclick="ConfirmReturn">Xác nhận thu hồi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<AllocationViewModel> ActiveAllocations = new();
+    private List<AllocationViewModel> HistoryAllocations = new();
+
+    private bool IsAllocationModalOpen = false;
+    private bool IsReturnModalOpen = false;
+    
+    private AllocationRequest NewAllocation = new();
+    private AllocationViewModel AllocationToReturn;
+
+    private DateTime ReturnDate = DateTime.Today;
+    private string ReturnCondition = "Bình thường";
+
+    protected override void OnInitialized()
+    {
+        // Mock Data: 6 Active
+        ActiveAllocations = new List<AllocationViewModel>
+        {
+            new() { AssetName = "Dell XPS 15", AssetCode = "IT-001", AssetType = "Laptop", EmployeeName = "Phan Thanh Tùng", Department = "Phòng Kỹ thuật", EmployeeAvatar = "/assets/media/avatars/300-1.jpg", AssignedDate = DateTime.Now.AddMonths(-6), Condition = "Tốt" },
+            new() { AssetName = "MacBook Pro M2", AssetCode = "IT-002", AssetType = "Laptop", EmployeeName = "Nguyễn Thị Mai", Department = "Phòng Nhân sự", EmployeeAvatar = "/assets/media/avatars/300-2.jpg", AssignedDate = DateTime.Now.AddMonths(-3), Condition = "Tốt" },
+            new() { AssetName = "iPhone 15 Pro", AssetCode = "MB-005", AssetType = "Mobile", EmployeeName = "Ngô Văn Long", Department = "Phòng Kinh doanh", EmployeeAvatar = "/assets/media/avatars/300-3.jpg", AssignedDate = DateTime.Now.AddMonths(-1), Condition = "Mới" },
+            new() { AssetName = "Toyota Camry", AssetCode = "VH-001", AssetType = "Vehicle", EmployeeName = "Phạm Minh Hùng", Department = "Ban Giám Đốc", EmployeeAvatar = "/assets/media/avatars/300-4.jpg", AssignedDate = DateTime.Now.AddYears(-1), Condition = "Đang bảo trì" },
+            new() { AssetName = "Ghế Ergonomic", AssetCode = "OF-012", AssetType = "Furniture", EmployeeName = "Hoàng Thu Phương", Department = "Phòng IT", EmployeeAvatar = "/assets/media/avatars/300-5.jpg", AssignedDate = DateTime.Now.AddYears(-2), Condition = "Tốt" },
+            new() { AssetName = "Tai nghe Sony ANC", AssetCode = "AS-102", AssetType = "Accessory", EmployeeName = "Lê Văn Tuấn", Department = "Phòng IT", EmployeeAvatar = "/assets/media/avatars/300-11.jpg", AssignedDate = DateTime.Now.AddDays(-10), Condition = "Mới" }
+        };
+
+        // Mock Data: 4 History
+        HistoryAllocations = new List<AllocationViewModel>
+        {
+            new() { AssetName = "iPad Air 5", AssetCode = "TB-008", AssetType = "Tablet", EmployeeName = "Vũ Thị Lan", AssignedDate = DateTime.Now.AddYears(-1), ReturnedDate = DateTime.Now.AddMonths(-2), ReturnCondition = "Bình thường" },
+            new() { AssetName = "Logitech MX Master", AssetCode = "AS-045", AssetType = "Accessory", EmployeeName = "Trần Thanh Bình", AssignedDate = DateTime.Now.AddMonths(-8), ReturnedDate = DateTime.Now.AddMonths(-1), ReturnCondition = "Hỏng" },
+            new() { AssetName = "Laptop HP Envy", AssetCode = "IT-044", AssetType = "Laptop", EmployeeName = "Đặng Thị Ngọc", AssignedDate = DateTime.Now.AddYears(-2), ReturnedDate = DateTime.Now.AddYears(-3), ReturnCondition = "Bình thường" },
+            new() { AssetName = "Bàn phím cơ Keychron", AssetCode = "AS-088", AssetType = "Accessory", EmployeeName = "Lý Văn Tùng", AssignedDate = DateTime.Now.AddMonths(-4), ReturnedDate = DateTime.Now.AddDays(-5), ReturnCondition = "Bình thường" }
+        };
+        
+        NewAllocation.AssignedDate = DateTime.Today;
+    }
+
+    private string GetAssetIcon(string type) => type switch
+    {
+        "Laptop" => "ki-outline ki-laptop",
+        "Mobile" => "ki-outline ki-phone",
+        "Vehicle" => "ki-outline ki-car",
+        "Furniture" => "ki-outline ki-home",
+        "Tablet" => "ki-outline ki-tablet",
+        _ => "ki-outline ki-briefcase"
+    };
+
+    private void OpenAllocationModal() { NewAllocation = new AllocationRequest { AssignedDate = DateTime.Today }; IsAllocationModalOpen = true; }
+    private void CloseAllocationModal() => IsAllocationModalOpen = false;
+
+    private void SaveAllocation()
+    {
+        ActiveAllocations.Insert(0, new AllocationViewModel
+        {
+            AssetName = NewAllocation.AssetCode == "IT-003" ? "Màn hình LG Ultrawide" : "Tài sản mới",
+            AssetCode = NewAllocation.AssetCode,
+            AssetType = "Accessory",
+            EmployeeName = NewAllocation.EmployeeId == "EMP001" ? "Phạm Minh Hùng" : "Nhân viên mới",
+            Department = "Văn phòng",
+            EmployeeAvatar = "/assets/media/avatars/300-12.jpg",
+            AssignedDate = NewAllocation.AssignedDate,
+            Condition = "Tốt"
+        });
+        CloseAllocationModal();
+    }
+
+    private void OpenReturnModal(AllocationViewModel item) { AllocationToReturn = item; ReturnDate = DateTime.Today; IsReturnModalOpen = true; }
+    private void CloseReturnModal() { IsReturnModalOpen = false; AllocationToReturn = null; }
+
+    private void ConfirmReturn()
+    {
+        if (AllocationToReturn != null)
+        {
+            ActiveAllocations.Remove(AllocationToReturn);
+            AllocationToReturn.ReturnedDate = ReturnDate;
+            AllocationToReturn.ReturnCondition = ReturnCondition;
+            HistoryAllocations.Insert(0, AllocationToReturn);
+        }
+        CloseReturnModal();
+    }
+
+    public class AllocationViewModel
+    {
+        public string AssetName { get; set; } = "";
+        public string AssetCode { get; set; } = "";
+        public string AssetType { get; set; } = "";
+        public string EmployeeName { get; set; } = "";
+        public string Department { get; set; } = "";
+        public string EmployeeAvatar { get; set; } = "";
+        public DateTime AssignedDate { get; set; }
+        public DateTime? ReturnedDate { get; set; }
+        public string Condition { get; set; } = "Tốt";
+        public string ReturnCondition { get; set; } = "Bình thường";
+    }
+
+    public class AllocationRequest
+    {
+        [Required(ErrorMessage = "Vui lòng chọn nhân viên")]
+        public string EmployeeId { get; set; } = "";
+        [Required(ErrorMessage = "Vui lòng chọn tài sản")]
+        public string AssetCode { get; set; } = "";
+        public DateTime AssignedDate { get; set; }
+        public string Note { get; set; } = "";
+    }
+}
+

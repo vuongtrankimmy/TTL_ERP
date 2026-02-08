@@ -1,0 +1,60 @@
+@using TTL.HR.Shared.Models
+
+@if (IsOpen && Model != null)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0">
+                <div class="modal-header border-0 pb-0">
+                    <h3 class="modal-title fw-bolder text-primary">Lên lịch phỏng vấn</h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="() => OnClose.InvokeAsync()">
+                         <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body py-5">
+                    <div class="d-flex align-items-center mb-5 bg-light-primary p-3 rounded">
+                        <i class="ki-outline ki-user fs-1 text-primary me-3"></i>
+                        <div>
+                            <div class="fs-8 text-gray-500 uppercase fw-bold">Ứng viên</div>
+                            <div class="fs-6 fw-bolder text-gray-800">@Model.ApplicantName</div>
+                        </div>
+                    </div>
+
+                    <div class="row g-5 mb-5">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Ngày phỏng vấn</label>
+                            <input type="date" class="form-control form-control-solid" @bind="Model.InterviewDate" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Giờ</label>
+                            <input type="time" class="form-control form-control-solid" @bind="Model.InterviewTime" />
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="form-label fw-bold">Người phỏng vấn</label>
+                        <input type="text" class="form-control form-control-solid" @bind="Model.Interviewer" placeholder="Nhập tên người PV" />
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="form-label fw-bold">Địa điểm / Link họp</label>
+                        <textarea class="form-control form-control-solid" rows="2" @bind="Model.Location"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" @onclick="() => OnClose.InvokeAsync()">Hủy</button>
+                    <button type="button" class="btn btn-primary fw-bold" @onclick="() => OnSave.InvokeAsync(Model)">
+                        Lưu thông tin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public InterviewScheduleModel? Model { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<InterviewScheduleModel> OnSave { get; set; }
+}

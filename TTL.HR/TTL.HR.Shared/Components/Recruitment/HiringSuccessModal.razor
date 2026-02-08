@@ -1,0 +1,40 @@
+@using TTL.HR.Shared.Models
+
+@if (IsOpen && Applicant != null)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0">
+                <div class="modal-header border-0 pb-0">
+                    <h3 class="modal-title fw-bolder text-success">Xác nhận tuyển dụng</h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="OnClose">
+                         <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body py-5">
+                    <div class="mb-5 text-gray-700">
+                        Chúc mừng ứng viên <span class="fw-bolder text-dark">@Applicant.Name</span> đã vượt qua các vòng tuyển dụng.
+                    </div>
+                    <div class="mb-5">
+                        <label class="form-label fw-bold">Ghi chú tuyển dụng (VD: Lương, Ngày nhận việc...)</label>
+                        <textarea class="form-control form-control-solid" rows="3" @bind="Note" placeholder="VD: Thử việc từ 01/03, Lương thỏa thuận 25M..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" @onclick="OnClose">Hủy</button>
+                    <button type="button" class="btn btn-success fw-bold" @onclick="() => OnSave.InvokeAsync(Note)">
+                        Hoàn tất tuyển dụng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public ApplicantItem? Applicant { get; set; }
+    [Parameter] public string Note { get; set; } = "";
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<string> OnSave { get; set; }
+}

@@ -1,0 +1,22 @@
+[
+    {
+        "_id": {
+            "$oid": "65fc04b59c9d4b001c8b4610"
+        },
+        "CompanyName": "CÔNG TY CỔ PHẦN ORGA-X",
+        "TaxCode": "0312345678",
+        "Headquarters": "Tầng 12, Tòa nhà Bitexco, Q1, TP.HCM",
+        "Email": "info@orga-x.com",
+        "Phone": "02838383838",
+        "Website": "https://orga-x.com",
+        "LogoUrl": "/assets/media/logos/default-dark.svg",
+        "DefaultAnnualLeaveDays": 12,
+        "ProbationMonths": 2,
+        "StandardCheckIn": "08:00:00",
+        "StandardCheckOut": "17:30:00",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    }
+]

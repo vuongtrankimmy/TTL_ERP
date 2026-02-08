@@ -1,0 +1,172 @@
+[
+    {
+        "_id": {
+            "$oid": "65bf0b2f0000000000000001"
+        },
+        "Title": "Tổng Giám Đốc (CEO)",
+        "Code": "CEO",
+        "Description": "Điều hành toàn bộ công ty",
+        "BaseSalaryRangeMin": 100000000,
+        "BaseSalaryRangeMax": 200000000,
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000001"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0b2f0000000000000002"
+        },
+        "Title": "Giám Đốc Nhân Sự",
+        "Code": "HR-DIR",
+        "Description": "Quản lý khối nhân sự",
+        "BaseSalaryRangeMin": 40000000,
+        "BaseSalaryRangeMax": 70000000,
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000002"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0b2f0000000000000003"
+        },
+        "Title": "IT Manager",
+        "Code": "IT-MGR",
+        "Description": "Quản lý khối công nghệ",
+        "BaseSalaryRangeMin": 45000000,
+        "BaseSalaryRangeMax": 80000000,
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000003"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0b2f0000000000000004"
+        },
+        "Title": "Senior Software Engineer",
+        "Code": "SE-SR",
+        "Description": "Lập trình viên có kinh nghiệm",
+        "BaseSalaryRangeMin": 25000000,
+        "BaseSalaryRangeMax": 45000000,
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000003"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0b2f0000000000000005"
+        },
+        "Title": "Junior Software Engineer",
+        "Code": "SE-UR",
+        "Description": "Lập trình viên mới",
+        "BaseSalaryRangeMin": 12000000,
+        "BaseSalaryRangeMax": 20000000,
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000003"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0b2f0000000000000006"
+        },
+        "Title": "Kế Toán Trưởng",
+        "Code": "ACC-CHIEF",
+        "Description": "Phụ trách bộ phận kế toán",
+        "BaseSalaryRangeMin": 30000000,
+        "BaseSalaryRangeMax": 50000000,
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000004"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0b2f0000000000000007"
+        },
+        "Title": "Sales Manager",
+        "Code": "SALES-MGR",
+        "Description": "Quản lý kinh doanh vùng",
+        "BaseSalaryRangeMin": 25000000,
+        "BaseSalaryRangeMax": 50000000,
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000005"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0b2f0000000000000008"
+        },
+        "Title": "Chuyên Viên Marketing",
+        "Code": "MKT-EXE",
+        "Description": "Thực hiện chiến dịch marketing",
+        "BaseSalaryRangeMin": 15000000,
+        "BaseSalaryRangeMax": 25000000,
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000006"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0b2f0000000000000009"
+        },
+        "Title": "Thủ Kho",
+        "Code": "WH-KEEPER",
+        "Description": "Quản lý xuất nhập tồn",
+        "BaseSalaryRangeMin": 10000000,
+        "BaseSalaryRangeMax": 15000000,
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000007"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65bf0b2f0000000000000010"
+        },
+        "Title": "Nhân Viên Bảo Vệ",
+        "Code": "GUARD",
+        "Description": "Giữ gìn an ninh",
+        "BaseSalaryRangeMin": 7000000,
+        "BaseSalaryRangeMax": 10000000,
+        "DepartmentId": {
+            "$oid": "65bf0a1e0000000000000010"
+        },
+        "CreatedAt": {
+            "$date": "2023-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    }
+]

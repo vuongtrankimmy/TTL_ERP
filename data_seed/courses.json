@@ -1,0 +1,163 @@
+[
+    {
+        "_id": {
+            "$oid": "65fc2b2b0000000000000001"
+        },
+        "Title": "Hội Nhập Văn Hóa Doanh Nghiệp (Onboarding)",
+        "Code": "TRN-ONB",
+        "Description": "Khóa học bắt buộc cho nhân viên mới về quy định chung",
+        "DurationHours": 4,
+        "TrainerName": "Nguyễn Thị Mai (HR)",
+        "IsMandatory": true,
+        "MaterialUrl": "/trainings/onboard.pdf",
+        "Status": "Active",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc2b2b0000000000000002"
+        },
+        "Title": "Kỹ Năng Giao Tiếp Hiệu Quả",
+        "Code": "SOFT-COMM",
+        "Description": "Nâng cao khả năng trình bày và lắng nghe",
+        "DurationHours": 8,
+        "TrainerName": "Dr. Lê Thẩm Dương (External)",
+        "IsMandatory": false,
+        "Status": "Active",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc2b2b0000000000000003"
+        },
+        "Title": "Quản Lý Thời Gian (Time Management)",
+        "Code": "SOFT-TIME",
+        "Description": "Sắp xếp công việc theo ma trận Eisenhower",
+        "DurationHours": 4,
+        "TrainerName": "Internal Senior Manager",
+        "IsMandatory": false,
+        "Status": "Active",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc2b2b0000000000000004"
+        },
+        "Title": "Microsoft Excel Nâng Cao (Data & Pivot)",
+        "Code": "TECH-EXCEL",
+        "Description": "Xử lý dữ liệu lớn, Pivot Table, Power Query",
+        "DurationHours": 16,
+        "TrainerName": "Trung Tâm Tin Học KHTN",
+        "IsMandatory": true,
+        "Status": "Active",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc2b2b0000000000000005"
+        },
+        "Title": "Lãnh Đạo Đội Nhóm (Leadership)",
+        "Code": "MGT-LEAD",
+        "Description": "Dành cho Team Leader và Manager mới bổ nhiệm",
+        "DurationHours": 24,
+        "TrainerName": "Dale Carnegie VN",
+        "IsMandatory": true,
+        "Status": "Active",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc2b2b0000000000000006"
+        },
+        "Title": "An Toàn Lao Động (HSE)",
+        "Code": "REQ-HSE",
+        "Description": "Quy định an toàn PCCC và lao động tại nhà máy",
+        "DurationHours": 4,
+        "TrainerName": "Sở Lao Động TBXH",
+        "IsMandatory": true,
+        "Status": "Active",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc2b2b0000000000000007"
+        },
+        "Title": "Tiếng Anh Giao Tiếp (Business English)",
+        "Code": "LANG-ENG",
+        "Description": "Tiếng Anh thương mại cơ bản",
+        "DurationHours": 40,
+        "TrainerName": "VUS",
+        "IsMandatory": false,
+        "Status": "Active",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc2b2b0000000000000008"
+        },
+        "Title": "Lập Trình .NET Core & Microservices",
+        "Code": "TECH-NET",
+        "Description": "Architecture Pattern cho dự án mới",
+        "DurationHours": 32,
+        "TrainerName": "Tech Lead (IT Dept)",
+        "IsMandatory": true,
+        "Status": "Active",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc2b2b0000000000000009"
+        },
+        "Title": "Kỹ Năng Bán Hàng & Chốt Sales",
+        "Code": "SKILL-SALE",
+        "Description": "Quy trình 7 bước bán hàng hiệu quả",
+        "DurationHours": 12,
+        "TrainerName": "Sales Director",
+        "IsMandatory": true,
+        "Status": "Active",
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc2b2b0000000000000010"
+        },
+        "Title": "Digital Marketing Masterclass",
+        "Code": "MKT-DIGI",
+        "Description": "Cập nhật xu hướng Marketing 2026",
+        "DurationHours": 20,
+        "TrainerName": "Google Expert",
+        "IsMandatory": false,
+        "Status": "Draft",
+        "CreatedAt": {
+            "$date": "2024-04-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    }
+]
