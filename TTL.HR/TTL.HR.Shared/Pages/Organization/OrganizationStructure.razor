@@ -140,6 +140,55 @@
         display: flex;
         justify-content: space-between;
     }
+@@media print {
+    /* Reset layout for printing */
+    #kt_app_sidebar, #kt_app_header, .toolbar, .node-tools {
+        display: none !important;
+    }
+    
+    .post, .container-fluid, .org-container {
+        padding: 0 !important;
+        margin: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: white !important;
+    }
+
+    .org-container {
+        border: none !important;
+    }
+
+    .org-tree {
+        transform: none !important; /* Reset zoom/pan for print */
+        position: relative !important;
+        display: block !important;
+        width: 100% !important;
+        padding: 20px 0 !important;
+    }
+
+    /* Ensure the legend is printed and positioned well */
+    .card.position-fixed {
+        position: static !important;
+        margin-top: 50px !important;
+        width: 250px !important;
+        box-shadow: none !important;
+        border: 1px solid #eee !important;
+        background: white !important;
+    }
+
+    /* General clean up */
+    .org-node {
+        break-inside: avoid;
+        border: 1px solid #ccc !important;
+    }
+
+    /* Keep connectors visible */
+    .org-tree li::before, .org-tree li::after, .org-tree ul ul::before {
+        border-color: #333 !important;
+    }
+
+
+}
 </style>
 
 <div class="toolbar py-5" id="kt_toolbar">
@@ -158,8 +207,7 @@
         </div>
         <div class="d-flex align-items-center gap-2">
             <div class="btn-group">
-                <button class="btn btn-sm btn-light-info fw-bolder px-4"><i class="bi bi-download me-2"></i>Xuất sơ đồ</button>
-                <button class="btn btn-sm btn-info fw-bolder px-4"><i class="bi bi-printer"></i></button>
+                <button class="btn btn-sm btn-light-info fw-bolder px-4" @onclick="ExportDiagram"><i class="bi bi-download me-2"></i>Xuất sơ đồ</button>
             </div>
             <button class="btn btn-sm btn-primary fw-bolder px-5" @onclick="ToggleAddModal"><i class="bi bi-plus-lg me-1"></i>Thêm nút mới</button>
         </div>
@@ -167,9 +215,9 @@
 </div>
 
 <div class="post d-flex flex-column-fluid" id="kt_post">
-    <div id="kt_content_container" class="container-fluid org-container">
+    <div class="container-fluid org-container" id="orgChartContainer">
         <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card" Rows="3" Columns="2">
-            <div class="org-tree">
+            <div class="org-tree" id="orgTreeExport">
                 <ul>
                     @if (rootNode != null)
                     {
@@ -181,11 +229,148 @@
     </div>
 </div>
 
+<!-- MODAL: ADD NEW NODE -->
+@if (showAddModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-primary py-4">
+                    <h5 class="modal-title text-white">Thêm nút mới vào sơ đồ</h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="ToggleAddModal"></button>
+                </div>
+                <div class="modal-body p-8" style="max-height: 70vh; overflow-y: auto;">
+                    <!-- Base Info -->
+                    <div class="mb-8">
+                        <h4 class="fs-6 fw-bold text-gray-800 mb-4 border-bottom pb-2">Thông tin cơ bản</h4>
+                        <div class="row g-5">
+                            <div class="col-md-6 mb-5">
+                                <label class="form-label fw-bold">Tên nhân sự / Bộ phận</label>
+                                <input type="text" class="form-control form-control-solid" @bind="newNode.Name" placeholder="Nhập tên..." />
+                            </div>
+                            <div class="col-md-6 mb-5">
+                                <label class="form-label fw-bold">Chức danh / Vai trò</label>
+                                <input type="text" class="form-control form-control-solid" @bind="newNode.Role" placeholder="Nhập chức danh..." />
+                            </div>
+                            <div class="col-md-6 mb-5">
+                                <label class="form-label fw-bold">Loại nút</label>
+                                <select class="form-select form-select-solid" @bind="newNode.Type">
+                                    <option value="Employee">Nhân viên</option>
+                                    <option value="Department">Bộ phận</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-5">
+                                <label class="form-label fw-bold">Nút cấp trên</label>
+                                <select class="form-select form-select-solid" @bind="newNodeParentId">
+                                    @foreach (var node in flatNodeList)
+                                    {
+                                        <option value="@node.Id">@node.Role - @node.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            @if (newNode.Type == "Employee")
+                            {
+                                <div class="col-md-6 mb-5">
+                                    <label class="form-label fw-bold">Số CCCD / CMND</label>
+                                    <input type="text" class="form-control form-control-solid" @bind="newNode.CccdNumber" />
+                                </div>
+                                <div class="col-md-6 mb-5">
+                                    <label class="form-label fw-bold">Ngày sinh</label>
+                                    <input type="date" class="form-control form-control-solid" @bind="newNode.DateOfBirth" />
+                                </div>
+                                <div class="col-md-6 mb-5">
+                                    <label class="form-label fw-bold">Giới tính</label>
+                                    <select class="form-select form-select-solid" @bind="newNode.Gender">
+                                        <option value="Nam">Nam</option>
+                                        <option value="Nữ">Nữ</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-5">
+                                    <label class="form-label fw-bold">Quốc tịch</label>
+                                    <input type="text" class="form-control form-control-solid" @bind="newNode.Nationality" />
+                                </div>
+                                <div class="col-md-6 mb-5">
+                                    <label class="form-label fw-bold">Dân tộc</label>
+                                    <input type="text" class="form-control form-control-solid" @bind="newNode.Ethnicity" />
+                                </div>
+                                <div class="col-md-6 mb-5">
+                                    <label class="form-label fw-bold">Tôn giáo</label>
+                                    <input type="text" class="form-control form-control-solid" @bind="newNode.Religion" />
+                                </div>
+                                <div class="col-md-12 mb-5">
+                                    <label class="form-label fw-bold">Quê quán</label>
+                                    <input type="text" class="form-control form-control-solid" @bind="newNode.PlaceOfOrigin" />
+                                </div>
+                                <div class="col-md-12 mb-5">
+                                    <label class="form-label fw-bold">Nơi thường trú</label>
+                                    <textarea class="form-control form-control-solid" rows="1" @bind="newNode.Residence"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Quản lý?</label>
+                                    <div class="form-check form-switch form-check-custom form-check-solid mt-2">
+                                        <input class="form-check-input" type="checkbox" @bind="newNode.IsManager" />
+                                        <span class="form-check-label fw-bold ms-2">Có</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    @if (newNode.Type == "Employee")
+                    {
+
+
+                        <!-- Contact Info -->
+                        <div class="mb-8">
+                            <h4 class="fs-6 fw-bold text-gray-800 mb-4 border-bottom pb-2">Thông tin liên lạc</h4>
+                            <div class="row g-5">
+                                <div class="col-md-6 mb-5">
+                                    <label class="form-label fw-bold">Số điện thoại</label>
+                                    <input type="text" class="form-control form-control-solid" @bind="newNode.Phone" />
+                                </div>
+                                <div class="col-md-6 mb-5">
+                                    <label class="form-label fw-bold">Email cá nhân</label>
+                                    <input type="email" class="form-control form-control-solid" @bind="newNode.PersonalEmail" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Job Details -->
+                        <div class="mb-8">
+                            <h4 class="fs-6 fw-bold text-gray-800 mb-4 border-bottom pb-2">Thông tin công việc</h4>
+                            <div class="row g-5">
+                                <div class="col-md-6 mb-5">
+                                    <label class="form-label fw-bold">Mã nhân viên</label>
+                                    <input type="text" class="form-control form-control-solid" @bind="newNode.EmployeeCode" />
+                                </div>
+                                <div class="col-md-6 mb-5">
+                                    <label class="form-label fw-bold">Loại hợp đồng</label>
+                                    <select class="form-select form-select-solid" @bind="newNode.ContractType">
+                                        <option value="">Chọn...</option>
+                                        <option value="Thử việc">Thử việc</option>
+                                        <option value="Chính thức - Không thời hạn">Chính thức - Không thời hạn</option>
+                                        <option value="Hợp đồng 1 năm">Hợp đồng 1 năm</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-light" @onclick="ToggleAddModal">Hủy</button>
+                    <button type="button" class="btn btn-primary px-8" @onclick="SaveNewNode">
+                        <i class="bi bi-check-lg me-1"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 <!-- DRAWER: EMPLOYEE DETAIL -->
 <div id="kt_drawer_employee_detail" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="employee-detail"
      data-kt-drawer-activate="true" data-kt-drawer-overlay="true"
      data-kt-drawer-width="{default:'300px', 'md': '650px'}" data-kt-drawer-direction="end"
-     data-kt-drawer-toggle=".kt_drawer_employee_detail_toggle"
      data-kt-drawer-close="#kt_drawer_employee_detail_close">
 
     <div class="card shadow-none rounded-0 w-100 h-100">
@@ -216,59 +401,137 @@
         </div>
 
         <div class="card-body p-0">
-            <!-- Navigation Tabs -->
-            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder px-10 mb-5">
-                <li class="nav-item">
-                    <a class="nav-link text-active-primary active py-4" data-bs-toggle="tab"
-                       href="#kt_emp_detail_profile">Thông tin hồ sơ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-active-primary py-4" data-bs-toggle="tab"
-                       href="#kt_emp_detail_account">Tài khoản & Phân quyền</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-active-primary py-4" data-bs-toggle="tab"
-                       href="#kt_emp_detail_calendar">Lịch & Chấm công</a>
-                </li>
-            </ul>
+            <div class="px-10" id="empDetailTabContent">
+                <div class="py-5">
+                    <div class="d-flex flex-stack mb-5">
+                        <h3 class="fw-bolder m-0 fs-5 text-uppercase">
+                            <i class="bi bi-person-badge text-primary me-2"></i>Thông tin cá nhân
+                        </h3>
+                    </div>
 
-            <div class="tab-content px-10" id="empDetailTabContent">
-                <!-- TAB: PROFILE -->
-                <div class="tab-pane fade show active" id="kt_emp_detail_profile" role="tabpanel">
-                    <div class="py-5">
-                        <div class="d-flex flex-stack mb-5">
-                            <h3 class="fw-bolder m-0 fs-5 text-uppercase">
-                                <i class="bi bi-person-badge text-primary me-2"></i>Thông tin cá nhân
-                            </h3>
-                            <button class="btn btn-sm btn-light-primary">
-                                <i class="bi bi-qr-code-scan me-2"></i>Quét
-                                thẻ Căn cước (CCCD) AI
-                            </button>
+                    <div class="row g-6 mb-8">
+                        <div class="col-md-4">
+                            <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Số CCCD / CMND</label>
+                            <div class="fw-bold fs-6 text-gray-800">@selectedNode?.CccdNumber</div>
                         </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Ngày sinh</label>
+                            <div class="fw-bold fs-6 text-gray-800">@selectedNode?.DateOfBirth?.ToString("dd/MM/yyyy")</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Giới tính</label>
+                            <div class="fw-bold fs-6 text-gray-800">@selectedNode?.Gender</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Quốc tịch</label>
+                            <div class="fw-bold fs-6 text-gray-800">@selectedNode?.Nationality</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Dân tộc</label>
+                            <div class="fw-bold fs-6 text-gray-800">@selectedNode?.Ethnicity</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Tôn giáo</label>
+                            <div class="fw-bold fs-6 text-gray-800">@selectedNode?.Religion</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Quê quán</label>
+                            <div class="fw-bold fs-6 text-gray-800">@selectedNode?.PlaceOfOrigin</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Nơi thường trú</label>
+                            <div class="fw-bold fs-6 text-gray-800">@selectedNode?.Residence</div>
+                        </div>
+                    </div>
 
-                        <div class="row g-6 mb-8">
-                            <div class="col-md-6">
-                                <label class="form-label text-muted fs-7 text-uppercase fw-bold">Họ và tên</label>
-                                <input type="text" class="form-control form-control-solid" value="@selectedNode?.Name" />
+
+
+                    <!-- Section: Contact & Personal -->
+                    <div class="mb-8">
+                        <h4 class="fs-6 fw-bold text-gray-800 mb-4 border-bottom pb-2 text-uppercase">Thông tin liên lạc</h4>
+                        <div class="row g-6">
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Số điện thoại</label>
+                                <div class="fw-bold fs-6 text-primary">@selectedNode?.Phone</div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label text-muted fs-7 text-uppercase fw-bold">
-                                    Số CCCD /
-                                    CMND
-                                </label>
-                                <input type="text" class="form-control form-control-solid" value="001092001234" />
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Email cá nhân</label>
+                                <div class="fw-bold fs-6 text-gray-800">@selectedNode?.PersonalEmail</div>
                             </div>
-                            <!-- Rest of the profile tab content as per the HTML file -->
-                            <div class="col-md-6">
-                                <label class="form-label text-muted fs-7 text-uppercase fw-bold">Ngày sinh</label>
-                                <input type="text" class="form-control form-control-solid" value="05/15/1992" />
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Email công việc</label>
+                                <div class="fw-bold fs-6 text-primary">@selectedNode?.WorkEmail</div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label text-muted fs-7 text-uppercase fw-bold">Giới tính</label>
-                                <select class="form-select form-select-solid">
-                                    <option value="1" selected>Nam</option>
-                                    <option value="2">Nữ</option>
-                                </select>
+                        </div>
+                    </div>
+
+                    <!-- Section: Job Information -->
+                    <div class="mb-8 p-6 bg-light-primary rounded-3 border border-primary border-dashed">
+                        <h4 class="fs-6 fw-bold text-gray-800 mb-4 border-bottom pb-2 text-uppercase">Thông tin công việc</h4>
+                        <div class="row g-6 mb-5">
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Mã nhân viên</label>
+                                <div class="fw-bolder fs-6 text-dark">#@selectedNode?.EmployeeCode</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Loại hợp đồng</label>
+                                <div><span class="badge badge-light-info fw-bold">@selectedNode?.ContractType</span></div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Ngày chính thức</label>
+                                <div class="fw-bold fs-6 text-gray-800">@selectedNode?.OfficialJoinDate?.ToString("dd/MM/yyyy")</div>
+                            </div>
+                        </div>
+                        <div class="row g-6">
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Văn phòng</label>
+                                <div class="fw-bold fs-6 text-gray-800">@selectedNode?.Workplace</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Phòng ban</label>
+                                <div class="fw-bold fs-6 text-gray-800">Phòng Kỹ thuật</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Chức vụ</label>
+                                <div class="fw-bold fs-6 text-gray-800">@selectedNode?.Role</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Finance -->
+                    <div class="mb-8">
+                        <h4 class="fs-6 fw-bold text-gray-800 mb-4 border-bottom pb-2 text-uppercase">Tài chính & Bảo hiểm</h4>
+                        <div class="row g-6">
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">MST cá nhân</label>
+                                <div class="fw-bold fs-6 text-gray-800">@selectedNode?.TaxId</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Số BHXH</label>
+                                <div class="fw-bold fs-6 text-gray-800">@selectedNode?.SocialInsuranceId</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Hôn nhân</label>
+                                <div class="fw-bold fs-6 text-gray-800">@selectedNode?.MaritalStatus</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Emergency Contact -->
+                    <div class="mb-5">
+                        <h4 class="fs-6 fw-bold text-gray-800 mb-4 border-bottom pb-2 text-uppercase">Liên hệ khẩn cấp</h4>
+                        <div class="row g-6">
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Người liên hệ</label>
+                                <div class="fw-bold fs-6 text-gray-800">@selectedNode?.EmergencyContactName</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Mối quan hệ</label>
+                                <div class="fw-bold fs-6 text-gray-800">@selectedNode?.EmergencyContactRelation</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">SĐT khẩn cấp</label>
+                                <div class="fw-bold fs-6 text-danger">@selectedNode?.EmergencyContactPhone</div>
                             </div>
                         </div>
                     </div>
@@ -276,11 +539,8 @@
             </div>
         </div>
 
-        <div class="card-footer border-0 d-flex gap-3 justify-content-between p-10">
-            <button type="button" class="btn btn-primary flex-grow-1" id="kt_emp_detail_save">
-                <i class="bi bi-save me-2"></i>Lưu thay đổi
-            </button>
-            <button type="button" class="btn btn-light flex-grow-1"
+        <div class="card-footer border-0 d-flex justify-content-end p-10">
+            <button type="button" class="btn btn-light px-10"
                     id="kt_drawer_employee_detail_close">
                 Đóng
             </button>
@@ -319,14 +579,116 @@
 <script>
     let scale = 1, pointX = 0, pointY = 0, isDragging = false, startX = 0, startY = 0;
     
-    function initOrgChartPanZoom() {
-        const orgTree = document.querySelector('.org-tree');
+    window.zoomAtCenter = (zoomIn) => {
         const orgContainer = document.querySelector('.org-container');
-        if (!orgTree || !orgContainer) return;
+        if (!orgContainer) return;
+        const rect = orgContainer.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const xs = (centerX - pointX) / scale;
+        const ys = (centerY - pointY) / scale;
+        if (zoomIn) scale *= 1.2; else scale /= 1.2;
+        scale = Math.min(3, Math.max(0.2, scale));
+        pointX = centerX - xs * scale;
+        pointY = centerY - ys * scale;
+        updateTransform();
+    };
 
-        function setTransform() {
+    window.resetPanZoom = () => {
+        scale = 1; pointX = 0; pointY = 20;
+        updateTransform();
+    };
+    
+    window.openEmployeeDetail = () => {
+        const drawerElement = document.querySelector('#kt_drawer_employee_detail');
+        if (drawerElement && typeof KTDrawer !== 'undefined') {
+            let drawerInstance = KTDrawer.getInstance(drawerElement);
+            if (!drawerInstance) {
+                drawerInstance = new KTDrawer(drawerElement);
+            }
+            if (drawerInstance) drawerInstance.show();
+        }
+    };
+
+    function updateTransform() {
+        const orgTree = document.querySelector('.org-tree');
+        if (orgTree) {
             orgTree.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
         }
+    }
+
+    window.exportOrgChart = () => {
+        const element = document.getElementById('orgTreeExport');
+        if (!element) return;
+
+        if (typeof html2canvas === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            script.onload = () => doExport(element);
+            document.head.appendChild(script);
+        } else {
+            doExport(element);
+        }
+
+        function doExport(el) {
+            const originalTransform = el.style.transform;
+            el.style.transform = 'none';
+            
+            html2canvas(el, {
+                backgroundColor: '#f8f9fa',
+                scale: 2,
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `OrganizationStructure_${new Date().getTime()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+                el.style.transform = originalTransform;
+            }).catch(err => {
+                console.error('Export failed:', err);
+                el.style.transform = originalTransform;
+            });
+        }
+    };
+
+
+
+    function initOrgChartPanZoom() {
+        console.log("Initializing OrgChart Pan/Zoom...");
+        const orgTree = document.querySelector('.org-tree');
+        const orgContainer = document.querySelector('.org-container');
+        
+        if (!orgTree || !orgContainer) {
+            console.warn("OrgChart elements not found. Retrying in 100ms...");
+            setTimeout(initOrgChartPanZoom, 100);
+            return;
+        }
+
+        // Remove old listeners if any to avoid duplicates
+        // (Simplified by re-assigning or using clean logic)
+        
+        const handleWheel = (e) => {
+            e.preventDefault();
+            const rect = orgContainer.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            const xs = (mouseX - pointX) / scale;
+            const ys = (mouseY - pointY) / scale;
+
+            const delta = -e.deltaY;
+            if (delta > 0) scale *= 1.1; else scale /= 1.1;
+            scale = Math.min(Math.max(0.1, scale), 5);
+
+            pointX = mouseX - xs * scale;
+            pointY = mouseY - ys * scale;
+
+            updateTransform();
+        };
+
+        orgContainer.removeEventListener('wheel', handleWheel);
+        orgContainer.addEventListener('wheel', handleWheel, { passive: false });
 
         orgContainer.onmousedown = (e) => {
             if (e.target.closest('.org-node')) return;
@@ -336,59 +698,29 @@
             startY = e.clientY - pointY;
         };
 
-        window.onmouseup = () => {
+        const onMouseUp = () => {
             isDragging = false;
             orgContainer.style.cursor = 'grab';
         };
 
-        window.onmousemove = (e) => {
+        const onMouseMove = (e) => {
             if (!isDragging) return;
             pointX = e.clientX - startX;
             pointY = e.clientY - startY;
-            setTransform();
+            updateTransform();
         };
 
-        orgContainer.onwheel = (e) => {
-            e.preventDefault();
-            const rect = orgContainer.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
-            const xs = (mouseX - pointX) / scale;
-            const ys = (mouseY - pointY) / scale;
-            const delta = -e.deltaY;
-            if (delta > 0) scale *= 1.1; else scale /= 1.1;
-            scale = Math.min(Math.max(0.2, scale), 3);
-            pointX = mouseX - xs * scale;
-            pointY = mouseY - ys * scale;
-            setTransform();
-        };
+        window.removeEventListener('mouseup', onMouseUp);
+        window.removeEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+        window.addEventListener('mousemove', onMouseMove);
         
-        window.zoomAtCenter = (zoomIn) => {
-            const rect = orgContainer.getBoundingClientRect();
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const xs = (centerX - pointX) / scale;
-            const ys = (centerY - pointY) / scale;
-            if (zoomIn) scale *= 1.2; else scale /= 1.2;
-            scale = Math.min(3, Math.max(0.2, scale));
-            pointX = centerX - xs * scale;
-            pointY = centerY - ys * scale;
-            setTransform();
-        };
-
-        window.resetPanZoom = () => {
-            scale = 1; pointX = 0; pointY = 20;
-            setTransform();
-        };
+        // Center the chart initially if needed
+        pointX = (orgContainer.offsetWidth / 2) - (orgTree.offsetWidth / 2);
+        pointY = 50;
         
-        window.openEmployeeDetail = () => {
-            const drawerElement = document.querySelector('#kt_drawer_employee_detail');
-            const drawer = KTDrawer.getInstance(drawerElement);
-            if (drawer) drawer.show();
-        };
-
-        // Initial set
-        setTransform();
+        updateTransform();
+        console.log("OrgChart Pan/Zoom initialized.");
     }
 </script>
 

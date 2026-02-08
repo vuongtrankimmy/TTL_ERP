@@ -35,10 +35,17 @@ namespace TTL.HR.Shared.Pages.Employees
                 newEmployee.Address = scannedData.Address;
                 newEmployee.Hometown = scannedData.Hometown;
                 newEmployee.Gender = scannedData.Gender;
-                // Tự sinh email demo
-                newEmployee.Name = scannedData.Name.ToUpper();
-                newEmployee.Email = "manh.tv@ttlloc.vn";
-                newEmployee.Phone = "0984 555 666";
+                newEmployee.Nationality = scannedData.Nationality;
+                newEmployee.Ethnicity = scannedData.Ethnicity;
+                newEmployee.Religion = scannedData.Religion;
+                newEmployee.CccdIssueDate = scannedData.IssueDate;
+                newEmployee.CccdIssuePlace = scannedData.IssuePlace;
+                newEmployee.PlaceOfOrigin = scannedData.Hometown;
+                newEmployee.Residence = scannedData.Address;
+                
+                // Tự sinh email và điện thoại demo
+                newEmployee.Email = scannedData.Name.Replace(" ", ".").ToLower() + "@gmail.com";
+                newEmployee.Phone = "0" + new Random().Next(900000000, 999999999);
                 
                 await JSRuntime.InvokeVoidAsync("Swal.fire", new {
                     title = "Thành công!",

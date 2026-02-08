@@ -23,5 +23,25 @@ namespace TTL.HR.Shared.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public bool IsActive { get; set; }
+
+        // Bổ sung các trường từ CCCD và thông tin quản lý
+        public string Nationality { get; set; } = "Việt Nam";
+        public string Ethnicity { get; set; } = "Kinh";
+        public string Religion { get; set; } = "Không";
+        public string PlaceOfOrigin { get; set; }
+        public string Residence { get; set; }
+        public string CccdIssueDate { get; set; }
+        public string CccdIssuePlace { get; set; }
+        public string TaxId { get; set; }
+        public string SocialInsuranceId { get; set; }
+        public string MaritalStatus { get; set; }
+        public string BankAccountNumber { get; set; }
+        public string BankName { get; set; }
+        public string BankBranch { get; set; }
+        public string OfficialJoinDate { get; set; }
+        public string Workplace { get; set; }
+        public string EmergencyContactName { get; set; }
+        public string EmergencyContactRelation { get; set; }
+        public string EmergencyContactPhone { get; set; }
     }
 }

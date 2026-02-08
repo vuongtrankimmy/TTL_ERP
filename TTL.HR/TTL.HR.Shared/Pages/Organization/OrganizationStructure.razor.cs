@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -15,13 +16,36 @@ namespace TTL.HR.Shared.Pages.Organization
         private OrgNode selectedNode;
         private int AllEmployeesCount = 0;
         private bool _isLoading = true;
+        private bool _jsInitialized = false;
+
+        // Add Node Modal state
+        private bool showAddModal = false;
+        private OrgNode newNode = new OrgNode();
+        private string newNodeParentId = "";
+        private List<OrgNode> flatNodeList = new List<OrgNode>();
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
             InitializeData();
+            RefreshFlatList();
             // Simulate tree layout calculation/API
             await System.Threading.Tasks.Task.Delay(1500);
             _isLoading = false;
+            StateHasChanged();
+        }
+
+        private void RefreshFlatList()
+        {
+            flatNodeList.Clear();
+            if (rootNode != null)
+                FlattenNodes(rootNode);
+        }
+
+        private void FlattenNodes(OrgNode node)
+        {
+            flatNodeList.Add(node);
+            foreach (var child in node.Children)
+                FlattenNodes(child);
         }
 
         private void InitializeData()
@@ -33,7 +57,20 @@ namespace TTL.HR.Shared.Pages.Organization
                 Name = "Nguyễn Văn Anh", 
                 Type = "Department", 
                 Avatar = "assets/media/avatars/300-1.jpg",
-                IsManager = true
+                IsManager = true,
+                Status = "Chính thức",
+                CccdNumber = "001092001234",
+                DateOfBirth = new DateOnly(1992, 5, 15),
+                Gender = "Nam",
+                PlaceOfOrigin = "Xuân Trường, Nam Định",
+                Residence = "Số 123, Đường ABC, Phường XYZ, Quận Cầu Giấy, Hà Nội",
+                Phone = "0987.654.321",
+                PersonalEmail = "nv.anh@gmail.com",
+                WorkEmail = "anh.nv@ttl.com.vn",
+                EmployeeCode = "NV-001",
+                ContractType = "Chính thức - Không thời hạn",
+                OfficialJoinDate = new DateOnly(2021, 1, 1),
+                Workplace = "Trụ sở chính - Hà Nội"
             };
 
             // Khối Vận hành
@@ -43,7 +80,8 @@ namespace TTL.HR.Shared.Pages.Organization
                 Name = "Trần Thị Bình", 
                 Type = "Department", 
                 Avatar = "assets/media/avatars/300-2.jpg",
-                IsManager = true 
+                IsManager = true,
+                Status = "Chính thức"
             };
             
             // Khối Tài chính
@@ -70,7 +108,6 @@ namespace TTL.HR.Shared.Pages.Organization
             rootNode.Children.Add(cfoNode);
             rootNode.Children.Add(ccoNode);
 
-            // Thu gọn số lượng phòng ban và nhân viên để đạt tổng ~20 người
             // COO: 2 phòng (Nhân sự, IT) - 5 người
             AddSubDepartments(cooNode, new[] { "Phòng Nhân sự", "Phòng IT" }, 4);
             
@@ -109,7 +146,14 @@ namespace TTL.HR.Shared.Pages.Organization
                         Role = GetRandomRole(name),
                         Name = GetRandomName("Nhân viên"),
                         Type = "Employee",
-                        Avatar = $"assets/media/avatars/300-{idCounter % 30 + 1}.jpg"
+                        Avatar = $"assets/media/avatars/300-{idCounter % 30 + 1}.jpg",
+                        EmployeeCode = $"NV-{idCounter}",
+                        CccdNumber = $"00120200{idCounter}",
+                        DateOfBirth = new DateOnly(1995, 10, 20),
+                        Gender = i % 2 == 0 ? "Nam" : "Nữ",
+                        Phone = $"09{idCounter:D8}",
+                        ContractType = "Thử việc",
+                        Status = "Thử việc"
                     });
                 }
             }
@@ -149,7 +193,36 @@ namespace TTL.HR.Shared.Pages.Organization
             JSRuntime.InvokeVoidAsync("openEmployeeDetail");
         }
         
-        private void ToggleAddModal() { /* ... */ }
+        private void ToggleAddModal() 
+        { 
+            newNode = new OrgNode { 
+                Id = (CountNodes(rootNode) + 1).ToString(),
+                Avatar = "assets/media/avatars/300-10.jpg",
+                Type = "Employee"
+            };
+            newNodeParentId = selectedNode?.Id ?? rootNode?.Id;
+            showAddModal = !showAddModal; 
+        }
+
+        private void SaveNewNode()
+        {
+            var parent = flatNodeList.Find(n => n.Id == newNodeParentId);
+            if (parent != null)
+            {
+                parent.Children.Add(newNode);
+                AllEmployeesCount = CountNodes(rootNode);
+                RefreshFlatList();
+                showAddModal = false;
+                StateHasChanged();
+            }
+        }
+
+        private async Task ExportDiagram()
+        {
+            await JSRuntime.InvokeVoidAsync("exportOrgChart");
+        }
+
+
 
         private async Task ZoomIn() => await JSRuntime.InvokeVoidAsync("zoomAtCenter", true);
         private async Task ZoomOut() => await JSRuntime.InvokeVoidAsync("zoomAtCenter", false);
@@ -157,8 +230,10 @@ namespace TTL.HR.Shared.Pages.Organization
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
+            if (!_isLoading && !_jsInitialized)
             {
+                await Task.Delay(100);
+                _jsInitialized = true;
                 await JSRuntime.InvokeVoidAsync("initOrgChartPanZoom");
             }
         }

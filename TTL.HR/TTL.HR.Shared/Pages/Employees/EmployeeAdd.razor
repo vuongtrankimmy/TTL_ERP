@@ -1,188 +1,322 @@
 @page "/employees/add"
-
-<CccdScanner @ref="cccdScanner" />
-
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
 
-<!-- SECTION 1: THÔNG TIN CÁ NHÂN -->
-<div class="card card-flush mb-6">
-	<div class="card-header pt-7">
-		<div class="card-title">
-			<span class="svg-icon svg-icon-1 me-3 text-primary">
-				<i class="bi bi-person-badge fs-2qx"></i>
-			</span>
-			<h2 class="fw-bold text-dark fs-4">THÔNG TIN CÁ NHÂN</h2>
-		</div>
-	</div>
-	<div class="card-body pt-0">
-		<!-- Smart Scan Banner -->
-		<div class="rounded border-primary border-dashed border-2 p-10 mb-10 bg-light-primary text-center position-relative overflow-hidden">
-			<div class="position-absolute top-50 start-50 translate-middle opacity-10" style="z-index: 0;">
-				<i class="bi bi-qr-code-scan" style="font-size: 15rem;"></i>
-			</div>
-			<div class="position-relative">
-				<div class="symbol symbol-70px mb-5">
-					<div class="symbol-label bg-white shadow-sm">
-						<i class="bi bi-qr-code-scan fs-2qx text-primary"></i>
-					</div>
-				</div>
-				<h3 class="fw-bold mb-2">Tính năng Scan CCCD Thông minh</h3>
-				<p class="text-muted fs-6 mb-5">Sử dụng công nghệ AI OCR để tự động nhận diện thông tin từ thẻ CCCD. Nhanh chóng, chính xác & bảo mật.</p>
-				<button type="button" class="btn btn-primary px-8" @onclick="ScanCCCD" style="z-index: 1;">
-					<i class="bi bi-upc-scan me-2"></i>Bấm quét thẻ hoặc kéo thả ảnh vào đây
-				</button>
-			</div>
-		</div>
+<CccdScanner @ref="cccdScanner" />
 
-		<div class="row g-9">
-			<div class="col-md-6 fv-row">
-				<label class="form-label required">Họ và tên</label>
-				<input type="text" class="form-control form-control-solid" placeholder="VD: Nguyễn Văn A" @bind="newEmployee.Name" />
-			</div>
-			<div class="col-md-6 fv-row">
-				<label class="form-label required">Mã nhân viên</label>
-				<input type="text" class="form-control form-control-solid" placeholder="VD: NV001" @bind="newEmployee.Id" />
-			</div>
-			<div class="col-md-4 fv-row">
-				<label class="form-label">Ngày sinh</label>
-				<input type="date" class="form-control form-control-solid" @bind="newEmployee.DOB" />
-			</div>
-			<div class="col-md-4 fv-row">
-				<label class="form-label required">Email liên hệ</label>
-				<input type="email" class="form-control form-control-solid" placeholder="email@company.com" @bind="newEmployee.Email" />
-			</div>
-			<div class="col-md-4 fv-row">
-				<label class="form-label">Số điện thoại</label>
-				<input type="tel" class="form-control form-control-solid" placeholder="09xx xxx xxx" @bind="newEmployee.Phone" />
-			</div>
-		</div>
-	</div>
+<div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
+    <!-- SECTION: THÔNG TIN CÁ NHÂN -->
+    <div class="card card-flush py-4">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-person-bounding-box text-primary fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Thông tin cá nhân & Định danh</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0">
+            <!-- AI Scanner Area -->
+            <div class="py-10 px-8 border border-primary border-dashed rounded-3 bg-light-primary text-center mb-10 position-relative overflow-hidden">
+                <div class="position-absolute top-50 start-50 translate-middle opacity-5" style="z-index: 0;">
+                    <i class="bi bi-qr-code-scan" style="font-size: 10rem;"></i>
+                </div>
+                <div class="position-relative" style="z-index: 1;">
+                    <div class="mb-4">
+                        <i class="bi bi-qr-code-scan fs-3x text-primary opacity-75"></i>
+                    </div>
+                    <div class="fw-bolder fs-5 text-gray-800 mb-1">Tính năng Scan CCCD Thông minh</div>
+                    <div class="text-gray-500 fs-7 mb-6">Sử dụng công nghệ AI OCR để tự động nhận diện thông tin từ thẻ CCCD. Nhanh chóng, chính xác & bảo mật.</div>
+                    <button type="button" class="btn btn-primary px-10 fw-bolder shadow-sm" @onclick="ScanCCCD">
+                        <i class="bi bi-upc-scan me-2"></i> Bấm quét thẻ hoặc kéo thả ảnh vào đây
+                    </button>
+                </div>
+            </div>
+
+            <!-- Basic Details -->
+            <div class="row g-9 mb-8">
+                <div class="col-md-8">
+                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Họ và tên nhân viên</label>
+                    <input type="text" class="form-control form-control-solid" placeholder="VD: NGUYỄN VĂN A" @bind="newEmployee.Name" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Số CCCD / CMND</label>
+                    <input type="text" class="form-control form-control-solid" placeholder="001xxxxxxxxx" @bind="newEmployee.IdCard" />
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-4">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Ngày sinh</label>
+                    <div class="position-relative d-flex align-items-center">
+                        <i class="bi bi-calendar3 position-absolute ms-4 text-gray-500"></i>
+                        <input type="date" class="form-control form-control-solid ps-12" @bind="newEmployee.DOB" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Giới tính</label>
+                    <select class="form-select form-select-solid" @bind="newEmployee.Gender">
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tình trạng hôn nhân</label>
+                    <select class="form-select form-select-solid" @bind="newEmployee.MaritalStatus">
+                        <option value="Độc thân">Độc thân</option>
+                        <option value="Đã kết hôn">Đã kết hôn</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-4">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Quốc tịch</label>
+                    <input type="text" class="form-control form-control-solid" placeholder="Việt Nam" @bind="newEmployee.Nationality" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Dân tộc</label>
+                    <input type="text" class="form-control form-control-solid" placeholder="Kinh" @bind="newEmployee.Ethnicity" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tôn giáo</label>
+                    <input type="text" class="form-control form-control-solid" placeholder="Không" @bind="newEmployee.Religion" />
+                </div>
+            </div>
+
+            <div class="row g-9">
+                <div class="col-md-4">
+                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Email cá nhân</label>
+                    <input type="email" class="form-control form-control-solid" placeholder="email@example.com" @bind="newEmployee.Email" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Số điện thoại</label>
+                    <input type="tel" class="form-control form-control-solid" placeholder="09xx xxx xxx" @bind="newEmployee.Phone" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Nơi làm việc (Văn phòng)</label>
+                    <input type="text" class="form-control form-control-solid" placeholder="Trụ sở chính" @bind="newEmployee.Workplace" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: ĐỊA CHỈ & LIÊN LẠC -->
+    <div class="card card-flush py-4">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-geo-alt text-primary fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Địa chỉ & Hộ khẩu</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0">
+            <div class="row g-9">
+                <div class="col-md-6">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Quê quán (Nguyên quán)</label>
+                    <textarea class="form-control form-control-solid" rows="1" placeholder="Ghi theo CCCD..." @bind="newEmployee.PlaceOfOrigin"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Nơi thường trú</label>
+                    <textarea class="form-control form-control-solid" rows="1" placeholder="Địa chỉ hiện tại..." @bind="newEmployee.Residence"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: THÔNG TIN CÔNG VIỆC -->
+    <div class="card card-flush py-4">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-briefcase text-primary fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Thông tin công việc & Hợp đồng</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0">
+            <div class="row g-9 mb-8">
+                <div class="col-md-4">
+                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Chức vụ / Vị trí</label>
+                    <select class="form-select form-select-solid" @bind="newEmployee.Role">
+                        <option value="">Chọn chức vụ...</option>
+                        <option value="Kỹ sư Backend">Kỹ sư Backend</option>
+                        <option value="Frontend Developer">Frontend Developer</option>
+                        <option value="Chuyên viên Nhân sự">Chuyên viên Nhân sự</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Phòng ban</label>
+                    <select class="form-select form-select-solid" @bind="newEmployee.Dept">
+                        <option value="Kỹ thuật">Kỹ thuật</option>
+                        <option value="Nhân sự">Nhân sự</option>
+                        <option value="Kế toán">Kế toán</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Trạng thái nhân sự</label>
+                    <select class="form-select form-select-solid" @bind="newEmployee.Status">
+                        <option value="Thử việc">Thử việc</option>
+                        <option value="Chính thức">Chính thức</option>
+                        <option value="Thực tập">Thực tập</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row g-9">
+                <div class="col-md-4">
+                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Loại hợp đồng</label>
+                    <select class="form-select form-select-solid" @bind="newEmployee.ContractType">
+                        <option value="Hợp đồng thử việc">Hợp đồng thử việc</option>
+                        <option value="Hợp đồng 1 năm">Hợp đồng 1 năm</option>
+                        <option value="Hợp đồng 3 năm">Hợp đồng 3 năm</option>
+                        <option value="Không thời hạn">Không thời hạn</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Ngày bắt đầu làm việc</label>
+                    <div class="position-relative d-flex align-items-center">
+                        <i class="bi bi-calendar-event position-absolute ms-4 text-gray-500"></i>
+                        <input type="text" class="form-control form-control-solid ps-12" placeholder="dd/mm/yyyy" @bind="newEmployee.OfficialJoinDate" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Mức lương cơ bản (VNĐ)</label>
+                    <div class="position-relative d-flex align-items-center">
+                        <span class="position-absolute ms-4 fw-bold text-gray-400">₫</span>
+                        <input type="text" class="form-control form-control-solid ps-12 text-end fw-bold text-primary" placeholder="10.000.000" @bind="newEmployee.Salary" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOUBLE COLUMN: FINANCE & EMERGENCY -->
+    <div class="row g-7 g-lg-10">
+        <div class="col-xl-8">
+            <div class="card card-flush py-4 h-100">
+                <div class="card-header border-0">
+                    <div class="card-title">
+                        <span class="symbol symbol-30px me-3">
+                            <i class="bi bi-bank text-primary fs-2"></i>
+                        </span>
+                        <h2 class="fw-bold fs-5 text-uppercase m-0">Tài chính & Bảo hiểm</h2>
+                    </div>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-6">
+                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Ngân hàng</label>
+                            <input type="text" class="form-control form-control-solid" placeholder="Tên ngân hàng" @bind="newEmployee.BankName" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Số tài khoản</label>
+                            <input type="text" class="form-control form-control-solid" placeholder="STK ngân hàng" @bind="newEmployee.BankAccountNumber" />
+                        </div>
+                    </div>
+                    <div class="row g-9">
+                        <div class="col-md-6">
+                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mã số thuế</label>
+                            <input type="text" class="form-control form-control-solid" placeholder="MST cá nhân" @bind="newEmployee.TaxId" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Số sổ BHXH</label>
+                            <input type="text" class="form-control form-control-solid" placeholder="Số BHXH" @bind="newEmployee.SocialInsuranceId" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card card-flush py-4 h-100 border-warning border-dashed border-1">
+                <div class="card-header border-0">
+                    <div class="card-title">
+                        <span class="symbol symbol-30px me-3">
+                            <i class="bi bi-exclamation-triangle-fill text-warning fs-2"></i>
+                        </span>
+                        <h2 class="fw-bold fs-5 text-uppercase m-0">Liên hệ khẩn cấp</h2>
+                    </div>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="mb-6">
+                        <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Họ tên người liên hệ</label>
+                        <input type="text" class="form-control form-control-solid" @bind="newEmployee.EmergencyContactName" />
+                    </div>
+                    <div class="row g-4 mb-0">
+                        <div class="col-5">
+                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">QH</label>
+                            <input type="text" class="form-control form-control-solid" @bind="newEmployee.EmergencyContactRelation" />
+                        </div>
+                        <div class="col-7">
+                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">SĐT Khẩn cấp</label>
+                            <input type="text" class="form-control form-control-solid" @bind="newEmployee.EmergencyContactPhone" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: TÀI LIỆU ĐÍNH KÈM -->
+    <div class="card card-flush py-4">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-paperclip text-primary fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Hồ sơ & Tài liệu đính kèm</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0">
+            <div class="row g-7">
+                <div class="col-md-6">
+                    <div class="d-flex flex-stack border border-dashed border-gray-300 rounded p-5">
+                        <div class="d-flex align-items-center">
+                            <div class="symbol symbol-40px me-4">
+                                <div class="symbol-label bg-light-danger">
+                                    <i class="bi bi-file-earmark-pdf fs-2 text-danger"></i>
+                                </div>
+                            </div>
+                            <div class="ms-1">
+                                <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Ảnh CCCD (Mặt trước/sau)</span>
+                                <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-light-primary fw-bolder px-5">TẢI LÊN</button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex flex-stack border border-dashed border-gray-300 rounded p-5">
+                        <div class="d-flex align-items-center">
+                            <div class="symbol symbol-40px me-4">
+                                <div class="symbol-label bg-light-success">
+                                    <i class="bi bi-patch-check fs-2 text-success"></i>
+                                </div>
+                            </div>
+                            <div class="ms-1">
+                                <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Bằng cấp & Chứng chỉ</span>
+                                <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-light-primary fw-bolder px-5">TẢI LÊN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="d-flex align-items-center justify-content-between mt-10 p-8 border-top border-gray-200">
+        <div class="text-gray-500 fs-8 fw-semibold">
+            <i class="bi bi-shield-lock-fill me-2 text-primary"></i>
+            Hệ thống bảo mật dữ liệu theo tiêu chuẩn quốc tế. Mọi thay đổi đều được lưu vết chi tiết.
+        </div>
+        <div class="d-flex gap-4">
+            <button type="button" class="btn btn-light fw-bold px-10 btn-sm" @onclick='() => Navigation.NavigateTo("/employees")'>HUỶ BỎ</button>
+            <button type="button" class="btn btn-primary fw-bold px-10 btn-sm" @onclick="Submit">LƯU HỒ SƠ NHÂN VIÊN</button>
+        </div>
+    </div>
 </div>
 
-<!-- SECTION 2: THÔNG TIN CÔNG VIỆC -->
-<div class="card card-flush mb-6">
-	<div class="card-header pt-7">
-		<div class="card-title">
-			<span class="svg-icon svg-icon-1 me-3 text-primary">
-				<i class="bi bi-briefcase fs-2qx"></i>
-			</span>
-			<h2 class="fw-bold text-dark fs-4">THÔNG TIN CÔNG VIỆC</h2>
-		</div>
-	</div>
-	<div class="card-body pt-0">
-		<div class="row g-9">
-			<div class="col-md-4 fv-row">
-				<label class="form-label required">CHỨC VỤ</label>
-				<select class="form-select form-select-solid" @bind="newEmployee.Role">
-					<option value="">Chọn chức vụ...</option>
-					<option value="Kỹ sư Backend">Kỹ sư Backend</option>
-					<option value="Frontend Developer">Frontend Developer</option>
-					<option value="Chuyên viên Nhân sự">Chuyên viên Nhân sự</option>
-					<option value="Kế toán viên">Kế toán viên</option>
-				</select>
-			</div>
-			<div class="col-md-4 fv-row">
-				<label class="form-label required">PHÒNG BAN</label>
-				<select class="form-select form-select-solid" @bind="newEmployee.Dept">
-					<option value="Kỹ thuật">Kỹ thuật</option>
-					<option value="Nhân sự">Nhân sự</option>
-					<option value="Tài chính">Tài chính</option>
-					<option value="Marketing">Marketing</option>
-				</select>
-			</div>
-			<div class="col-md-4 fv-row">
-				<label class="form-label">TRẠNG THÁI</label>
-				<select class="form-select form-select-solid" @bind="newEmployee.Status">
-					<option value="Thử việc">Thử việc</option>
-					<option value="Chính thức">Chính thức</option>
-					<option value="Nghỉ việc">Nghỉ việc</option>
-				</select>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="row g-6">
-	<!-- SECTION 3: HỢP ĐỒNG & LƯƠNG -->
-	<div class="col-lg-7">
-		<div class="card card-flush h-lg-100">
-			<div class="card-header pt-7">
-				<div class="card-title">
-					<span class="svg-icon svg-icon-1 me-3 text-primary">
-						<i class="bi bi-file-earmark-text fs-2qx"></i>
-					</span>
-					<h2 class="fw-bold text-dark fs-4">HỢP ĐỒNG & LƯƠNG</h2>
-				</div>
-			</div>
-			<div class="card-body pt-5">
-				<div class="fv-row mb-10">
-					<label class="form-label">LOẠI HỢP ĐỒNG</label>
-					<select class="form-select form-select-solid" @bind="newEmployee.ContractType">
-						<option value="Hợp đồng thử việc">Hợp đồng thử việc</option>
-						<option value="Xác định thời hạn (1 năm)">Xác định thời hạn (1 năm)</option>
-						<option value="Xác định thời hạn (3 năm)">Xác định thời hạn (3 năm)</option>
-						<option value="Không thời hạn">Không thời hạn</option>
-					</select>
-				</div>
-				<div class="fv-row">
-					<label class="form-label required">MỨC LƯƠNG CƠ BẢN (VNĐ)</label>
-					<div class="position-relative">
-						<input type="text" class="form-control form-control-solid ps-15" placeholder="10.000.000" @bind="newEmployee.Salary" />
-						<div class="position-absolute top-50 start-0 translate-middle-y ms-5">
-							<span class="text-gray-500 fw-bold">VNĐ</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- SECTION 4: TÀI LIỆU ĐÍNH KÈM -->
-	<div class="col-lg-5">
-		<div class="card card-flush h-lg-100">
-			<div class="card-header pt-7">
-				<div class="card-title">
-					<span class="svg-icon svg-icon-1 me-3 text-primary">
-						<i class="bi bi-paperclip fs-2qx"></i>
-					</span>
-					<h2 class="fw-bold text-dark fs-4">TÀI LIỆU ĐÍNH KÈM</h2>
-				</div>
-			</div>
-			<div class="card-body pt-5">
-				<div class="d-flex flex-stack border-bottom border-gray-200 border-bottom-dashed mb-5 pb-5">
-					<div class="d-flex align-items-center">
-						<i class="bi bi-file-earmark-pdf fs-1 text-danger me-4"></i>
-						<div class="d-flex flex-column">
-							<span class="text-gray-800 fw-bold">CMND / CCCD</span>
-							<span class="text-muted fs-7">PDF, JPG, PNG (Max 5MB)</span>
-						</div>
-					</div>
-					<button class="btn btn-sm btn-light-primary fw-bold">Tải lên</button>
-				</div>
-				<div class="d-flex flex-stack">
-					<div class="d-flex align-items-center">
-						<i class="bi bi-patch-check fs-1 text-success me-4"></i>
-						<div class="d-flex flex-column">
-							<span class="text-gray-800 fw-bold">Bằng cấp / chứng chỉ</span>
-							<span class="text-muted fs-7">PDF, JPG, PNG (Max 10MB)</span>
-						</div>
-					</div>
-					<button class="btn btn-sm btn-light-primary fw-bold">Tải lên</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="d-flex flex-stack mt-10 mb-10 pt-5 border-top border-gray-200">
-	<div class="text-muted fs-7">
-		<i class="bi bi-info-circle me-1"></i> Lưu ý: Mọi thay đổi dữ liệu sẽ được ghi lại trong nhật ký hệ thống.
-	</div>
-	<div class="d-flex gap-3">
-		<a href="/employees" class="btn btn-light fw-bold px-10">Hủy bỏ</a>
-		<button type="submit" class="btn btn-primary fw-bold px-10" @onclick="Submit">Lưu nhân viên</button>
-	</div>
-</div>
 
 

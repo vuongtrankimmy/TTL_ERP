@@ -2,8 +2,8 @@
 @using System.Linq
 
 <li>
-    <div class="org-node kt_drawer_employee_detail_toggle @(Node.Type == "Department" ? "is-department" : "") @(Node.IsManager ? "is-manager" : "")" 
-         @onclick="() => OnNodeClick.InvokeAsync(Node)">
+    <div class="org-node @(Node.Type == "Department" ? "is-department" : "") @(Node.IsManager ? "is-manager" : "")" 
+         @onclick="() => OnNodeClick.InvokeAsync(Node)" @onclick:stopPropagation="true">
         <div class="node-tools">
             <button class="btn btn-icon btn-xs btn-light-primary"><i class="bi bi-pencil fs-9"></i></button>
         </div>
@@ -12,7 +12,17 @@
             <img src="@Node.Avatar" class="avatar" alt="@Node.Name" />
             <div class="d-flex flex-column align-items-start">
                 <div class="org-role">@Node.Role</div>
-                <div class="org-name">@Node.Name</div>
+                <div class="org-name d-flex align-items-center">
+                    @Node.Name
+                    @if (!string.IsNullOrEmpty(Node.EmployeeCode))
+                    {
+                        <span class="text-gray-400 fs-9 ms-2">#@Node.EmployeeCode</span>
+                    }
+                </div>
+                @if (Node.Type == "Employee" && !string.IsNullOrEmpty(Node.Status))
+                {
+                    <span class="badge badge-light-success fw-bolder fs-9 py-1 px-2 mt-1">@Node.Status</span>
+                }
             </div>
         </div>
 
