@@ -8,15 +8,15 @@ namespace TTL.HR.Shared.Entities.Recruitment
 {
     public class JobPosting : BaseEntity
     {
-        public string Title { get; set; }
-        public string Code { get; set; } // DEV-001
+        public string Title { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty; // DEV-001
         
         [BsonRepresentation(BsonType.ObjectId)]
-        public string DepartmentId { get; set; }
-        public string DepartmentName { get; set; } // Denormalized for display
+        public string DepartmentId { get; set; } = string.Empty;
+        public string DepartmentName { get; set; } = string.Empty; // Denormalized for display
 
-        public string Description { get; set; } // HTML/MarkDown
-        public string Requirements { get; set; }
+        public string Description { get; set; } = string.Empty; // HTML/MarkDown
+        public string Requirements { get; set; } = string.Empty;
         
         public int Quantity { get; set; }
         public int FilledQuantity { get; set; }
@@ -25,25 +25,25 @@ namespace TTL.HR.Shared.Entities.Recruitment
         public DateTime EndDate { get; set; }
 
         public JobStatus Status { get; set; } = JobStatus.Draft;
-        public string[] Skills { get; set; } // [".NET", "SQL", "Blazor"]
+        public string[] Skills { get; set; } = Array.Empty<string>(); // [".NET", "SQL", "Blazor"]
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public string AssigneeId { get; set; } // Recruiter in charge
+        public string AssigneeId { get; set; } = string.Empty; // Recruiter in charge
     }
 
     public class Candidate : BaseEntity
     {
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string ResumeUrl { get; set; } // Link to CV file
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string ResumeUrl { get; set; } = string.Empty; // Link to CV file
         
         [BsonRepresentation(BsonType.ObjectId)]
-        public string JobPostingId { get; set; }
+        public string JobPostingId { get; set; } = string.Empty;
 
         public CandidateStatus Status { get; set; } = CandidateStatus.New;
         public double? InterviewScore { get; set; }
-        public string Notes { get; set; }
+        public string Notes { get; set; } = string.Empty;
     }
 
     public enum JobStatus

@@ -9,13 +9,13 @@ namespace TTL.HR.Shared.Entities.Contracts
     // Replaces TemplateItem
     public class ContractTemplate : BaseEntity
     {
-        public string Name { get; set; }
-        public string Code { get; set; } // QT-NS-01/2026
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty; // QT-NS-01/2026
+        public string Description { get; set; } = string.Empty;
         public ContractType Type { get; set; }
         
-        public string ContentHtml { get; set; } // For editor preview
-        public string FilePath { get; set; } // Path to .docx template file
+        public string ContentHtml { get; set; } = string.Empty; // For editor preview
+        public string FilePath { get; set; } = string.Empty; // Path to .docx template file
         
         public TemplateStatus Status { get; set; } = TemplateStatus.Draft;
         public string Icon { get; set; } = "bi bi-file-earmark-text";
@@ -25,12 +25,12 @@ namespace TTL.HR.Shared.Entities.Contracts
     public class EmployeeContract : BaseEntity
     {
         [BsonRepresentation(BsonType.ObjectId)]
-        public string EmployeeId { get; set; }
+        public string EmployeeId { get; set; } = string.Empty;
         
         [BsonRepresentation(BsonType.ObjectId)]
-        public string TemplateId { get; set; } // Derived from which template
+        public string TemplateId { get; set; } = string.Empty; // Derived from which template
 
-        public string ContractNumber { get; set; } // 2026/LĐ-001
+        public string ContractNumber { get; set; } = string.Empty; // 2026/LĐ-001
         
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; } // Null if permanent
@@ -39,7 +39,7 @@ namespace TTL.HR.Shared.Entities.Contracts
         public decimal AllowanceTotal { get; set; }
         
         public ContractStatus Status { get; set; } = ContractStatus.Draft;
-        public string SignedFileUrl { get; set; } // Scan of signed copy
+        public string SignedFileUrl { get; set; } = string.Empty; // Scan of signed copy
     }
 
     public enum ContractType

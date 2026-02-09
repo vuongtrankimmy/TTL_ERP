@@ -8,13 +8,13 @@ namespace TTL.HR.Shared.Entities.System
 {
     public class SystemConfig : BaseEntity
     {
-        public string CompanyName { get; set; }
-        public string TaxCode { get; set; }
-        public string Headquarters { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string Website { get; set; }
-        public string LogoUrl { get; set; }
+        public string CompanyName { get; set; } = string.Empty;
+        public string TaxCode { get; set; } = string.Empty;
+        public string Headquarters { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string Website { get; set; } = string.Empty;
+        public string LogoUrl { get; set; } = string.Empty;
         
         // HR defaults
         public int DefaultAnnualLeaveDays { get; set; } = 12;
@@ -26,18 +26,18 @@ namespace TTL.HR.Shared.Entities.System
     public class AuditLog : BaseEntity
     {
         [BsonRepresentation(BsonType.ObjectId)]
-        public string UserId { get; set; }
-        public string Username { get; set; }
+        public string UserId { get; set; } = string.Empty;
+        public string Username { get; set; } = string.Empty;
         
-        public string Action { get; set; } // "CREATE", "UPDATE", "DELETE", "LOGIN"
-        public string EntityName { get; set; } // "Employee", "Contract"
+        public string Action { get; set; } = string.Empty; // "CREATE", "UPDATE", "DELETE", "LOGIN"
+        public string EntityName { get; set; } = string.Empty; // "Employee", "Contract"
         
         [BsonRepresentation(BsonType.ObjectId)]
-        public string EntityId { get; set; }
+        public string EntityId { get; set; } = string.Empty;
         
-        public string OldValueJson { get; set; }
-        public string NewValueJson { get; set; }
-        public string IpAddress { get; set; }
-        public string UserAgent { get; set; }
+        public string OldValueJson { get; set; } = string.Empty;
+        public string NewValueJson { get; set; } = string.Empty;
+        public string IpAddress { get; set; } = string.Empty;
+        public string UserAgent { get; set; } = string.Empty;
     }
 }

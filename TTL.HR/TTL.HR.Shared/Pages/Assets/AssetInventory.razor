@@ -32,7 +32,7 @@
                     </tr>
                 </thead>
                 <tbody class="fw-semibold text-gray-600">
-                    @foreach (var asset in Assets)
+                    @foreach (var asset in AssetList)
                     {
                         <tr>
                             <td>
@@ -72,13 +72,13 @@
     OnCancelled="CloseDeleteModal" />
 
 @code {
-    private List<AssetViewModel> Assets = new();
+    private List<AssetViewModel> AssetList = new();
     private bool IsDeleteModalOpen = false;
-    private AssetViewModel AssetToDelete;
+    private AssetViewModel? AssetToDelete;
 
     protected override void OnInitialized()
     {
-        Assets = new List<AssetViewModel>
+        AssetList = new List<AssetViewModel>
         {
             new AssetViewModel { Name = "Dell XPS 15", Code = "IT-001", Type = "Laptop", AssignedTo = "John Doe", Status = "Assigned", PurchaseDate = DateTime.Now.AddMonths(-6) },
             new AssetViewModel { Name = "MacBook Pro M2", Code = "IT-002", Type = "Laptop", AssignedTo = "Jane Smith", Status = "Assigned", PurchaseDate = DateTime.Now.AddMonths(-3) },
@@ -125,18 +125,18 @@
     {
         if (AssetToDelete != null)
         {
-            Assets.Remove(AssetToDelete);
+            AssetList.Remove(AssetToDelete);
             CloseDeleteModal();
         }
     }
 
     public class AssetViewModel
     {
-        public string Name { get; set; }
-        public string Code { get; set; }
-        public string Type { get; set; }
-        public string AssignedTo { get; set; }
-        public string Status { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public string AssignedTo { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
         public DateTime PurchaseDate { get; set; }
     }
 }

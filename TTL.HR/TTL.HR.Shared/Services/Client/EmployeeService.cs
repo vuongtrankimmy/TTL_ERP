@@ -9,40 +9,37 @@ namespace TTL.HR.Shared.Services.Client
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly HttpClient _httpClient;
+        private readonly IApiRepository<Employee> _repository;
+        private const string Endpoint = "api/employee";
 
-        public EmployeeService(HttpClient httpClient)
+        public EmployeeService(IApiRepository<Employee> repository)
         {
-            _httpClient = httpClient;
+            _repository = repository;
         }
 
         public async Task<IEnumerable<Employee>> GetEmployeesAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<Employee>>("api/employee");
+            return await _repository.GetAllAsync(Endpoint);
         }
 
-        public async Task<Employee> GetEmployeeAsync(string id)
+        public async Task<Employee?> GetEmployeeAsync(string id)
         {
-            return await _httpClient.GetFromJsonAsync<Employee>($"api/employee/{id}");
+            return await _repository.GetByIdAsync(Endpoint, id);
         }
 
-        public async Task<Employee> CreateEmployeeAsync(Employee employee)
+        public async Task<Employee?> CreateEmployeeAsync(Employee employee)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/employee", employee);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<Employee>();
+            return await _repository.CreateAsync(Endpoint, employee);
         }
 
         public async Task UpdateEmployeeAsync(string id, Employee employee)
         {
-            var response = await _httpClient.PutAsJsonAsync($"api/employee/{id}", employee);
-            response.EnsureSuccessStatusCode();
+            await _repository.UpdateAsync(Endpoint, id, employee);
         }
 
         public async Task DeleteEmployeeAsync(string id)
         {
-            var response = await _httpClient.DeleteAsync($"api/employee/{id}");
-            response.EnsureSuccessStatusCode();
+            await _repository.DeleteAsync(Endpoint, id);
         }
     }
 }

@@ -9,22 +9,22 @@ namespace TTL.HR.Shared.Entities.HumanResource
     public class Employee : BaseEntity
     {
         // Core Identity
-        public string Code { get; set; }  // NV-001
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string CompanyEmail { get; set; }
-        public string Phone { get; set; }
-        public string AvatarUrl { get; set; }
+        public string Code { get; set; } = string.Empty;  // NV-001
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string CompanyEmail { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string AvatarUrl { get; set; } = string.Empty;
         
         // Organizational Links
         [BsonRepresentation(BsonType.ObjectId)]
-        public string DepartmentId { get; set; }
+        public string DepartmentId { get; set; } = string.Empty;
         
         [BsonRepresentation(BsonType.ObjectId)]
-        public string PositionId { get; set; }
+        public string PositionId { get; set; } = string.Empty;
         
         [BsonRepresentation(BsonType.ObjectId)]
-        public string ReportToId { get; set; }
+        public string ReportToId { get; set; } = string.Empty;
 
         // Employment Status
         public EmployeeStatus Status { get; set; } = EmployeeStatus.Active;
@@ -36,23 +36,23 @@ namespace TTL.HR.Shared.Entities.HumanResource
         public PersonalInfo PersonalDetails { get; set; } = new();
 
         // System Access
-        public string Username { get; set; }
-        public string PasswordHash { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
         public List<string> Roles { get; set; } = new(); // ["Admin", "HR Manager", "Employee"]
     }
 
     public class PersonalInfo
     {
         public DateTime? DOB { get; set; }
-        public string Gender { get; set; } // Consider Enum
-        public string Address { get; set; }
-        public string Hometown { get; set; }
-        public string IdCardNumber { get; set; } // CCCD
+        public string Gender { get; set; } = string.Empty; // Consider Enum
+        public string Address { get; set; } = string.Empty;
+        public string Hometown { get; set; } = string.Empty;
+        public string IdCardNumber { get; set; } = string.Empty; // CCCD
         public DateTime? IdCardIssueDate { get; set; }
-        public string IdCardPlace { get; set; }
-        public string TaxCode { get; set; }
-        public string BankAccount { get; set; }
-        public string BankName { get; set; }
+        public string IdCardPlace { get; set; } = string.Empty;
+        public string TaxCode { get; set; } = string.Empty;
+        public string BankAccount { get; set; } = string.Empty;
+        public string BankName { get; set; } = string.Empty;
     }
 
     public enum EmployeeStatus

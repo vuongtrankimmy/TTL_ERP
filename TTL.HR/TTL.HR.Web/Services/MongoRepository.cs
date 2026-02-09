@@ -9,8 +9,8 @@ namespace TTL.HR.Web.Data
 {
     public class MongoDbSettings
     {
-        public string ConnectionString { get; set; } = "mongodb://localhost:27017";
-        public string DatabaseName { get; set; } = "OrgaX_HR_DB";
+        public string ConnectionString { get; set; } = string.Empty;
+        public string DatabaseName { get; set; } = string.Empty;
     }
 
     public class MongoRepository<T> : IRepository<T> where T : BaseEntity
@@ -32,7 +32,7 @@ namespace TTL.HR.Web.Data
             return await _collection.Find(e => !e.IsDeleted).ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T?> GetByIdAsync(string id)
         {
             return await _collection.Find(e => e.Id == id && !e.IsDeleted).FirstOrDefaultAsync();
         }

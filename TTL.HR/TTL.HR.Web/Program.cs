@@ -10,6 +10,11 @@ builder.Services.AddRazorComponents()
 builder.Services.Configure<TTL.HR.Web.Data.MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 
+// Client-side services setup (Using API Repository)
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://localhost:5000/") });
+builder.Services.AddScoped(typeof(TTL.HR.Shared.Interfaces.IApiRepository<>), typeof(TTL.HR.Shared.Services.Client.ApiRepository<>));
+builder.Services.AddScoped<TTL.HR.Shared.Interfaces.IEmployeeService, TTL.HR.Shared.Services.Client.EmployeeService>();
+
 builder.Services.AddSingleton(typeof(TTL.HR.Shared.Interfaces.IRepository<>), typeof(TTL.HR.Web.Data.MongoRepository<>));
 builder.Services.AddControllers();
 

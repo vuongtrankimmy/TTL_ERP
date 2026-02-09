@@ -7,29 +7,29 @@ namespace TTL.HR.Shared.Entities.Organization
 {
     public class Department : BaseEntity
     {
-        public string Name { get; set; }
-        public string Code { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         
         [BsonRepresentation(BsonType.ObjectId)]
-        public string ParentId { get; set; } // For hierarchical structure
+        public string ParentId { get; set; } = string.Empty; // For hierarchical structure
         
         [BsonRepresentation(BsonType.ObjectId)]
-        public string ManagerId { get; set; } // Head of Department (EmployeeId)
+        public string ManagerId { get; set; } = string.Empty; // Head of Department (EmployeeId)
 
         public int Level { get; set; } // 0: Top, 1, 2...
-        public string Path { get; set; } // Materialized Path: /RootId/ChildId/
+        public string Path { get; set; } = string.Empty; // Materialized Path: /RootId/ChildId/
     }
 
     public class Position : BaseEntity
     {
-        public string Title { get; set; }
-        public string Code { get; set; }
-        public string Description { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public decimal BaseSalaryRangeMin { get; set; }
         public decimal BaseSalaryRangeMax { get; set; }
         
         [BsonRepresentation(BsonType.ObjectId)]
-        public string DepartmentId { get; set; } // Optional: link position to specific dept
+        public string DepartmentId { get; set; } = string.Empty; // Optional: link position to specific dept
     }
 }
