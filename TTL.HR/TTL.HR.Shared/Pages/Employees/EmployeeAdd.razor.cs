@@ -4,21 +4,49 @@ using System;
 using System.Threading.Tasks;
 using TTL.HR.Shared.Models;
 using TTL.HR.Shared.Components.Common;
+using TTL.HR.Shared.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TTL.HR.Shared.Pages.Employees
 {
     public partial class EmployeeAdd
     {
+        [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
+        [Inject] public IDepartmentService DepartmentService { get; set; } = default!;
+        [Inject] public IPositionService PositionService { get; set; } = default!;
+        [Inject] public IEmployeeService EmployeeService { get; set; } = default!;
+
+        private List<LookupModel> genderLookups = new();
+        private List<LookupModel> maritalStatusLookups = new();
+        private List<LookupModel> employeeStatusLookups = new();
+        private List<LookupModel> contractTypeLookups = new();
+        private List<DepartmentModel> departments = new();
+        private List<PositionModel> positions = new();
+
         private EmployeeModel newEmployee = new()
         {
-            Gender = "Nam",
-            Dept = "Kỹ thuật",
-            Status = "Thử việc",
-            ContractType = "Hợp đồng thử việc",
             IsActive = true,
             JoinDate = DateTime.Now,
             DOB = new DateTime(1995, 1, 1)
         };
+
+        protected override async Task OnInitializedAsync()
+        {
+            genderLookups = await MasterDataService.GetCachedLookupsAsync("Gender");
+            maritalStatusLookups = await MasterDataService.GetCachedLookupsAsync("MaritalStatus");
+            employeeStatusLookups = await MasterDataService.GetCachedLookupsAsync("EmployeeStatus");
+            contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType");
+            departments = await DepartmentService.GetDepartmentsAsync();
+            positions = await PositionService.GetPositionsAsync();
+
+            // Set defaults if lists are not empty
+            if (newEmployee.Gender == string.Empty) newEmployee.Gender = genderLookups.FirstOrDefault()?.Name ?? "Nam";
+            if (newEmployee.Status == string.Empty) newEmployee.Status = employeeStatusLookups.FirstOrDefault()?.Name ?? "Thử việc";
+            if (newEmployee.ContractType == string.Empty) newEmployee.ContractType = contractTypeLookups.FirstOrDefault()?.Name ?? "Hợp đồng thử việc";
+            if (newEmployee.DeptId == string.Empty) newEmployee.DeptId = departments.FirstOrDefault()?.Id ?? string.Empty;
+            if (newEmployee.PositionId == string.Empty) newEmployee.PositionId = positions.FirstOrDefault()?.Id ?? string.Empty;
+        }
 
         private CccdScanner cccdScanner;
 
@@ -75,17 +103,56 @@ namespace TTL.HR.Shared.Pages.Employees
                 showConfirmButton = false
             });
             await JSRuntime.InvokeVoidAsync("Swal.showLoading");
-            await Task.Delay(1500);
-
-            await JSRuntime.InvokeVoidAsync("Swal.fire", new
+            try 
             {
-                title = "Thành công!",
-                text = "Hồ sơ nhân viên " + newEmployee.Name + " (" + newEmployee.Id + ") đã được lưu thành công.",
-                icon = "success",
-                confirmButtonText = "Đóng"
-            });
+                var employeeEntity = new Entities.HumanResource.Employee
+                {
+                    FullName = newEmployee.Name,
+                    Email = newEmployee.Email,
+                    CompanyEmail = newEmployee.CompanyEmail,
+                    Phone = newEmployee.Phone,
+                    AvatarUrl = newEmployee.Avatar,
+                    DepartmentId = newEmployee.DeptId,
+                    PositionId = newEmployee.PositionId,
+                    JoinDate = newEmployee.JoinDate,
+                    Status = Enum.TryParse<Entities.HumanResource.EmployeeStatus>(newEmployee.Status, true, out var status) ? status : Entities.HumanResource.EmployeeStatus.Probation,
+                    Type = Enum.TryParse<Entities.HumanResource.EmploymentType>(newEmployee.ContractType, true, out var type) ? type : Entities.HumanResource.EmploymentType.FullTime,
+                    PersonalDetails = new Entities.HumanResource.PersonalInfo
+                    {
+                        DOB = newEmployee.DOB,
+                        Gender = newEmployee.Gender,
+                        Address = newEmployee.Address,
+                        Hometown = newEmployee.Hometown,
+                        IdCardNumber = newEmployee.IdCard,
+                        IdCardPlace = newEmployee.CccdIssuePlace,
+                        TaxCode = newEmployee.TaxId,
+                        BankAccount = newEmployee.BankAccountNumber,
+                        BankName = newEmployee.BankName
+                    }
+                };
 
-            Navigation.NavigateTo("/employees");
+                var created = await EmployeeService.CreateEmployeeAsync(employeeEntity);
+
+                if (created != null)
+                {
+                    await JSRuntime.InvokeVoidAsync("Swal.fire", new
+                    {
+                        title = "Thành công!",
+                        text = "Hồ sơ nhân viên " + created.FullName + " (" + created.Code + ") đã được lưu thành công.",
+                        icon = "success",
+                        confirmButtonText = "Đóng"
+                    });
+                    Navigation.NavigateTo("/employees");
+                }
+                else 
+                {
+                    await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Không thể lưu hồ sơ nhân viên. Vui lòng thử lại.", "error");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi hệ thống", ex.Message, "error");
+            }
         }
     }
 }

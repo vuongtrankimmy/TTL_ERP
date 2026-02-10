@@ -5,6 +5,21 @@ namespace TTL.HR.Shared.Pages.Dashboard
 {
     public partial class Dashboard
     {
-        // Logic cho dashboard có thể bổ sung thêm việc gọi API lấy dữ liệu thực tế tại đây
+        [Inject] public IDashboardService DashboardService { get; set; } = default!;
+        
+        private DashboardOverviewModel? _overview;
+        private bool _isLoading = true;
+
+        protected override async Task OnInitializedAsync()
+        {
+            try
+            {
+                _overview = await DashboardService.GetOverviewAsync();
+            }
+            finally
+            {
+                _isLoading = false;
+            }
+        }
     }
 }

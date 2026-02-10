@@ -56,15 +56,19 @@
                 <div class="col-md-4">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Giới tính</label>
                     <select class="form-select form-select-solid" @bind="newEmployee.Gender">
-                        <option value="Nam">Nam</option>
-                        <option value="Nữ">Nữ</option>
+                        @foreach (var item in genderLookups)
+                        {
+                            <option value="@item.Name">@item.Name</option>
+                        }
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tình trạng hôn nhân</label>
                     <select class="form-select form-select-solid" @bind="newEmployee.MaritalStatus">
-                        <option value="Độc thân">Độc thân</option>
-                        <option value="Đã kết hôn">Đã kết hôn</option>
+                        @foreach (var item in maritalStatusLookups)
+                        {
+                            <option value="@item.Name">@item.Name</option>
+                        }
                     </select>
                 </div>
             </div>
@@ -139,27 +143,30 @@
             <div class="row g-9 mb-8">
                 <div class="col-md-4">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Chức vụ / Vị trí</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.Role">
-                        <option value="">Chọn chức vụ...</option>
-                        <option value="Kỹ sư Backend">Kỹ sư Backend</option>
-                        <option value="Frontend Developer">Frontend Developer</option>
-                        <option value="Chuyên viên Nhân sự">Chuyên viên Nhân sự</option>
+                    <select class="form-select form-select-solid" @bind="newEmployee.PositionId">
+                        <option value="">Chọn chức danh...</option>
+                        @foreach (var item in positions)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Phòng ban</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.Dept">
-                        <option value="Kỹ thuật">Kỹ thuật</option>
-                        <option value="Nhân sự">Nhân sự</option>
-                        <option value="Kế toán">Kế toán</option>
+                    <select class="form-select form-select-solid" @bind="newEmployee.DeptId">
+                        @foreach (var item in departments)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Trạng thái nhân sự</label>
                     <select class="form-select form-select-solid" @bind="newEmployee.Status">
-                        <option value="Thử việc">Thử việc</option>
-                        <option value="Chính thức">Chính thức</option>
-                        <option value="Thực tập">Thực tập</option>
+                        @foreach (var item in employeeStatusLookups)
+                        {
+                            <option value="@item.Name">@item.Name</option>
+                        }
                     </select>
                 </div>
             </div>
@@ -167,10 +174,10 @@
                 <div class="col-md-4">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Loại hợp đồng</label>
                     <select class="form-select form-select-solid" @bind="newEmployee.ContractType">
-                        <option value="Hợp đồng thử việc">Hợp đồng thử việc</option>
-                        <option value="Hợp đồng 1 năm">Hợp đồng 1 năm</option>
-                        <option value="Hợp đồng 3 năm">Hợp đồng 3 năm</option>
-                        <option value="Không thời hạn">Không thời hạn</option>
+                        @foreach (var item in contractTypeLookups)
+                        {
+                            <option value="@item.Name">@item.Name</option>
+                        }
                     </select>
                 </div>
                 <div class="col-md-4">

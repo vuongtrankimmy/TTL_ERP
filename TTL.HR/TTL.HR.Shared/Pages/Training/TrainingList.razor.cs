@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using TTL.HR.Shared.Components.Training;
+using TTL.HR.Shared.Interfaces;
+using TTL.HR.Shared.Models;
 
 namespace TTL.HR.Shared.Pages.Training
 {
@@ -28,10 +30,46 @@ namespace TTL.HR.Shared.Pages.Training
         [Microsoft.AspNetCore.Components.Inject]
         public IJSRuntime JS { get; set; }
 
+        [Microsoft.AspNetCore.Components.Inject]
+        public ITrainingService TrainingService { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            await Task.Delay(800);
-            _isLoading = false;
+            await LoadData();
+        }
+
+        private async Task LoadData()
+        {
+            _isLoading = true;
+            try
+            {
+                var courses = await TrainingService.GetCoursesAsync();
+                if (courses != null)
+                {
+                    _trainings = courses.Select(c => new TrainingItemViewModel
+                    {
+                        Id = int.TryParse(c.Id, out var id) ? id : 0,
+                        Title = c.Title,
+                        Code = $"TRN-{c.Id}",
+                        Category = "Technical", // Default
+                        Trainer = c.TrainerName,
+                        Duration = $"{c.DurationHours}h",
+                        Type = "Internal",
+                        IsMandatory = true,
+                        Status = c.Status,
+                        Participants = 0,
+                        MaxParticipants = 20
+                    }).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                // Error handling
+            }
+            finally
+            {
+                _isLoading = false;
+            }
         }
 
         private void SetViewMode(bool isGrid)
@@ -101,21 +139,7 @@ namespace TTL.HR.Shared.Pages.Training
             }
         }
 
-        private List<TrainingItemViewModel> _trainings = new()
-        {
-            new() { Id = 1, Title = "Hội Nhập Văn Hóa Doanh Nghiệp", Code = "TRN-ONB", Category = "Onboarding", Trainer = "Nguyễn Thị Mai (HR)", Duration = "4h", Type = "Internal", IsMandatory = true, Status = "Active", Participants = 15, MaxParticipants = 20 },
-            new() { Id = 2, Title = "Kỹ Năng Giao Tiếp Hiệu Quả", Code = "SOFT-COMM", Category = "Soft Skills", Trainer = "Dr. Lê Thẩm Dương", Duration = "8h", Type = "External", IsMandatory = false, Status = "Active", Participants = 45, MaxParticipants = 50 },
-            new() { Id = 3, Title = "Microsoft Excel Nâng Cao", Code = "TECH-EXCEL", Category = "Technical", Trainer = "TT Tin học KHTN", Duration = "16h", Type = "External", IsMandatory = true, Status = "Active", Participants = 12, MaxParticipants = 15 },
-            new() { Id = 4, Title = "Lãnh Đạo Đội Nhóm (Leadership)", Code = "MGT-LEAD", Category = "Management", Trainer = "Dale Carnegie VN", Duration = "24h", Type = "External", IsMandatory = true, Status = "Active", Participants = 8, MaxParticipants = 10 },
-            new() { Id = 5, Title = ".NET Core & Microservices", Code = "TECH-NET", Category = "Technical", Trainer = "Tech Lead (IT Dept)", Duration = "32h", Type = "Internal", IsMandatory = true, Status = "Active", Participants = 20, MaxParticipants = 25 },
-            new() { Id = 6, Title = "Digital Marketing Masterclass", Code = "MKT-DIGI", Category = "Marketing", Trainer = "Google Expert", Duration = "20h", Type = "External", IsMandatory = false, Status = "Draft", Participants = 0, MaxParticipants = 30 },
-            new() { Id = 7, Title = "An Toàn Lao Động & PCCC", Code = "SAFE-FIRE", Category = "Technical", Trainer = "PCCC Quận 1", Duration = "8h", Type = "External", IsMandatory = true, Status = "Active", Participants = 100, MaxParticipants = 150 },
-            new() { Id = 8, Title = "Kỹ Năng Giải Quyết Vấn Đề", Code = "SOFT-PROB", Category = "Soft Skills", Trainer = "Phan Thanh Tùng", Duration = "12h", Type = "Internal", IsMandatory = false, Status = "Active", Participants = 18, MaxParticipants = 25 },
-            new() { Id = 9, Title = "Quản Trị Dự Án Agile/Scrum", Code = "MGT-SCRUM", Category = "Management", Trainer = "Scrum Alliance", Duration = "16h", Type = "External", IsMandatory = true, Status = "Active", Participants = 12, MaxParticipants = 12 },
-            new() { Id = 10, Title = "Tiếng Anh Giao Tiếp Công Sở", Code = "SOFT-ENG", Category = "Soft Skills", Trainer = "British Council", Duration = "48h", Type = "External", IsMandatory = false, Status = "Active", Participants = 25, MaxParticipants = 30 },
-            new() { Id = 11, Title = "Bảo Mật Thông Tin & Dữ Liệu", Code = "TECH-SEC", Category = "Technical", Trainer = "Security Team", Duration = "6h", Type = "Internal", IsMandatory = true, Status = "Active", Participants = 150, MaxParticipants = 200 },
-            new() { Id = 12, Title = "Kỹ Năng Thuyết Trình Ấn Tượng", Code = "SOFT-PRES", Category = "Soft Skills", Trainer = "VTV Academy", Duration = "16h", Type = "External", IsMandatory = false, Status = "Completed", Participants = 20, MaxParticipants = 20 }
-        };
+        private List<TrainingItemViewModel> _trainings = new();
 
         private IEnumerable<TrainingItemViewModel> FilteredTrainings => _trainings
             .Where(t => string.IsNullOrWhiteSpace(SearchTerm) || t.Title.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) || t.Code.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))

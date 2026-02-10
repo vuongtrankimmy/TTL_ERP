@@ -16,11 +16,43 @@ namespace TTL.HR.Shared.Pages.Leave
         private ApprovalItem? _selectedRequest;
         private ApprovalItem? _requestToProcess;
 
+        [Inject] private ILeaveService LeaveService { get; set; } = default!;
+
         protected override async Task OnInitializedAsync()
         {
-            // Simulate API loading
-            await Task.Delay(1000);
-            _isLoading = false;
+            await LoadData();
+        }
+
+        private async Task LoadData()
+        {
+            _isLoading = true;
+            try
+            {
+                var requests = await LeaveService.GetLeaveRequestsAsync();
+                if (requests != null)
+                {
+                    _approvals = requests.Select(r => new ApprovalItem
+                    {
+                        Id = int.TryParse(r.Id, out var id) ? id : 0,
+                        Name = r.EmployeeName,
+                        Department = "General",
+                        Avatar = "",
+                        Type = r.Type,
+                        DateRange = $"{r.StartDate:dd/MM} - {r.EndDate:dd/MM}",
+                        Duration = r.TotalDays.ToString("F1"),
+                        Reason = r.Reason,
+                        Status = r.Status
+                    }).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                // Error handling
+            }
+            finally
+            {
+                _isLoading = false;
+            }
         }
 
         private string _modalTitle = "";
@@ -72,20 +104,14 @@ namespace TTL.HR.Shared.Pages.Leave
         {
             if (_requestToProcess == null) return;
 
-            // In a real app, call API here
-            if (_actionType == "APPROVE")
+            string status = _actionType == "APPROVE" ? "Approved" : "Rejected";
+            var success = await LeaveService.ApproveLeaveRequestAsync(_requestToProcess.Id.ToString(), status);
+
+            if (success)
             {
-                _requestToProcess.Status = "Approved";
+                _requestToProcess.Status = status;
                 _requestToProcess.ManagerNote = reason;
                 _approvals.Remove(_requestToProcess);
-                await JSRuntime.InvokeVoidAsync("console.log", "Approved request " + _requestToProcess.Id);
-            }
-            else if (_actionType == "REJECT")
-            {
-                _requestToProcess.Status = "Rejected";
-                _requestToProcess.ManagerNote = reason;
-                _approvals.Remove(_requestToProcess);
-                await JSRuntime.InvokeVoidAsync("console.log", "Rejected request " + _requestToProcess.Id);
             }
 
             if (_selectedRequest == _requestToProcess)
@@ -104,19 +130,6 @@ namespace TTL.HR.Shared.Pages.Leave
 
         private List<ApprovalItem> _approvals = new()
         {
-            new() { Id = 1, Name = "Nguyễn Văn An", Department = "Phòng Kỹ thuật", Avatar = "assets/media/avatars/300-1.jpg", Type = "Nghỉ phép năm", DateRange = "15/10 - 16/10", Duration = "2.0", Reason = "Việc gia đình ở quê cần giải quyết gấp." },
-            new() { Id = 2, Name = "Lê Thị Mai", Department = "Phòng Marketing", Avatar = "assets/media/avatars/300-2.jpg", Type = "Nghỉ ốm", DateRange = "12/10 - 12/10", Duration = "1.0", Reason = "Sốt xuất huyết, có giấy khám của bác sĩ đính kèm." },
-            new() { Id = 3, Name = "Trần Đức Hòa", Department = "Phòng Kinh doanh", Avatar = "", Type = "Đi công tác", DateRange = "20/10 - 22/10", Duration = "3.0", Reason = "Gặp đối tác tại Đà Nẵng để ký kết hợp đồng dự án mới." },
-            new() { Id = 4, Name = "Phạm Minh Tuấn", Department = "Phòng Nhân sự", Avatar = "assets/media/avatars/300-3.jpg", Type = "Nghỉ không lương", DateRange = "18/10", Duration = "1.0", Reason = "Giải quyết thủ tục hành chính đất đai." },
-            new() { Id = 5, Name = "Kiều Linh", Department = "Phòng Marketing", Avatar = "", Type = "Nghỉ thai sản", DateRange = "01/11 - 30/04", Duration = "180.0", Reason = "Nghỉ chế độ thai sản theo quy định luật lao động." },
-            new() { Id = 6, Name = "Vũ Hoàng Long", Department = "Phòng Kỹ thuật", Avatar = "assets/media/avatars/300-4.jpg", Type = "Làm việc từ xa", DateRange = "05/11 - 06/11", Duration = "2.0", Reason = "Hỗ trợ deploy hệ thống ban đêm, xin làm remote bù." },
-            new() { Id = 7, Name = "Bùi Hồng", Department = "Phòng HC-NS", Avatar = "", Type = "Nghỉ ốm", DateRange = "28/10", Duration = "0.5", Reason = "Đi tái khám định kỳ tại bệnh viện." },
-            new() { Id = 8, Name = "Trần Văn Cường", Department = "Phòng Kỹ thuật", Avatar = "assets/media/avatars/300-5.jpg", Type = "Nghỉ phép năm", DateRange = "01/11 - 05/11", Duration = "5.0", Reason = "Đưa gia đình đi du lịch nước ngoài theo kế hoạch." },
-            new() { Id = 9, Name = "Mai Duy", Department = "Phòng Kinh doanh", Avatar = "", Type = "Đi công tác", DateRange = "10/11 - 13/11", Duration = "4.0", Reason = "Training sản phẩm mới cho chi nhánh khu vực miền Nam." },
-            new() { Id = 10, Name = "Lý Thái Tổ", Department = "Ban Giám Đốc", Avatar = "assets/media/avatars/300-6.jpg", Type = "Nghỉ phép năm", DateRange = "20/12 - 31/12", Duration = "10.0", Reason = "Nghỉ phép tiêu chuẩn cuối năm." },
-            new() { Id = 11, Name = "Đỗ Thùy Trang", Department = "Phòng Kế toán", Avatar = "assets/media/avatars/300-7.jpg", Type = "Nghỉ không lương", DateRange = "25/11", Duration = "0.5", Reason = "Việc riêng gia đình không thể sắp xếp khác." },
-            new() { Id = 12, Name = "Hoàng Gia Bảo", Department = "IT Support", Avatar = "", Type = "Nghỉ ốm", DateRange = "02/11 - 04/11", Duration = "3.0", Reason = "Viêm họng cấp cần nghỉ ngơi điều trị." },
-            new() { Id = 13, Name = "Phan Anh", Department = "Phòng Thiết kế", Avatar = "assets/media/avatars/300-8.jpg", Type = "Đi công tác", DateRange = "15/11 - 16/11", Duration = "1.5", Reason = "Khảo sát mặt bằng thi công thực tế cho dự án mới." }
         };
 
         private class ApprovalItem

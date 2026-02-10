@@ -10,7 +10,7 @@ namespace TTL.HR.Shared.Services.Client
     public class EmployeeService : IEmployeeService
     {
         private readonly IApiRepository<Employee> _repository;
-        private const string Endpoint = "api/employee";
+        private const string Endpoint = "api/v1/employees";
 
         public EmployeeService(IApiRepository<Employee> repository)
         {

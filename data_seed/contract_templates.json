@@ -10,6 +10,8 @@
         "ContentHtml": "<p>Nội dung hợp đồng thử việc...</p>",
         "FilePath": "/templates/HD-TV-01.docx",
         "Status": "Active",
+        "Icon": "bi bi-file-earmark-person",
+        "Color": "primary",
         "CreatedAt": {
             "$date": "2023-01-01T00:00:00Z"
         },
@@ -26,6 +28,8 @@
         "ContentHtml": "<p>Nội dung hợp đồng 12 tháng...</p>",
         "FilePath": "/templates/HD-LD-12M.docx",
         "Status": "Active",
+        "Icon": "bi bi-file-earmark-richtext",
+        "Color": "success",
         "CreatedAt": {
             "$date": "2023-01-01T00:00:00Z"
         },
@@ -42,38 +46,8 @@
         "ContentHtml": "<p>Nội dung hợp đồng 36 tháng...</p>",
         "FilePath": "/templates/HD-LD-36M.docx",
         "Status": "Active",
-        "CreatedAt": {
-            "$date": "2023-01-01T00:00:00Z"
-        },
-        "IsDeleted": false
-    },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000004"
-        },
-        "Name": "Hợp đồng lao động không xác định thời hạn",
-        "Code": "HD-LD-KTH",
-        "Description": "Dành cho nhân viên thâm niên",
-        "Type": "Indefinite",
-        "ContentHtml": "<p>Nội dung hợp đồng không thời hạn...</p>",
-        "FilePath": "/templates/HD-LD-KTH.docx",
-        "Status": "Active",
-        "CreatedAt": {
-            "$date": "2023-01-01T00:00:00Z"
-        },
-        "IsDeleted": false
-    },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000005"
-        },
-        "Name": "Hợp đồng Đào tạo nghề",
-        "Code": "HD-DT",
-        "Description": "Cam kết đào tạo và làm việc",
-        "Type": "Training",
-        "ContentHtml": "<p>Nội dung đào tạo...</p>",
-        "FilePath": "/templates/HD-DT.docx",
-        "Status": "Active",
+        "Icon": "bi bi-file-earmark-richtext-fill",
+        "Color": "info",
         "CreatedAt": {
             "$date": "2023-01-01T00:00:00Z"
         },
@@ -90,72 +64,10 @@
         "ContentHtml": "<p>Điều khoản bảo mật...</p>",
         "FilePath": "/templates/NDA-01.docx",
         "Status": "Active",
+        "Icon": "bi bi-shield-lock",
+        "Color": "danger",
         "CreatedAt": {
             "$date": "2023-01-01T00:00:00Z"
-        },
-        "IsDeleted": false
-    },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000007"
-        },
-        "Name": "Hợp đồng Cộng tác viên",
-        "Code": "HD-CTV",
-        "Description": "Dành cho nhân sự không chính thức",
-        "Type": "Collaborator",
-        "ContentHtml": "<p>Điều khoản CTV...</p>",
-        "FilePath": "/templates/HD-CTV.docx",
-        "Status": "Active",
-        "CreatedAt": {
-            "$date": "2023-01-01T00:00:00Z"
-        },
-        "IsDeleted": false
-    },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000008"
-        },
-        "Name": "Hợp đồng Tư vấn (Consulting)",
-        "Code": "HD-TVAN",
-        "Description": "Thuê chuyên gia tư vấn ngoài",
-        "Type": "Contractor",
-        "ContentHtml": "<p>Điều khoản tư vấn...</p>",
-        "FilePath": "/templates/HD-TVAN.docx",
-        "Status": "Draft",
-        "CreatedAt": {
-            "$date": "2024-01-01T00:00:00Z"
-        },
-        "IsDeleted": false
-    },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000009"
-        },
-        "Name": "Hợp đồng Thử việc (Quản lý)",
-        "Code": "HD-TV-MGR",
-        "Description": "Thử việc cho cấp quản lý (2 tháng)",
-        "Type": "Probation",
-        "ContentHtml": "<p>Nội dung thử việc quản lý...</p>",
-        "FilePath": "/templates/HD-TV-MGR.docx",
-        "Status": "Active",
-        "CreatedAt": {
-            "$date": "2023-01-01T00:00:00Z"
-        },
-        "IsDeleted": false
-    },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000010"
-        },
-        "Name": "Phụ lục điều chỉnh lương",
-        "Code": "PL-LUONG-2024",
-        "Description": "Mẫu phụ lục tăng lương định kỳ",
-        "Type": "Official_12M",
-        "ContentHtml": "<p>Điều chỉnh...</p>",
-        "FilePath": "/templates/PL-LUONG.docx",
-        "Status": "Active",
-        "CreatedAt": {
-            "$date": "2024-01-01T00:00:00Z"
         },
         "IsDeleted": false
     }

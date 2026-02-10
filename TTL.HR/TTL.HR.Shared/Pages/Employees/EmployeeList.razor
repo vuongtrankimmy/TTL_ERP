@@ -1,4 +1,7 @@
 @page "/employees"
+@inject TTL.HR.Shared.Interfaces.IEmployeeService EmployeeService
+@inject TTL.HR.Shared.Interfaces.IMasterDataService MasterDataService
+@inject TTL.HR.Shared.Interfaces.IDepartmentService DepartmentService
 
 <div class="card">
     <div class="card-header border-0 pt-6">
@@ -31,22 +34,21 @@
                     <div class="mb-10">
                         <label class="form-label fs-6 fw-bold">Phòng ban:</label>
                         <select class="form-select form-select-solid fw-bolder" @bind="filterDept">
-                            <option value="">Vui lòng chọn</option>
-                            <option value="Kỹ thuật">Kỹ thuật</option>
-                            <option value="Nhân sự">Nhân sự</option>
-                            <option value="Tài chính">Tài chính</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="Kinh doanh">Kinh doanh</option>
+                            <option value="">Tất cả phòng ban</option>
+                            @foreach(var dept in CachedDepartments)
+                            {
+                                <option value="@dept.Name">@dept.Name</option>
+                            }
                         </select>
                     </div>
                     <div class="mb-10">
                         <label class="form-label fs-6 fw-bold">Trạng thái:</label>
                         <select class="form-select form-select-solid fw-bolder" @bind="filterStatus">
-                            <option value="">Vui lòng chọn</option>
-                            <option value="Chính thức">Chính thức</option>
-                            <option value="Thử việc">Thử việc</option>
-                            <option value="Nghỉ việc">Nghỉ việc</option>
-                            <option value="Thai sản">Thai sản</option>
+                            <option value="">Tất cả trạng thái</option>
+                            @foreach(var status in CachedStatuses)
+                            {
+                                <option value="@status.Name">@status.Name</option>
+                            }
                         </select>
                     </div>
                     <div class="d-flex justify-content-end">
@@ -508,11 +510,42 @@
     private double contextMenuY = 0;
     private bool _isLoading = true;
 
+    private List<DepartmentModel> CachedDepartments = new();
+    private List<LookupModel> CachedStatuses = new();
+
     protected override async Task OnInitializedAsync()
     {
-        // Simulate API loading
-        await Task.Delay(1400);
-        _isLoading = false;
+        _isLoading = true;
+        try 
+        {
+            var empList = await EmployeeService.GetEmployeesAsync();
+            employees = empList.Select(e => new EmployeeModel
+            {
+                Id = e.Code,
+                Name = e.FullName,
+                Email = e.Email,
+                CompanyEmail = e.CompanyEmail,
+                Dept = e.DepartmentId, // In a real app, we'd fetch the name or include it
+                Role = e.PositionId,
+                JoinDate = e.JoinDate,
+                Status = e.Status.ToString(),
+                Avatar = e.AvatarUrl,
+                IdCard = e.PersonalDetails?.IdCardNumber ?? "",
+                DOB = e.PersonalDetails?.DOB,
+                Gender = e.PersonalDetails?.Gender ?? "",
+                Address = e.PersonalDetails?.Address ?? "",
+                Hometown = e.PersonalDetails?.Hometown ?? "",
+                Salary = e.PersonalDetails?.TaxCode ?? "", // Just a placeholder
+                IsActive = true
+            }).ToList();
+            
+            CachedDepartments = await DepartmentService.GetDepartmentsAsync();
+            CachedStatuses = await MasterDataService.GetCachedLookupsAsync("EmployeeStatus");
+        }
+        finally 
+        {
+            _isLoading = false;
+        }
     }
 
     private int currentPage = 1;
@@ -528,105 +561,7 @@
     private bool isAllSelected => FilteredEmployees.Any() && selectedIds.Count >= FilteredEmployees.Count();
 
     private EmployeeModel selectedEmployee = new();
-    private List<EmployeeModel> employees = new()
-    {
-        new EmployeeModel { 
-            Id = "NV001", Name = "Nguyễn Văn An", Email = "an.nv@personal.com", CompanyEmail = "an.nv@ttlloc.vn", Dept = "Kỹ thuật", Role = "Kỹ sư Backend", JoinDate = new DateTime(2021, 5, 1), Status = "Chính thức", Avatar = "assets/media/avatars/300-1.jpg",
-            IdCard = "001092001234", DOB = new DateTime(1992, 5, 15), Gender = "Nam", Phone = "0987654321", Address = "123 Đường Láng, Hà Nội", ContractType = "Xác định thời hạn (3 năm)", Salary = "25,000,000 VNĐ", ContractExpiry = new DateTime(2024, 5, 12), Username = "an.nv.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV002", Name = "Lê Thị Mai", Email = "mai.lt@personal.com", CompanyEmail = "mai.lt@ttlloc.vn", Dept = "Marketing", Role = "Chuyên viên Content", JoinDate = new DateTime(2022, 6, 15), Status = "Thử việc", Avatar = "assets/media/avatars/300-2.jpg",
-            IdCard = "001095005678", DOB = new DateTime(1995, 8, 20), Gender = "Nữ", Phone = "0912345678", Address = "456 Cầu Giấy, Hà Nội", ContractType = "Thử việc", Salary = "12,000,000 VNĐ", ContractExpiry = new DateTime(2022, 8, 15), Username = "mai.lt.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV003", Name = "Phạm Hoàng", Email = "hoang.p@personal.com", CompanyEmail = "hoang.p@ttlloc.vn", Dept = "Kỹ thuật", Role = "Team Lead", JoinDate = new DateTime(2020, 1, 10), Status = "Chính thức", Avatar = "",
-            IdCard = "001088009900", DOB = new DateTime(1988, 1, 10), Gender = "Nam", Phone = "0909090909", Address = "789 Hai Bà Trưng, HCM", ContractType = "Không thời hạn", Salary = "45,000,000 VNĐ", ContractExpiry = null, Username = "hoang.p.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV004", Name = "Trần Minh", Email = "minh.t@personal.com", CompanyEmail = "minh.t@ttlloc.vn", Dept = "Nhân sự", Role = "Trưởng phòng NS", JoinDate = new DateTime(2019, 3, 5), Status = "Chính thức", Avatar = "assets/media/avatars/300-3.jpg",
-            IdCard = "001085001122", DOB = new DateTime(1985, 3, 5), Gender = "Nam", Phone = "0988888888", Address = "321 Tây Sơn, Hà Nội", ContractType = "Không thời hạn", Salary = "35,000,000 VNĐ", ContractExpiry = null, Username = "minh.t.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV005", Name = "Đặng Hồng Nhung", Email = "nhung.dh@personal.com", CompanyEmail = "nhung.dh@ttlloc.vn", Dept = "Kế toán", Role = "Kế toán trưởng", JoinDate = new DateTime(2020, 11, 20), Status = "Chính thức", Avatar = "assets/media/avatars/300-5.jpg",
-            IdCard = "001090003344", DOB = new DateTime(1990, 11, 20), Gender = "Nữ", Phone = "0977777777", Address = "15 Khâm Thiên, Hà Nội", ContractType = "Không thời hạn", Salary = "28,000,000 VNĐ", ContractExpiry = null, Username = "nhung.dh.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV006", Name = "Hoàng Văn Thái", Email = "thai.hv@personal.com", CompanyEmail = "thai.hv@ttlloc.vn", Dept = "Kỹ thuật", Role = "Kỹ sư DevOps", JoinDate = new DateTime(2021, 8, 12), Status = "Chính thức", Avatar = "assets/media/avatars/300-6.jpg",
-            IdCard = "001093005566", DOB = new DateTime(1993, 8, 12), Gender = "Nam", Phone = "0966666666", Address = "78 Lê Duẩn, Hà Nội", ContractType = "Xác định thời hạn (3 năm)", Salary = "30,000,000 VNĐ", ContractExpiry = new DateTime(2024, 8, 12), Username = "thai.hv.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV007", Name = "Bùi Kim Liên", Email = "lien.bk@personal.com", CompanyEmail = "lien.bk@ttlloc.vn", Dept = "Nhân sự", Role = "Chuyên viên Tuyển dụng", JoinDate = new DateTime(2023, 3, 1), Status = "Chính thức", Avatar = "assets/media/avatars/300-7.jpg",
-            IdCard = "001097007788", DOB = new DateTime(1997, 1, 1), Gender = "Nữ", Phone = "0955555555", Address = "22 Trần Duy Hưng, Hà Nội", ContractType = "Xác định thời hạn (1 năm)", Salary = "15,000,000 VNĐ", ContractExpiry = new DateTime(2024, 3, 1), Username = "lien.bk.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV008", Name = "Vũ Anh Tuấn", Email = "tuan.va@personal.com", CompanyEmail = "tuan.va@ttlloc.vn", Dept = "Kỹ thuật", Role = "Frontend Developer", JoinDate = new DateTime(2023, 9, 15), Status = "Thử việc", Avatar = "assets/media/avatars/300-8.jpg",
-            IdCard = "001099009911", DOB = new DateTime(1999, 9, 15), Gender = "Nam", Phone = "0944444444", Address = "101 Láng Hạ, Hà Nội", ContractType = "Thử việc", Salary = "18,000,000 VNĐ", ContractExpiry = new DateTime(2023, 11, 15), Username = "tuan.va.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV009", Name = "Ngô Gia Bảo", Email = "bao.ng@personal.com", CompanyEmail = "bao.ng@ttlloc.vn", Dept = "Marketing", Role = "Digital Marketing", JoinDate = new DateTime(2022, 10, 10), Status = "Chính thức", Avatar = "assets/media/avatars/300-9.jpg",
-            IdCard = "001096002233", DOB = new DateTime(1996, 10, 10), Gender = "Nam", Phone = "0933333333", Address = "88 Thái Hà, Hà Nội", ContractType = "Xác định thời hạn (2 năm)", Salary = "20,000,000 VNĐ", ContractExpiry = new DateTime(2024, 10, 10), Username = "bao.ng.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV010", Name = "Phan Tuyết Nhi", Email = "nhi.pt@personal.com", CompanyEmail = "nhi.pt@ttlloc.vn", Dept = "Kế toán", Role = "Kế toán viên", JoinDate = new DateTime(2024, 1, 5), Status = "Thử việc", Avatar = "assets/media/avatars/300-10.jpg",
-            IdCard = "001001004455", DOB = new DateTime(2001, 1, 5), Gender = "Nữ", Phone = "0922222222", Address = "55 Kim Mã, Hà Nội", ContractType = "Thử việc", Salary = "10,000,000 VNĐ", ContractExpiry = new DateTime(2024, 3, 5), Username = "nhi.pt.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV011", Name = "Lý Minh Triết", Email = "triet.lm@personal.com", CompanyEmail = "triet.lm@ttlloc.vn", Dept = "Kỹ thuật", Role = "Mobile Developer", JoinDate = new DateTime(2022, 2, 20), Status = "Chính thức", Avatar = "assets/media/avatars/300-11.jpg",
-            IdCard = "001094002233", DOB = new DateTime(1994, 2, 20), Gender = "Nam", Phone = "0911223344", Address = "12 Chùa Bộc, Hà Nội", ContractType = "Xác định thời hạn (2 năm)", Salary = "22,000,000 VNĐ", ContractExpiry = new DateTime(2024, 2, 20), Username = "triet.lm.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV012", Name = "Trương Mỹ Linh", Email = "linh.tm@personal.com", CompanyEmail = "linh.tm@ttlloc.vn", Dept = "Marketing", Role = "Designer", JoinDate = new DateTime(2023, 7, 10), Status = "Chính thức", Avatar = "assets/media/avatars/300-12.jpg",
-            IdCard = "001098006677", DOB = new DateTime(1998, 7, 10), Gender = "Nữ", Phone = "0922334455", Address = "45 Nguyễn Trãi, Thanh Xuân", ContractType = "Xác định thời hạn (1 năm)", Salary = "16,000,000 VNĐ", ContractExpiry = new DateTime(2024, 7, 10), Username = "linh.tm.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV013", Name = "Bùi Anh Đức", Email = "duc.ba@personal.com", CompanyEmail = "duc.ba@ttlloc.vn", Dept = "Kinh doanh", Role = "Account Manager", JoinDate = new DateTime(2021, 12, 1), Status = "Chính thức", Avatar = "assets/media/avatars/300-13.jpg",
-            IdCard = "001091008899", DOB = new DateTime(1991, 12, 1), Gender = "Nam", Phone = "0933445566", Address = "78 Lạc Long Quân, Hà Nội", ContractType = "Không thời hạn", Salary = "20,000,000 VNĐ", ContractExpiry = null, Username = "duc.ba.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV014", Name = "Vương Thu Thủy", Email = "thuy.vt@personal.com", CompanyEmail = "thuy.vt@ttlloc.vn", Dept = "Hành chính", Role = "Lễ tân", JoinDate = new DateTime(2024, 2, 1), Status = "Thử việc", Avatar = "assets/media/avatars/300-14.jpg",
-            IdCard = "002002001122", DOB = new DateTime(2002, 5, 10), Gender = "Nữ", Phone = "0944556677", Address = "101 Đê La Thành, Hà Nội", ContractType = "Thử việc", Salary = "8,000,000 VNĐ", ContractExpiry = new DateTime(2024, 4, 1), Username = "thuy.vt.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV015", Name = "Đỗ Cao Cường", Email = "cuong.dc@personal.com", CompanyEmail = "cuong.dc@ttlloc.vn", Dept = "Kỹ thuật", Role = "QA/QC", JoinDate = new DateTime(2023, 1, 15), Status = "Chính thức", Avatar = "assets/media/avatars/300-15.jpg",
-            IdCard = "001096004455", DOB = new DateTime(1996, 1, 15), Gender = "Nam", Phone = "0955667788", Address = "22 Hàng Bạc, Hoàn Kiếm", ContractType = "Xác định thời hạn (3 năm)", Salary = "18,000,000 VNĐ", ContractExpiry = new DateTime(2026, 1, 15), Username = "cuong.dc.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV016", Name = "Ngô Bích Phương", Email = "phuong.nb@personal.com", CompanyEmail = "phuong.nb@ttlloc.vn", Dept = "Nhân sự", Role = "C&B Specialist", JoinDate = new DateTime(2022, 9, 20), Status = "Chính thức", Avatar = "assets/media/avatars/300-16.jpg",
-            IdCard = "001094007788", DOB = new DateTime(1994, 9, 20), Gender = "Nữ", Phone = "0966778899", Address = "67 Trần Phú, Ba Đình", ContractType = "Không thời hạn", Salary = "22,000,000 VNĐ", ContractExpiry = null, Username = "phuong.nb.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV017", Name = "Lương Thế Thành", Email = "thanh.lt@personal.com", CompanyEmail = "thanh.lt@ttlloc.vn", Dept = "Kinh doanh", Role = "Sales Executive", JoinDate = new DateTime(2023, 11, 10), Status = "Chính thức", Avatar = "assets/media/avatars/300-17.jpg",
-            IdCard = "001095001133", DOB = new DateTime(1995, 3, 22), Gender = "Nam", Phone = "0977889900", Address = "34 Định Công, Hà Nội", ContractType = "Xác định thời hạn (1 năm)", Salary = "14,000,000 VNĐ", ContractExpiry = new DateTime(2024, 11, 10), Username = "thanh.lt.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV018", Name = "Tạ Minh Quân", Email = "quan.tm@personal.com", CompanyEmail = "quan.tm@ttlloc.vn", Dept = "Kỹ thuật", Role = "Security Engineer", JoinDate = new DateTime(2021, 4, 1), Status = "Chính thức", Avatar = "assets/media/avatars/300-18.jpg",
-            IdCard = "001092003344", DOB = new DateTime(1992, 10, 5), Gender = "Nam", Phone = "0988990011", Address = "89 Trường Chinh, Hà Nội", ContractType = "Không thời hạn", Salary = "32,000,000 VNĐ", ContractExpiry = null, Username = "quan.tm.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV019", Name = "Hà Thu Hà", Email = "ha.ht@personal.com", CompanyEmail = "ha.ht@ttlloc.vn", Dept = "Marketing", Role = "Social Media", JoinDate = new DateTime(2024, 1, 15), Status = "Thử việc", Avatar = "assets/media/avatars/300-19.jpg",
-            IdCard = "003001005566", DOB = new DateTime(2001, 12, 12), Gender = "Nữ", Phone = "0999001122", Address = "56 Kim Ngưu, Hai Bà Trưng", ContractType = "Thử việc", Salary = "11,000,000 VNĐ", ContractExpiry = new DateTime(2024, 3, 15), Username = "ha.ht.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV020", Name = "Bạch Vĩnh Hưng", Email = "hung.bv@personal.com", CompanyEmail = "hung.bv@ttlloc.vn", Dept = "Tài chính", Role = "Phân tích tài chính", JoinDate = new DateTime(2020, 5, 20), Status = "Chính thức", Avatar = "assets/media/avatars/300-20.jpg",
-            IdCard = "001089007788", DOB = new DateTime(1989, 5, 20), Gender = "Nam", Phone = "0912121212", Address = "11 Lý Thường Kiệt, Hà Nội", ContractType = "Không thời hạn", Salary = "38,000,000 VNĐ", ContractExpiry = null, Username = "hung.bv.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV021", Name = "Mai Phương Thảo", Email = "thao.mp@personal.com", CompanyEmail = "thao.mp@ttlloc.vn", Dept = "Kỹ thuật", Role = "Front-end Dev", JoinDate = new DateTime(2023, 10, 1), Status = "Chính thức", Avatar = "assets/media/avatars/300-21.jpg",
-            IdCard = "001099003311", DOB = new DateTime(1999, 1, 18), Gender = "Nữ", Phone = "0923232323", Address = "23 Tôn Thất Tùng, Hà Nội", ContractType = "Xác định thời hạn (2 năm)", Salary = "20,000,000 VNĐ", ContractExpiry = new DateTime(2025, 10, 1), Username = "thao.mp.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV022", Name = "Dương Quốc Anh", Email = "anh.dq@personal.com", CompanyEmail = "anh.dq@ttlloc.vn", Dept = "Kinh doanh", Role = "Telesales", JoinDate = new DateTime(2024, 1, 20), Status = "Thử việc", Avatar = "assets/media/avatars/300-22.jpg",
-            IdCard = "001002008899", DOB = new DateTime(2002, 8, 30), Gender = "Nam", Phone = "0934343434", Address = "45 Bạch Mai, Hà Nội", ContractType = "Thử việc", Salary = "7,500,000 VNĐ", ContractExpiry = new DateTime(2024, 3, 20), Username = "anh.dq.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV023", Name = "Phạm Lê Uyên", Email = "uyen.pl@personal.com", CompanyEmail = "uyen.pl@ttlloc.vn", Dept = "Kế toán", Role = "Kế toán tổng hợp", JoinDate = new DateTime(2022, 1, 10), Status = "Chính thức", Avatar = "assets/media/avatars/300-23.jpg",
-            IdCard = "001093001122", DOB = new DateTime(1993, 1, 10), Gender = "Nữ", Phone = "0945454545", Address = "78 Giải Phóng, Hà Nội", ContractType = "Không thời hạn", Salary = "19,000,000 VNĐ", ContractExpiry = null, Username = "uyen.pl.erp", Password = "password123", IsActive = true
-        },
-        new EmployeeModel { 
-            Id = "NV024", Name = "Trần Thanh Bình", Email = "binh.tt@personal.com", CompanyEmail = "binh.tt@ttlloc.vn", Dept = "Kỹ thuật", Role = "Product Owner", JoinDate = new DateTime(2020, 8, 15), Status = "Chính thức", Avatar = "assets/media/avatars/300-24.jpg",
-            IdCard = "001087005566", DOB = new DateTime(1987, 8, 15), Gender = "Nam", Phone = "0956565656", Address = "90 Nguyễn Chí Thanh, Hà Nội", ContractType = "Không thời hạn", Salary = "50,000,000 VNĐ", ContractExpiry = null, Username = "binh.tt.erp", Password = "password123", IsActive = true
-        }
-    };
+    private List<EmployeeModel> employees = new();
 
     private IEnumerable<EmployeeModel> FilteredEmployees => employees
         .Where(e => (string.IsNullOrEmpty(searchQuery) || e.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || e.Id.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
@@ -783,7 +718,7 @@
         ");
 
         if (result) {
-            // Giả lập xóa nhân viên khỏi danh sách
+            await EmployeeService.DeleteEmployeeAsync(selectedEmployee.Id);
             var empToRemove = employees.FirstOrDefault(e => e.Id == selectedEmployee.Id);
             if (empToRemove != null)
             {

@@ -13,8 +13,8 @@
     <TieredPGO>true</TieredPGO>
     <GarbageCollectionAdaptationMode>2</GarbageCollectionAdaptationMode>
 
-    <AssemblyVersion>26.2.9.256</AssemblyVersion>
-    <FileVersion>26.2.9.256</FileVersion>
+    <AssemblyVersion>26.2.10.259</AssemblyVersion>
+    <FileVersion>26.2.10.259</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

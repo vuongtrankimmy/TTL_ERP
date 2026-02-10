@@ -7,7 +7,9 @@ namespace TTL.HR.Shared.Models
         public string Email { get; set; } = string.Empty;
         public string CompanyEmail { get; set; } = string.Empty;
         public string Dept { get; set; } = string.Empty;
+        public string DeptId { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+        public string PositionId { get; set; } = string.Empty;
         public DateTime? JoinDate { get; set; }
         public string Status { get; set; } = string.Empty;
         public string Avatar { get; set; } = string.Empty;

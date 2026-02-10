@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using TTL.HR.Shared.Interfaces;
+using TTL.HR.Shared.Models;
 
 namespace TTL.HR.Shared.Services.Client
 {
@@ -19,7 +20,8 @@ namespace TTL.HR.Shared.Services.Client
         {
             try
             {
-                return await _httpClient.GetFromJsonAsync<IEnumerable<T>>(endpoint) ?? new List<T>();
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<T>>>(endpoint);
+                return response?.Data ?? new List<T>();
             }
             catch
             {
@@ -31,7 +33,8 @@ namespace TTL.HR.Shared.Services.Client
         {
             try
             {
-                return await _httpClient.GetFromJsonAsync<T>($"{endpoint}/{id}");
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<T>>($"{endpoint}/{id}");
+                return response != null ? response.Data : null;
             }
             catch
             {
@@ -44,7 +47,8 @@ namespace TTL.HR.Shared.Services.Client
             var response = await _httpClient.PostAsJsonAsync(endpoint, entity);
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<T>();
+                var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<T>>();
+                return apiResponse != null ? apiResponse.Data : null;
             }
             return null;
         }
