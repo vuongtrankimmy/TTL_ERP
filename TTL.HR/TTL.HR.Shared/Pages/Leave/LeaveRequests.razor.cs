@@ -1,6 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using TTL.HR.Application.Modules.Leave.Interfaces;
+using TTL.HR.Application.Modules.Leave.Models;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Shared.Pages.Leave
 {
@@ -13,11 +18,46 @@ namespace TTL.HR.Shared.Pages.Leave
         private LeaveRequestItem? _selectedRequest;
         private LeaveRequestItem? _requestToProcess;
         
+        [Inject] private ILeaveService LeaveService { get; set; } = default!;
+
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
-            // Simulate API loading
-            await System.Threading.Tasks.Task.Delay(1500);
-            _isLoading = false;
+            await LoadData();
+        }
+
+        private async System.Threading.Tasks.Task LoadData()
+        {
+            _isLoading = true;
+            try
+            {
+                var requests = await LeaveService.GetLeaveRequestsAsync();
+                if (requests != null)
+                {
+                    _leaveRequests = requests.Select(r => new LeaveRequestItem
+                    {
+                        Id = r.Id,
+                        Name = r.EmployeeName,
+                        Department = "General",
+                        Avatar = "",
+                        AvatarBg = "bg-primary",
+                        Type = r.Type,
+                        TypeColor = r.Type == "Nghỉ phép năm" ? "badge-light-primary" : "badge-light-warning",
+                        DateRange = $"{r.StartDate:dd/MM} - {r.EndDate:dd/MM}",
+                        Duration = $"{r.TotalDays} ngày",
+                        Reason = r.Reason,
+                        Status = r.Status,
+                        StatusColor = r.Status == "Approved" ? "badge-light-success" : (r.Status == "Rejected" ? "badge-light-danger" : "badge-light-warning")
+                    }).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                // Error handling
+            }
+            finally
+            {
+                _isLoading = false;
+            }
         }
 
         private string _modalTitle = "";
@@ -74,26 +114,22 @@ namespace TTL.HR.Shared.Pages.Leave
             _showActionModal = true;
         }
 
-        private void confirmAction(string reason)
+        private async Task confirmAction(string reason)
         {
             if (_requestToProcess == null) return;
 
-            if (_actionType == "APPROVE")
+            string status = _actionType == "APPROVE" ? "Approved" : "Rejected";
+            var success = await LeaveService.ApproveLeaveRequestAsync(_requestToProcess.Id, status);
+
+            if (success)
             {
-                _requestToProcess.Status = "Đã phê duyệt";
-                _requestToProcess.StatusColor = "badge-light-success";
-                _requestToProcess.ManagerNote = reason;
-            }
-            else if (_actionType == "REJECT")
-            {
-                _requestToProcess.Status = "Đã từ chối";
-                _requestToProcess.StatusColor = "badge-light-danger";
+                _requestToProcess.Status = status == "Approved" ? "Đã phê duyệt" : "Đã từ chối";
+                _requestToProcess.StatusColor = status == "Approved" ? "badge-light-success" : "badge-light-danger";
                 _requestToProcess.ManagerNote = reason;
             }
 
             if (_selectedRequest == _requestToProcess)
             {
-                _selectedRequest = null; // Forces update or can keep and just close
                 _showDetail = false;
             }
 
@@ -106,19 +142,7 @@ namespace TTL.HR.Shared.Pages.Leave
             _requestToProcess = null;
         }
 
-        private List<LeaveRequestItem> _leaveRequests = new()
-        {
-            new() { Id = "REQ001", Name = "Nguyễn Văn Lộc", Department = "Kỹ thuật", Avatar = "assets/media/avatars/300-1.jpg", Type = "Nghỉ phép năm", TypeColor = "badge-light-primary", DateRange = "10/02 - 12/02", Duration = "3 ngày", Reason = "Giải quyết việc gia đình cá nhân quan trọng.", Status = "Đã phê duyệt", StatusColor = "badge-light-success" },
-            new() { Id = "REQ002", Name = "Lê Thị Mai", Department = "Marketing", Avatar = "assets/media/avatars/300-2.jpg", Type = "Nghỉ ốm", TypeColor = "badge-light-danger", DateRange = "05/02 - 06/02", Duration = "2 ngày", Reason = "Bị sốt xuất huyết, có giấy chỉ định của bác sĩ.", Status = "Chờ phê duyệt", StatusColor = "badge-light-warning" },
-            new() { Id = "REQ003", Name = "Phạm Hoàng", Department = "Kỹ thuật", Avatar = "", AvatarBg = "bg-info", Type = "Đi công tác", TypeColor = "badge-light-info", DateRange = "15/02 - 20/02", Duration = "6 ngày", Reason = "Hỗ trợ triển khai dự án tại chi nhánh miền Nam.", Status = "Đã phê duyệt", StatusColor = "badge-light-success" },
-            new() { Id = "REQ004", Name = "Trần Minh", Department = "Nhân sự", Avatar = "assets/media/avatars/300-3.jpg", Type = "Làm việc từ xa", TypeColor = "badge-light-dark", DateRange = "07/02", Duration = "1 ngày", Reason = "Làm việc tại nhà để xử lý hồ sơ nhân sự bảo mật.", Status = "Đã phê duyệt", StatusColor = "badge-light-success" },
-            new() { Id = "REQ005", Name = "Hoàng Nam", Department = "Kinh doanh", Avatar = "assets/media/avatars/300-5.jpg", Type = "Nghỉ không lương", TypeColor = "badge-light-secondary", DateRange = "12/02 - 14/02", Duration = "3 ngày", Reason = "Về quê có việc hiếu hỷ đột xuất.", Status = "Đã từ chối", StatusColor = "badge-light-danger" },
-            new() { Id = "REQ006", Name = "Kiều Linh", Department = "Thiết kế", Avatar = "", AvatarBg = "bg-warning", Type = "Nghỉ thai sản", TypeColor = "badge-light-warning", DateRange = "01/02 - 01/08", Duration = "6 tháng", Reason = "Chế độ nghỉ thai sản theo quy định luật lao động.", Status = "Đã phê duyệt", StatusColor = "badge-light-success" },
-            new() { Id = "REQ007", Name = "Vũ Long", Department = "Vận hành", Avatar = "assets/media/avatars/300-6.jpg", Type = "Đi đào tạo", TypeColor = "badge-light-primary", DateRange = "22/02 - 25/02", Duration = "4 ngày", Reason = "Tham gia khóa học nâng cao quản trị hệ thống Cloud.", Status = "Chờ phê duyệt", StatusColor = "badge-light-warning" },
-            new() { Id = "REQ008", Name = "Đặng Thu", Department = "Tài chính", Avatar = "assets/media/avatars/300-9.jpg", Type = "Nghỉ kết hôn", TypeColor = "badge-light-success", DateRange = "20/02 - 23/02", Duration = "4 ngày", Reason = "Nghỉ lễ kết hôn (3 ngày định mức + 1 ngày phép).", Status = "Đã phê duyệt", StatusColor = "badge-light-success" },
-            new() { Id = "REQ009", Name = "Bùi Cường", Department = "Kỹ thuật", Avatar = "", AvatarBg = "bg-primary", Type = "Nghỉ việc riêng", TypeColor = "badge-light-info", DateRange = "09/02", Duration = "1 ngày", Reason = "Xử lý thủ tục hành chính tại cơ quan nhà nước.", Status = "Chờ phê duyệt", StatusColor = "badge-light-warning" },
-            new() { Id = "REQ010", Name = "Ngô Diệp", Department = "Hành chính", Avatar = "assets/media/avatars/300-11.jpg", Type = "Giải trình đi muộn", TypeColor = "badge-light-secondary", DateRange = "04/02", Duration = "1 giờ", Reason = "Xe hỏng đột xuất trên đường đến văn phòng.", Status = "Đã phê duyệt", StatusColor = "badge-light-success" }
-        };
+        private List<LeaveRequestItem> _leaveRequests = new();
 
         private class LeaveRequestItem
         {

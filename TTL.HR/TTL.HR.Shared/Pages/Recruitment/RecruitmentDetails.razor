@@ -1,4 +1,4 @@
-@page "/recruitment/details/{Id:int}"
+@page "/recruitment/details/{Id}"
 @using System.Globalization
 @using Microsoft.AspNetCore.Components.Forms
 @using TTL.HR.Shared.Components.Recruitment
@@ -255,11 +255,11 @@
                 <div class="modal-body py-5">
                     <div class="mb-5">
                         <label class="form-label fw-bold">Họ và tên</label>
-                        <input type="text" class="form-control form-control-solid" placeholder="Nhập họ tên" />
+                        <input type="text" class="form-control form-control-solid" placeholder="Nhập họ tên" @bind="NewApplicant.FullName" />
                     </div>
                     <div class="mb-5">
                         <label class="form-label fw-bold">Email</label>
-                        <input type="email" class="form-control form-control-solid" placeholder="email@example.com" />
+                        <input type="email" class="form-control form-control-solid" placeholder="email@example.com" @bind="NewApplicant.Email" />
                     </div>
                 </div>
                 <div class="modal-footer">

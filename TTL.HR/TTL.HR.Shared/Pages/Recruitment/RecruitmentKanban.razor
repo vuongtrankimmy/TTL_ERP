@@ -1,5 +1,6 @@
 @page "/recruitment/kanban"
 @using TTL.HR.Shared.Components.Common
+@using TTL.HR.Shared.Components.Recruitment
 
 <PageTitle>Bảng theo dõi ứng viên - TTL.HR</PageTitle>
 
@@ -38,69 +39,78 @@
             </div>
         </div>
 
-        <!-- Kanban Board -->
-        <div class="row g-5">
-            @foreach (var column in KanbanBoard)
-            {
-                <div class="col-md-3">
-                    <div class="card bg-light shadow-none border-0 h-100">
-                        <div class="card-header border-0 py-5 bg-transparent">
-                            <h3 class="card-title fw-bolder text-gray-800">
-                                @column.Title
-                                <span class="badge badge-light-@column.ColorClass fs-8 ms-2">@column.Applicants.Count</span>
-                            </h3>
-                        </div>
-                        <div class="card-body p-4 pt-0 overflow-auto" style="min-height: 500px; max-height: 700px;">
-                            @if (!column.Applicants.Any())
-                            {
-                                <div class="d-flex flex-column flex-center h-200px border border-dashed border-gray-300 rounded-3">
-                                    <div class="text-gray-400 fs-7">Trống</div>
-                                </div>
-                            }
-                            
-                            @foreach (var app in column.Applicants)
-                            {
-                                <div class="card shadow-sm mb-4 border-0 hover-elevate cursor-pointer" @onclick="() => ViewProfile(app)">
-                                    <div class="card-body p-5">
-                                        <div class="d-flex align-items-center mb-3">
-                                            <div class="symbol symbol-40px me-3">
-                                                <img src="@app.Avatar" alt="@app.Name" />
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card">
+            <!-- Kanban Board -->
+            <div class="row g-5">
+                @foreach (var column in KanbanBoard)
+                {
+                    <div class="col-md-3">
+                        <div class="card bg-light shadow-none border-0 h-100">
+                            <div class="card-header border-0 py-5 bg-transparent">
+                                <h3 class="card-title fw-bolder text-gray-800">
+                                    @column.Title
+                                    <span class="badge badge-light-@column.ColorClass fs-8 ms-2">@column.Applicants.Count</span>
+                                </h3>
+                            </div>
+                            <div class="card-body p-4 pt-0 overflow-auto" style="min-height: 500px; max-height: 700px;">
+                                @if (!column.Applicants.Any())
+                                {
+                                    <div class="d-flex flex-column flex-center h-200px border border-dashed border-gray-300 rounded-3 bg-white bg-opacity-50">
+                                        <div class="text-gray-400 fs-7">Trống</div>
+                                    </div>
+                                }
+                                
+                                @foreach (var app in column.Applicants)
+                                {
+                                    <div class="card shadow-sm mb-4 border-0 hover-elevate cursor-pointer overflow-hidden" @onclick="() => ViewProfile(app)">
+                                        <div class="card-body p-5">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="symbol symbol-40px me-3">
+                                                    @if (!string.IsNullOrEmpty(app.Avatar))
+                                                    {
+                                                        <img src="@app.Avatar" alt="@app.Name" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="symbol-label bg-light-@column.ColorClass text-@column.ColorClass fw-bold">@app.Name.Substring(0, 1)</span>
+                                                    }
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <span class="text-gray-800 text-hover-primary fw-bolder fs-6">@app.Name</span>
+                                                    <span class="text-muted fw-bold fs-8">@app.JobTitle</span>
+                                                </div>
+                                                @if (app.Status == "Từ chối" || app.Status == "Rejected")
+                                                {
+                                                    <span class="badge badge-light-danger fs-9">Loại</span>
+                                                }
+                                                else if (app.Status == "Đã tuyển" || app.Status == "Hired")
+                                                {
+                                                    <span class="badge badge-light-success fs-9">Hợp đồng</span>
+                                                }
                                             </div>
-                                            <div class="d-flex flex-column flex-grow-1">
-                                                <span class="text-gray-800 text-hover-primary fw-bolder fs-6">@app.Name</span>
-                                                <span class="text-muted fw-bold fs-8">@app.JobTitle</span>
-                                            </div>
-                                            @if (app.Status == "Từ chối")
-                                            {
-                                                <span class="badge badge-light-danger fs-9">Loại</span>
-                                            }
-                                            else if (app.Status == "Đã tuyển")
-                                            {
-                                                <span class="badge badge-light-success fs-9">Hợp đồng</span>
-                                            }
-                                        </div>
 
-                                        <div class="d-flex flex-stack mt-auto">
-                                            <div class="d-flex align-items-center">
-                                                <i class="ki-outline ki-calendar fs-6 text-gray-400 me-1"></i>
-                                                <span class="text-gray-400 fw-bold fs-9">@app.DaysInStage ngày</span>
-                                            </div>
-                                            <div class="symbol-group symbol-hover">
-                                                <div class="symbol symbol-25px symbol-circle" title="Xem chi tiết">
-                                                    <span class="symbol-label bg-light-primary text-primary fw-bold fs-9">
-                                                        <i class="ki-outline ki-eye fs-8 text-primary"></i>
-                                                    </span>
+                                            <div class="d-flex flex-stack mt-auto">
+                                                <div class="d-flex align-items-center">
+                                                    <i class="ki-outline ki-calendar fs-6 text-gray-400 me-1"></i>
+                                                    <span class="text-gray-400 fw-bold fs-9">@app.DaysInStage ngày trong bước này</span>
+                                                </div>
+                                                <div class="symbol-group symbol-hover">
+                                                    <div class="symbol symbol-25px symbol-circle" title="Xem chi tiết">
+                                                        <span class="symbol-label bg-light-primary text-primary fw-bold fs-9">
+                                                            <i class="ki-outline ki-eye fs-8 text-primary"></i>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            }
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        </SkeletonLoading>
     </div>
 </div>
 

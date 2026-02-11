@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
+using Microsoft.AspNetCore.Components;
 using TTL.HR.Shared.Components.Training;
-using TTL.HR.Shared.Interfaces;
-using TTL.HR.Shared.Models;
+using TTL.HR.Application.Modules.Training.Interfaces;
+using TTL.HR.Application.Modules.Training.Models;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Shared.Pages.Training
 {
@@ -98,9 +100,17 @@ namespace TTL.HR.Shared.Pages.Training
         {
             if (ItemToDelete != null)
             {
-                _trainings.Remove(ItemToDelete);
+                var success = await TrainingService.DeleteCourseAsync(ItemToDelete.Id.ToString());
+                if (success)
+                {
+                    _trainings.Remove(ItemToDelete);
+                    await JS.InvokeVoidAsync("toastr.success", "Đã xóa khóa đào tạo thành công!");
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi xóa khóa đào tạo.");
+                }
                 CloseDeleteModal();
-                await JS.InvokeVoidAsync("toastr.success", "Đã xóa khóa đào tạo thành công!");
             }
         }
 

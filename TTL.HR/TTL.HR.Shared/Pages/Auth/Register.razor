@@ -1,6 +1,5 @@
 @page "/auth/register"
 @layout AuthLayout
-@inject NavigationManager Navigation
 
 <PageTitle>Đăng ký - OrgaX HR</PageTitle>
 
@@ -20,28 +19,35 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <label class="form-label fs-7 fw-bolder text-dark">Họ và tên</label>
-        <input type="text" placeholder="Nhập họ tên đầy đủ" name="fullname" autocomplete="off" class="form-control bg-transparent fs-7" />
+        <input type="text" placeholder="Nhập họ tên đầy đủ" name="fullname" autocomplete="off" class="form-control bg-transparent fs-7" @bind="_fullName" />
     </div>
     <!--end::Input group=-->
 
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <label class="form-label fs-7 fw-bolder text-dark">Email công việc</label>
-        <input type="text" placeholder="Nhập email doanh nghiệp" name="email" autocomplete="off" class="form-control bg-transparent fs-7" />
+        <input type="text" placeholder="Nhập email doanh nghiệp" name="email" autocomplete="off" class="form-control bg-transparent fs-7" @bind="_email" />
+    </div>
+    <!--end::Input group=-->
+
+    <!--begin::Input group=-->
+    <div class="fv-row mb-8">
+        <label class="form-label fs-7 fw-bolder text-dark">Tên đăng nhập</label>
+        <input type="text" placeholder="Nhập tên đăng nhập" name="username" autocomplete="off" class="form-control bg-transparent fs-7" @bind="_username" />
     </div>
     <!--end::Input group=-->
 
     <!--begin::Input group-->
     <div class="fv-row mb-8">
         <label class="form-label fs-7 fw-bolder text-dark">Mật khẩu</label>
-        <input class="form-control bg-transparent fs-7" type="password" placeholder="Tối thiểu 8 ký tự" name="password" autocomplete="off" />
+        <input class="form-control bg-transparent fs-7" type="password" placeholder="Tối thiểu 8 ký tự" name="password" autocomplete="off" @bind="_password" />
     </div>
     <!--end::Input group=-->
 
     <!--begin::Input group-->
     <div class="fv-row mb-8">
         <label class="form-label fs-7 fw-bolder text-dark">Xác nhận mật khẩu</label>
-        <input class="form-control bg-transparent fs-7" type="password" placeholder="Nhập lại mật khẩu" name="confirm-password" autocomplete="off" />
+        <input class="form-control bg-transparent fs-7" type="password" placeholder="Nhập lại mật khẩu" name="confirm-password" autocomplete="off" @bind="_confirmPassword" />
     </div>
     <!--end::Input group=-->
 

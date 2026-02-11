@@ -1,30 +1,70 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using TTL.HR.Shared.Components.Training;
+using TTL.HR.Application.Modules.Training.Interfaces;
+using TTL.HR.Application.Modules.Training.Models;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Shared.Pages.Training
 {
     public partial class TrainingDetails
     {
-        [Parameter] public int Id { get; set; }
+        [Parameter] public string Id { get; set; } = "";
+        
+        [Inject] public ITrainingService TrainingService { get; set; } = default!;
+        [Inject] public NavigationManager Navigation { get; set; } = default!;
+        [Inject] public IJSRuntime JS { get; set; } = default!;
+
         private bool _isLoading = true;
-        private CourseDetailViewModel Course;
-        private List<AttendeeViewModel> Attendees = new();
+        private CourseModel? Course;
+        private List<ParticipantModel> Attendees = new();
         private bool IsRegisterModalOpen = false;
 
         // Modal Delete Control
         private bool IsDeleteModalOpen = false;
-        private AttendeeViewModel ItemToRemoveAttendee;
+        private ParticipantModel? ItemToRemoveAttendee;
 
-        [Inject] public NavigationManager Navigation { get; set; }
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadData();
+        }
+
+        private async Task LoadData()
+        {
+            _isLoading = true;
+            try
+            {
+                Course = await TrainingService.GetCourseAsync(Id);
+                if (Course == null)
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Không tìm thấy khóa đào tạo.");
+                    Navigation.NavigateTo("/training");
+                    return;
+                }
+
+                var participantsList = await TrainingService.GetParticipantsAsync(Id);
+                Attendees = participantsList.ToList();
+            }
+            catch (Exception)
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Lỗi tải dữ liệu.");
+            }
+            finally
+            {
+                _isLoading = false;
+            }
+        }
 
         private void HandleEdit()
         {
             Navigation.NavigateTo($"/training/add?id={Id}");
         }
 
-        private void PromptRemoveAttendee(AttendeeViewModel attendee)
+        private void PromptRemoveAttendee(ParticipantModel attendee)
         {
             ItemToRemoveAttendee = attendee;
             IsDeleteModalOpen = true;
@@ -36,12 +76,20 @@ namespace TTL.HR.Shared.Pages.Training
             ItemToRemoveAttendee = null;
         }
 
-        private void ConfirmRemoveAttendee()
+        private async Task ConfirmRemoveAttendee()
         {
             if (ItemToRemoveAttendee != null)
             {
-                Attendees.Remove(ItemToRemoveAttendee);
-                Course.ParticipantsCount--;
+                var success = await TrainingService.RemoveParticipantAsync(Id, ItemToRemoveAttendee.EmployeeId);
+                if (success)
+                {
+                    await JS.InvokeVoidAsync("toastr.success", "Đã hủy đăng ký học viên thành công!");
+                    await LoadData();
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi hủy đăng ký.");
+                }
                 CloseRemoveModal();
             }
         }
@@ -56,83 +104,24 @@ namespace TTL.HR.Shared.Pages.Training
             IsRegisterModalOpen = false;
         }
 
-        private void ConfirmRegister(List<TrainingRegistrationPopup.EmployeeSelectViewModel> selectedEmployees)
+        private async Task ConfirmRegister(List<TrainingRegistrationPopup.EmployeeSelectViewModel> selectedEmployees)
         {
-            foreach (var emp in selectedEmployees)
-            {
-                // Simulate adding attendees
-                Attendees.Add(new AttendeeViewModel { 
-                    Name = emp.FullName, 
-                    Department = emp.Department, 
-                    Email = $"{emp.Code.ToLower()}@company.com", 
-                    Avatar = "assets/media/avatars/300-1.jpg", 
-                    Status = "Joined", 
-                    StatusBadge = "badge-light-success", 
-                    Score = "--" 
-                });
-                Course.ParticipantsCount++;
-            }
-            CloseRegisterModal();
-        }
+            if (selectedEmployees == null || !selectedEmployees.Any()) return;
 
-        protected override async System.Threading.Tasks.Task OnInitializedAsync()
-        {
-            await System.Threading.Tasks.Task.Delay(800);
+            var employeeIds = selectedEmployees.Select(e => e.Code).ToList();
+            var success = await TrainingService.RegisterParticipantsAsync(Id, employeeIds);
             
-            // Mock fetching detail based on Id (Normally calling a Service)
-            Course = new CourseDetailViewModel
+            if (success)
             {
-                Id = Id,
-                Title = "Hội Nhập Văn Hóa Doanh Nghiệp (Onboarding)",
-                Code = "TRN-ONB",
-                Description = "Khóa học bắt buộc cho nhân viên mới về quy định chung, tầm nhìn, sứ mệnh và văn hóa ứng xử tại công ty.",
-                Trainer = "Nguyễn Thị Mai (HR)",
-                Location = "Phòng đào tạo tầng 4 / Zoom Online",
-                StartDate = new DateTime(2026, 3, 10),
-                Duration = "4 giờ",
-                ParticipantsCount = 15,
-                MaxParticipants = 20,
-                Status = "Active",
-                StatusClass = "badge-light-success",
-                IsMandatory = true
-            };
-
-            Attendees = new List<AttendeeViewModel>
+                await JS.InvokeVoidAsync("toastr.success", "Đã đăng ký học viên thành công!");
+                await LoadData();
+            }
+            else
             {
-                new() { Name = "Phan Thanh Tùng", Department = "Phòng Kỹ thuật", Email = "tung.pt@company.com", Avatar = "assets/media/avatars/300-1.jpg", Status = "Joined", StatusBadge = "badge-light-success", Score = "8.5" },
-                new() { Name = "Nguyễn Văn Lộc", Department = "Kinh doanh", Email = "loc.nv@company.com", Avatar = "assets/media/avatars/300-2.jpg", Status = "Pending", StatusBadge = "badge-light-warning", Score = "--" },
-                new() { Name = "Lê Thị Hồng", Department = "Nhân sự", Email = "hong.lt@company.com", Avatar = "assets/media/avatars/300-3.jpg", Status = "Joined", StatusBadge = "badge-light-success", Score = "9.0" }
-            };
-
-            _isLoading = false;
-        }
-
-        public class CourseDetailViewModel
-        {
-            public int Id { get; set; }
-            public string Title { get; set; }
-            public string Code { get; set; }
-            public string Description { get; set; }
-            public string Trainer { get; set; }
-            public string Location { get; set; }
-            public DateTime StartDate { get; set; }
-            public string Duration { get; set; }
-            public int ParticipantsCount { get; set; }
-            public int MaxParticipants { get; set; }
-            public string Status { get; set; }
-            public string StatusClass { get; set; }
-            public bool IsMandatory { get; set; }
-        }
-
-        public class AttendeeViewModel
-        {
-            public string Name { get; set; }
-            public string Department { get; set; }
-            public string Email { get; set; }
-            public string Avatar { get; set; }
-            public string Status { get; set; }
-            public string StatusBadge { get; set; }
-            public string Score { get; set; }
+                await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi đăng ký.");
+            }
+            
+            CloseRegisterModal();
         }
     }
 }

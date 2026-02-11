@@ -1,88 +1,51 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using TTL.HR.Shared.Models;
+using TTL.HR.Application.Modules.Attendance.Interfaces;
+using TTL.HR.Application.Modules.Attendance.Models;
 
 namespace TTL.HR.Shared.Pages.User.Components
 {
     public partial class UserAttendanceHistory
     {
-        [Parameter] public int UserId { get; set; }
+        [Parameter] public string EmployeeId { get; set; } = "";
+        [Inject] public IAttendanceService AttendanceService { get; set; } = default!;
 
         private bool _showExplanationDrawer = false;
-        private AttendanceRecord? _selectedRecordForExplanation;
+        private AttendanceDetailModel? _selectedRecordForExplanation;
+        private List<AttendanceDetailModel> _attendanceRecords = new();
+        private bool _isLoading = true;
 
-        private List<AttendanceRecord> _attendanceRecords = new List<AttendanceRecord>();
-
-        protected override void OnParametersSet()
+        protected override async Task OnParametersSetAsync()
         {
-            // Mock data logic based on UserId (simulated)
-            GenerateMockData(UserId);
-        }
-
-        private void GenerateMockData(int userId)
-        {
-            // Reset and generate fresh mock data
-            _attendanceRecords.Clear();
-            var random = new Random(userId); // Use userId as seed for consistent random data per user
-
-            DateTime startDate = new DateTime(2026, 2, 1);
-            DateTime endDate = new DateTime(2026, 2, 28);
-
-            for (DateTime date = endDate; date >= startDate; date = date.AddDays(-1))
+            if (!string.IsNullOrEmpty(EmployeeId))
             {
-                var record = new AttendanceRecord
-                {
-                    Date = date,
-                    DayOfWeek = date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN")),
-                    CheckIn = "08:00",
-                    CheckOut = "17:30",
-                    TotalWork = "8h 00m",
-                    Status = "Đúng giờ",
-                    StatusClass = "badge-light-success",
-                    CheckInColor = "text-gray-800",
-                    CheckOutColor = "text-gray-800",
-                    TotalWorkColor = "text-success"
-                };
-
-                // Randomize some statuses
-                if (date.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    record.DayOfWeek = "Chủ Nhật";
-                    record.CheckIn = "--:--";
-                    record.CheckOut = "--:--";
-                    record.TotalWork = "0h 00m";
-                    record.Status = "Ngày nghỉ";
-                    record.StatusClass = "badge-light-secondary";
-                    record.CheckInColor = "text-muted fst-italic";
-                    record.CheckOutColor = "text-muted fst-italic";
-                    record.TotalWorkColor = "text-muted";
-                }
-                else if (random.Next(0, 10) == 1) // 10% chance of late
-                {
-                    record.CheckIn = "08:45";
-                    record.TotalWork = "7h 15m";
-                    record.Status = "Đi muộn";
-                    record.StatusClass = "badge-light-warning";
-                    record.CheckInColor = "text-danger";
-                    record.TotalWorkColor = "text-warning";
-                }
-                else if (random.Next(0, 15) == 2) // ~6% chance of leave
-                {
-                        record.CheckIn = "P";
-                        record.CheckOut = "P";
-                        record.TotalWork = "8h 00m";
-                        record.Status = "Nghỉ phép";
-                        record.StatusClass = "badge-light-info";
-                        record.CheckInColor = "text-info";
-                        record.CheckOutColor = "text-info";
-                }
-
-                _attendanceRecords.Add(record);
+                await LoadData();
             }
         }
 
-        private void OpenExplanation(AttendanceRecord record)
+        private async Task LoadData()
+        {
+            _isLoading = true;
+            try
+            {
+                var month = new DateTime(2026, 2, 1); // Current month for demo
+                var data = await AttendanceService.GetAttendanceDetailsAsync(EmployeeId, month);
+                _attendanceRecords = data?.OrderByDescending(x => x.Date).ToList() ?? new List<AttendanceDetailModel>();
+            }
+            catch (Exception)
+            {
+                // Error handled by parent or toastr
+            }
+            finally
+            {
+                _isLoading = false;
+            }
+        }
+
+        private void OpenExplanation(AttendanceDetailModel record)
         {
             _selectedRecordForExplanation = record;
             _showExplanationDrawer = true;
@@ -94,18 +57,32 @@ namespace TTL.HR.Shared.Pages.User.Components
             _selectedRecordForExplanation = null;
         }
 
-        public class AttendanceRecord
+        private string GetStatusClass(string status)
         {
-            public DateTime Date { get; set; }
-            public string DayOfWeek { get; set; } = "";
-            public string CheckIn { get; set; } = "";
-            public string CheckOut { get; set; } = "";
-            public string TotalWork { get; set; } = "";
-            public string Status { get; set; } = "";
-            public string StatusClass { get; set; } = "";
-            public string CheckInColor { get; set; } = "";
-            public string CheckOutColor { get; set; } = "";
-            public string TotalWorkColor { get; set; } = "";
+            return status switch
+            {
+                "Đúng giờ" or "On Time" => "badge-light-success",
+                "Đi muộn" or "Late" => "badge-light-warning",
+                "Về sớm" or "Early Leave" => "badge-light-warning",
+                "Nghỉ phép" or "Leave" => "badge-light-info",
+                "Ngày nghỉ" or "Holiday" => "badge-light-secondary",
+                "Vắng mặt" or "Absent" => "badge-light-danger",
+                _ => "badge-light-primary"
+            };
+        }
+
+        private string TranslateStatus(string status)
+        {
+            return status switch
+            {
+                "On Time" => "Đúng giờ",
+                "Late" => "Đi muộn",
+                "Early Leave" => "Về sớm",
+                "Leave" => "Nghỉ phép",
+                "Holiday" => "Ngày nghỉ",
+                "Absent" => "Vắng mặt",
+                _ => status
+            };
         }
     }
 }

@@ -1,13 +1,15 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
-using TTL.HR.Shared.Models;
+using TTL.HR.Application.Modules.Recruitment;
+using TTL.HR.Application.Modules.Recruitment.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace TTL.HR.Shared.Pages.Recruitment
 {
     public partial class RecruitmentList
     {
-        [Inject] public IRecruitmentService RecruitmentService { get; set; } = default!;
+        [Inject] public IRecruitmentApplication RecruitmentApp { get; set; } = default!;
         [Inject] public NavigationManager Navigation { get; set; } = default!;
 
         private bool _isLoading = true;
@@ -23,11 +25,11 @@ namespace TTL.HR.Shared.Pages.Recruitment
         private async Task LoadData()
         {
             _isLoading = true;
-            _jobs = (await RecruitmentService.GetJobsAsync()).ToList();
+            _jobs = (await RecruitmentApp.GetActiveJobPostingsAsync()).ToList();
             _isLoading = false;
         }
 
-        private void HandleEdit(int id)
+        private void HandleEdit(string id)
         {
             Navigation.NavigateTo($"/recruitment/add?id={id}");
         }
@@ -48,7 +50,7 @@ namespace TTL.HR.Shared.Pages.Recruitment
         {
             if (ItemToDelete != null)
             {
-                await RecruitmentService.DeleteJobAsync(ItemToDelete.Id.ToString());
+                await RecruitmentApp.DeleteJobPostingAsync(ItemToDelete.Id);
                 await LoadData();
                 CloseDeleteModal();
             }

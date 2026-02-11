@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using TTL.HR.Shared.Models;
+using TTL.HR.Application.Modules.Organization.Models;
 
 namespace TTL.HR.Shared.Pages.Organization
 {
     public partial class OrganizationStructure
     {
-        [Inject] public IJSRuntime JSRuntime { get; set; }
-
+        [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
         private string searchQuery = "";
-        private OrgNode rootNode;
-        private OrgNode selectedNode;
+        private OrgNode? rootNode;
+        private OrgNode? selectedNode;
         private int AllEmployeesCount = 0;
         private bool _isLoading = true;
         private bool _jsInitialized = false;
@@ -196,7 +195,7 @@ namespace TTL.HR.Shared.Pages.Organization
         private void ToggleAddModal() 
         { 
             newNode = new OrgNode { 
-                Id = (CountNodes(rootNode) + 1).ToString(),
+                Id = (rootNode != null ? CountNodes(rootNode) + 1 : 1).ToString(),
                 Avatar = "assets/media/avatars/300-10.jpg",
                 Type = "Employee"
             };

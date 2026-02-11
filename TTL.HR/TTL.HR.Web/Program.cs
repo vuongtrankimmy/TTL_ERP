@@ -7,26 +7,31 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 // standard-api-setup
-builder.Services.Configure<TTL.HR.Web.Data.MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDbSettings"));
+// Client-side services setup (Using API Repository from Application project)
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://gateway.tantanloc.com/") });
+builder.Services.AddScoped(typeof(TTL.HR.Application.Modules.Common.Interfaces.IApiRepository<>), typeof(TTL.HR.Application.Modules.Common.Services.ApiRepository<>));
+builder.Services.AddScoped<TTL.HR.Application.Modules.HumanResource.Interfaces.IEmployeeService, TTL.HR.Application.Modules.HumanResource.Services.EmployeeService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IMasterDataService, TTL.HR.Application.Modules.Common.Services.MasterDataService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Organization.Interfaces.IDepartmentService, TTL.HR.Application.Modules.Organization.Services.DepartmentService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Organization.Interfaces.IPositionService, TTL.HR.Application.Modules.Organization.Services.PositionService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IAuthService, TTL.HR.Application.Modules.Common.Services.AuthService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.HumanResource.Interfaces.IContractService, TTL.HR.Application.Modules.HumanResource.Services.ContractService>();
 
-// Client-side services setup (Using API Repository)
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://localhost:5000/") });
-builder.Services.AddScoped(typeof(TTL.HR.Shared.Interfaces.IApiRepository<>), typeof(TTL.HR.Shared.Services.Client.ApiRepository<>));
-builder.Services.AddScoped<TTL.HR.Shared.Interfaces.IEmployeeService, TTL.HR.Shared.Services.Client.EmployeeService>();
-builder.Services.AddScoped<TTL.HR.Shared.Interfaces.IMasterDataService, TTL.HR.Shared.Services.Client.MasterDataService>();
-builder.Services.AddScoped<TTL.HR.Shared.Interfaces.IDepartmentService, TTL.HR.Shared.Services.Client.DepartmentService>();
-builder.Services.AddScoped<TTL.HR.Shared.Interfaces.IPositionService, TTL.HR.Shared.Services.Client.PositionService>();
-builder.Services.AddScoped<TTL.HR.Shared.Interfaces.IDashboardService, TTL.HR.Shared.Services.Client.DashboardService>();
-builder.Services.AddScoped<TTL.HR.Shared.Interfaces.IRecruitmentService, TTL.HR.Shared.Services.Client.RecruitmentService>();
-builder.Services.AddScoped<TTL.HR.Shared.Interfaces.IAttendanceService, TTL.HR.Shared.Services.Client.AttendanceService>();
-builder.Services.AddScoped<TTL.HR.Shared.Interfaces.ILeaveService, TTL.HR.Shared.Services.Client.LeaveService>();
-builder.Services.AddScoped<TTL.HR.Shared.Interfaces.ITrainingService, TTL.HR.Shared.Services.Client.TrainingService>();
-builder.Services.AddScoped<TTL.HR.Shared.Interfaces.IPayrollService, TTL.HR.Shared.Services.Client.PayrollService>();
-builder.Services.AddScoped<TTL.HR.Shared.Interfaces.IAssetService, TTL.HR.Shared.Services.Client.AssetService>();
+// Module Services
+builder.Services.AddScoped<TTL.HR.Application.Modules.Dashboard.Interfaces.IDashboardService, TTL.HR.Application.Modules.Dashboard.Services.DashboardService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Recruitment.Interfaces.IRecruitmentService, TTL.HR.Application.Modules.Recruitment.Services.RecruitmentService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Attendance.Interfaces.IAttendanceService, TTL.HR.Application.Modules.Attendance.Services.AttendanceService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Leave.Interfaces.ILeaveService, TTL.HR.Application.Modules.Leave.Services.LeaveService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Training.Interfaces.ITrainingService, TTL.HR.Application.Modules.Training.Services.TrainingService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Payroll.Interfaces.IPayrollService, TTL.HR.Application.Modules.Payroll.Services.PayrollService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Payroll.Interfaces.IBenefitService, TTL.HR.Application.Modules.Payroll.Services.BenefitService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IPermissionService, TTL.HR.Application.Modules.Common.Services.PermissionService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Assets.Interfaces.IAssetService, TTL.HR.Application.Modules.Assets.Services.AssetService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.ISettingsService, TTL.HR.Application.Modules.Common.Services.SettingsService>();
 
-builder.Services.AddSingleton(typeof(TTL.HR.Shared.Interfaces.IRepository<>), typeof(TTL.HR.Web.Data.MongoRepository<>));
-builder.Services.AddControllers();
+// Application Layer
+builder.Services.AddScoped<TTL.HR.Application.Modules.Recruitment.IRecruitmentApplication, TTL.HR.Application.Modules.Recruitment.RecruitmentApplication>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Attendance.IAttendanceApplication, TTL.HR.Application.Modules.Attendance.AttendanceApplication>();
 
 var app = builder.Build();
 
@@ -43,7 +48,6 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapControllers(); // Enable API endpoints
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()

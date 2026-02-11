@@ -1,25 +1,25 @@
 @page "/training/add"
 @using Microsoft.AspNetCore.Components.Forms
 
-<PageTitle>Tạo khóa đào tạo mới - TTL.HR</PageTitle>
+<PageTitle>@(_isEdit ? "Cập nhật" : "Tạo") khóa đào tạo - TTL.HR</PageTitle>
 
 <div class="post d-flex flex-column-fluid" id="kt_post">
     <div id="kt_content_container" class="container-fluid">
         <div class="card mb-5 mb-xl-10">
             <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
                 <div class="card-title m-0">
-                    <h3 class="fw-bolder m-0">Tạo khóa đào tạo mới</h3>
+                    <h3 class="fw-bolder m-0">@(_isEdit ? "Cập nhật" : "Tạo") khóa đào tạo</h3>
                 </div>
             </div>
             <div id="kt_account_profile_details" class="collapse show">
-                <form class="form">
+                <EditForm Model="@_course" OnValidSubmit="SaveCourse">
                     <div class="card-body border-top p-9">
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label required fw-bold fs-6">Tên khóa học</label>
                             <div class="col-lg-8">
                                 <div class="row">
                                     <div class="col-lg-12 fv-row">
-                                        <input type="text" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Ví dụ: Kỹ năng giao tiếp nâng cao" />
+                                        <input type="text" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Ví dụ: Kỹ năng giao tiếp nâng cao" @bind="_course.Title" />
                                     </div>
                                 </div>
                             </div>
@@ -27,7 +27,7 @@
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label required fw-bold fs-6">Mã khóa học</label>
                             <div class="col-lg-8 fv-row">
-                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: COM-2024" />
+                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: COM-2024" @bind="_course.Id" disabled="@_isEdit" />
                             </div>
                         </div>
                         <div class="row mb-6">
@@ -35,7 +35,7 @@
                                 <span class="required">Giảng viên / Đơn vị đào tạo</span>
                             </label>
                             <div class="col-lg-8 fv-row">
-                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: Nguyễn Văn A hoặc Trung tâm ABC" />
+                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: Nguyễn Văn A hoặc Trung tâm ABC" @bind="_course.TrainerName" />
                             </div>
                         </div>
                         <div class="row mb-6">
@@ -43,23 +43,24 @@
                                 <span class="required">Loại hình đào tạo</span>
                             </label>
                             <div class="col-lg-8 fv-row">
-                                <select class="form-select form-select-solid form-select-lg fw-bold">
-                                    <option value="Internal">Nội bộ (Internal)</option>
-                                    <option value="External">Bên ngoài (External)</option>
-                                    <option value="Online">Trực tuyến (E-Learning)</option>
+                                <select class="form-select form-select-solid form-select-lg fw-bold" @bind="_course.Status">
+                                    <option value="Draft">Draft</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Closed">Closed</option>
+                                    <option value="Completed">Completed</option>
                                 </select>
                             </div>
                         </div>
                          <div class="row mb-6">
                             <label class="col-lg-4 col-form-label fw-bold fs-6">Ngày bắt đầu</label>
                             <div class="col-lg-8 fv-row">
-                                <input type="date" class="form-control form-control-lg form-control-solid" />
+                                <input type="date" class="form-control form-control-lg form-control-solid" @bind="_course.StartDate" />
                             </div>
                         </div>
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label fw-bold fs-6">Thời lượng</label>
                             <div class="col-lg-8 fv-row">
-                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: 3 ngày hoặc 12 giờ" />
+                                <input type="number" class="form-control form-control-lg form-control-solid" placeholder="Số giờ: 12" @bind="_course.DurationHours" />
                             </div>
                         </div>
                          <div class="row mb-6">
@@ -77,7 +78,7 @@
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label fw-bold fs-6">Nội dung chi tiết (Syllabus)</label>
                             <div class="col-lg-8 fv-row">
-                                <textarea class="form-control form-control-lg form-control-solid" rows="5" placeholder="Nhập tóm tắt nội dung khóa học..."></textarea>
+                                <textarea class="form-control form-control-lg form-control-solid" rows="5" placeholder="Nhập tóm tắt nội dung khóa học..." @bind="_course.Description"></textarea>
                             </div>
                         </div>
                         <div class="row mb-6">
@@ -89,9 +90,15 @@
                     </div>
                     <div class="card-footer d-flex justify-content-end py-6 px-9">
                         <a href="/training" class="btn btn-light btn-active-light-primary me-2">Hủy bỏ</a>
-                        <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Lưu khóa học</button>
+                        <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit" disabled="@_isSaving">
+                            @if (_isSaving)
+                            {
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            }
+                            Lưu khóa học
+                        </button>
                     </div>
-                </form>
+                </EditForm>
             </div>
         </div>
     </div>

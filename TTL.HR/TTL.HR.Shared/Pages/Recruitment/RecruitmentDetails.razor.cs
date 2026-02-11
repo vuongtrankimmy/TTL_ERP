@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using TTL.HR.Shared.Models;
+using TTL.HR.Application.Modules.Recruitment;
+using TTL.HR.Application.Modules.Recruitment.Models;
 
 namespace TTL.HR.Shared.Pages.Recruitment
 {
     public partial class RecruitmentDetails
     {
-        [Parameter] public int Id { get; set; }
-        [Inject] public NavigationManager Navigation { get; set; }
-        [Inject] public IJSRuntime JS { get; set; }
+        [Parameter] public string Id { get; set; } = string.Empty;
+        [Inject] public IRecruitmentApplication RecruitmentApp { get; set; } = default!;
+        [Inject] public NavigationManager Navigation { get; set; } = default!;
+        [Inject] public IJSRuntime JS { get; set; } = default!;
 
         protected JobDetail? Job { get; set; }
         protected List<ApplicantItem> Applicants { get; set; } = new();
@@ -38,37 +41,28 @@ namespace TTL.HR.Shared.Pages.Recruitment
         protected string SuccessNote = "";
         protected ApplicantItem? ApplicantToSuccess;
 
-        protected override async System.Threading.Tasks.Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
         {
-            await System.Threading.Tasks.Task.Delay(500);
-            _isLoading = false;
+            await LoadData();
+        }
 
-            Job = new JobDetail
+        private async Task LoadData()
+        {
+            _isLoading = true;
+            try 
             {
-                Id = Id,
-                Title = "Senior .NET Developer",
-                Code = "DEV-001",
-                Department = "Kỹ thuật",
-                Type = "Toàn thời gian",
-                HiringCount = 2,
-                ApplicantsCount = 12,
-                Deadline = new DateTime(2026, 3, 15)
-            };
-
-            Applicants = new List<ApplicantItem>
+                Job = await RecruitmentApp.GetJobDetailsAsync(Id);
+                var applicantList = await RecruitmentApp.GetApplicantsAsync(Id);
+                Applicants = applicantList.ToList();
+            }
+            catch (Exception)
             {
-                new() { Id = 1, Name = "Nguyễn Văn Anh", Email = "anh.nv@gmail.com", Avatar = "assets/media/avatars/300-1.jpg", AppliedDate = new DateTime(2026, 2, 1), Status = "Phỏng vấn", StatusBadge = "badge-light-warning", History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 2, 1) }, new() { Status = "Phỏng vấn", Date = new DateTime(2026, 2, 5), Note = "Đã hẹn phỏng vấn vòng 1" } } },
-                new() { Id = 2, Name = "Trần Thị Bình", Email = "binh.tt@outlook.com", Avatar = "assets/media/avatars/300-2.jpg", AppliedDate = new DateTime(2026, 2, 2), Status = "Tiếp nhận", StatusBadge = "badge-light-primary", History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 2, 2) } } },
-                new() { Id = 3, Name = "Phạm Văn Chung", Email = "chung.pv@gmail.com", Avatar = "assets/media/avatars/300-3.jpg", AppliedDate = new DateTime(2026, 1, 25), Status = "Đề nghị", StatusBadge = "badge-light-info", History = new List<StatusHistory> { new() { Status = "Đề nghị", Date = new DateTime(2026, 2, 7) } } },
-                new() { Id = 4, Name = "Lê Thị Diệu", Email = "dieu.lt@gmail.com", Avatar = "assets/media/avatars/300-4.jpg", AppliedDate = new DateTime(2026, 2, 3), Status = "Từ chối", StatusBadge = "badge-light-danger", RejectionReason = "Kinh nghiệm chưa phù hợp", History = new List<StatusHistory> { new() { Status = "Từ chối", Date = new DateTime(2026, 2, 6) } } },
-                new() { Id = 5, Name = "Hoàng Văn Hải", Email = "hai.hv@gmail.com", Avatar = "assets/media/avatars/300-5.jpg", AppliedDate = new DateTime(2026, 2, 4), Status = "Đã tuyển", StatusBadge = "badge-light-success", HiringNote = "Nhận việc từ 15/02", History = new List<StatusHistory> { new() { Status = "Đã tuyển", Date = new DateTime(2026, 2, 8) } } },
-                new() { Id = 6, Name = "Ngô Thị Hoa", Email = "hoa.nt@gmail.com", Avatar = "assets/media/avatars/300-6.jpg", AppliedDate = new DateTime(2026, 2, 5), Status = "Tiếp nhận", StatusBadge = "badge-light-primary" },
-                new() { Id = 7, Name = "Đặng Văn Khoa", Email = "khoa.dv@gmail.com", Avatar = "assets/media/avatars/300-7.jpg", AppliedDate = new DateTime(2026, 2, 6), Status = "Phỏng vấn", StatusBadge = "badge-light-warning" },
-                new() { Id = 8, Name = "Bùi Văn Nam", Email = "nam.bv@gmail.com", Avatar = "assets/media/avatars/300-8.jpg", AppliedDate = new DateTime(2026, 2, 7), Status = "Tiếp nhận", StatusBadge = "badge-light-primary" },
-                new() { Id = 9, Name = "Lý Văn Phát", Email = "phat.lv@gmail.com", Avatar = "assets/media/avatars/300-9.jpg", AppliedDate = new DateTime(2026, 2, 8), Status = "Phỏng vấn", StatusBadge = "badge-light-warning" },
-                new() { Id = 10, Name = "Vũ Văn Quân", Email = "quan.vv@gmail.com", Avatar = "assets/media/avatars/300-10.jpg", AppliedDate = new DateTime(2026, 2, 8), Status = "Tiếp nhận", StatusBadge = "badge-light-primary" },
-                new() { Id = 11, Name = "Trịnh Văn Sơn", Email = "son.tv@gmail.com", Avatar = "assets/media/avatars/300-11.jpg", AppliedDate = new DateTime(2026, 2, 8), Status = "Tiếp nhận", StatusBadge = "badge-light-primary" }
-            };
+                // Error handling
+            }
+            finally
+            {
+                _isLoading = false;
+            }
         }
 
         protected void OpenAddApplicantModal()
@@ -79,24 +73,22 @@ namespace TTL.HR.Shared.Pages.Recruitment
 
         protected void CloseAddApplicantModal() => IsAddApplicantModalOpen = false;
 
-        protected async System.Threading.Tasks.Task SaveApplicant()
+        protected async Task SaveApplicant()
         {
-            Applicants.Insert(0, new ApplicantItem
+            var success = await RecruitmentApp.AddApplicantAsync(Id, NewApplicant);
+            if (success)
             {
-                Id = Applicants.Any() ? Applicants.Max(a => a.Id) + 1 : 1,
-                Name = NewApplicant.Name,
-                Email = NewApplicant.Email,
-                Avatar = "assets/media/avatars/300-12.jpg",
-                AppliedDate = NewApplicant.AppliedDate,
-                Status = "Tiếp nhận",
-                StatusBadge = "badge-light-primary"
-            });
-            if (Job != null) Job.ApplicantsCount++;
-            CloseAddApplicantModal();
-            await JS.InvokeVoidAsync("toastr.success", "Đã thêm ứng viên mới thành công!");
+                await LoadData();
+                CloseAddApplicantModal();
+                await JS.InvokeVoidAsync("toastr.success", "Đã thêm ứng viên mới thành công!");
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi thêm ứng viên.");
+            }
         }
 
-        protected void UpdateStatus(ApplicantItem applicant, string newStatus, string? note = null)
+        protected async Task UpdateStatus(ApplicantItem applicant, string newStatus, string? note = null)
         {
             if (newStatus == "Từ chối")
             {
@@ -114,52 +106,40 @@ namespace TTL.HR.Shared.Pages.Recruitment
                 return;
             }
 
-            ApplyStatusChange(applicant, newStatus, note);
+            await ApplyStatusChange(applicant, newStatus, note);
         }
 
-        protected void ApplyStatusChange(ApplicantItem applicant, string newStatus, string? note = null)
+        protected async Task ApplyStatusChange(ApplicantItem applicant, string newStatus, string? note = null)
         {
-            if (applicant.Status != newStatus || !string.IsNullOrEmpty(note))
+            var success = await RecruitmentApp.UpdateApplicantStatusAsync(applicant.Id.ToString(), newStatus, note);
+            if (success)
             {
-                if (applicant.Status != newStatus)
-                {
-                    applicant.Status = newStatus;
-                    applicant.StatusBadge = newStatus switch
-                    {
-                        "Tiếp nhận" => "badge-light-primary",
-                        "Phỏng vấn" => "badge-light-warning",
-                        "Đã tuyển" => "badge-light-success",
-                        "Từ chối" => "badge-light-danger",
-                        _ => "badge-light-secondary"
-                    };
-                }
-
-                applicant.History.Add(new StatusHistory { Status = newStatus, Date = DateTime.Now, Note = note });
-                StateHasChanged();
+                await LoadData();
+                await JS.InvokeVoidAsync("toastr.success", "Đã cập nhật trạng thái hồ sơ!");
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi cập nhật trạng thái.");
             }
         }
 
         protected void CloseRejectionModal() => IsRejectionModalOpen = false;
-        protected async System.Threading.Tasks.Task SaveRejection(string reason)
+        protected async Task SaveRejection(string reason)
         {
             if (ApplicantToReject != null)
             {
-                ApplicantToReject.RejectionReason = reason;
-                ApplyStatusChange(ApplicantToReject, "Từ chối", $"Lý do loại: {reason}");
+                await ApplyStatusChange(ApplicantToReject, "Từ chối", $"Lý do loại: {reason}");
                 IsRejectionModalOpen = false;
-                await JS.InvokeVoidAsync("toastr.success", "Đã cập nhật trạng thái hồ sơ!");
             }
         }
 
         protected void CloseSuccessModal() => IsSuccessModalOpen = false;
-        protected async System.Threading.Tasks.Task SaveSuccess(string note)
+        protected async Task SaveSuccess(string note)
         {
             if (ApplicantToSuccess != null)
             {
-                ApplicantToSuccess.HiringNote = note;
-                ApplyStatusChange(ApplicantToSuccess, "Đã tuyển", $"Ghi chú tuyển dụng: {note}");
+                await ApplyStatusChange(ApplicantToSuccess, "Đã tuyển", $"Ghi chú tuyển dụng: {note}");
                 IsSuccessModalOpen = false;
-                await JS.InvokeVoidAsync("toastr.success", "Chúc mừng! Bạn đã hoàn tất tuyển dụng ứng viên.");
             }
         }
 
@@ -177,14 +157,21 @@ namespace TTL.HR.Shared.Pages.Recruitment
             ApplicantToDelete = null;
         }
 
-        protected async System.Threading.Tasks.Task ConfirmDeleteApplicant()
+        protected async Task ConfirmDeleteApplicant()
         {
             if (ApplicantToDelete != null)
             {
-                Applicants.Remove(ApplicantToDelete);
-                if (Job != null) Job.ApplicantsCount--;
-                CloseDeleteModal();
-                await JS.InvokeVoidAsync("toastr.success", "Đã xóa hồ sơ ứng viên.");
+                var success = await RecruitmentApp.DeleteApplicantAsync(ApplicantToDelete.Id.ToString());
+                if (success)
+                {
+                    await LoadData();
+                    CloseDeleteModal();
+                    await JS.InvokeVoidAsync("toastr.success", "Đã xóa hồ sơ ứng viên.");
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi xóa hồ sơ.");
+                }
             }
         }
 
@@ -202,38 +189,38 @@ namespace TTL.HR.Shared.Pages.Recruitment
 
         protected void OpenScheduleModal(ApplicantItem applicant)
         {
+            var firstInterview = applicant.Interviews.FirstOrDefault();
             SelectedApplicant = applicant;
             ScheduleModel = new InterviewScheduleModel
             {
                 ApplicantId = applicant.Id,
                 ApplicantName = applicant.Name,
-                InterviewDate = applicant.InterviewDate ?? DateOnly.FromDateTime(DateTime.Today.AddDays(1)),
-                InterviewTime = applicant.InterviewTime ?? new TimeOnly(9, 0),
-                Interviewer = applicant.Interviewer ?? "Phan Thanh Tùng",
-                Location = applicant.Location ?? "Văn phòng Tầng 5 - TTL Building"
+                InterviewDate = DateOnly.FromDateTime(firstInterview?.ScheduledAt ?? DateTime.Today.AddDays(1)),
+                InterviewTime = TimeOnly.FromDateTime(firstInterview?.ScheduledAt ?? DateTime.Today.AddHours(9)),
+                Interviewer = firstInterview?.InterViewerName ?? "Phan Thanh Tùng",
+                Location = firstInterview?.Location ?? "Văn phòng Tầng 5 - TTL Building"
             };
             IsScheduleModalOpen = true;
         }
 
         protected void CloseScheduleModal() => IsScheduleModalOpen = false;
 
-        protected async System.Threading.Tasks.Task SaveInterviewSchedule(InterviewScheduleModel model)
+        protected async Task SaveInterviewSchedule(InterviewScheduleModel model)
         {
             if (SelectedApplicant != null)
             {
-                string note = SelectedApplicant.HasInterviewScheduled ? "Cập nhật lịch phỏng vấn" : $"Đã hẹn phỏng vấn: {model.InterviewDate:dd/MM} lúc {model.InterviewTime}";
-                
-                // Cập nhật thông tin vào applicant hiện tại
-                SelectedApplicant.InterviewDate = model.InterviewDate;
-                SelectedApplicant.InterviewTime = model.InterviewTime;
-                SelectedApplicant.Interviewer = model.Interviewer;
-                SelectedApplicant.Location = model.Location;
-                SelectedApplicant.HasInterviewScheduled = true;
-
-                ApplyStatusChange(SelectedApplicant, "Phỏng vấn", note);
-                
-                IsScheduleModalOpen = false;
-                await JS.InvokeVoidAsync("toastr.success", "Đã cập nhật lịch phỏng vấn thành công!");
+                    model.ScheduledAt = model.InterviewDate.ToDateTime(model.InterviewTime);
+                var success = await RecruitmentApp.ScheduleInterviewAsync(SelectedApplicant.Id, model);
+                if (success)
+                {
+                    await LoadData();
+                    IsScheduleModalOpen = false;
+                    await JS.InvokeVoidAsync("toastr.success", "Đã cập nhật lịch phỏng vấn thành công!");
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi đặt lịch phỏng vấn.");
+                }
             }
         }
     }

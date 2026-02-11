@@ -1,122 +1,120 @@
-@page "/payroll/period/{PeriodId}"
-@inject NavigationManager Navigation
-@using System.Linq
+@page "/payroll/period/{Year:int}/{Month:int}"
+@using TTL.HR.Shared.Components.Common
 
-<div class="card card-flush">
+<PageTitle>Chi tiết bảng lương tháng @Month/@Year - TTL.HR</PageTitle>
+
+<div class="card card-flush shadow-sm border-0">
     <!--begin::Header-->
-    <div class="card-header align-items-center py-5 gap-2 gap-md-5">
+    <div class="card-header align-items-center py-5 gap-2 gap-md-5 border-0">
         <div class="card-title">
             <div class="d-flex align-items-center position-relative my-1">
-                <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4"></i>
+                <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4 text-gray-500"></i>
                 <input type="text" class="form-control form-control-solid w-250px ps-12" placeholder="Tìm theo tên, mã NV..." @bind="SearchTerm" @bind:event="oninput">
             </div>
             
-            <div class="ms-3">
-                <select class="form-select form-select-solid w-150px">
-                    <option>Tháng 10/2023</option>
-                    <option>Tháng 09/2023</option>
-                </select>
-            </div>
-            
-             <div class="ms-3">
-                <select class="form-select form-select-solid w-200px">
-                    <option>Phòng ban: Tất cả</option>
-                    <option>Phòng Kỹ thuật</option>
-                    <option>Phòng Nhân sự</option>
-                </select>
+            <div class="ms-3 d-none d-md-block">
+                <div class="p-3 bg-light rounded fw-bold text-gray-700">
+                    Kỳ lương tháng @Month/@Year
+                </div>
             </div>
         </div>
         
-        <div class="card-toolbar">
-            <button class="btn btn-icon btn-light-primary me-2"><i class="ki-outline ki-file-down fs-2"></i></button>
-            <button class="btn btn-icon btn-light-danger me-2"><i class="ki-outline ki-trash fs-2"></i></button>
-            <button class="btn btn-icon btn-light-info me-5"><i class="ki-outline ki-arrows-circle fs-2"></i></button>
-            <button type="button" class="btn btn-light-primary border-dashed me-3"><i class="ki-outline ki-filter fs-2"></i> Lọc thêm</button>
-            <button type="button" class="btn btn-light-primary me-3"><i class="ki-outline ki-file-up fs-2"></i> Xuất Excel</button>
-            <button type="button" class="btn btn-primary" @onclick="FinalizePayroll"><i class="ki-outline ki-check-circle fs-2"></i> Chốt lương</button>
+        <div class="card-toolbar d-flex gap-2">
+            <button type="button" class="btn btn-light-primary fw-bold"><i class="ki-outline ki-file-up fs-2 me-1"></i> Xuất Excel</button>
+            <button type="button" class="btn btn-primary fw-bold" @onclick="FinalizePayroll"><i class="ki-outline ki-check-circle fs-2 me-1"></i> Chốt lương tháng này</button>
         </div>
     </div>
     <!--end::Header-->
 
     <div class="card-body pt-0">
-        <div class="mb-5 mt-2">
+        <div class="mb-5 mt-2 d-flex align-items-center justify-content-between">
             <div class="form-check form-check-custom form-check-solid">
                 <input class="form-check-input" type="checkbox" @onchange="ToggleSelectAll" checked="@IsAllSelected" />
                 <label class="form-check-label fw-bold text-gray-700 ms-3">Chọn tất cả (@FilteredPayslips.Count() nhân viên)</label>
             </div>
+            <div class="text-muted fs-7">
+                <i class="ki-outline ki-information-5 fs-5 me-1"></i> Nhấn vào tên nhân viên để điều chỉnh lương chi tiết.
+            </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table align-middle table-row-dashed fs-6 gy-5">
-                <thead>
-                    <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                        <th class="w-10px pe-2"></th>
-                        <th class="min-w-250px">NHÂN VIÊN</th>
-                        <th class="min-w-125px text-end">LƯƠNG CƠ BẢN</th>
-                        <th class="min-w-125px text-end">PHỤ CẤP</th>
-                        <th class="min-w-125px text-center">NGÀY CÔNG</th>
-                        <th class="min-w-125px text-end text-danger">GIẢM TRỪ</th>
-                        <th class="min-w-125px text-end text-primary">THỰC LĨNH</th>
-                        <th class="min-w-100px text-center">TRẠNG THÁI</th>
-                    </tr>
-                </thead>
-                <tbody class="fw-semibold text-gray-600">
-                    @foreach (var slip in FilteredPayslips)
-                    {
-                        <tr>
-                            <td>
-                                <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="checkbox" @bind="slip.IsSelected" />
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center cursor-pointer" @onclick="() => OpenDetailDrawer(slip)">
-                                    <div class="symbol symbol-circle symbol-40px overflow-hidden me-3">
-                                        <img src="@slip.AvatarUrl" alt="" />
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <a href="javascript:void(0)" class="text-gray-800 text-hover-primary fs-6 fw-bold">@slip.EmployeeName</a>
-                                        <span class="text-muted fs-7">@slip.EmployeeCode • @slip.Department</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-end fw-bold">@slip.BasicSalary.ToString("N0") đ</td>
-                            <td class="text-end text-success fw-bold">+@slip.TotalAllowances.ToString("N0") đ</td>
-                            <td class="text-center">
-                                <span class="fw-bold">@slip.ActualWorkDays</span>/@slip.StandardWorkDays
-                            </td>
-                            <td class="text-end text-danger fw-bold">-@slip.TotalDeductions.ToString("N0") đ</td>
-                            <td class="text-end fw-bolder text-primary fs-5">@slip.NetSalary.ToString("N0") đ</td>
-                            <td class="text-center">
-                                <span class="badge badge-light-@(GetStatusColor(slip.Status)) fw-bold py-2 px-3">@slip.Status</span>
-                            </td>
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="10">
+            <div class="table-responsive">
+                <table class="table align-middle table-row-dashed fs-6 gy-5">
+                    <thead class="bg-light">
+                        <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                            <th class="w-10px pe-2 ps-4"></th>
+                            <th class="min-w-250px">NHÂN VIÊN</th>
+                            <th class="min-w-125px text-end">LƯƠNG CƠ BẢN</th>
+                            <th class="min-w-125px text-end">PHỤ CẤP</th>
+                            <th class="min-w-125px text-center">NGÀY CÔNG</th>
+                            <th class="min-w-125px text-end text-danger">GIẢM TRỪ</th>
+                            <th class="min-w-125px text-end text-primary">THỰC LĨNH</th>
+                            <th class="min-w-100px text-center">TRẠNG THÁI</th>
                         </tr>
-                    }
-                </tbody>
-                <tfoot>
-                    <tr class="bg-light fw-bolder fs-6 text-gray-800">
-                        <td colspan="2" class="ps-15 py-5">TỔNG CỘNG (@FilteredPayslips.Count() nhân viên)</td>
-                        <td class="text-end">@Payslips.Sum(p => p.BasicSalary).ToString("N0") đ</td>
-                        <td class="text-end text-success">+@Payslips.Sum(p => p.TotalAllowances).ToString("N0") đ</td>
-                        <td class="text-center">--</td>
-                        <td class="text-end text-danger">-@Payslips.Sum(p => p.TotalDeductions).ToString("N0") đ</td>
-                        <td class="text-end text-primary fs-4">@Payslips.Sum(p => p.NetSalary).ToString("N0") đ</td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- STICKY ACTION BAR -->
-<div class="card card-flush shadow-sm mt-5">
-    <div class="card-body p-5 d-flex justify-content-between align-items-center">
-        <div class="text-muted fs-7"><i class="ki-outline ki-information-5 fs-5 me-1"></i>Dữ liệu được cập nhật dựa trên bảng chấm công chuẩn.</div>
-        <div class="d-flex">
-            <button class="btn btn-outline btn-outline-dashed btn-outline-default me-3"><i class="ki-outline ki-file-up fs-2"></i> Xuất file Excel Thanh toán</button>
-            <button class="btn btn-dark" @onclick="FinalizePayroll"><i class="ki-outline ki-save-2 fs-2"></i> Chốt bảng lương</button>
-        </div>
+                    </thead>
+                    <tbody class="fw-semibold text-gray-700">
+                        @if (FilteredPayslips.Any())
+                        {
+                            @foreach (var slip in FilteredPayslips)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="form-check form-check-custom form-check-solid">
+                                            <input class="form-check-input" type="checkbox" @bind="slip.IsSelected" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center cursor-pointer" @onclick="() => OpenDetailDrawer(slip)">
+                                            <div class="symbol symbol-circle symbol-40px overflow-hidden me-3 border border-gray-300">
+                                                @if (!string.IsNullOrEmpty(slip.AvatarUrl))
+                                                {
+                                                    <img src="@slip.AvatarUrl" alt="" />
+                                                }
+                                                else
+                                                {
+                                                    <span class="symbol-label bg-light-primary text-primary fw-bold">@slip.EmployeeName.Substring(0, 1)</span>
+                                                }
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="javascript:void(0)" class="text-gray-800 text-hover-primary fs-6 fw-bold">@slip.EmployeeName</a>
+                                                <span class="text-muted fs-7">@slip.EmployeeCode • @slip.Department</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-end fw-bold">@slip.BasicSalary.ToString("N0") đ</td>
+                                    <td class="text-end text-success fw-bold">+@slip.TotalAllowances.ToString("N0") đ</td>
+                                    <td class="text-center">
+                                        <span class="fw-bold">@slip.ActualWorkDays</span>/@slip.StandardWorkDays
+                                    </td>
+                                    <td class="text-end text-danger fw-bold">-@slip.TotalDeductions.ToString("N0") đ</td>
+                                    <td class="text-end fw-bolder text-primary fs-5">@slip.NetSalary.ToString("N0") đ</td>
+                                    <td class="text-center">
+                                        <span class="badge @(slip.Status == "Đã chốt" ? "badge-light-success" : "badge-light-warning") fw-bold py-2 px-3">@slip.Status</span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center py-10">Không tìm thấy dữ liệu nhân viên.</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot class="bg-light-primary bg-opacity-10">
+                        <tr class="fw-bolder fs-6 text-gray-800">
+                            <td colspan="2" class="ps-10 py-5">TỔNG CỘNG (@FilteredPayslips.Count() nhân viên)</td>
+                            <td class="text-end">@Payslips.Sum(p => p.BasicSalary).ToString("N0") đ</td>
+                            <td class="text-end text-success">+@Payslips.Sum(p => p.TotalAllowances).ToString("N0") đ</td>
+                            <td class="text-center">--</td>
+                            <td class="text-end text-danger">-@Payslips.Sum(p => p.TotalDeductions).ToString("N0") đ</td>
+                            <td class="text-end text-primary fs-4">@Payslips.Sum(p => p.NetSalary).ToString("N0") đ</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </SkeletonLoading>
     </div>
 </div>
 
@@ -124,94 +122,58 @@
 <div class="drawer drawer-end @(IsDrawerOpen ? "drawer-on" : "")" style="width: 500px; max-width: 100vw; z-index: 1060; transition: transform 0.3s ease-in-out; position: fixed; right: 0; top: 0; bottom: 0; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transform: @(IsDrawerOpen ? "translateX(0)" : "translateX(100%)")">
     @if (SelectedSlip != null)
     {
-        <div class="card w-100 rounded-0 border-0 h-100">
-            <div class="card-header border-0 pt-7 mb-2">
-                <h3 class="card-title fw-bold text-gray-900 fs-3">Phiếu lương chi tiết</h3>
+        <div class="card w-100 rounded-0 border-0 h-100 shadow-lg">
+            <div class="card-header border-0 pt-7 mb-2 ms-2">
+                <h3 class="card-title fw-bolder text-gray-900 fs-2">Điều chỉnh Phiếu lương</h3>
                 <div class="card-toolbar">
-                    <span class="badge badge-light-success fw-bold me-4">@(SelectedSlip.Status == "Đã chốt" ? "Đã chốt lương" : "Dự thảo")</span>
                     <button class="btn btn-sm btn-icon btn-active-light-primary" @onclick="CloseDrawer">
                         <i class="ki-outline ki-cross fs-1"></i>
                     </button>
                 </div>
             </div>
             <div class="card-body p-9 scroll-y">
-                <!-- Avatar & Info Box -->
-                <div class="d-flex align-items-center mb-8">
-                    <!-- Avatar lớn chuẩn thiết kế -->
-                    <div class="symbol symbol-100px symbol-circle me-6">
-                         <img src="@SelectedSlip.AvatarUrl" alt="image" style="object-fit: cover" />
+                <!-- User Info -->
+                <div class="d-flex align-items-center mb-8 bg-light p-6 rounded">
+                    <div class="symbol symbol-70px symbol-circle me-5 border border-white border-4 shadow-sm">
+                         <img src="@SelectedSlip.AvatarUrl" alt="" />
                     </div>
-                    <!-- Info bên phải -->
                     <div class="d-flex flex-column">
-                        <a href="#" class="fs-2 fw-bold text-gray-1000 text-hover-primary mb-1">@SelectedSlip.EmployeeName</a>
-                        <span class="fs-6 fw-semibold text-gray-500 mb-1">ID: @SelectedSlip.EmployeeCode</span>
-                        <span class="fs-6 fw-semibold text-gray-500">@SelectedSlip.Department</span>
-                        <span class="fs-7 fw-semibold text-muted mt-1">Kỳ lương: 01/10/2023 - 31/10/2023</span>
+                        <span class="fs-4 fw-bold text-gray-900 mb-1">@SelectedSlip.EmployeeName</span>
+                        <span class="fs-7 fw-semibold text-gray-500">Mã NV: @SelectedSlip.EmployeeCode</span>
+                        <span class="fs-7 fw-semibold text-gray-500">@SelectedSlip.Department</span>
                     </div>
                 </div>
 
-                <div class="d-flex mb-9 gap-3">
-                    <button class="btn btn-sm btn-light-primary flex-grow-1 fw-bold"><i class="ki-outline ki-file-down fs-3 me-1"></i> Tải PDF</button>
-                    <button class="btn btn-sm btn-primary flex-grow-1 fw-bold"><i class="ki-outline ki-sms fs-3 me-1"></i> Gửi qua Email</button>
-                </div>
+                <div class="mb-10">
+                    <h4 class="fw-bold mb-5 fs-6 text-uppercase text-gray-500 border-bottom pb-2">Các khoản điều chỉnh</h4>
+                    
+                    <div class="mb-6">
+                        <label class="form-label fw-bold">Lương cơ bản (VND)</label>
+                        <input type="number" class="form-control form-control-solid fw-bold text-primary fs-5" @bind="SelectedSlip.BasicSalary" />
+                    </div>
 
-                <!-- Tóm tắt -->
-                <div class="mb-9">
-                    <h4 class="fw-bold mb-4 fs-7 text-uppercase text-gray-500 ls-1">Tóm tắt công suất</h4>
-                    <div class="row g-3">
-                        <div class="col-4">
-                            <div class="bg-light p-4 rounded-2 text-center">
-                                <div class="fs-6 fw-bold text-gray-800">@SelectedSlip.ActualWorkDays/@SelectedSlip.StandardWorkDays</div>
-                                <div class="fs-9 text-muted fw-bold">NGÀY CÔNG</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="bg-light p-4 rounded-2 text-center">
-                                <div class="fs-6 fw-bold text-gray-800">15 giờ</div>
-                                <div class="fs-9 text-muted fw-bold">TĂNG CA</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="bg-light p-4 rounded-2 text-center">
-                                <div class="fs-6 fw-bold text-gray-800">0 lần</div>
-                                <div class="fs-9 text-muted fw-bold">MUỘN/SỚM</div>
-                            </div>
-                        </div>
+                    <div class="mb-6">
+                        <label class="form-label fw-bold">Các khoản Phụ cấp (+)</label>
+                        <input type="number" class="form-control form-control-solid fw-bold text-success fs-5" @bind="SelectedSlip.TotalAllowances" />
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="form-label fw-bold">Các khoản Giảm trừ (-)</label>
+                        <input type="number" class="form-control form-control-solid fw-bold text-danger fs-5" @bind="SelectedSlip.TotalDeductions" />
                     </div>
                 </div>
 
-                <div class="mb-9">
-                    <div class="d-flex flex-stack mb-5">
-                        <h4 class="fw-bold fs-6 text-uppercase text-gray-500">1. Các khoản thu nhập</h4>
-                        <span class="fs-6 fw-bold text-success">+@SelectedSlip.TotalAllowances.ToString("N0") đ</span>
-                    </div>
-                    <div class="separator separator-dashed mb-5"></div>
-                    <div class="d-flex flex-stack mb-4"><span class="text-gray-600">Lương cơ bản</span><span class="fw-bold">@SelectedSlip.BasicSalary.ToString("N0") đ</span></div>
-                    <div class="d-flex flex-stack mb-4"><span class="text-gray-600">Lương OT (15h)</span><span class="fw-bold">4,500,000 đ</span></div>
-                    <div class="d-flex flex-stack mb-4"><span class="text-gray-600">Thưởng dự án</span><span class="fw-bold">2,000,000 đ</span></div>
-                    <div class="d-flex flex-stack mb-4"><span class="text-gray-600">Phụ cấp ăn trưa</span><span class="fw-bold">1,000,000 đ</span></div>
-                </div>
-
-                <div class="mb-9">
-                    <div class="d-flex flex-stack mb-5">
-                        <h4 class="fw-bold fs-6 text-uppercase text-gray-500">2. Các khoản giảm trừ</h4>
-                        <span class="fs-6 fw-bold text-danger">-@SelectedSlip.TotalDeductions.ToString("N0") đ</span>
-                    </div>
-                    <div class="separator separator-dashed mb-5"></div>
-                    <div class="d-flex flex-stack mb-4"><span class="text-gray-600">BHXH (8%)</span><span class="fw-bold">1,500,000 đ</span></div>
-                    <div class="d-flex flex-stack mb-4"><span class="text-gray-600">Thuế TNCN</span><span class="fw-bold">150,000 đ</span></div>
-                </div>
-
-                <div class="bg-dark rounded p-6 d-flex flex-stack">
+                <div class="bg-dark rounded p-8 d-flex flex-stack shadow">
                     <div class="d-flex flex-column">
-                        <span class="text-white fw-bold fs-6">THỰC LĨNH CUỐI CÙNG QÚY NÀY</span>
-                        <span class="text-muted fs-8">Đã bao gồm các khoản thuế & bảo hiểm bắt buộc</span>
+                        <span class="text-white fw-bold fs-6">THỰC LĨNH SAU ĐIỀU CHỈNH</span>
+                        <span class="text-gray-500 fs-8">Tính toán tự động theo công thức</span>
                     </div>
-                    <span class="text-white fw-bolder fs-2">@SelectedSlip.NetSalary.ToString("N0") đ</span>
+                    <span class="text-primary fw-bolder fs-1">@((SelectedSlip.BasicSalary + SelectedSlip.TotalAllowances - SelectedSlip.TotalDeductions).ToString("N0")) đ</span>
                 </div>
             </div>
-            <div class="card-footer border-0 py-5 text-center">
-                <span class="text-muted fs-8">Người duyệt: Bùi Quang Tuấn • Ngày duyệt: 01/10/2023 10:30</span>
+            <div class="card-footer border-0 py-8 px-9 d-flex gap-3">
+                <button type="button" class="btn btn-light fw-bold flex-grow-1" @onclick="CloseDrawer">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary fw-bold flex-grow-1" @onclick="SaveAdjustments">Lưu thay đổi</button>
             </div>
         </div>
     }
@@ -220,93 +182,4 @@
 @if (IsDrawerOpen)
 {
     <div class="modal-backdrop fade show" @onclick="CloseDrawer" style="z-index: 1050"></div>
-}
-
-@code {
-    [Parameter] public string PeriodId { get; set; }
-    private string SearchTerm = "";
-    private List<PayslipViewModel> Payslips = new();
-    private bool IsAllSelected = false;
-    private bool IsDrawerOpen = false;
-    private PayslipViewModel SelectedSlip;
-
-    protected override void OnInitialized()
-    {
-        Payslips = new List<PayslipViewModel>
-        {
-            new PayslipViewModel { EmployeeCode = "MNV001", EmployeeName = "Nguyễn Văn Lộc", Department = "Phòng Kỹ thuật", AvatarUrl = "assets/media/avatars/300-1.jpg", BasicSalary = 15000000, TotalAllowances = 7500000, ActualWorkDays = 22, StandardWorkDays = 22, TotalDeductions = 1650000, Status = "Dự thảo" },
-            new PayslipViewModel { EmployeeCode = "MNV002", EmployeeName = "Phạm Minh Tuấn", Department = "Phòng Kinh doanh", AvatarUrl = "assets/media/avatars/300-2.jpg", BasicSalary = 10000000, TotalAllowances = 15800000, ActualWorkDays = 20, StandardWorkDays = 22, TotalDeductions = 1500000, Status = "Dự thảo" },
-            new PayslipViewModel { EmployeeCode = "MNV003", EmployeeName = "Trần Thị Thu", Department = "Phòng Marketing", AvatarUrl = "assets/media/avatars/300-3.jpg", BasicSalary = 18000000, TotalAllowances = 3000000, ActualWorkDays = 22, StandardWorkDays = 22, TotalDeductions = 2100000, Status = "Dự thảo" },
-            new PayslipViewModel { EmployeeCode = "MNV004", EmployeeName = "Bùi Quang Tuấn", Department = "Ban Giám đốc", AvatarUrl = "assets/media/avatars/300-5.jpg", BasicSalary = 45000000, TotalAllowances = 10000000, ActualWorkDays = 22, StandardWorkDays = 22, TotalDeductions = 5500000, Status = "Dự thảo" },
-            new PayslipViewModel { EmployeeCode = "MNV005", EmployeeName = "Lê Hoàng Long", Department = "Phòng Kỹ thuật", AvatarUrl = "assets/media/avatars/300-6.jpg", BasicSalary = 23000000, TotalAllowances = 4000000, ActualWorkDays = 22, StandardWorkDays = 22, TotalDeductions = 2500000, Status = "Dự thảo" },
-            new PayslipViewModel { EmployeeCode = "MNV006", EmployeeName = "Đỗ Thùy Trang", Department = "Phòng Kế toán", AvatarUrl = "assets/media/avatars/300-7.jpg", BasicSalary = 14000000, TotalAllowances = 1500000, ActualWorkDays = 22, StandardWorkDays = 22, TotalDeductions = 1470000, Status = "Đã chốt" },
-            new PayslipViewModel { EmployeeCode = "MNV007", EmployeeName = "Ngô Chí Công", Department = "Phòng Nhân sự", AvatarUrl = "assets/media/avatars/300-9.jpg", BasicSalary = 12000000, TotalAllowances = 2000000, ActualWorkDays = 22, StandardWorkDays = 22, TotalDeductions = 1265000, Status = "Đã chốt" },
-            new PayslipViewModel { EmployeeCode = "MNV008", EmployeeName = "Vũ Thị Mai", Department = "Phòng Marketing", AvatarUrl = "assets/media/avatars/300-11.jpg", BasicSalary = 12500000, TotalAllowances = 3000000, ActualWorkDays = 18, StandardWorkDays = 22, TotalDeductions = 1180000, Status = "Dự thảo" },
-            new PayslipViewModel { EmployeeCode = "MNV009", EmployeeName = "Hoàng Gia Bảo", Department = "IT Support", AvatarUrl = "assets/media/avatars/300-12.jpg", BasicSalary = 11000000, TotalAllowances = 2000000, ActualWorkDays = 21, StandardWorkDays = 22, TotalDeductions = 1155000, Status = "Dự thảo" },
-            new PayslipViewModel { EmployeeCode = "MNV010", EmployeeName = "Lý Minh Anh", Department = "Phòng Hành chính", AvatarUrl = "assets/media/avatars/300-13.jpg", BasicSalary = 9000000, TotalAllowances = 1000000, ActualWorkDays = 22, StandardWorkDays = 22, TotalDeductions = 945000, Status = "Dự thảo" }
-        };
-        foreach (var p in Payslips) { p.CalculateNet(); }
-    }
-
-    private void OpenDetailDrawer(PayslipViewModel slip)
-    {
-        SelectedSlip = slip;
-        IsDrawerOpen = true;
-    }
-
-    private void CloseDrawer()
-    {
-        IsDrawerOpen = false;
-    }
-
-    private void ToggleSelectAll(ChangeEventArgs e)
-    {
-        IsAllSelected = (bool)e.Value;
-        foreach (var slip in FilteredPayslips) { slip.IsSelected = IsAllSelected; }
-    }
-
-    private void FinalizePayroll()
-    {
-        foreach (var p in Payslips.Where(x => x.IsSelected || !Payslips.Any(s => s.IsSelected)))
-        {
-            p.Status = "Đã chốt";
-        }
-    }
-
-    private IEnumerable<PayslipViewModel> FilteredPayslips =>
-        string.IsNullOrWhiteSpace(SearchTerm) 
-        ? Payslips 
-        : Payslips.Where(p => p.EmployeeName.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) || p.EmployeeCode.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
-
-    private string GetStatusColor(string status)
-    {
-        return status switch
-        {
-            "Dự thảo" => "warning",
-            "Đã gửi" => "primary",
-            "Đã chốt" => "success",
-            _ => "secondary"
-        };
-    }
-
-    public class PayslipViewModel
-    {
-        public bool IsSelected { get; set; }
-        public string EmployeeCode { get; set; }
-        public string EmployeeName { get; set; }
-        public string Department { get; set; }
-        public string AvatarUrl { get; set; }
-        public decimal BasicSalary { get; set; }
-        public decimal TotalAllowances { get; set; }
-        public decimal TotalDeductions { get; set; }
-        public decimal NetSalary { get; set; }
-        public int ActualWorkDays { get; set; }
-        public int StandardWorkDays { get; set; }
-        public string Status { get; set; }
-
-        public void CalculateNet()
-        {
-            NetSalary = BasicSalary + TotalAllowances - TotalDeductions;
-        }
-    }
 }

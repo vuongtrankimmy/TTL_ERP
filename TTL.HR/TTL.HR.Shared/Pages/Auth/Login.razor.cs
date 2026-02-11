@@ -1,16 +1,19 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-
 using Microsoft.JSInterop;
+using TTL.HR.Application.Modules.Common.Interfaces;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Shared.Pages.Auth
 {
     public partial class Login
     {
         [Inject] public IJSRuntime JS { get; set; }
+        [Inject] public IAuthService AuthService { get; set; }
+        [Inject] public NavigationManager Navigation { get; set; }
 
-        private string _email = "admin@orgax.vn";
+        private string _username = "admin";
         private string _password = "admin";
         private bool _isLoading = false;
 
@@ -18,22 +21,53 @@ namespace TTL.HR.Shared.Pages.Auth
         {
             if (_isLoading) return;
 
+            if (string.IsNullOrEmpty(_username) || string.IsNullOrEmpty(_password))
+            {
+                try {
+                    await JS.InvokeVoidAsync("toastr.warning", "Vui lòng nhập đầy đủ tài khoản và mật khẩu!");
+                } catch { }
+                return;
+            }
+
             _isLoading = true;
             StateHasChanged();
 
-            // Giả lập quá trình đăng nhập
-            await Task.Delay(1000);
-            
-            _isLoading = false;
-            StateHasChanged();
-            
-            // Thông báo thành công
-            try {
-                await JS.InvokeVoidAsync("toastr.success", "Đăng nhập thành công!");
-            } catch { /* Ignore if toastr not loaded */ }
+            try
+            {
+                var response = await AuthService.LoginAsync(new LoginRequest 
+                { 
+                    Username = _username, 
+                    Password = _password 
+                });
 
-            // Điều hướng về dashboard
-            Navigation.NavigateTo("/dashboard");
+                if (response.Success)
+                {
+                    // Thông báo thành công
+                    try {
+                        await JS.InvokeVoidAsync("toastr.success", response.Message ?? "Đăng nhập thành công!");
+                    } catch { }
+
+                    // Điều hướng về dashboard
+                    Navigation.NavigateTo("/dashboard");
+                }
+                else
+                {
+                    try {
+                        await JS.InvokeVoidAsync("toastr.error", response.Message ?? "Đăng nhập thất bại. Vui lòng kiểm tra lại tài khoản!");
+                    } catch { }
+                }
+            }
+            catch (Exception ex)
+            {
+                try {
+                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra trong quá trình kết nối!");
+                } catch { }
+            }
+            finally
+            {
+                _isLoading = false;
+                StateHasChanged();
+            }
         }
     }
 }

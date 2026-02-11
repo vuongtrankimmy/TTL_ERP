@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using TTL.HR.Application.Modules.Leave.Interfaces;
+using TTL.HR.Application.Modules.Leave.Models;
 
 namespace TTL.HR.Shared.Pages.Leave
 {

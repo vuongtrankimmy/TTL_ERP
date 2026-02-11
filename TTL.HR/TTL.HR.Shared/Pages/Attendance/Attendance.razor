@@ -89,24 +89,24 @@
                                                     @if (!string.IsNullOrEmpty(emp.Avatar))
                                                     {
                                                         <img src="@emp.Avatar" alt="user" />
-                                                    }
-                                                    else
-                                                    {
-                                                        <div class="symbol-label bg-light-danger text-danger fw-bolder">@emp.Name.Substring(0, 1)</div>
-                                                    }
+                                                     }
+                                                     else
+                                                     {
+                                                        <div class="symbol-label bg-light-danger text-danger fw-bolder">@emp.EmployeeName.Substring(0, 1)</div>
+                                                     }
                                                 </div>
-                                                <div class="d-flex justify-content-start flex-column"><span class="text-dark fw-bolder fs-6">@emp.Name</span><span class="text-muted fw-bold fs-7">@emp.Id • @emp.Role</span></div>
+                                                <div class="d-flex justify-content-start flex-column"><span class="text-dark fw-bolder fs-6">@emp.EmployeeName</span><span class="text-muted fw-bold fs-7">@emp.EmployeeId • @emp.Role</span></div>
                                             </div>
                                         </td>
                                         <td><span class="text-gray-700 fw-bold">@emp.Department</span></td>
                                         <td class="text-center fw-bolder text-gray-800">@emp.StandardWork</td>
                                         <td class="text-center fw-bolder text-primary">@emp.ActualWork</td>
-                                        <td class="text-center"><span class="text-danger fw-bold">@emp.LateEarly.Split('/')[0]</span>/<span class="text-gray-600 fw-bold">@emp.LateEarly.Split('/')[1]</span></td>
-                                        <td class="text-center"><span class="text-warning fw-bold">@emp.LeaveHoliday.Split('/')[0]</span>/<span class="text-gray-600 fw-bold">@emp.LeaveHoliday.Split('/')[1]</span></td>
-                                        <td class="text-center fw-bold text-success">@emp.Overtime</td>
+                                        <td class="text-center"><span class="text-danger fw-bold">@emp.LateCount</span>/<span class="text-gray-600 fw-bold">@emp.EarlyLeaveCount</span></td>
+                                        <td class="text-center"><span class="text-warning fw-bold">@emp.LeaveDays</span>/<span class="text-gray-600 fw-bold">@emp.HolidayDays</span></td>
+                                        <td class="text-center fw-bold text-success">@emp.OvertimeHours h</td>
                                         <td class="text-center">
-                                            <span class="badge @emp.StatusColor fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
-                                                <span class="bullet bullet-dot @(emp.StatusColor.Replace("badge-light-", "bg-")) w-6px h-6px me-2"></span>@emp.Status
+                                            <span class="badge @GetStatusColor(emp.Status) fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                                <span class="bullet bullet-dot @(GetStatusColor(emp.Status).Replace("badge-light-", "bg-")) w-6px h-6px me-2"></span>@emp.Status
                                             </span>
                                         </td>
                                         <td class="text-end">
@@ -169,13 +169,13 @@
                             }
                             else
                             {
-                                <div class="symbol-label fs-2 fw-bold bg-primary text-inverse-primary">@_selectedEmployee.Name.Substring(0, 1)</div>
+                                <div class="symbol-label fs-2 fw-bold bg-primary text-inverse-primary">@_selectedEmployee.EmployeeName.Substring(0, 1)</div>
                             }
                         </div>
                         <div class="d-flex flex-column">
                             <div class="d-flex align-items-center mb-1">
-                                <span class="text-gray-900 fw-bolder fs-5 me-2">@_selectedEmployee.Name</span>
-                                <span class="badge @_selectedEmployee.StatusColor fw-bold fs-9 px-2 py-1">@_selectedEmployee.Status</span>
+                                <span class="text-gray-900 fw-bolder fs-5 me-2">@_selectedEmployee.EmployeeName</span>
+                                <span class="badge @GetStatusColor(_selectedEmployee.Status) fw-bold fs-9 px-2 py-1">@_selectedEmployee.Status</span>
                             </div>
                             <span class="text-muted fw-bold fs-7">@_selectedEmployee.Department - @_selectedEmployee.Role</span>
                         </div>
@@ -191,25 +191,25 @@
                 <div class="row g-5 mb-8">
                     <div class="col-6">
                         <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 mb-3">
-                            <div class="fs-6 fw-bolder text-gray-700">@_selectedEmployee.LateEarly</div>
+                            <div class="fs-6 fw-bolder text-gray-700">@_selectedEmployee.LateCount/@_selectedEmployee.EarlyLeaveCount</div>
                             <div class="fw-bold text-muted fs-8">Đi muộn/Về sớm</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 mb-3">
-                            <div class="fs-6 fw-bolder text-gray-700">@_selectedEmployee.Overtime</div>
+                            <div class="fs-6 fw-bolder text-gray-700">@_selectedEmployee.OvertimeHours h</div>
                             <div class="fw-bold text-muted fs-8">Tăng ca (OT)</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 mb-3">
-                            <div class="fs-6 fw-bolder text-gray-700">@_selectedEmployee.LeaveHoliday</div>
+                            <div class="fs-6 fw-bolder text-gray-700">@_selectedEmployee.LeaveDays/@_selectedEmployee.HolidayDays</div>
                             <div class="fw-bold text-muted fs-8">Nghỉ phép/Lễ</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 mb-3">
-                            <div class="fs-6 fw-bolder text-gray-700">100%</div>
+                            <div class="fs-6 fw-bolder text-gray-700">@((_selectedEmployee.ActualWork / _selectedEmployee.StandardWork * 100).ToString("0"))%</div>
                             <div class="fw-bold text-muted fs-8">Tỷ lệ chuyên cần</div>
                         </div>
                     </div>
@@ -228,42 +228,45 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><span class="text-gray-800 fw-bold fs-7">02/02 - Thứ 2</span></td>
-                                <td class="text-center"><span class="badge badge-light-success fs-7 fw-bold">08:00</span></td>
-                                <td class="text-center"><span class="badge badge-light-success fs-7 fw-bold">17:30</span></td>
-                                <td class="text-end"><span class="text-gray-800 fw-bolder fs-7">1.0</span></td>
-                            </tr>
-                            <tr>
-                                <td><span class="text-gray-800 fw-bold fs-7">03/02 - Thứ 3</span></td>
-                                <td class="text-center"><span class="badge badge-light-danger fs-7 fw-bold">08:15</span></td>
-                                <td class="text-center"><span class="badge badge-light-success fs-7 fw-bold">17:30</span></td>
-                                <td class="text-end"><span class="text-gray-800 fw-bolder fs-7">1.0</span></td>
-                            </tr>
-                            <tr>
-                                <td><span class="text-gray-800 fw-bold fs-7">04/02 - Thứ 4</span></td>
-                                <td class="text-center"><span class="badge badge-light-success fs-7 fw-bold">07:55</span></td>
-                                <td class="text-center"><span class="badge badge-light-success fs-7 fw-bold">17:35</span></td>
-                                <td class="text-end"><span class="text-gray-800 fw-bolder fs-7">1.0</span></td>
-                            </tr>
-                            <tr>
-                                <td><span class="text-gray-800 fw-bold fs-7">05/02 - Thứ 5</span></td>
-                                <td class="text-center"><span class="badge badge-light-success fs-7 fw-bold">08:02</span></td>
-                                <td class="text-center"><span class="badge badge-light-success fs-7 fw-bold">17:32</span></td>
-                                <td class="text-end"><span class="text-gray-800 fw-bolder fs-7">1.0</span></td>
-                            </tr>
+                            @foreach (var detail in _selectedDetails)
+                            {
+                                <tr>
+                                    <td><span class="text-gray-800 fw-bold fs-7">@detail.Date.ToString("dd/MM") - @detail.DayOfWeek</span></td>
+                                    <td class="text-center">
+                                        @if (detail.CheckIn.HasValue)
+                                        {
+                                            <span class="badge @(detail.IsLate ? "badge-light-danger" : "badge-light-success") fs-7 fw-bold">@detail.CheckIn.Value.ToString("HH:mm")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fs-8">--:--</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (detail.CheckOut.HasValue)
+                                        {
+                                            <span class="badge @(detail.IsEarlyLeave ? "badge-light-danger" : "badge-light-success") fs-7 fw-bold">@detail.CheckOut.Value.ToString("HH:mm")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fs-8">--:--</span>
+                                        }
+                                    </td>
+                                    <td class="text-end"><span class="text-gray-800 fw-bolder fs-7">@detail.WorkValue.ToString("0.0")</span></td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
 
                 <!-- Warning Block -->
-                @if (int.Parse(_selectedEmployee.LateEarly.Split('/')[0]) > 0)
+                @if (_selectedEmployee.LateCount > 0)
                 {
                     <div class="alert alert-dismissible bg-light-warning d-flex flex-column flex-sm-row p-5 mb-8 border border-warning">
                         <i class="ki-outline ki-information-5 fs-2hx text-warning me-4 mb-5 mb-sm-0"></i>
                         <div class="d-flex flex-column">
                             <h4 class="fw-bold text-gray-800 mb-1">Lưu ý từ hệ thống</h4>
-                            <span class="fs-7 text-gray-700">Nhân viên này có @_selectedEmployee.LateEarly.Split('/')[0] ngày đi muộn. Vui lòng kiểm tra lý do giải trình nếu có.</span>
+                            <span class="fs-7 text-gray-700">Nhân viên này có @_selectedEmployee.LateCount ngày đi muộn. Vui lòng kiểm tra lý do giải trình nếu có.</span>
                         </div>
                     </div>
                 }

@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
+using TTL.HR.Application.Modules.Organization.Interfaces;
+using TTL.HR.Application.Modules.Organization.Models;
 
 namespace TTL.HR.Shared.Pages.Organization
 {
     public partial class DepartmentList
     {
+        [Inject] private IDepartmentService DepartmentService { get; set; } = default!;
+
         private bool _showEditDrawer = false;
         private bool _showDetailDrawer = false;
         private bool _showConfirmDeleteModal = false;
@@ -16,28 +20,57 @@ namespace TTL.HR.Shared.Pages.Organization
         private bool _isLoading = true;
         private DepartmentItem _editingDept = new();
         private DepartmentItem? _selectedDept;
-
-        protected override async System.Threading.Tasks.Task OnInitializedAsync()
-        {
-            // Simulate API loading
-            await System.Threading.Tasks.Task.Delay(1150);
-            _isLoading = false;
-        }
         private DepartmentItem? _departmentToDelete;
 
         private List<string> _availableIcons = new() { 
             "ki-outline ki-code", "ki-outline ki-people", "ki-outline ki-chart-line-up", 
-            "ki-outline ki-gear", "ki-outline ki-shield-tick", "ki-outline ki-briefcase" 
+            "ki-outline ki-gear", "ki-outline ki-shield-tick", "ki-outline ki-briefcase",
+            "ki-outline ki-abstract-26", "ki-outline ki-abstract-41"
         };
 
-        private List<DepartmentItem> _departments = new()
+        private List<DepartmentItem> _departments = new();
+
+        protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
-            new("Phòng Kỹ Thuật (Engineering)", "ENG-001", "Khối Công Nghệ (CTO)", "Nguyễn Văn Lộc", "Tech Lead", "assets/media/avatars/300-1.jpg", 42, 50, true, "ki-outline ki-code", "bg-light-primary", "text-primary", "bg-primary"),
-            new("Phòng Nhân Sự (HR)", "HR-001", "Khối Vận Hành (COO)", "Lê Thị Lan", "HR Manager", null, 8, 10, true, "ki-outline ki-people", "bg-light-success", "text-success", "bg-success"),
-            new("Phòng Kinh Doanh (Sales)", "SAL-001", "Khối Kinh Doanh (CBDO)", "Trần Minh Tâm", "Sales Director", null, 25, 30, true, "ki-outline ki-chart-line-up", "bg-light-warning", "text-warning", "bg-warning"),
-            new("Phòng Marketing", "MKT-001", "Khối Kinh Doanh (CBDO)", "Hoàng Anh Tuấn", "Marketing Head", null, 12, 15, true, "ki-outline ki-megaphone", "bg-light-info", "text-info", "bg-info"),
-            new("Ban Pháp Chế", "LEG-001", "Ban Giám Đốc", "Phạm Như Quỳnh", "Legal Counsel", null, 3, 4, true, "ki-outline ki-shield-tick", "bg-light-danger", "text-danger", "bg-danger")
-        };
+            await LoadDepartments();
+        }
+
+        private async System.Threading.Tasks.Task LoadDepartments()
+        {
+            _isLoading = true;
+            try
+            {
+                var departments = await DepartmentService.GetDepartmentsAsync();
+                _departments = departments.Select(d => new DepartmentItem
+                {
+                    Id = d.Id,
+                    Name = d.Name,
+                    Code = d.Code,
+                    Block = d.Description ?? "", // Mapping Description to Block for now
+                    ManagerName = d.ManagerName,
+                    ManagerTitle = d.ManagerTitle,
+                    ManagerAvatar = d.ManagerAvatar,
+                    EmployeeCount = d.EmployeeCount,
+                    IsActive = d.IsActive,
+                    Capacity = 10, // Default or fetch if available
+                    // Set default UI properties or map if stored
+                    Icon = "ki-outline ki-briefcase",
+                    IconBg = "bg-light-primary",
+                    IconColor = "text-primary",
+                    ProgressColor = "bg-primary"
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                // Handle error
+                Console.WriteLine($"Error loading departments: {ex.Message}");
+            }
+            finally
+            {
+                _isLoading = false;
+                StateHasChanged();
+            }
+        }
 
         private IEnumerable<DepartmentItem> FilteredDepartments => _departments
             .Where(d => string.IsNullOrEmpty(_searchTerm) || d.Name.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) || d.Code.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase))
@@ -53,7 +86,23 @@ namespace TTL.HR.Shared.Pages.Organization
 
         private void editDepartment(DepartmentItem dept) {
             _isNewDepartment = false;
-            _editingDept = dept; // In real app, we should clone
+            _editingDept = new DepartmentItem
+            {
+                Id = dept.Id,
+                Name = dept.Name,
+                Code = dept.Code,
+                Block = dept.Block,
+                ManagerName = dept.ManagerName,
+                ManagerTitle = dept.ManagerTitle,
+                ManagerAvatar = dept.ManagerAvatar,
+                EmployeeCount = dept.EmployeeCount,
+                Capacity = dept.Capacity,
+                IsActive = dept.IsActive,
+                Icon = dept.Icon,
+                IconBg = dept.IconBg,
+                IconColor = dept.IconColor,
+                ProgressColor = dept.ProgressColor
+            };
             _showEditDrawer = true;
         }
 
@@ -65,11 +114,43 @@ namespace TTL.HR.Shared.Pages.Organization
         private void closeEditDrawer() => _showEditDrawer = false;
         private void closeDetailDrawer() => _showDetailDrawer = false;
 
-        private void saveDepartment() {
-            if (_isNewDepartment) {
-                _departments.Insert(0, _editingDept);
+        private async System.Threading.Tasks.Task saveDepartment() {
+            _isLoading = true;
+            try 
+            {
+                if (_isNewDepartment) {
+                    var createRequest = new CreateDepartmentRequest
+                    {
+                        Name = _editingDept.Name,
+                        Code = _editingDept.Code,
+                        Description = _editingDept.Block, // Mapping Block to Description
+                        ParentId = null // Add UI for ParentId if needed
+                    };
+                    await DepartmentService.CreateDepartmentAsync(createRequest);
+                }
+                else
+                {
+                    var updateRequest = new UpdateDepartmentRequest
+                    {
+                        Name = _editingDept.Name,
+                        Code = _editingDept.Code,
+                        Description = _editingDept.Block,
+                        IsActive = _editingDept.IsActive
+                    };
+                    await DepartmentService.UpdateDepartmentAsync(_editingDept.Id, updateRequest);
+                }
+                await LoadDepartments();
+                closeEditDrawer();
             }
-            closeEditDrawer();
+            catch (Exception ex)
+            {
+                 Console.WriteLine($"Error saving department: {ex.Message}");
+            }
+            finally
+            {
+                _isLoading = false;
+                StateHasChanged();
+            }
         }
 
         private void requestDeleteDepartment(DepartmentItem dept) {
@@ -82,15 +163,27 @@ namespace TTL.HR.Shared.Pages.Organization
             _departmentToDelete = null;
         }
 
-        private void confirmDeleteDepartment() {
+        private async System.Threading.Tasks.Task confirmDeleteDepartment() {
             if (_departmentToDelete != null) {
-                _departments.Remove(_departmentToDelete);
-                closeDeleteModal();
+                try
+                {
+                    await DepartmentService.DeleteDepartmentAsync(_departmentToDelete.Id);
+                    await LoadDepartments();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error deleting department: {ex.Message}");
+                }
+                finally
+                {
+                    closeDeleteModal();
+                }
             }
         }
 
         private class DepartmentItem
         {
+            public string Id { get; set; } = string.Empty;
             public string Name { get; set; } = "";
             public string Code { get; set; } = "";
             public string Block { get; set; } = "";

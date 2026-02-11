@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="TTL.HR/TTL.HR.Application/TTL.HR.Application.csproj" />
   <Project Path="TTL.HR/TTL.HR.Shared/TTL.HR.Shared.csproj" />
   <Project Path="TTL.HR/TTL.HR.Web/TTL.HR.Web.csproj" />
   <Project Path="TTL.HR/TTL.HR/TTL.HR.csproj">

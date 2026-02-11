@@ -114,11 +114,11 @@
 													}
 													else
 													{
-														<span class="symbol-label @item.AvatarColor fs-6 fw-bolder">@item.Name.Substring(0, 1)</span>
+														<span class="symbol-label bg-light-danger text-danger fs-6 fw-bolder">@item.EmployeeName.Substring(0, 1)</span>
 													}
 												</div>
 												<div class="d-flex justify-content-start flex-column">
-													<span class="text-dark fw-bolder fs-6 cursor-pointer text-hover-primary" @onclick="() => OpenDetail(item)">@item.Name</span>
+													<span class="text-dark fw-bolder fs-6 cursor-pointer text-hover-primary" @onclick="() => OpenDetail(item)">@item.EmployeeName</span>
 													<span class="text-muted fw-bold fs-7">@item.EmployeeId • @item.Department</span>
 												</div>
 											</div>
@@ -134,9 +134,16 @@
 												@(item.Reason.Length > 30 ? item.Reason.Substring(0, 30) + "..." : item.Reason)
 											</span>
 										</td>
-										<td><span class="text-gray-800 fw-bold fs-7">@item.ApplyDate</span></td>
+										<td><span class="text-gray-800 fw-bold fs-7">@item.RequestedDate.ToString("dd/MM/yyyy")</span></td>
 										<td class="text-center">
-											<span class="badge @item.StatusClass fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+											@{
+												var statusClass = item.Status switch {
+													"Approved" or "Đã duyệt" => "badge-light-success",
+													"Rejected" or "Từ chối" => "badge-light-danger",
+													_ => "badge-light-warning"
+												};
+											}
+											<span class="badge @statusClass fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
 												@if (item.IsPending)
 												{
 													<span class="bullet bullet-dot bg-warning w-6px h-6px me-2 pulse pulse-warning"></span>
@@ -196,15 +203,15 @@
 					<div class="symbol symbol-60px symbol-circle me-5">
 						@if (!string.IsNullOrEmpty(_selectedRequest.Avatar))
 						{
-							<img src="@_selectedRequest.Avatar" alt="@_selectedRequest.Name" />
+							<img src="@_selectedRequest.Avatar" alt="@_selectedRequest.EmployeeName" />
 						}
 						else
 						{
-							<span class="symbol-label @_selectedRequest.AvatarColor fs-2 fw-bold">@_selectedRequest.Name.Substring(0, 1)</span>
+							<span class="symbol-label bg-light-info text-info fs-2 fw-bold">@_selectedRequest.EmployeeName.Substring(0, 1)</span>
 						}
 					</div>
 					<div class="flex-grow-1">
-						<a href="#" class="text-gray-900 fw-bold text-hover-primary fs-5">@_selectedRequest.Name</a>
+						<a href="#" class="text-gray-900 fw-bold text-hover-primary fs-5">@_selectedRequest.EmployeeName</a>
 						<span class="text-muted d-block fw-semibold">@_selectedRequest.EmployeeId • @_selectedRequest.Department</span>
 					</div>
 				</div>
@@ -228,7 +235,7 @@
 				<!-- Info Grid -->
 				<div class="mb-5">
 					<label class="fw-bold text-gray-700 mb-1">Ngày áp dụng</label>
-					<div class="fw-bold fs-6 text-gray-900 border-bottom pb-2">@_selectedRequest.ApplyDate</div>
+					<div class="fw-bold fs-6 text-gray-900 border-bottom pb-2">@_selectedRequest.RequestedDate.ToString("dd/MM/yyyy")</div>
 				</div>
 
 				<div class="mb-5">
@@ -241,7 +248,14 @@
 				<div class="mb-5">
 					<label class="fw-bold text-gray-700 mb-1">Trạng thái hiện tại</label>
 					<div>
-						<span class="badge @_selectedRequest.StatusClass fw-bold px-4 py-2 fs-7">
+						@{
+							var statusClassDetail = _selectedRequest.Status switch {
+								"Approved" or "Đã duyệt" => "badge-light-success",
+								"Rejected" or "Từ chối" => "badge-light-danger",
+								_ => "badge-light-warning"
+							};
+						}
+						<span class="badge @statusClassDetail fw-bold px-4 py-2 fs-7">
 							@if (_selectedRequest.IsPending)
 							{
 								<span class="bullet bullet-dot bg-warning w-6px h-6px me-2 pulse pulse-warning"></span>
@@ -257,19 +271,19 @@
 					<h5 class="mb-4">Lịch sử phê duyệt</h5>
 					<div class="timeline-label">
 						<div class="timeline-item">
-							<div class="timeline-label fw-bold text-gray-800 fs-6">08:30 10/10</div>
+							<div class="timeline-label fw-bold text-gray-800 fs-6">@_selectedRequest.RequestedDate.ToString("HH:mm dd/MM")</div>
 							<div class="timeline-badge"><i class="fa fa-genderless text-primary fs-1"></i></div>
 							<div class="timeline-content text-muted ps-3">
-								<span class="fw-bold text-gray-800">@_selectedRequest.Name</span> gửi yêu cầu mới
+								<span class="fw-bold text-gray-800">@_selectedRequest.EmployeeName</span> gửi yêu cầu mới
 							</div>
 						</div>
 						@if (!_selectedRequest.IsPending)
 						{
 							<div class="timeline-item">
-								<div class="timeline-label fw-bold text-gray-800 fs-6">09:15 11/10</div>
-								<div class="timeline-badge"><i class="fa fa-genderless @_selectedRequest.StatusClass.Replace("light-", "") fs-1"></i></div>
+								<div class="timeline-label fw-bold text-gray-800 fs-6">Thành công</div>
+								<div class="timeline-badge"><i class="fa fa-genderless text-success fs-1"></i></div>
 								<div class="timeline-content text-muted ps-3">
-									<span class="fw-bold text-gray-800">Phạm Quản Lý</span> đã @_selectedRequest.Status.ToLower()
+									Quản lý đã @_selectedRequest.Status.ToLower()
 									<div class="text-gray-600 mt-1 fs-7">Ghi chú: @(string.IsNullOrEmpty(_selectedRequest.ManagerNote) ? "Đã kiểm tra lịch làm việc." : _selectedRequest.ManagerNote)</div>
 								</div>
 							</div>

@@ -32,7 +32,7 @@
                                 <InputText class="form-control form-control-solid" @bind-Value="Model.Code" placeholder="Mã tin (VD: DEV-001)" />
                             </div>
                             <div class="col-lg-5">
-                                <InputSelect class="form-select form-select-solid fw-bold" @bind-Value="Model.Department">
+                                <InputSelect class="form-select form-select-solid fw-bold" @bind-Value="Model.DepartmentName">
                                     <option value="">Chọn phòng ban...</option>
                                     <option value="IT">Kỹ thuật (IT)</option>
                                     <option value="HR">Nhân sự (HR)</option>
@@ -55,7 +55,7 @@
                             <div class="col-lg-5">
                                 <div class="input-group input-group-solid">
                                     <span class="input-group-text">Số lượng tuyển:</span>
-                                    <InputNumber class="form-control" @bind-Value="Model.HiringCount" />
+                                    <InputNumber class="form-control" @bind-Value="Model.Quantity" />
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                             <div class="col-lg-9 fv-row">
                                 <div class="position-relative">
                                     <i class="ki-outline ki-calendar fs-2 position-absolute top-50 translate-middle-y ms-4"></i>
-                                    <InputDate class="form-control form-control-solid ps-12" @bind-Value="Model.Deadline" />
+                                    <InputDate class="form-control form-control-solid ps-12" @bind-Value="Model.EndDate" />
                                 </div>
                             </div>
                         </div>

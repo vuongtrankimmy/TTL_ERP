@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
-using TTL.HR.Shared.Models;
+using TTL.HR.Application.Modules.Organization.Models;
 
 namespace TTL.HR.Shared.Pages.Organization
 {

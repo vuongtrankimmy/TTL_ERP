@@ -2,27 +2,52 @@
 
 <div class="post d-flex flex-column-fluid pt-8" id="kt_post">
     <div id="kt_content_container" class="container-fluid">
+        <!-- Header with Actions -->
+        <div class="d-flex flex-wrap flex-stack mb-6">
+            <h3 class="fw-bolder my-2">Cấu hình lương & Bảo hiểm
+            <span class="fs-6 text-gray-400 fw-bold ms-1">Tham số tính toán cho bảng lương hệ thống</span></h3>
+            <div class="d-flex my-2">
+                <button class="btn btn-light-primary btn-sm me-3 fw-bolder px-5" @onclick="LoadData" disabled="@_isSaving">
+                    <i class="bi bi-arrow-counterclockwise fs-5 me-1"></i>Hủy thay đổi
+                </button>
+                <button class="btn btn-primary btn-sm fw-bolder px-8" @onclick="SaveSettings" disabled="@(_isSaving || _isLoading)">
+                    @if (_isSaving)
+                    {
+                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                    }
+                    else
+                    {
+                        <i class="bi bi-check-lg fs-5 me-1"></i>
+                    }
+                    Lưu tham số
+                </button>
+            </div>
+        </div>
+
         <!-- Tabs -->
         <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder mb-8">
             <li class="nav-item">
-                <a class="nav-link active py-4 px-8 me-4" href="#">
+                <a class="nav-link py-4 px-8 me-4 @(activeTab == "insurance" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("insurance")'>
                     <i class="bi bi-shield-check me-2"></i>Tham số bảo hiểm
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link py-4 px-8 me-4" href="#">
+                <a class="nav-link py-4 px-8 me-4 @(activeTab == "pit" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("pit")'>
                     <i class="bi bi-layout-text-window-reverse me-2"></i>Biểu thuế TNCN
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link py-4 px-8 me-0" href="#">
+                <a class="nav-link py-4 px-8 me-0 @(activeTab == "allowances" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("allowances")'>
                     <i class="bi bi-gift me-2"></i>Phụ cấp & Phúc lợi
                 </a>
             </li>
         </ul>
 
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table">
         <div class="tab-content">
-            <div class="tab-pane fade show active" role="tabpanel">
+            @if (activeTab == "insurance")
+            {
+                <div class="tab-pane fade show active">
                 <!-- Insurance Table -->
                 <div class="card card-flush shadow-xs border mb-8">
                     <div class="card-header pt-7">
@@ -56,11 +81,11 @@
                                                 <span class="text-muted fs-8 mt-1">Hưu trí, tử tuất, ốm đau...</span>
                                             </div>
                                         </td>
-                                        <td class="fw-bold fs-7">8.0%</td>
-                                        <td class="fw-bold fs-7">17.5%</td>
+                                        <td><input type="number" step="0.1" class="form-control form-control-solid w-80px h-30px fs-7" @bind="Model.SocialInsurancePercentEmployee" /></td>
+                                        <td><input type="number" step="0.1" class="form-control form-control-solid w-80px h-30px fs-7" @bind="Model.SocialInsurancePercentCompany" /></td>
                                         <td class="text-muted fs-7">--</td>
-                                        <td class="fs-7 text-gray-600"><span class="badge badge-light fw-bold">01/07/2023</span></td>
-                                        <td class="text-end pe-4"><a href="#" class="btn btn-sm btn-link fw-bolder text-primary p-0">Chỉnh sửa</a></td>
+                                        <td class="fs-7 text-gray-600"><span class="badge badge-light fw-bold">01/01/2024</span></td>
+                                        <td class="text-end pe-4"><span class="text-muted fs-8">Tự động áp dụng</span></td>
                                     </tr>
                                     <tr>
                                         <td class="ps-4">
@@ -69,11 +94,11 @@
                                                 <span class="text-muted fs-8 mt-1">Chăm sóc sức khỏe cộng đồng</span>
                                             </div>
                                         </td>
-                                        <td class="fw-bold fs-7">1.5%</td>
-                                        <td class="fw-bold fs-7">3.0%</td>
+                                        <td><input type="number" step="0.1" class="form-control form-control-solid w-80px h-30px fs-7" @bind="Model.HealthInsurancePercentEmployee" /></td>
+                                        <td><input type="number" step="0.1" class="form-control form-control-solid w-80px h-30px fs-7" @bind="Model.HealthInsurancePercentCompany" /></td>
                                         <td class="text-muted fs-7">--</td>
-                                        <td class="fs-7 text-gray-600"><span class="badge badge-light fw-bold">01/07/2023</span></td>
-                                        <td class="text-end pe-4"><a href="#" class="btn btn-sm btn-link fw-bolder text-primary p-0">Chỉnh sửa</a></td>
+                                        <td class="fs-7 text-gray-600"><span class="badge badge-light fw-bold">01/01/2024</span></td>
+                                        <td class="text-end pe-4"><span class="text-muted fs-8">Tự động áp dụng</span></td>
                                     </tr>
                                     <tr>
                                         <td class="ps-4">
@@ -82,11 +107,11 @@
                                                 <span class="text-muted fs-8 mt-1">Hỗ trợ khi mất việc làm</span>
                                             </div>
                                         </td>
-                                        <td class="fw-bold fs-7">1.0%</td>
-                                        <td class="fw-bold fs-7">1.0%</td>
+                                        <td><input type="number" step="0.1" class="form-control form-control-solid w-80px h-30px fs-7" @bind="Model.UnemploymentInsurancePercentEmployee" /></td>
+                                        <td><input type="number" step="0.1" class="form-control form-control-solid w-80px h-30px fs-7" @bind="Model.UnemploymentInsurancePercentCompany" /></td>
                                         <td class="text-muted fs-7">--</td>
-                                        <td class="fs-7 text-gray-600"><span class="badge badge-light fw-bold">01/07/2023</span></td>
-                                        <td class="text-end pe-4"><a href="#" class="btn btn-sm btn-link fw-bolder text-primary p-0">Chỉnh sửa</a></td>
+                                        <td class="fs-7 text-gray-600"><span class="badge badge-light fw-bold">01/01/2024</span></td>
+                                        <td class="text-end pe-4"><span class="text-muted fs-8">Tự động áp dụng</span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -98,23 +123,45 @@
                 <h3 class="fw-bolder text-gray-800 mb-6">Mức giảm trừ & Lương vùng</h3>
                 <div class="row g-7 mb-8">
                     <div class="col-md-6">
-                        <div class="card p-8 d-flex flex-row align-items-center justify-content-between cursor-pointer border shadow-xs">
+                        <div class="card p-8 d-flex flex-row align-items-center justify-content-between border shadow-xs">
                             <div>
                                 <span class="d-block text-gray-700 fw-bold fs-7 mb-1">Giảm trừ gia cảnh (Bản thân)</span>
                                 <span class="text-muted fs-9 fst-italic mb-3 d-block">Áp dụng cho người nộp thuế TNCN</span>
-                                <span class="fs-1 fw-bolder text-dark">11.000.000 <span class="fs-9 fw-bold text-muted ms-1">VNĐ / tháng</span></span>
+                                <div class="d-flex align-items-end">
+                                    <input type="number" class="form-control form-control-transparent fw-bolder fs-1 p-0 w-200px" @bind="Model.DefaultPersonalDeduction" />
+                                    <span class="fs-9 fw-bold text-muted ms-1 mb-2">VNĐ / tháng</span>
+                                </div>
                             </div>
-                            <div class="btn btn-icon btn-light-primary btn-sm"><i class="bi bi-pencil-square"></i></div>
+                            <div class="btn btn-icon btn-light-primary btn-sm"><i class="bi bi-cash"></i></div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card p-8 d-flex flex-row align-items-center justify-content-between cursor-pointer border shadow-xs">
+                        <div class="card p-8 d-flex flex-row align-items-center justify-content-between border shadow-xs">
                             <div>
                                 <span class="d-block text-gray-700 fw-bold fs-7 mb-1">Giảm trừ người phụ thuộc</span>
                                 <span class="text-muted fs-9 fst-italic mb-3 d-block">Mỗi người phụ thuộc hợp lệ</span>
-                                <span class="fs-1 fw-bolder text-dark">4.400.000 <span class="fs-9 fw-bold text-muted ms-1">VNĐ / tháng</span></span>
+                                <div class="d-flex align-items-end">
+                                    <input type="number" class="form-control form-control-transparent fw-bolder fs-1 p-0 w-150px" @bind="Model.DefaultDependentDeduction" />
+                                    <span class="fs-9 fw-bold text-muted ms-1 mb-2">VNĐ / tháng</span>
+                                </div>
                             </div>
-                            <div class="btn btn-icon btn-light-primary btn-sm"><i class="bi bi-pencil-square"></i></div>
+                            <div class="btn btn-icon btn-light-primary btn-sm"><i class="bi bi-people"></i></div>
+                        </div>
+                </div>
+            </div>
+                
+                <div class="row g-7 mb-8">
+                    <div class="col-md-12">
+                        <div class="card p-8 d-flex flex-row align-items-center justify-content-between border shadow-xs bg-light">
+                            <div>
+                                <span class="d-block text-gray-700 fw-bold fs-7 mb-1">Mức lương cơ sở (Toàn quốc)</span>
+                                <span class="text-muted fs-9 fst-italic mb-3 d-block">Dùng để tính mức trần đóng BHXH/BHYT (20 lần lương cơ sở)</span>
+                                <div class="d-flex align-items-end">
+                                    <input type="number" class="form-control form-control-transparent fw-bolder fs-1 p-0 w-200px" @bind="Model.StatutoryPayRate" />
+                                    <span class="fs-9 fw-bold text-muted ms-1 mb-2">VNĐ / tháng</span>
+                                </div>
+                            </div>
+                            <div class="btn btn-icon btn-light-primary btn-sm"><i class="bi bi-bank"></i></div>
                         </div>
                     </div>
                 </div>
@@ -128,55 +175,99 @@
                             <table class="table table-row-dashed table-row-gray-200 align-middle gs-7 gy-5">
                                 <tbody>
                                     <tr>
-                                        <td class="fw-bold fs-7">Vùng I (Hà Nội, TP.HCM,...)</td>
-                                        <td class="text-end fw-bolder fs-7 pe-10">4.680.000 VNĐ</td>
-                                        <td class="text-end pe-7"><i class="bi bi-three-dots fs-3 cursor-pointer"></i></td>
+                                        <td class="fw-bold fs-7 ps-4">Vùng I (Hà Nội, TP.HCM,...)</td>
+                                        <td class="text-end pe-10">
+                                            <div class="d-flex align-items-center justify-content-end">
+                                                <input type="number" class="form-control form-control-solid w-150px h-30px fs-7 text-end" @bind="Model.Region1MinimumSalary" />
+                                                <span class="fs-8 text-muted ms-2">VNĐ</span>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td class="fw-bold fs-7">Vùng II (Đà Nẵng, Cần Thơ,...)</td>
-                                        <td class="text-end fw-bolder fs-7 pe-10">4.160.000 VNĐ</td>
-                                        <td class="text-end pe-7"><i class="bi bi-three-dots fs-3 cursor-pointer"></i></td>
+                                        <td class="fw-bold fs-7 ps-4">Vùng II (Đà Nẵng, Cần Thơ,...)</td>
+                                        <td class="text-end pe-10">
+                                            <div class="d-flex align-items-center justify-content-end">
+                                                <input type="number" class="form-control form-control-solid w-150px h-30px fs-7 text-end" @bind="Model.Region2MinimumSalary" />
+                                                <span class="fs-8 text-muted ms-2">VNĐ</span>
+                                            </div>
+                                        </td>
                                     </tr>
+                                    <tr>
+                                        <td class="fw-bold fs-7 ps-4">Vùng III (Bắc Ninh, Bình Dương,...)</td>
+                                        <td class="text-end pe-10">
+                                            <div class="d-flex align-items-center justify-content-end">
+                                                <input type="number" class="form-control form-control-solid w-150px h-30px fs-7 text-end" @bind="Model.Region3MinimumSalary" />
+                                                <span class="fs-8 text-muted ms-2">VNĐ</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold fs-7 ps-4">Vùng IV (Các khu vực còn lại)</td>
+                                        <td class="text-end pe-10">
+                                            <div class="d-flex align-items-center justify-content-end">
+                                                <input type="number" class="form-control form-control-solid w-150px h-30px fs-7 text-end" @bind="Model.Region4MinimumSalary" />
+                                                <span class="fs-8 text-muted ms-2">VNĐ</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- Info Boxes -->
-                <div class="row g-5 mt-4">
-                    <div class="col-md-4">
-                        <div class="info-box bg-light-primary rounded-3 p-6 d-flex align-items-start gap-4 h-100">
-                            <i class="bi bi-layout-text-sidebar-reverse fs-2x text-primary"></i>
-                            <div>
-                                <h4 class="fw-bolder fs-6 mb-2">Cơ sở pháp lý</h4>
-                                <span class="fs-9 text-muted d-block">Theo Nghị định 24/2023/NĐ-CP và Nghị quyết về biểu thuế TNCN mới nhất.</span>
-                            </div>
+                </div>
+            }
+
+            @if (activeTab == "pit")
+            {
+                <div class="tab-pane fade show active">
+                    <div class="card card-flush shadow-xs border mb-8">
+                        <div class="card-header pt-7">
+                            <h3 class="card-title fw-bolder text-gray-800">Biểu thuế suất lũy tiến từng phần</h3>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="warning-box bg-light-warning rounded-3 p-6 border border-dashed border-warning d-flex align-items-start gap-4 h-100">
-                            <i class="bi bi-exclamation-triangle-fill fs-2x text-warning"></i>
-                            <div>
-                                <h4 class="fw-bolder fs-6 mb-2">Lưu ý quyết toán</h4>
-                                <span class="fs-9 text-dark d-block">Việc thay đổi tham số sẽ ảnh hưởng đến các phiếu lương chưa chốt của kỳ hiện tại.</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="help-box bg-light-info rounded-3 p-6 border border-dashed border-info d-flex align-items-start gap-4 h-100">
-                            <i class="bi bi-question-circle-fill fs-2x text-primary"></i>
-                            <div>
-                                <h4 class="fw-bolder fs-6 mb-2">Hỗ trợ nghiệp vụ</h4>
-                                <span class="fs-9 text-muted d-block">Liên hệ bộ phận Kế toán - Thuế để được hướng dẫn về các định mức vùng mới nhất.</span>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-row-dashed table-row-gray-200 align-middle gs-7 gy-5">
+                                    <thead>
+                                        <tr class="fw-bolder text-muted bg-light text-uppercase fs-9">
+                                            <th>Bậc</th>
+                                            <th>Thu nhập tính thuế (Triệu VNĐ/tháng)</th>
+                                            <th class="text-center">Thuế suất (%)</th>
+                                            <th class="text-end pe-4">Thành tiền tối đa bậc</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>1</td><td>Đến 5</td><td class="text-center fw-bold">5%</td><td class="text-end pe-4">250,000</td></tr>
+                                        <tr><td>2</td><td>Trên 5 đến 10</td><td class="text-center fw-bold">10%</td><td class="text-end pe-4">750,000</td></tr>
+                                        <tr><td>3</td><td>Trên 10 đến 18</td><td class="text-center fw-bold">15%</td><td class="text-end pe-4">1,950,000</td></tr>
+                                        <tr><td>4</td><td>Trên 18 đến 32</td><td class="text-center fw-bold">20%</td><td class="text-end pe-4">4,750,000</td></tr>
+                                        <tr><td>5</td><td>Trên 32 đến 52</td><td class="text-center fw-bold">25%</td><td class="text-end pe-4">9,750,000</td></tr>
+                                        <tr><td>6</td><td>Trên 52 đến 80</td><td class="text-center fw-bold">30%</td><td class="text-end pe-4">18,150,000</td></tr>
+                                        <tr><td>7</td><td>Trên 80</td><td class="text-center fw-bold">35%</td><td class="text-end pe-4">--</td></tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
+
+            @if (activeTab == "allowances")
+            {
+                <div class="tab-pane fade show active">
+                    <div class="card card-flush shadow-xs border mb-8">
+                        <div class="card-body p-20 text-center">
+                            <i class="bi bi-gift-fill fs-5x text-light-primary mb-5"></i>
+                            <h3 class="fw-bolder text-gray-800">Quản lý Phụ cấp & Phúc lợi</h3>
+                            <p class="text-muted fs-6">Vui lòng sử dụng mô-đun <a href="/payroll/allowances" class="fw-bold text-primary">Danh mục phụ cấp</a> để cấu hình chi tiết cho từng loại.</p>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
+        </SkeletonLoading>
     </div>
 </div>
 
-@code {
-}

@@ -1,5 +1,4 @@
 @page "/settings/general"
-@inject NavigationManager Navigation
 
 <div class="post d-flex flex-column-fluid pt-8" id="kt_post">
     <div id="kt_content_container" class="container-fluid">
@@ -9,10 +8,24 @@
             <h3 class="fw-bolder my-2">Cài đặt hệ thống 
             <span class="fs-6 text-gray-400 fw-bold ms-1">Cấu hình chung toàn hệ thống HR</span></h3>
             <div class="d-flex my-2">
-                <button class="btn btn-light-primary btn-sm me-3 fw-bolder px-5"><i class="bi bi-arrow-counterclockwise fs-5 me-1"></i>Hủy thay đổi</button>
-                <button class="btn btn-primary btn-sm fw-bolder px-8"><i class="bi bi-check-lg fs-5 me-1"></i>Lưu cấu hình</button>
+                <button class="btn btn-light-primary btn-sm me-3 fw-bolder px-5" @onclick="LoadData" disabled="@_isSaving">
+                    <i class="bi bi-arrow-counterclockwise fs-5 me-1"></i>Hủy thay đổi
+                </button>
+                <button class="btn btn-primary btn-sm fw-bolder px-8" @onclick="SaveSettings" disabled="@(_isSaving || _isLoading)">
+                    @if (_isSaving)
+                    {
+                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                    }
+                    else
+                    {
+                        <i class="bi bi-check-lg fs-5 me-1"></i>
+                    }
+                    Lưu cấu hình
+                </button>
             </div>
         </div>
+
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card">
 
         <div class="row g-7">
             <!-- Sidebar Navigation (Optional or visual guide) -->
@@ -91,35 +104,43 @@
                                 </div>
                             </div>
                             <div class="row mb-6">
-                                <label class="col-lg-3 col-form-label fw-bold fs-7">Tên công ty (Tiếng Việt)</label>
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Tên công ty</label>
                                 <div class="col-lg-9">
-                                    <input type="text" class="form-control form-control-solid fs-7" value="CÔNG TY CỔ PHẦN TÂN TÂN LỘC" />
-                                </div>
-                            </div>
-                            <div class="row mb-6">
-                                <label class="col-lg-3 col-form-label fw-bold fs-7">Tên công ty (Tiếng Anh)</label>
-                                <div class="col-lg-9">
-                                    <input type="text" class="form-control form-control-solid fs-7" value="TAN TAN LOC JOINT STOCK COMPANY" />
+                                    <input type="text" class="form-control form-control-solid fs-7" @bind="Model.CompanyName" />
                                 </div>
                             </div>
                             <div class="row mb-6">
                                 <div class="col-md-6 row">
                                     <label class="col-lg-6 col-form-label fw-bold fs-7 ps-5">Mã số thuế</label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control form-control-solid fs-7" value="0312345678" />
+                                        <input type="text" class="form-control form-control-solid fs-7" @bind="Model.TaxCode" />
                                     </div>
                                 </div>
                                 <div class="col-md-6 row">
                                     <label class="col-lg-4 col-form-label fw-bold fs-7">Website</label>
                                     <div class="col-lg-8">
-                                        <input type="text" class="form-control form-control-solid fs-7" value="https://tantanloc.com.vn" />
+                                        <input type="text" class="form-control form-control-solid fs-7" @bind="Model.Website" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <div class="col-md-6 row">
+                                    <label class="col-lg-6 col-form-label fw-bold fs-7 ps-5">Số điện thoại</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control form-control-solid fs-7" @bind="Model.CompanyPhone" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 row">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-7">Email đại diện</label>
+                                    <div class="col-lg-8">
+                                        <input type="email" class="form-control form-control-solid fs-7" @bind="Model.CompanyEmail" />
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-6">
                                 <label class="col-lg-3 col-form-label fw-bold fs-7">Địa chỉ trụ sở</label>
                                 <div class="col-lg-9">
-                                    <textarea class="form-control form-control-solid fs-7" rows="2">Tòa nhà TTL Building, 123 Đường Công Nghệ, Phường 10, Quận 1, TP. Hồ Chí Minh</textarea>
+                                    <textarea class="form-control form-control-solid fs-7" rows="2" @bind="Model.CompanyAddress"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -137,8 +158,9 @@
                             <div class="row mb-6">
                                 <label class="col-lg-3 col-form-label fw-bold fs-7">Múi giờ hệ thống</label>
                                 <div class="col-lg-9">
-                                    <select class="form-select form-select-solid fs-7 fw-bold">
-                                        <option value="Asia/Ho_Chi_Minh" selected>(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+                                    <select class="form-select form-select-solid fs-7 fw-bold" @bind="Model.TimeZone">
+                                        <option value="Asia/Ho_Chi_Minh">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+                                        <option value="SE Asia Standard Time">(GMT+07:00) SE Asia</option>
                                         <option value="UTC">Universal Coordinated Time (UTC)</option>
                                     </select>
                                 </div>
@@ -147,17 +169,17 @@
                                 <div class="col-md-6 row">
                                     <label class="col-lg-6 col-form-label fw-bold fs-7 ps-5">Ngôn ngữ mặc định</label>
                                     <div class="col-lg-6">
-                                        <select class="form-select form-select-solid fs-7 fw-bold">
-                                            <option value="vi" selected>Tiếng Việt</option>
-                                            <option value="en">English</option>
+                                        <select class="form-select form-select-solid fs-7 fw-bold" @bind="Model.DefaultLanguage">
+                                            <option value="vi-VN">Tiếng Việt</option>
+                                            <option value="en-US">English</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6 row">
                                     <label class="col-lg-4 col-form-label fw-bold fs-7">Tiền tệ</label>
                                     <div class="col-lg-8">
-                                        <select class="form-select form-select-solid fs-7 fw-bold">
-                                            <option value="VND" selected>Việt Nam Đồng (VNĐ)</option>
+                                        <select class="form-select form-select-solid fs-7 fw-bold" @bind="Model.Currency">
+                                            <option value="VND">Việt Nam Đồng (VNĐ)</option>
                                             <option value="USD">US Dollar ($)</option>
                                         </select>
                                     </div>
@@ -167,15 +189,15 @@
                                 <label class="col-lg-3 col-form-label fw-bold fs-7">Định dạng ngày tháng</label>
                                 <div class="col-lg-9 d-flex gap-4">
                                     <div class="form-check form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="radio" name="date_format" value="DD/MM/YYYY" checked />
+                                        <input class="form-check-input" type="radio" name="date_format" value="dd/MM/yyyy" checked="@(Model.DateFormat == "dd/MM/yyyy")" @onchange='() => Model.DateFormat = "dd/MM/yyyy"' />
                                         <label class="form-check-label fs-7 fw-bold">DD/MM/YYYY</label>
                                     </div>
                                     <div class="form-check form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="radio" name="date_format" value="MM/DD/YYYY" />
+                                        <input class="form-check-input" type="radio" name="date_format" value="MM/dd/yyyy" checked="@(Model.DateFormat == "MM/dd/yyyy")" @onchange='() => Model.DateFormat = "MM/dd/yyyy"' />
                                         <label class="form-check-label fs-7 fw-bold">MM/DD/YYYY</label>
                                     </div>
                                     <div class="form-check form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="radio" name="date_format" value="YYYY-MM-DD" />
+                                        <input class="form-check-input" type="radio" name="date_format" value="yyyy-MM-dd" checked="@(Model.DateFormat == "yyyy-MM-dd")" @onchange='() => Model.DateFormat = "yyyy-MM-dd"' />
                                         <label class="form-check-label fs-7 fw-bold">YYYY-MM-DD</label>
                                     </div>
                                 </div>
@@ -225,39 +247,67 @@
                         </div>
                         <div class="card-body pt-5">
                             <div class="row mb-6">
-                                <label class="col-lg-3 col-form-label fw-bold fs-7">Số giờ làm việc / tuần</label>
-                                <div class="col-lg-3">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Giờ làm việc</label>
+                                <div class="col-lg-4">
                                     <div class="input-group input-group-solid">
-                                        <input type="number" class="form-control fs-7" value="44" />
-                                        <span class="input-group-text fs-8 text-gray-500">Giờ</span>
+                                        <span class="input-group-text fs-8">Bắt đầu</span>
+                                        <input type="time" class="form-control fs-7" @bind="Model.WorkStartTime" />
                                     </div>
                                 </div>
-                                <label class="col-lg-3 col-form-label fw-bold fs-7 ps-lg-5">Số ngày nghỉ phép / năm</label>
-                                <div class="col-lg-3">
+                                <div class="col-lg-4">
                                     <div class="input-group input-group-solid">
-                                        <input type="number" class="form-control fs-7" value="12" />
-                                        <span class="input-group-text fs-8 text-gray-500">Ngày</span>
+                                        <span class="input-group-text fs-8">Kết thúc</span>
+                                        <input type="time" class="form-control fs-7" @bind="Model.WorkEndTime" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Giờ nghỉ trưa</label>
+                                <div class="col-lg-4">
+                                    <div class="input-group input-group-solid">
+                                        <span class="input-group-text fs-8">Bắt đầu</span>
+                                        <input type="time" class="form-control fs-7" @bind="Model.BreakStartTime" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="input-group input-group-solid">
+                                        <span class="input-group-text fs-8">Kết thúc</span>
+                                        <input type="time" class="form-control fs-7" @bind="Model.BreakEndTime" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Thời gian ân hạn đi muộn</label>
+                                <div class="col-lg-4">
+                                    <div class="input-group input-group-solid">
+                                        <input type="number" class="form-control fs-7" @bind="Model.LateGracePeriodMinutes" />
+                                        <span class="input-group-text fs-8">Phút</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-6">
                                 <label class="col-lg-3 col-form-label fw-bold fs-7">Các ngày làm việc</label>
                                 <div class="col-lg-9 d-flex flex-wrap gap-3">
-                                    <button class="btn btn-sm btn-light-primary fw-bolder">Thứ 2</button>
-                                    <button class="btn btn-sm btn-light-primary fw-bolder">Thứ 3</button>
-                                    <button class="btn btn-sm btn-light-primary fw-bolder">Thứ 4</button>
-                                    <button class="btn btn-sm btn-light-primary fw-bolder">Thứ 5</button>
-                                    <button class="btn btn-sm btn-light-primary fw-bolder">Thứ 6</button>
-                                    <button class="btn btn-sm btn-light-warning fw-bolder">Sáng Thứ 7</button>
-                                    <button class="btn btn-sm btn-light fw-bolder text-muted">Chủ nhật</button>
+                                    @{
+                                        var days = new[] { ("Mon", "Thứ 2"), ("Tue", "Thứ 3"), ("Wed", "Thứ 4"), ("Thu", "Thứ 5"), ("Fri", "Thứ 6"), ("Sat", "Thứ 7"), ("Sun", "Chủ nhật") };
+                                        var selectedDays = Model.WorkDays?.Split(';', StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>();
+                                    }
+                                    @foreach (var (key, label) in days)
+                                    {
+                                        var isSelected = selectedDays.Contains(key);
+                                        <button type="button" class="btn btn-sm @(isSelected ? "btn-light-primary" : "btn-light") fw-bolder" 
+                                                @onclick='() => { if(isSelected) selectedDays.Remove(key); else selectedDays.Add(key); Model.WorkDays = string.Join(";", selectedDays); }'>
+                                            @label
+                                        </button>
+                                    }
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-lg-3 col-form-label fw-bold fs-7">Tính công ngoài giờ (OT)</label>
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Thời gian linh hoạt</label>
                                 <div class="col-lg-9">
                                     <label class="form-check form-switch form-check-custom form-check-solid">
-                                        <input class="form-check-input w-45px h-25px" type="checkbox" checked />
-                                        <span class="form-check-label fs-7 fw-bold text-gray-600">Tự động kích hoạt OT nếu check-out muộn quá 1 giờ</span>
+                                        <input class="form-check-input w-45px h-25px" type="checkbox" @bind="Model.AllowFlexibleHours" />
+                                        <span class="form-check-label fs-7 fw-bold text-gray-600">Cho phép nhân viên tự sắp xếp thời gian làm việc (Flexible)</span>
                                     </label>
                                 </div>
                             </div>
@@ -274,38 +324,32 @@
                         </div>
                         <div class="card-body pt-5">
                             <div class="row mb-6">
-                                <label class="col-lg-3 col-form-label fw-bold fs-7">Các bước tuyển dụng</label>
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Địa điểm phỏng vấn mặc định</label>
                                 <div class="col-lg-9">
-                                    <div class="d-flex flex-wrap gap-2 mb-3">
-                                        <span class="badge badge-light-primary fw-bold p-3">Tiếp nhận <i class="bi bi-x ms-2 cursor-pointer"></i></span>
-                                        <span class="badge badge-light-warning fw-bold p-3">Phỏng vấn <i class="bi bi-x ms-2 cursor-pointer"></i></span>
-                                        <span class="badge badge-light-info fw-bold p-3">Đề nghị <i class="bi bi-x ms-2 cursor-pointer"></i></span>
-                                        <span class="badge badge-light-success fw-bold p-3">Đã tuyển <i class="bi bi-lock-fill ms-2"></i></span>
-                                        <span class="badge badge-light-danger fw-bold p-3">Từ chối <i class="bi bi-lock-fill ms-2"></i></span>
-                                        <button class="btn btn-icon btn-sm btn-light-primary rounded-circle"><i class="bi bi-plus"></i></button>
+                                    <input type="text" class="form-control form-control-solid fs-7" @bind="Model.DefaultInterviewLocation" placeholder="Tòa nhà TTL, Phòng họp 1..." />
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Thời gian lưu trữ hồ sơ</label>
+                                <div class="col-lg-3">
+                                    <div class="input-group input-group-solid">
+                                        <input type="number" class="form-control fs-7" @bind="Model.ResumeRetentionDays" />
+                                        <span class="input-group-text fs-8">Ngày</span>
                                     </div>
-                                    <div class="form-text fs-8 text-muted">Kéo thả để sắp xếp thứ tự các bước trong bảng Kanban.</div>
                                 </div>
                             </div>
                             <div class="separator separator-dashed my-6"></div>
                             <div class="row mb-6">
-                                <label class="col-lg-3 col-form-label fw-bold fs-7">Thông báo ứng viên</label>
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Cài đặt tự động</label>
                                 <div class="col-lg-9">
                                     <label class="form-check form-switch form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input w-40px h-20px" type="checkbox" checked />
-                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Tự động gửi email xác nhận khi nhận hồ sơ</span>
+                                        <input class="form-check-input w-40px h-20px" type="checkbox" @bind="Model.AutoSendThankYouEmail" />
+                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Tự động gửi email cảm ơn khi nhận hồ sơ</span>
                                     </label>
                                     <label class="form-check form-switch form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input w-40px h-20px" type="checkbox" checked />
-                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Gửi nhắc nhở phỏng vấn trước 24h</span>
+                                        <input class="form-check-input w-40px h-20px" type="checkbox" @bind="Model.EnableExternalJobBoard" />
+                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Kích hoạt đăng tin tự động lên Job Board bên ngoài</span>
                                     </label>
-                                </div>
-                            </div>
-                            <div class="row mb-6">
-                                <label class="col-lg-3 col-form-label fw-bold fs-7">Lý do từ chối mẫu</label>
-                                <div class="col-lg-9">
-                                    <textarea class="form-control form-control-solid fs-7" rows="3">Kinh nghiệm chưa phù hợp;Kỹ năng mềm còn yếu;Mức lương mong đợi vượt ngân sách;Không đạt bài test chuyên môn</textarea>
-                                    <div class="form-text fs-8 text-muted">Các lý do cách nhau bởi dấu chấm phẩy (;).</div>
                                 </div>
                             </div>
                         </div>
@@ -321,38 +365,43 @@
                         </div>
                         <div class="card-body pt-5">
                             <div class="row mb-6">
-                                <label class="col-lg-3 col-form-label fw-bold fs-7">Danh mục khóa học</label>
-                                <div class="col-lg-9">
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <span class="badge badge-light-info fw-bold p-3">Technical</span>
-                                        <span class="badge badge-light-info fw-bold p-3">Soft Skills</span>
-                                        <span class="badge badge-light-info fw-bold p-3">Management</span>
-                                        <span class="badge badge-light-info fw-bold p-3">Onboarding</span>
-                                        <button class="btn btn-icon btn-sm btn-light-primary rounded-circle"><i class="bi bi-plus"></i></button>
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Ngân sách tối đa / nhân viên / năm</label>
+                                <div class="col-lg-4">
+                                    <div class="input-group input-group-solid">
+                                        <input type="number" class="form-control fs-7" @bind="Model.MaxBudgetPerEmployee" />
+                                        <span class="input-group-text fs-8">VNĐ</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Thời gian đào tạo mặc định</label>
+                                <div class="col-lg-3">
+                                    <div class="input-group input-group-solid">
+                                        <input type="number" class="form-control fs-7" @bind="Model.DefaultTrainingDurationHours" />
+                                        <span class="input-group-text fs-8">Giờ</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="separator separator-dashed my-6"></div>
                             <div class="row mb-6">
-                                <label class="col-lg-3 col-form-label fw-bold fs-7">Chứng chỉ & Đánh giá</label>
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Quy trình & Đánh giá</label>
                                 <div class="col-lg-9">
                                     <label class="form-check form-switch form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input w-40px h-20px" type="checkbox" checked />
-                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Tự động cấp chứng chỉ PDF sau khi hoàn thành</span>
+                                        <input class="form-check-input w-40px h-20px" type="checkbox" @bind="Model.AutoEnrollOnboarding" />
+                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Tự động ghi danh khóa Onboarding cho nhân viên mới</span>
                                     </label>
                                     <label class="form-check form-switch form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input w-40px h-20px" type="checkbox" />
-                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Bắt buộc đánh giá khóa học để nhận chứng chỉ</span>
+                                        <input class="form-check-input w-40px h-20px" type="checkbox" @bind="Model.EnableFeedback" />
+                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Cho phép phản hồi/đánh giá sau khi hoàn thành khóa học</span>
                                     </label>
                                 </div>
                             </div>
                             <div class="row mb-6">
-                                <label class="col-lg-3 col-form-label fw-bold fs-7">Nhắc nhở đào tạo</label>
-                                <div class="col-lg-9">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <span class="fs-7 fw-bold text-gray-700 me-3">Nhắc nhở khóa học bắt buộc trước</span>
-                                        <input type="number" class="form-control form-control-solid w-70px me-2" value="7" />
-                                        <span class="fs-7 text-muted">ngày</span>
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Cảnh báo hết hạn chứng chỉ</label>
+                                <div class="col-lg-3">
+                                    <div class="input-group input-group-solid">
+                                        <input type="number" class="form-control fs-7" @bind="Model.CertificateExpiryWarningDays" />
+                                        <span class="input-group-text fs-8">Ngày</span>
                                     </div>
                                 </div>
                             </div>
@@ -368,51 +417,86 @@
                             <h3 class="card-title fw-bolder text-gray-800">Thông báo & Email</h3>
                         </div>
                         <div class="card-body pt-5">
-                            <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6 mb-7">
-                                <i class="bi bi-shield-lock-fill fs-2tx text-warning me-4"></i>
-                                <div class="d-flex flex-stack flex-grow-1">
-                                    <div class="fw-bold">
-                                        <h4 class="text-gray-900 fw-bolder">Cấu hình SMTP chưa hoàn tất</h4>
-                                        <div class="fs-7 text-gray-700">Hệ thống hiện đang dùng máy chủ mặc định. Email thông báo có thể bị chuyển vào mục spam.</div>
+                            <div class="row mb-7">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Máy chủ SMTP</label>
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control form-control-solid fs-7" @bind="Model.SmtpServer" placeholder="smtp.gmail.com" />
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="input-group input-group-solid">
+                                        <span class="input-group-text fs-8">Cổng</span>
+                                        <input type="number" class="form-control fs-7" @bind="Model.SmtpPort" />
                                     </div>
-                                    <button class="btn btn-warning btn-sm fw-bolder px-5">Cấu hình ngay</button>
+                                </div>
+                            </div>
+                            <div class="row mb-7">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Tài khoản gửi tin</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control form-control-solid fs-7" @bind="Model.SmtpUser" placeholder="noreply@tantanloc.com" />
+                                </div>
+                            </div>
+                            <div class="row mb-7">
+                                <div class="col-lg-3"></div>
+                                <div class="col-lg-9">
+                                    <label class="form-check form-switch form-check-custom form-check-solid mb-3">
+                                        <input class="form-check-input w-40px h-20px" type="checkbox" @bind="Model.EnableEmailNotifications" />
+                                        <span class="form-check-label fs-7 fw-bold text-gray-700">Kích hoạt gửi thông báo qua Email</span>
+                                    </label>
                                 </div>
                             </div>
                             
+                            <h5 class="fw-bolder mb-5 mt-10">Tùy chọn thông báo hệ thống</h5>
                             <div class="table-responsive">
                                 <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4">
                                     <thead>
                                         <tr class="fw-bolder text-muted bg-light text-uppercase fs-9">
-                                            <th class="ps-4">Loại thông báo</th>
-                                            <th class="text-center">Email</th>
-                                            <th class="text-center">Hệ thống (Web)</th>
-                                            <th class="text-center">Mobile Push</th>
+                                            <th class="ps-4">Sự kiện kích hoạt</th>
+                                            <th class="text-center">Kích hoạt</th>
+                                            <th class="text-center">Cấu hình thêm</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="ps-4">
-                                                <span class="text-dark fw-bold fs-7">Có nhân viên mới vào làm</span>
-                                            </td>
-                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
-                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
-                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" /></div></td>
+                                            <td class="ps-4"><span class="text-dark fw-bold fs-7">Yêu cầu nghỉ phép/đi công tác</span></td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" @bind="Model.NotifyOnLeaveRequest" /></div></td>
+                                            <td><span class="text-muted fs-8">Thông báo cho quản lý trực tiếp</span></td>
                                         </tr>
                                         <tr>
-                                            <td class="ps-4">
-                                                <span class="text-dark fw-bold fs-7">Thông báo bảng lương mới</span>
-                                            </td>
-                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
-                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
-                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
+                                            <td class="ps-4"><span class="text-dark fw-bold fs-7">Phê duyệt nghỉ phép/đi công tác</span></td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" @bind="Model.NotifyOnLeaveApproval" /></div></td>
+                                            <td><span class="text-muted fs-8">Thông báo cho nhân viên yêu cầu</span></td>
                                         </tr>
                                         <tr>
-                                            <td class="ps-4">
-                                                <span class="text-dark fw-bold fs-7">Nhắc nhở ngày sinh nhật nhân viên</span>
+                                            <td class="ps-4"><span class="text-dark fw-bold fs-7">Hợp đồng sắp hết hạn</span></td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" @bind="Model.NotifyOnContractExpiry" /></div></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="fs-8 text-muted me-2">Thông báo trước</span>
+                                                    <input type="number" class="form-control form-control-solid w-60px h-25px fs-8" @bind="Model.ContractExpiryWarningDays" />
+                                                    <span class="fs-8 text-muted ms-2">ngày</span>
+                                                </div>
                                             </td>
-                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" /></div></td>
-                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" checked /></div></td>
-                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" /></div></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-4"><span class="text-dark fw-bold fs-7">Kết thúc thử việc</span></td>
+                                            <td class="text-center"><div class="form-check form-check-custom form-check-solid justify-content-center"><input class="form-check-input" type="checkbox" @bind="Model.NotifyOnProbationEnd" /></div></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="fs-8 text-muted me-2">Thông báo trước</span>
+                                                    <input type="number" class="form-control form-control-solid w-60px h-25px fs-8" @bind="Model.ProbationEndWarningDays" />
+                                                    <span class="fs-8 text-muted ms-2">ngày</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-4"><span class="text-dark fw-bold fs-7">Sinh nhật & Kỷ niệm</span></td>
+                                            <td class="text-center">
+                                                <div class="d-flex gap-5 justify-content-center">
+                                                    <label class="form-check form-check-custom form-check-solid"><input class="form-check-input w-15px h-15px" type="checkbox" @bind="Model.NotifyOnBirthday" /><span class="ms-2 fs-8">Sinh nhật</span></label>
+                                                    <label class="form-check form-check-custom form-check-solid"><input class="form-check-input w-15px h-15px" type="checkbox" @bind="Model.NotifyOnWorkAnniversary" /><span class="ms-2 fs-8">Kỷ niệm</span></label>
+                                                </div>
+                                            </td>
+                                            <td><span class="text-muted fs-8">Thông báo chung toàn hệ thống</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -422,27 +506,6 @@
                 }
             </div>
         </div>
+        </SkeletonLoading>
     </div>
 </div>
-
-@code {
-    [Parameter]
-    [SupplyParameterFromQuery]
-    public string Tab { get; set; }
-
-    private string activeTab = "company_profile";
-
-    protected override void OnParametersSet()
-    {
-        if (!string.IsNullOrEmpty(Tab))
-        {
-            activeTab = Tab;
-        }
-    }
-
-    private void SetActiveTab(string tab)
-    {
-        activeTab = tab;
-        Navigation.NavigateTo($"/settings/general?Tab={tab}", false);
-    }
-}

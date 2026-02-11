@@ -90,12 +90,12 @@
                                                     }
                                                     else
                                                     {
-                                                        <div class="symbol-label @emp.AvatarBg text-white fw-bold fs-7">@emp.Name.Substring(0, 1)</div>
+                                                        <div class="symbol-label bg-light-primary text-primary fw-bold fs-7">@emp.EmployeeName.Substring(0, 1)</div>
                                                     }
                                                 </div>
                                                 <div class="d-flex justify-content-start flex-column">
-                                                    <span class="text-dark fw-bolder fs-7">@emp.Name</span>
-                                                    <span class="text-muted fw-bold fs-9">ID: @emp.Id</span>
+                                                    <span class="text-dark fw-bolder fs-7">@emp.EmployeeName</span>
+                                                    <span class="text-muted fw-bold fs-9">ID: @emp.EmployeeId</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -188,11 +188,11 @@
                         }
                         else
                         {
-                            <div class="symbol-label fs-2 fw-bold @_selectedSchedule.AvatarBg text-white">@_selectedSchedule.Name.Substring(0, 1)</div>
+                            <div class="symbol-label fs-2 fw-bold bg-info text-white">@_selectedSchedule.EmployeeName.Substring(0, 1)</div>
                         }
                     </div>
                     <div class="d-flex flex-column">
-                        <span class="text-gray-900 fw-bolder fs-5">@_selectedSchedule.Name</span>
+                        <span class="text-gray-900 fw-bolder fs-5">@_selectedSchedule.EmployeeName</span>
                         <span class="text-muted fw-bold fs-7">@_selectedSchedule.Department</span>
                         <span class="badge @_selectedSchedule.ShiftColor fw-bold fs-9 mt-1 px-2 py-1 overflow-hidden" style="max-width: fit-content">@_selectedSchedule.CurrentShift</span>
                     </div>

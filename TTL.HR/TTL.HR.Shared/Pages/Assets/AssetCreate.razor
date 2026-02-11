@@ -1,128 +1,105 @@
 @page "/assets/add"
-@inject NavigationManager Navigation
+@page "/assets/edit/{Id}"
+@using TTL.HR.Shared.Components.Common
 
-<div class="card">
-    <div class="card-header">
+<PageTitle>@(IsEdit ? "Chỉnh sửa tài sản" : "Thêm tài sản mới") - TTL.HR</PageTitle>
+
+<div class="card card-flush shadow-sm border-0 pt-8">
+    <div class="card-header border-0 ms-4">
         <div class="card-title">
-            <h2>Add New Asset</h2>
+            <div class="d-flex align-items-center">
+                <div class="symbol symbol-45px me-3">
+                    <div class="symbol-label bg-light-primary">
+                        <i class="ki-outline ki-plus-circle fs-2 text-primary"></i>
+                    </div>
+                </div>
+                <h2 class="fw-bolder">@(IsEdit ? "Chỉnh sửa thông tin tài sản" : "Đăng ký tài sản mới")</h2>
+            </div>
         </div>
     </div>
     <div class="card-body">
-        <EditForm Model="@Asset" OnValidSubmit="HandleValidSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-
-            <div class="row mb-5">
-                <div class="col-md-6 mb-5">
-                    <label class="required form-label">Asset Name</label>
-                    <InputText class="form-control form-control-solid" @bind-Value="Asset.Name" placeholder="e.g. Dell XPS 15" />
-                </div>
-                <div class="col-md-6 mb-5">
-                    <label class="required form-label">Asset Code</label>
-                    <InputText class="form-control form-control-solid" @bind-Value="Asset.Code" placeholder="e.g. IT-001" />
-                </div>
-            
-                <div class="col-md-6 mb-5">
-                    <label class="required form-label">Type</label>
-                    <InputSelect class="form-select form-select-solid" Value="Asset.Type" ValueExpression="@(() => Asset.Type)" ValueChanged="@((string value) => OnTypeChanged(value))">
-                        <option value="">Select Type...</option>
-                        <option value="Laptop">Laptop</option>
-                        <option value="Desktop">Desktop</option>
-                        <option value="Monitor">Monitor</option>
-                        <option value="Phone">Phone</option>
-                        <option value="Vehicle">Vehicle</option>
-                        <option value="Furniture">Furniture</option>
-                        <option value="Other">Other (Custom)</option>
-                    </InputSelect>
-                    
-                    @if (IsOtherTypeSelected)
-                    {
-                        <div class="mt-3">
-                            <input type="text" class="form-control form-control-solid" placeholder="Enter custom type..." @bind="CustomType" />
-                        </div>
-                    }
-                </div>
-                <div class="col-md-6 mb-5">
-                    <label class="form-label">Serial Number</label>
-                    <InputText class="form-control form-control-solid" @bind-Value="Asset.SerialNumber" placeholder="e.g. SN-123456789" />
-                </div>
-            
-                <div class="col-md-6 mb-5">
-                    <label class="required form-label">Purchase Date</label>
-                    <InputDate class="form-control form-control-solid" @bind-Value="Asset.PurchaseDate" />
-                </div>
-                <div class="col-md-6 mb-5">
-                    <label class="required form-label">Purchase Price (VND)</label>
-                    <InputNumber class="form-control form-control-solid" @bind-Value="Asset.PurchasePrice" />
-                </div>
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Form" Rows="4">
+            <EditForm Model="@Asset" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
                 
-                 <div class="col-md-6 mb-5">
-                    <label class="required form-label">Status</label>
-                    <InputSelect class="form-select form-select-solid" @bind-Value="Asset.Status">
-                        <option value="Available">Available</option>
-                        <option value="Assigned">Assigned</option>
-                        <option value="In Maintenance">In Maintenance</option>
-                        <option value="Broken">Broken</option>
-                        <option value="Disposed">Disposed</option>
-                    </InputSelect>
+                <div class="row g-9 mb-8">
+                    <div class="col-md-6 fv-row">
+                        <label class="required fs-6 fw-bold mb-2">Tên tài sản</label>
+                        <InputText class="form-control form-control-solid" @bind-Value="Asset.Name" placeholder="Ví dụ: Laptop Dell XPS 15" />
+                        <ValidationMessage For="@(() => Asset.Name)" class="text-danger" />
+                    </div>
+                    <div class="col-md-6 fv-row">
+                        <label class="required fs-6 fw-bold mb-2">Mã TSCĐ</label>
+                        <InputText class="form-control form-control-solid" @bind-Value="Asset.Code" placeholder="Ví dụ: IT-001" disabled="@IsEdit" />
+                        <ValidationMessage For="@(() => Asset.Code)" class="text-danger" />
+                    </div>
                 </div>
-            </div>
 
-             <div class="mb-5">
-                <label class="form-label">Description / Notes</label>
-                <InputTextArea class="form-control form-control-solid" rows="3" @bind-Value="Asset.Description" />
-            </div>
+                <div class="row g-9 mb-8">
+                    <div class="col-md-6 fv-row">
+                        <label class="required fs-6 fw-bold mb-2">Loại tài sản</label>
+                        <InputSelect class="form-select form-select-solid" @bind-Value="Asset.Category">
+                            <option value="Laptop">Máy tính xách tay (Laptop)</option>
+                            <option value="Desktop">Máy tính để bàn (PC)</option>
+                            <option value="Monitor">Màn hình</option>
+                            <option value="Phone">Điện thoại</option>
+                            <option value="Vehicle">Phương tiện đi lại</option>
+                            <option value="Furniture">Nội thất văn phòng</option>
+                            <option value="Office">Thiết bị văn phòng</option>
+                            <option value="Other">Khác</option>
+                        </InputSelect>
+                    </div>
+                    <div class="col-md-6 fv-row">
+                        <label class="fs-6 fw-bold mb-2">Số Serial / IMEI</label>
+                        <InputText class="form-control form-control-solid" @bind-Value="Asset.SerialNumber" placeholder="Nhập số Serial hoặc IMEI" />
+                    </div>
+                </div>
 
-            <div class="d-flex justify-content-end">
-                <a href="/assets/inventory" class="btn btn-light me-3">Cancel</a>
-                <button type="submit" class="btn btn-primary">
-                    <span class="indicator-label">Save Asset</span>
-                </button>
-            </div>
-        </EditForm>
+                <div class="row g-9 mb-8">
+                    <div class="col-md-4 fv-row">
+                        <label class="required fs-6 fw-bold mb-2">Ngày mua</label>
+                        <div class="position-relative d-flex align-items-center">
+                            <i class="ki-outline ki-calendar-8 fs-2 position-absolute mx-4"></i>
+                            <InputDate class="form-control form-control-solid ps-12" @bind-Value="Asset.PurchaseDate" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 fv-row">
+                        <label class="required fs-6 fw-bold mb-2">Giá mua (VND)</label>
+                        <InputNumber class="form-control form-control-solid" @bind-Value="Asset.PurchasePrice" />
+                    </div>
+                    <div class="col-md-4 fv-row">
+                        <label class="required fs-6 fw-bold mb-2">Trạng thái kho</label>
+                        <InputSelect class="form-select form-select-solid" @bind-Value="Asset.Status">
+                            <option value="Available">Sẵn dùng</option>
+                            <option value="Assigned">Đã bàn giao</option>
+                            <option value="Maintenance">Đang bảo trì</option>
+                            <option value="Broken">Đã hỏng</option>
+                            <option value="Lost">Đã mất</option>
+                        </InputSelect>
+                    </div>
+                </div>
+
+                <div class="fv-row mb-15">
+                    <label class="fs-6 fw-bold mb-2">Ghi chú chi tiết</label>
+                    <InputTextArea class="form-control form-control-solid" rows="4" @bind-Value="Asset.SerialNumber" placeholder="Thông số kỹ thuật, cấu hình, tình trạng khi nhập kho..." />
+                </div>
+
+                <div class="d-flex justify-content-end gap-3">
+                    <button type="button" class="btn btn-light fw-bold" @onclick="Cancel" disabled="@_isSaving">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary fw-bold" disabled="@_isSaving">
+                        @if (_isSaving)
+                        {
+                            <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                            <span>Đang lưu...</span>
+                        }
+                        else
+                        {
+                            <i class="ki-outline ki-check fs-2 me-1"></i>
+                            <span>@(IsEdit ? "Cập nhật tài sản" : "Lưu tài sản mới")</span>
+                        }
+                    </button>
+                </div>
+            </EditForm>
+        </SkeletonLoading>
     </div>
 </div>
-
-@code {
-    private AssetCreateModel Asset = new();
-
-    private bool IsOtherTypeSelected = false;
-    private string CustomType = "";
-
-    protected override void OnInitialized()
-    {
-        Asset.PurchaseDate = DateTime.Today;
-        Asset.Status = "Available";
-    }
-
-    private void OnTypeChanged(string value)
-    {
-        Asset.Type = value;
-        IsOtherTypeSelected = (value == "Other");
-    }
-
-    private void HandleValidSubmit()
-    {
-        // If Custom Type is selected, use the custom value
-        if (IsOtherTypeSelected && !string.IsNullOrWhiteSpace(CustomType))
-        {
-            Asset.Type = CustomType;
-        }
-
-        // Logic to save asset (e.g., call API)
-        // For now, just navigate back
-        Navigation.NavigateTo("/assets/inventory");
-    }
-
-    public class AssetCreateModel
-    {
-        public string Name { get; set; }
-        public string Code { get; set; }
-        public string Type { get; set; }
-        public string SerialNumber { get; set; }
-        public DateTime PurchaseDate { get; set; }
-        public decimal PurchasePrice { get; set; }
-        public string Status { get; set; }
-        public string Description { get; set; }
-    }
-}

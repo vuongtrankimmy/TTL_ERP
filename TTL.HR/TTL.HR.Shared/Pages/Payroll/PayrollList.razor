@@ -1,125 +1,87 @@
 @page "/payroll/periods"
-@inject NavigationManager Navigation
-@using System.Linq
+@using TTL.HR.Shared.Components.Common
 
-<div class="card card-flush">
-    <div class="card-header align-items-center py-5 gap-2 gap-md-5">
+<PageTitle>Quản lý Bảng lương - TTL.HR</PageTitle>
+
+<div class="card card-flush shadow-sm border-0">
+    <div class="card-header align-items-center py-5 gap-2 gap-md-5 border-0">
         <div class="card-title">
             <div class="d-flex align-items-center position-relative my-1">
-                <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4"></i>
-                <input type="text" data-kt-ecommerce-order-filter="search" class="form-control form-control-solid w-250px ps-12" placeholder="Search Payroll">
+                <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4 text-gray-500"></i>
+                <input type="text" class="form-control form-control-solid w-250px ps-12" placeholder="Tìm kiếm bảng lương...">
             </div>
         </div>
         <div class="card-toolbar">
-            <button type="button" class="btn btn-primary" @onclick="CreateNewPeriod">
-                <i class="ki-outline ki-plus fs-2"></i> Generate Payroll
+            <button type="button" class="btn btn-primary fw-bold" @onclick="CreateNewPeriod">
+                <i class="ki-outline ki-plus fs-2 me-1"></i> Tính lương tháng này
             </button>
         </div>
     </div>
+    
     <div class="card-body pt-0">
-        <div class="table-responsive">
-            <table class="table align-middle table-row-dashed fs-6 gy-5">
-                <thead>
-                    <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                        <th class="min-w-100px">Period Name</th>
-                        <th class="min-w-100px">Month/Year</th>
-                        <th class="min-w-100px">Status</th>
-                        <th class="min-w-100px">Total Payout</th>
-                        <th class="text-end min-w-100px">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="fw-semibold text-gray-600">
-                    @foreach (var period in Periods)
-                    {
-                        <tr>
-                            <td>
-                                <a href="javascript:void(0)" @onclick="() => ViewDetail(period.Name)" class="text-gray-800 text-hover-primary fw-bold">@period.Name</a>
-                            </td>
-                            <td>
-                                <span class="fw-bold">@period.Month/@period.Year</span>
-                            </td>
-                            <td>
-                                <div class="badge badge-light-@(period.Status == "Closed" ? "success" : "warning") fw-bold">@period.Status</div>
-                            </td>
-                            <td>
-                                <span class="fw-bold">@period.TotalAmount.ToString("N0") VND</span>
-                            </td>
-                            <td class="text-end">
-                                <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" title="View Details" @onclick="() => ViewDetail(period.Name)">
-                                    <i class="ki-outline ki-eye fs-3"></i>
-                                </button>
-                                <button class="btn btn-icon btn-active-light-danger w-30px h-30px" title="Delete" @onclick="() => DeletePeriod(period)">
-                                    <i class="ki-outline ki-trash fs-3"></i>
-                                </button>
-                            </td>
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="5">
+            <div class="table-responsive">
+                <table class="table align-middle table-row-dashed fs-6 gy-5">
+                    <thead>
+                        <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                            <th class="min-w-200px">Kỳ lương</th>
+                            <th class="min-w-100px text-center">Tháng/Năm</th>
+                            <th class="min-w-100px text-center">Nhân viên</th>
+                            <th class="min-w-150px text-end">Tổng chi trả</th>
+                            <th class="min-w-120px text-center">Trạng thái</th>
+                            <th class="text-end min-w-100px">Thao tác</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody class="fw-semibold text-gray-700">
+                        @if (Periods.Any())
+                        {
+                            @foreach (var period in Periods)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-40px me-3">
+                                                <div class="symbol-label bg-light-success">
+                                                    <i class="ki-outline ki-dollar text-success fs-2"></i>
+                                                </div>
+                                            </div>
+                                            <a href="javascript:void(0)" @onclick="() => ViewDetail(period.Month, period.Year)" class="text-gray-800 text-hover-primary fw-bold fs-6">@period.Name</a>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-light fw-bold fs-7">@period.Month/@period.Year</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="text-gray-600 fw-bold">@period.EmployeeCount nhận viên</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="text-dark fw-bolder fs-6">@period.TotalAmount.ToString("N0") VND</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="badge @(period.Status == "Closed" || period.Status == "Đã chốt" ? "badge-light-success" : "badge-light-warning") fw-bold px-4 py-3">@(period.Status == "Closed" || period.Status == "Đã chốt" ? "Đã chốt" : "Dự thảo")</div>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-icon btn-light-primary btn-active-primary me-2 hover-scale" title="Xem chi tiết" @onclick="() => ViewDetail(period.Month, period.Year)">
+                                            <i class="ki-outline ki-eye fs-2"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-icon btn-light-danger btn-active-danger hover-scale" title="Xóa">
+                                            <i class="ki-outline ki-trash fs-2"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-20">
+                                    <div class="text-muted fs-4">Chưa có dữ liệu bảng lương.</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </SkeletonLoading>
     </div>
 </div>
-
-@code {
-    private List<PayrollPeriodViewModel> Periods = new();
-
-    protected override void OnInitialized()
-    {
-        Periods = new List<PayrollPeriodViewModel>
-        {
-            new PayrollPeriodViewModel { Name = "Payroll Jan 2026", Month = 1, Year = 2026, Status = "Closed", TotalAmount = 500000000 },
-            new PayrollPeriodViewModel { Name = "Payroll Feb 2026", Month = 2, Year = 2026, Status = "Draft", TotalAmount = 520000000 }
-        };
-    }
-
-    private void CreateNewPeriod() 
-    { 
-        // Mock logic: Add a new period
-        var lastPeriod = Periods.OrderByDescending(p => p.Year).ThenByDescending(p => p.Month).FirstOrDefault();
-        var nextMonth = 1;
-        var nextYear = 2026;
-
-        if (lastPeriod != null)
-        {
-            if (lastPeriod.Month == 12)
-            {
-                nextMonth = 1;
-                nextYear = lastPeriod.Year + 1;
-            }
-            else
-            {
-                nextMonth = lastPeriod.Month + 1;
-                nextYear = lastPeriod.Year;
-            }
-        }
-
-        Periods.Add(new PayrollPeriodViewModel 
-        { 
-            Name = $"Payroll {System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(nextMonth)} {nextYear}", 
-            Month = nextMonth, 
-            Year = nextYear, 
-            Status = "Draft", 
-            TotalAmount = 0 
-        });
-    }
-
-    private void DeletePeriod(PayrollPeriodViewModel period)
-    {
-        Periods.Remove(period);
-    }
-
-    private void ViewDetail(string periodName)
-    {
-        // For demo, passing periodName as ID
-        Navigation.NavigateTo($"/payroll/period/{periodName}");
-    }
-
-    public class PayrollPeriodViewModel
-    {
-        public string Name { get; set; }
-        public int Month { get; set; }
-        public int Year { get; set; }
-        public string Status { get; set; }
-        public decimal TotalAmount { get; set; }
-    }
-}

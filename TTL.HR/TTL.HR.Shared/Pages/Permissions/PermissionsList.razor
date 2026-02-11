@@ -15,8 +15,8 @@
                             <span class="text-gray-800 fw-bolder fs-6">Tổng số vai trò</span>
                         </div>
                         <div class="d-flex flex-column">
-                            <span class="fs-2 fw-bolder text-dark">05</span>
-                            <span class="text-muted fs-8 fw-bold">Admin, HR, Manager, Leader, User</span>
+                            <span class="fs-2 fw-bolder text-dark">@(_roles.Count.ToString("D2"))</span>
+                            <span class="text-muted fs-8 fw-bold">@string.Join(", ", _roles.Take(5).Select(r => r.Name))</span>
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                             <span class="text-gray-800 fw-bolder fs-6">Tổng quyền hạn</span>
                         </div>
                         <div class="d-flex flex-column">
-                            <span class="fs-2 fw-bolder text-dark">42</span>
+                            <span class="fs-2 fw-bolder text-dark">@_allPermissionsCount</span>
                             <span class="text-muted fs-8 fw-bold">Đã phân phối cho các nhóm</span>
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                             <span class="text-gray-800 fw-bolder fs-6">Người dùng được gán</span>
                         </div>
                         <div class="d-flex flex-column">
-                            <span class="fs-2 fw-bolder text-dark">128</span>
+                            <span class="fs-2 fw-bolder text-dark">@_totalUsersWithRoles</span>
                             <span class="text-muted fs-8 fw-bold">Nhân viên đang hoạt động</span>
                         </div>
                     </div>
@@ -64,17 +64,17 @@
                     <span class="text-muted fs-7">Thiết lập chi tiết quyền hạn cho từng nhóm người dùng</span>
                 </div>
                 <!--begin::Card toolbar-->
-                <div class="card-toolbar">
                     <div class="d-flex justify-content-end gap-2">
-                        <div class="position-relative w-md-250px me-3">
-                            <i class="ki-outline ki-magnifier fs-2 position-absolute top-50 translate-middle-y ms-4"></i>
-                            <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm kiếm vai trò..." />
-                        </div>
+                        <button type="button" class="btn btn-light-primary btn-sm px-6" @onclick="LoadDataAsync">
+                            <i class="ki-outline ki-arrows-circle fs-2 me-1"></i>Làm mới
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm px-6" @onclick="SaveAllChanges">
+                            <i class="ki-outline ki-check fs-2 me-1"></i>Lưu tất cả thay đổi
+                        </button>
                         <button type="button" class="btn btn-primary btn-sm px-6" @onclick="openAddRole">
                             <i class="ki-outline ki-plus fs-2 me-1"></i>Thêm vai trò
                         </button>
                     </div>
-                </div>
                 <!--end::Card toolbar-->
             </div>
             <!--end::Card header-->
@@ -86,69 +86,62 @@
                         <thead>
                             <tr class="fw-bold text-muted text-uppercase fs-8 border-bottom-0 bg-light">
                                 <th class="min-w-250px rounded-start align-middle">Danh mục quyền hạn</th>
-                                <th class="text-center min-w-100px">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <i class="ki-outline ki-shield-tick fs-2 text-primary mb-2"></i>
-                                        <span>Admin</span>
-                                    </div>
-                                </th>
-                                <th class="text-center min-w-100px">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <i class="ki-outline ki-profile-user fs-2 text-success mb-2"></i>
-                                        <span>HR Manager</span>
-                                    </div>
-                                </th>
-                                <th class="text-center min-w-100px">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <i class="ki-outline ki-briefcase fs-2 text-info mb-2"></i>
-                                        <span>Quản lý</span>
-                                    </div>
-                                </th>
-                                <th class="text-center min-w-100px">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <i class="ki-outline ki-medal-star fs-2 text-warning mb-2"></i>
-                                        <span>Tổ trưởng</span>
-                                    </div>
-                                </th>
-                                <th class="text-center min-w-100px rounded-end">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <i class="ki-outline ki-user fs-2 text-gray-500 mb-2"></i>
-                                        <span>Nhân viên</span>
-                                    </div>
-                                </th>
+                                @foreach (var role in _roles)
+                                {
+                                    <th class="text-center min-w-100px">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <i class="ki-outline ki-shield-tick fs-2 text-primary mb-2"></i>
+                                            <span>@role.Name</span>
+                                        </div>
+                                    </th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var p in _permissions)
+                            @if (_isLoading)
                             {
-                                <tr class="hover-elevate cursor-pointer" @onclick="() => openPermissionDetail(p)">
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-45px me-4">
-                                                <span class="symbol-label @p.IconBg">
-                                                    <i class="@p.Icon fs-2 @p.IconColor"></i>
-                                                </span>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="text-gray-800 fw-bolder text-hover-primary fs-6">@p.Name</span>
-                                                <span class="text-muted fs-8">@p.Description</span>
-                                            </div>
+                                <tr>
+                                    <td colspan="@(1 + _roles.Count)" class="text-center py-10">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
                                         </div>
                                     </td>
-                                    @for (int i = 0; i < 5; i++)
-                                    {
-                                        <td class="text-center">
-                                            @{
-                                                var isEnabled = p.AccessDefaults[i];
-                                                var colorClass = isEnabled ? "text-success" : "text-gray-300";
-                                                var iconClass = isEnabled ? "ki-check-square" : "ki-cross-square";
-                                            }
-                                            <div class="d-flex justify-content-center">
-                                                <i class="ki-outline @iconClass fs-1 @colorClass"></i>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var p in _permissions)
+                                {
+                                    <tr class="hover-elevate cursor-pointer" @onclick="() => openPermissionDetail(p)">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-45px me-4">
+                                                    <span class="symbol-label @p.IconBg">
+                                                        <i class="@p.Icon fs-2 @p.IconColor"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-gray-800 fw-bolder text-hover-primary fs-6">@p.Name</span>
+                                                    <span class="text-muted fs-8">@p.Description</span>
+                                                </div>
                                             </div>
                                         </td>
-                                    }
-                                </tr>
+                                        @for (int i = 0; i < _roles.Count; i++)
+                                        {
+                                            var roleIndex = i;
+                                            <td class="text-center" @onclick:stopPropagation="true">
+                                                @{
+                                                    var isEnabled = p.AccessDefaults[roleIndex];
+                                                    var colorClass = isEnabled ? "text-success" : "text-gray-300";
+                                                    var iconClass = isEnabled ? "ki-check-square" : "ki-cross-square";
+                                                }
+                                                <div class="d-flex justify-content-center cursor-pointer" @onclick="() => ToggleCategory(p, roleIndex)">
+                                                    <i class="ki-outline @iconClass fs-1 @colorClass"></i>
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>

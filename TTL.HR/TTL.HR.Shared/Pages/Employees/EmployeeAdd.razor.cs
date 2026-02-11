@@ -2,11 +2,16 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
 using System.Threading.Tasks;
-using TTL.HR.Shared.Models;
+using TTL.HR.Application.Modules.Common.Models;
+using TTL.HR.Application.Modules.HumanResource.Models;
+using TTL.HR.Application.Modules.Organization.Models;
 using TTL.HR.Shared.Components.Common;
-using TTL.HR.Shared.Interfaces;
+using TTL.HR.Application.Modules.Common.Interfaces;
+using TTL.HR.Application.Modules.Organization.Interfaces;
+using TTL.HR.Application.Modules.HumanResource.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using Entities = TTL.HR.Application.Modules.HumanResource.Entities;
 
 namespace TTL.HR.Shared.Pages.Employees
 {
@@ -16,6 +21,8 @@ namespace TTL.HR.Shared.Pages.Employees
         [Inject] public IDepartmentService DepartmentService { get; set; } = default!;
         [Inject] public IPositionService PositionService { get; set; } = default!;
         [Inject] public IEmployeeService EmployeeService { get; set; } = default!;
+        [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
+        [Inject] public NavigationManager Navigation { get; set; } = default!;
 
         private List<LookupModel> genderLookups = new();
         private List<LookupModel> maritalStatusLookups = new();
@@ -57,9 +64,9 @@ namespace TTL.HR.Shared.Pages.Employees
             if (scannedData != null)
             {
                 newEmployee.Name = scannedData.Name;
-                newEmployee.Id = "NV" + new Random().Next(100, 999);
-                newEmployee.DOB = scannedData.DOB ?? DateTime.Now;
+                newEmployee.Code = "NV" + new Random().Next(100, 999);
                 newEmployee.IdCard = scannedData.IdCard;
+                newEmployee.DOB = scannedData.DOB ?? DateTime.Now;
                 newEmployee.Address = scannedData.Address;
                 newEmployee.Hometown = scannedData.Hometown;
                 newEmployee.Gender = scannedData.Gender;
@@ -105,8 +112,9 @@ namespace TTL.HR.Shared.Pages.Employees
             await JSRuntime.InvokeVoidAsync("Swal.showLoading");
             try 
             {
-                var employeeEntity = new Entities.HumanResource.Employee
+                var employeeEntity = new Entities.Employee
                 {
+                    Code = newEmployee.Code,
                     FullName = newEmployee.Name,
                     Email = newEmployee.Email,
                     CompanyEmail = newEmployee.CompanyEmail,
@@ -114,10 +122,10 @@ namespace TTL.HR.Shared.Pages.Employees
                     AvatarUrl = newEmployee.Avatar,
                     DepartmentId = newEmployee.DeptId,
                     PositionId = newEmployee.PositionId,
-                    JoinDate = newEmployee.JoinDate,
-                    Status = Enum.TryParse<Entities.HumanResource.EmployeeStatus>(newEmployee.Status, true, out var status) ? status : Entities.HumanResource.EmployeeStatus.Probation,
-                    Type = Enum.TryParse<Entities.HumanResource.EmploymentType>(newEmployee.ContractType, true, out var type) ? type : Entities.HumanResource.EmploymentType.FullTime,
-                    PersonalDetails = new Entities.HumanResource.PersonalInfo
+                    JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate,
+                    Status = Enum.TryParse<Entities.EmployeeStatus>(newEmployee.Status, true, out var status) ? status : Entities.EmployeeStatus.Probation,
+                    Type = Enum.TryParse<Entities.EmploymentType>(newEmployee.ContractType, true, out var type) ? type : Entities.EmploymentType.FullTime,
+                    PersonalDetails = new Entities.PersonalInfo
                     {
                         DOB = newEmployee.DOB,
                         Gender = newEmployee.Gender,

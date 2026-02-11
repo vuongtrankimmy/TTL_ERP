@@ -1,5 +1,7 @@
-using System;
 using Microsoft.AspNetCore.Components;
+using System.Threading.Tasks;
+using TTL.HR.Application.Modules.Dashboard.Interfaces;
+using TTL.HR.Application.Modules.Dashboard.Models;
 
 namespace TTL.HR.Shared.Pages.Dashboard
 {

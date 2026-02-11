@@ -1,108 +1,73 @@
 @page "/training/courses"
-@inject NavigationManager Navigation
+@using TTL.HR.Shared.Components.Common
 
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5 g-xl-9">
-    @foreach(var course in Courses) {
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header">
-                    <h3 class="card-title fw-bold text-gray-800">Title</h3>
-                    <div class="card-toolbar">
-                        <button type="button" class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                            <i class="ki-outline ki-category fs-6"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body p-9">
-                    <div class="fs-2hx fw-bold text-gray-800 mb-4">@course.Title</div> 
-                    <div class="d-flex flex-wrap mb-5">
-                       <span class="badge badge-light-primary me-2">@course.Duration</span>
-                       <span class="badge badge-light-success">@course.Trainer</span>
-                    </div>
+<PageTitle>Khóa đào tạo - TTL.HR</PageTitle>
 
-                    <div class="fs-6 fw-semibold text-gray-600 mb-7">
-                        @course.Description
-                    </div>
-
-                    <div class="d-flex align-items-center mb-5">
-                        <div class="symbol symbol-circle symbol-40px overflow-hidden me-3">
-                            <div class="symbol-label">
-                                <img src="/assets/media/avatars/300-6.jpg" alt="Emma Smith" class="w-100">
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold">Trainer</a>
-                            <span class="text-gray-400 fw-semibold">@course.Trainer</span>
-                        </div>
-                    </div>
-
-                    <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
-                        <i class="ki-outline ki-information-5 fs-2tx text-warning me-4"></i>
-                        <div class="d-flex flex-stack flex-grow-1">
-                            <div class="fw-semibold">
-                                <div class="fs-6 text-gray-700">Deadline: @course.Deadline.ToShortDateString()</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-end pt-0">
-                     <a href="javascript:void(0)" @onclick="() => ViewDetail(course.Title)" class="btn btn-sm btn-light-primary">View Details</a>
-                </div>
-            </div>
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+        <div class="mb-10 text-center">
+            <h1 class="text-dark fw-boldest fs-2qx mb-3">Trung tâm Đào tạo</h1>
+            <div class="text-gray-400 fw-bold fs-5">Hãy tham gia các khóa học để nâng cao kỹ năng và phát triển nghề nghiệp</div>
         </div>
-    }
+
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card" Rows="2" Columns="4">
+            <div class="row g-6 g-xl-9">
+                @if (Courses.Any())
+                {
+                    @foreach (var course in Courses)
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card h-100 shadow-sm border-0 hover-elevate">
+                                <div class="card-body d-flex flex-column p-9">
+                                    <div class="d-flex flex-stack mb-5">
+                                        <div class="symbol symbol-50px">
+                                            <span class="symbol-label bg-light-primary text-primary fw-boldest">TRAIN</span>
+                                        </div>
+                                        <span class="badge badge-light-primary fw-bold px-4 py-3">@course.Status</span>
+                                    </div>
+
+                                    <div class="mb-5">
+                                        <a href="javascript:void(0)" @onclick="() => ViewDetail(course.Id)" class="fs-2 text-gray-800 text-hover-primary fw-bolder">@course.Title</a>
+                                        <div class="fw-bold text-gray-400 mt-2 mb-4 fs-6">@course.Description</div>
+                                    </div>
+
+                                    <div class="d-flex flex-stack mt-auto">
+                                        <div class="d-flex align-items-center me-3">
+                                            <div class="symbol symbol-35px symbol-circle me-3">
+                                                <span class="symbol-label bg-light-warning text-warning fw-bold">@course.TrainerName.Substring(0, 1)</span>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="text-gray-800 fw-bolder fs-7">@course.TrainerName</span>
+                                                <span class="text-muted fw-bold fs-9">Giảng viên</span>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="text-gray-800 fw-bolder fs-7">@course.DurationHours giờ</div>
+                                            <div class="text-muted fw-bold fs-9">Thời lượng</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="separator separator-dashed my-6"></div>
+                                    
+                                    <div class="d-flex flex-stack">
+                                        <div class="d-flex align-items-center">
+                                            <i class="ki-outline ki-calendar fs-2 text-gray-400 me-2"></i>
+                                            <span class="text-gray-800 fw-bolder fs-7">@course.StartDate.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                        <button class="btn btn-sm btn-primary fw-bold px-6" @onclick="() => ViewDetail(course.Id)">Chi tiết</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center py-20">
+                        <div class="text-muted fs-4">Hiện không có khóa học nào mới.</div>
+                    </div>
+                }
+            </div>
+        </SkeletonLoading>
+    </div>
 </div>
-
-@code {
-    private List<CourseViewModel> Courses = new();
-
-    protected override void OnInitialized()
-    {
-        Courses = new List<CourseViewModel>
-        {
-            new CourseViewModel { 
-                Title = "Onboarding 101", 
-                Description = "Essential training for all new hires covering company culture and policies.", 
-                Duration = "4 Hours", 
-                Trainer = "HR Dept", 
-                Deadline = DateTime.Now.AddDays(7) 
-            },
-            new CourseViewModel { 
-                Title = "Advanced Excel", 
-                Description = "Master Pivot Tables, VLOOKUP and macros.", 
-                Duration = "2 Days", 
-                Trainer = "External", 
-                Deadline = DateTime.Now.AddDays(30) 
-            },
-            new CourseViewModel { 
-                Title = "Leadership Skills", 
-                Description = "Developing core leadership competencies for new managers.", 
-                Duration = "1 Week", 
-                Trainer = "CEO", 
-                Deadline = DateTime.Now.AddMonths(2) 
-            },
-            new CourseViewModel { 
-                Title = "Cybersecurity Basics", 
-                Description = "Protecting company data and recognizing phishing attempts.", 
-                Duration = "2 Hours", 
-                Trainer = "IT Dept", 
-                Deadline = DateTime.Now.AddDays(14) 
-            }
-        };
-    }
-
-    private void ViewDetail(string courseTitle)
-    {
-        // For demo, passing title as ID
-        Navigation.NavigateTo($"/training/course/{courseTitle}");
-    }
-
-    public class CourseViewModel
-    {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Duration { get; set; }
-        public string Trainer { get; set; }
-        public DateTime Deadline { get; set; }
-    }
-}

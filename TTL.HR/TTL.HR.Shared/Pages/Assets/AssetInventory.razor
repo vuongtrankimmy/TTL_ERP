@@ -1,142 +1,107 @@
 @page "/assets/inventory"
-@inject NavigationManager Navigation
 @using TTL.HR.Shared.Components.Common
 
-<div class="card">
-    <div class="card-header border-0 pt-6">
+<PageTitle>Kho tài sản - TTL.HR</PageTitle>
+
+<div class="card card-flush shadow-sm border-0">
+    <div class="card-header align-items-center py-5 gap-2 gap-md-5 border-0">
         <div class="card-title">
             <div class="d-flex align-items-center position-relative my-1">
-                <i class="ki-outline ki-magnifier fs-3 position-absolute ms-5"></i>
-                <input type="text" data-kt-customer-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Search Assets">
+                <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4 text-gray-500"></i>
+                <input type="text" class="form-control form-control-solid w-250px ps-12" placeholder="Tìm kiếm tài sản..." 
+                       @bind="_searchTerm" @bind:event="oninput">
             </div>
         </div>
         <div class="card-toolbar">
-            <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
-                <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_export_users">
-                <i class="ki-outline ki-exit-up fs-2"></i>Export</button>
-                <button type="button" class="btn btn-primary" @onclick="CreateNewAsset">Add Asset</button>
+            <div class="d-flex justify-content-end gap-3">
+                <button type="button" class="btn btn-light-primary fw-bold">
+                    <i class="ki-outline ki-exit-up fs-2 me-1"></i> Xuất Excel
+                </button>
+                <button type="button" class="btn btn-primary fw-bold" @onclick="CreateNewAsset">
+                    <i class="ki-outline ki-plus fs-2 me-1"></i> Thêm tài sản
+                </button>
             </div>
         </div>
     </div>
     <div class="card-body pt-0">
-        <div class="table-responsive">
-            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_asset_table">
-                <thead>
-                    <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                        <th class="min-w-125px">Asset Name</th>
-                        <th class="min-w-125px">Code</th>
-                        <th class="min-w-125px">Assigned To</th>
-                        <th class="min-w-125px">Status</th>
-                        <th class="min-w-125px">Purchase Date</th>
-                        <th class="text-end min-w-70px">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="fw-semibold text-gray-600">
-                    @foreach (var asset in AssetList)
-                    {
-                        <tr>
-                            <td>
-                                <a href="javascript:void(0)" @onclick="() => ViewDetail(asset.Code)" class="text-gray-800 text-hover-primary mb-1">@asset.Name</a>
-                                <span class="text-gray-500 fw-semibold d-block fs-7">@asset.Type</span>
-                            </td>
-                            <td>@asset.Code</td>
-                             <td>
-                                <div class="badge badge-light fw-bold">@asset.AssignedTo</div>
-                            </td>
-                             <td>
-                                <div class="badge badge-light-@(GetStatusColor(asset.Status)) fw-bold">@asset.Status</div>
-                            </td>
-                             <td>@asset.PurchaseDate.ToShortDateString()</td>
-                            <td class="text-end">
-                                <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" title="View Details" @onclick="() => ViewDetail(asset.Code)">
-                                    <i class="ki-outline ki-eye fs-3"></i>
-                                </button>
-                                <button class="btn btn-icon btn-active-light-danger w-30px h-30px" title="Delete" @onclick="() => PromptDeleteAsset(asset)">
-                                    <i class="ki-outline ki-trash fs-3"></i>
-                                </button>
-                            </td>
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="10">
+            <div class="table-responsive">
+                <table class="table align-middle table-row-dashed fs-6 gy-5">
+                    <thead class="bg-light">
+                        <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                            <th class="min-w-250px ps-4">TÊN TÀI SẢN</th>
+                            <th class="min-w-120px">MÃ TSCĐ</th>
+                            <th class="min-w-150px">NGƯỜI SỬ DỤNG</th>
+                            <th class="min-w-120px text-center">TRẠNG THÁI</th>
+                            <th class="min-w-120px">NGÀY MUA</th>
+                            <th class="text-end min-w-100px pe-4">THAO TÁC</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody class="fw-semibold text-gray-700">
+                        @if (FilteredAssets.Any())
+                        {
+                            @foreach (var asset in FilteredAssets)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-40px me-3">
+                                                <div class="symbol-label bg-light-info text-info">
+                                                    <i class="ki-outline ki-laptop fs-2"></i>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="javascript:void(0)" @onclick="() => ViewDetail(asset.Id)" class="text-gray-800 text-hover-primary fs-6 fw-bold">@asset.Name</a>
+                                                <span class="text-muted fw-semibold fs-7 text-uppercase">@asset.Category</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge badge-light fw-bold fs-7">@asset.Code</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if (asset.AssignedTo != "Chưa bàn giao")
+                                            {
+                                                <div class="symbol symbol-25px symbol-circle me-2">
+                                                    <div class="symbol-label bg-light-primary text-primary fs-9 fw-bold">@asset.AssignedTo.Substring(0, 1)</div>
+                                                </div>
+                                            }
+                                            <span class="fw-bold">@asset.AssignedTo</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="badge badge-light-@(GetStatusColor(asset.StatusKey)) fw-bold px-4 py-3">@asset.Status</div>
+                                    </td>
+                                    <td>@asset.PurchaseDate?.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-end pe-4">
+                                        <button class="btn btn-sm btn-icon btn-light-primary btn-active-primary me-2 hover-scale" title="Xem chi tiết" @onclick="() => ViewDetail(asset.Id)">
+                                            <i class="ki-outline ki-eye fs-2"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-icon btn-light-danger btn-active-danger hover-scale" title="Xóa" @onclick="() => PromptDeleteAsset(asset)">
+                                            <i class="ki-outline ki-trash fs-2"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-20">
+                                    <div class="text-muted fs-4">Không tìm thấy tài sản nào.</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </SkeletonLoading>
     </div>
 </div>
 
 <DeleteConfirmationModal 
     IsVisible="@IsDeleteModalOpen"
-    Title="Delete Asset"
-    Message="You are requesting to delete asset"
+    Title="Xóa tài sản"
+    Message="Bạn có chắc chắn muốn xóa tài sản này khỏi kho?"
     ItemName="@(AssetToDelete?.Name ?? "")"
     OnConfirmed="ConfirmDelete"
     OnCancelled="CloseDeleteModal" />
-
-@code {
-    private List<AssetViewModel> AssetList = new();
-    private bool IsDeleteModalOpen = false;
-    private AssetViewModel? AssetToDelete;
-
-    protected override void OnInitialized()
-    {
-        AssetList = new List<AssetViewModel>
-        {
-            new AssetViewModel { Name = "Dell XPS 15", Code = "IT-001", Type = "Laptop", AssignedTo = "John Doe", Status = "Assigned", PurchaseDate = DateTime.Now.AddMonths(-6) },
-            new AssetViewModel { Name = "MacBook Pro M2", Code = "IT-002", Type = "Laptop", AssignedTo = "Jane Smith", Status = "Assigned", PurchaseDate = DateTime.Now.AddMonths(-3) },
-            new AssetViewModel { Name = "LG Ultrawide", Code = "IT-003", Type = "Monitor", AssignedTo = "Pool", Status = "Available", PurchaseDate = DateTime.Now.AddYears(-1) },
-             new AssetViewModel { Name = "Toyota Camry", Code = "VH-001", Type = "Vehicle", AssignedTo = "Director", Status = "In Maintenance", PurchaseDate = DateTime.Now.AddYears(-2) }
-        };
-    }
-
-    private string GetStatusColor(string status)
-    {
-        return status switch
-        {
-            "Available" => "success",
-            "Assigned" => "primary",
-            "In Maintenance" => "warning",
-            "Disposed" => "danger",
-            _ => "secondary"
-        };
-    }
-    
-    private void CreateNewAsset() 
-    { 
-        Navigation.NavigateTo("/assets/add");
-    }
-
-    private void ViewDetail(string code)
-    {
-        Navigation.NavigateTo($"/assets/detail/{code}");
-    }
-
-    private void PromptDeleteAsset(AssetViewModel asset)
-    {
-        AssetToDelete = asset;
-        IsDeleteModalOpen = true;
-    }
-
-    private void CloseDeleteModal()
-    {
-        IsDeleteModalOpen = false;
-        AssetToDelete = null;
-    }
-
-    private void ConfirmDelete()
-    {
-        if (AssetToDelete != null)
-        {
-            AssetList.Remove(AssetToDelete);
-            CloseDeleteModal();
-        }
-    }
-
-    public class AssetViewModel
-    {
-        public string Name { get; set; } = string.Empty;
-        public string Code { get; set; } = string.Empty;
-        public string Type { get; set; } = string.Empty;
-        public string AssignedTo { get; set; } = string.Empty;
-        public string Status { get; set; } = string.Empty;
-        public DateTime PurchaseDate { get; set; }
-    }
-}

@@ -8,10 +8,24 @@
             <h3 class="fw-bolder my-2">Vùng & Ngôn ngữ
             <span class="fs-6 text-gray-400 fw-bold ms-1">Tùy chỉnh hiển thị và định dạng cho hệ thống</span></h3>
             <div class="d-flex my-2">
-                <button class="btn btn-light-primary btn-sm me-3 fw-bolder px-5"><i class="bi bi-arrow-counterclockwise fs-5 me-1"></i>Mặc định</button>
-                <button class="btn btn-primary btn-sm fw-bolder px-8"><i class="bi bi-check-lg fs-5 me-1"></i>Lưu thay đổi</button>
+                <button class="btn btn-light-primary btn-sm me-3 fw-bolder px-5" @onclick="ResetToDefault" disabled="@_isSaving">
+                    <i class="bi bi-arrow-counterclockwise fs-5 me-1"></i>Mặc định
+                </button>
+                <button class="btn btn-primary btn-sm fw-bolder px-8" @onclick="SaveSettings" disabled="@(_isSaving || _isLoading)">
+                    @if (_isSaving)
+                    {
+                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                    }
+                    else
+                    {
+                        <i class="bi bi-check-lg fs-5 me-1"></i>
+                    }
+                    Lưu thay đổi
+                </button>
             </div>
         </div>
+
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card">
 
         <div class="row g-7">
             <!-- Left Column: Language & Region Settings -->
@@ -27,7 +41,7 @@
                     <div class="card-body pt-5">
                         <div class="row g-5">
                             <div class="col-md-6">
-                                <label class="d-flex flex-stack cursor-pointer mb-5 p-4 border border-dashed rounded bg-light-primary border-primary">
+                                <label class="d-flex flex-stack cursor-pointer mb-5 p-4 border border-dashed rounded @(Model.DefaultLanguage == "vi-VN" ? "bg-light-primary border-primary" : "")">
                                     <span class="d-flex align-items-center me-2">
                                         <span class="symbol symbol-40px me-4">
                                             <img src="assets/media/flags/vietnam.svg" alt="VN" class="w-30px" />
@@ -38,12 +52,12 @@
                                         </span>
                                     </span>
                                     <span class="form-check form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="radio" name="language" value="vi" checked />
+                                        <input class="form-check-input" type="radio" name="language" value="vi-VN" checked="@(Model.DefaultLanguage == "vi-VN")" @onchange='() => Model.DefaultLanguage = "vi-VN"' />
                                     </span>
                                 </label>
                             </div>
                             <div class="col-md-6">
-                                <label class="d-flex flex-stack cursor-pointer mb-5 p-4 border border-dashed rounded hover-bg-light">
+                                <label class="d-flex flex-stack cursor-pointer mb-5 p-4 border border-dashed rounded @(Model.DefaultLanguage == "en-US" ? "bg-light-primary border-primary" : "hover-bg-light")">
                                     <span class="d-flex align-items-center me-2">
                                         <span class="symbol symbol-40px me-4">
                                             <img src="assets/media/flags/united-states.svg" alt="US" class="w-30px" />
@@ -54,7 +68,7 @@
                                         </span>
                                     </span>
                                     <span class="form-check form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="radio" name="language" value="en" />
+                                        <input class="form-check-input" type="radio" name="language" value="en-US" checked="@(Model.DefaultLanguage == "en-US")" @onchange='() => Model.DefaultLanguage = "en-US"' />
                                     </span>
                                 </label>
                             </div>
@@ -74,8 +88,9 @@
                         <div class="row mb-8">
                             <label class="col-lg-4 col-form-label fw-bold fs-7">Múi giờ (Timezone)</label>
                             <div class="col-lg-8">
-                                <select class="form-select form-select-solid fs-7">
+                                <select class="form-select form-select-solid fs-7" @bind="Model.TimeZone">
                                     <option value="Asia/Ho_Chi_Minh">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+                                    <option value="SE Asia Standard Time">(GMT+07:00) SE Asia</option>
                                     <option value="Asia/Tokyo">(GMT+09:00) Tokyo, Seoul</option>
                                     <option value="America/New_York">(GMT-05:00) Eastern Time (US & Canada)</option>
                                     <option value="Europe/London">(GMT+00:00) London, Lisbon</option>
@@ -87,18 +102,18 @@
                             <label class="col-lg-4 col-form-label fw-bold fs-7">Đơn vị tiền tệ</label>
                             <div class="col-lg-8">
                                 <div class="d-flex flex-wrap gap-3">
-                                    <label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex align-items-center px-5 active">
+                                    <label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex align-items-center px-5 @(Model.Currency == "VND" ? "active" : "")">
                                         <span class="form-check form-check-custom form-check-solid me-3">
-                                            <input class="form-check-input" type="radio" name="currency" value="VND" checked />
+                                            <input class="form-check-input" type="radio" name="currency" value="VND" checked="@(Model.Currency == "VND")" @onchange='() => Model.Currency = "VND"' />
                                         </span>
                                         <span class="d-flex flex-column text-start">
                                             <span class="fw-bolder fs-6">VNĐ</span>
                                             <span class="fs-8">Việt Nam Đồng</span>
                                         </span>
                                     </label>
-                                    <label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex align-items-center px-5">
+                                    <label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex align-items-center px-5 @(Model.Currency == "USD" ? "active" : "")">
                                         <span class="form-check form-check-custom form-check-solid me-3">
-                                            <input class="form-check-input" type="radio" name="currency" value="USD" />
+                                            <input class="form-check-input" type="radio" name="currency" value="USD" checked="@(Model.Currency == "USD")" @onchange='() => Model.Currency = "USD"' />
                                         </span>
                                         <span class="d-flex flex-column text-start">
                                             <span class="fw-bolder fs-6">USD</span>
@@ -106,6 +121,7 @@
                                         </span>
                                     </label>
                                 </div>
+
                             </div>
                         </div>
 
@@ -114,20 +130,20 @@
                             <div class="col-lg-8">
                                 <div class="row g-3">
                                     <div class="col-md-4">
-                                        <label class="form-check form-check-custom form-check-solid border p-3 rounded cursor-pointer">
-                                            <input class="form-check-input" type="radio" name="date_format" checked />
+                                        <label class="form-check form-check-custom form-check-solid border p-3 rounded cursor-pointer @(Model.DateFormat == "dd/MM/yyyy" ? "bg-light" : "")">
+                                            <input class="form-check-input" type="radio" name="date_format" checked="@(Model.DateFormat == "dd/MM/yyyy")" @onchange='() => Model.DateFormat = "dd/MM/yyyy"' />
                                             <span class="ms-3 fs-7 fw-bold">DD/MM/YYYY</span>
                                         </label>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-check form-check-custom form-check-solid border p-3 rounded cursor-pointer">
-                                            <input class="form-check-input" type="radio" name="date_format" />
+                                        <label class="form-check form-check-custom form-check-solid border p-3 rounded cursor-pointer @(Model.DateFormat == "MM/dd/yyyy" ? "bg-light" : "")">
+                                            <input class="form-check-input" type="radio" name="date_format" checked="@(Model.DateFormat == "MM/dd/yyyy")" @onchange='() => Model.DateFormat = "MM/dd/yyyy"' />
                                             <span class="ms-3 fs-7 fw-bold">MM/DD/YYYY</span>
                                         </label>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-check form-check-custom form-check-solid border p-3 rounded cursor-pointer">
-                                            <input class="form-check-input" type="radio" name="date_format" />
+                                        <label class="form-check form-check-custom form-check-solid border p-3 rounded cursor-pointer @(Model.DateFormat == "yyyy-MM-dd" ? "bg-light" : "")">
+                                            <input class="form-check-input" type="radio" name="date_format" checked="@(Model.DateFormat == "yyyy-MM-dd")" @onchange='() => Model.DateFormat = "yyyy-MM-dd"' />
                                             <span class="ms-3 fs-7 fw-bold">YYYY-MM-DD</span>
                                         </label>
                                     </div>
@@ -167,19 +183,19 @@
                             <div class="d-flex flex-column gap-4">
                                 <div class="d-flex justify-content-between border-bottom pb-2">
                                     <span class="text-gray-600 fs-8">Ngày hôm nay:</span>
-                                    <span class="fw-bolder fs-7">25/12/2024</span>
+                                    <span class="fw-bolder fs-7">@DateTime.Now.ToString(Model.DateFormat)</span>
                                 </div>
                                 <div class="d-flex justify-content-between border-bottom pb-2">
-                                    <span class="text-gray-600 fs-8">Giờ hệ thống:</span>
-                                    <span class="fw-bolder fs-7">14:30:45 (GMT+7)</span>
+                                    <span class="text-gray-600 fs-8">Múi giờ:</span>
+                                    <span class="fw-bolder fs-7">@Model.TimeZone</span>
                                 </div>
                                 <div class="d-flex justify-content-between border-bottom pb-2">
                                     <span class="text-gray-600 fs-8">Tiền lương mẫu:</span>
-                                    <span class="fw-bolder fs-7">25,500,000 VNĐ</span>
+                                    <span class="fw-bolder fs-7">@(string.Format(Model.Currency == "VND" ? "{0:N0} VNĐ" : "${0:N2}", 25500000))</span>
                                 </div>
                                 <div class="d-flex justify-content-between border-bottom pb-2">
-                                    <span class="text-gray-600 fs-8">Phần trăm:</span>
-                                    <span class="fw-bolder fs-7">10.5%</span>
+                                    <span class="text-gray-600 fs-8">Ngôn ngữ:</span>
+                                    <span class="fw-bolder fs-7">@(Model.DefaultLanguage == "vi-VN" ? "Tiếng Việt" : "English")</span>
                                 </div>
                             </div>
                         </div>
@@ -204,8 +220,7 @@
                 </div>
             </div>
         </div>
+        </SkeletonLoading>
     </div>
 </div>
 
-@code {
-}

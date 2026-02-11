@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
-using TTL.HR.Shared.Interfaces;
-using TTL.HR.Shared.Models;
+using TTL.HR.Application.Modules.Attendance.Interfaces;
+using TTL.HR.Application.Modules.Attendance.Models;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Shared.Pages.Attendance
 {
@@ -13,8 +14,9 @@ namespace TTL.HR.Shared.Pages.Attendance
 
         private bool _showDetail = false;
         private bool _isLoading = true;
-        private EmployeeAttendance? _selectedEmployee;
-        private List<EmployeeAttendance> _employees = new();
+        private AttendanceModel? _selectedEmployee;
+        private List<AttendanceModel> _employees = new();
+        private List<AttendanceDetailModel> _selectedDetails = new();
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
@@ -29,21 +31,7 @@ namespace TTL.HR.Shared.Pages.Attendance
                 var timesheets = await AttendanceService.GetTimesheetsAsync();
                 if (timesheets != null)
                 {
-                    _employees = timesheets.Select(t => new EmployeeAttendance
-                    {
-                        Id = t.EmployeeId,
-                        Name = t.EmployeeName,
-                        Role = "Staff",
-                        Department = "General",
-                        Avatar = "",
-                        StandardWork = "22",
-                        ActualWork = (t.CheckIn != null && t.CheckOut != null) ? "1.0" : (t.CheckIn != null ? "0.5" : "0.0"),
-                        LateEarly = "0/0",
-                        LeaveHoliday = "0/0",
-                        Overtime = "0h",
-                        Status = t.Status,
-                        StatusColor = t.Status == "CheckedIn" ? "badge-light-primary" : (t.Status == "Completed" ? "badge-light-success" : "badge-light-warning")
-                    }).ToList();
+                    _employees = timesheets.ToList();
                 }
             }
             catch (Exception)
@@ -56,10 +44,12 @@ namespace TTL.HR.Shared.Pages.Attendance
             }
         }
 
-        private void openDetail(EmployeeAttendance emp)
+        private async System.Threading.Tasks.Task openDetail(AttendanceModel emp)
         {
             _selectedEmployee = emp;
+            _selectedDetails = (await AttendanceService.GetAttendanceDetailsAsync(emp.EmployeeId, DateTime.Now)).ToList();
             _showDetail = true;
+            StateHasChanged();
         }
 
         private void closeDetail()
@@ -67,20 +57,15 @@ namespace TTL.HR.Shared.Pages.Attendance
             _showDetail = false;
         }
 
-        private class EmployeeAttendance
+        private string GetStatusColor(string status)
         {
-            public string Id { get; set; } = "";
-            public string Name { get; set; } = "";
-            public string Role { get; set; } = "";
-            public string Department { get; set; } = "";
-            public string Avatar { get; set; } = "";
-            public string StandardWork { get; set; } = "";
-            public string ActualWork { get; set; } = "";
-            public string LateEarly { get; set; } = "";
-            public string LeaveHoliday { get; set; } = "";
-            public string Overtime { get; set; } = "";
-            public string Status { get; set; } = "";
-            public string StatusColor { get; set; } = "";
+            return status switch
+            {
+                "CheckedIn" => "badge-light-primary",
+                "Completed" => "badge-light-success",
+                "Absent" => "badge-light-danger",
+                _ => "badge-light-warning"
+            };
         }
     }
 }

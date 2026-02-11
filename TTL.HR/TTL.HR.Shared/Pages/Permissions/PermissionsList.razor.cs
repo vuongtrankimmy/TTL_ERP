@@ -1,14 +1,110 @@
 using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
-using TTL.HR.Shared.Models;
+using TTL.HR.Application.Modules.Common.Interfaces;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Shared.Pages.Permissions
 {
     public partial class PermissionsList
     {
+        [Inject] private IPermissionService PermissionService { get; set; } = default!;
+
+        private bool _isLoading = true;
         private bool _showRoleDrawer = false;
         private bool _showDetailDrawer = false;
         private PermissionCategory? _selectedCategory;
+        private List<RoleModel> _roles = new();
+        private List<PermissionCategory> _permissions = new();
+        private int _allPermissionsCount = 0;
+        private int _totalUsersWithRoles = 0;
+
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadDataAsync();
+        }
+
+        private async Task LoadDataAsync()
+        {
+            _isLoading = true;
+            try
+            {
+                var allRoles = await PermissionService.GetRolesAsync();
+                _roles = allRoles.Take(5).ToList(); // Limit columns to 5 for layout stability
+                
+                var apiPermissions = await PermissionService.GetPermissionsAsync();
+                _allPermissionsCount = apiPermissions.Count;
+                _totalUsersWithRoles = allRoles.Sum(r => r.UsersCount);
+
+                _permissions = apiPermissions
+                    .GroupBy(p => p.Group)
+                    .Select(g => new PermissionCategory(
+                        g.Key,
+                        $"{g.Count()} quyền hạn khả dụng",
+                        GetGroupIcon(g.Key),
+                        GetGroupBg(g.Key),
+                        GetGroupColor(g.Key),
+                        CalculateAccessDefaults(g.ToList()),
+                        g.Select(p => new SubPermission(p.Name, p.Code, p.AssignedRoles.Select(ar => ar.Id).ToList())).ToList()
+                    )).ToList();
+            }
+            catch (Exception)
+            {
+                // Handle error
+            }
+            finally
+            {
+                _isLoading = false;
+            }
+        }
+
+        private bool[] CalculateAccessDefaults(List<PermissionWithRolesDto> groupPerms)
+        {
+            var results = new bool[_roles.Count];
+            for (int i = 0; i < _roles.Count; i++)
+            {
+                var roleId = _roles[i].Id;
+                // A category is "checked" for a role if it has ANY permission assigned to it
+                results[i] = groupPerms.Any(p => p.AssignedRoles.Any(ar => ar.Id == roleId));
+            }
+            return results;
+        }
+
+        private string GetGroupIcon(string group) => group switch
+        {
+            "Nhân sự" => "ki-people",
+            "Lương thưởng" => "ki-wallet",
+            "Chấm công" => "ki-timer",
+            "Nghỉ phép" => "ki-calendar",
+            "Tuyển dụng" => "ki-user-tick",
+            "Đào tạo" => "ki-book-open",
+            "Dashboard" => "ki-graph-3",
+            "Hệ thống" => "ki-setting-2",
+            "Hợp đồng" => "ki-file-added",
+            "Tài sản" => "ki-package",
+            _ => "ki-shield"
+        };
+
+        private string GetGroupBg(string group) => group switch
+        {
+            "Nhân sự" => "bg-light-primary",
+            "Lương thưởng" => "bg-light-success",
+            "Chấm công" => "bg-light-warning",
+            "Nghỉ phép" => "bg-light-info",
+            "Đào tạo" => "bg-light-info",
+            "Hệ thống" => "bg-light-dark",
+            _ => "bg-light-danger"
+        };
+
+        private string GetGroupColor(string group) => group switch
+        {
+            "Nhân sự" => "text-primary",
+            "Lương thưởng" => "text-success",
+            "Chấm công" => "text-warning",
+            "Nghỉ phép" => "text-info",
+            "Đào tạo" => "text-info",
+            "Hệ thống" => "text-dark",
+            _ => "text-danger"
+        };
 
         private void openAddRole() => _showRoleDrawer = true;
         private void closeRoleDrawer() => _showRoleDrawer = false;
@@ -19,19 +115,48 @@ namespace TTL.HR.Shared.Pages.Permissions
         }
         private void closeDetailDrawer() => _showDetailDrawer = false;
 
-        private List<PermissionCategory> _permissions = new()
+        private void ToggleCategory(PermissionCategory cat, int roleIndex)
         {
-            new("Quản lý Nhân sự", "Hồ sơ, Sơ đồ tổ chức, Danh sách nhân viên", "ki-people", "bg-light-primary", "text-primary", new bool[] { true, true, true, false, false }, new() { new("Xem danh sách", "hr.view"), new("Thêm mới nhân viên", "hr.create"), new("Sửa thông tin hồ sơ", "hr.edit"), new("Xóa nhân sự", "hr.delete"), new("Xuất báo cáo Excel", "hr.export") }),
-            new("Bảng lương & Thuế", "Tính lương, Chốt lương, Thuế TNCN & BHXH", "ki-wallet", "bg-light-success", "text-success", new bool[] { true, true, false, false, false }, new() { new("Xem bảng lương", "payroll.view"), new("Tính toán lương tháng", "payroll.calc"), new("Chốt sổ lương", "payroll.close"), new("Gửi phiếu lương", "payroll.send") }),
-            new("Chấm công & Ca làm", "Dữ liệu máy chấm công, Phân ca, Chốt công", "ki-timer", "bg-light-warning", "text-warning", new bool[] { true, true, true, true, false }, new() { new("Xem dữ liệu công", "att.view"), new("Phân ca làm việc", "att.schedule"), new("Chốt vân tay", "att.sync"), new("Sửa giờ công", "att.edit") }),
-            new("Quản lý Nghỉ phép", "Duyệt đơn, Cấu hình loại nghỉ, Quỹ phép", "ki-calendar", "bg-light-info", "text-info", new bool[] { true, true, true, false, false }, new() { new("Duyệt đơn nghỉ", "leave.approve"), new("Cấu hình quỹ phép", "leave.config"), new("Xem lịch nghỉ toàn công ty", "leave.calendar") }),
-            new("Phụ cấp & Phúc lợi", "Cấu hình phụ cấp, Danh sách phúc lợi năm", "ki-shop", "bg-light-danger", "text-danger", new bool[] { true, true, false, false, false }, new() { new("Thêm phụ cấp mới", "ben.create"), new("Gán phúc lợi nhân viên", "ben.assign"), new("Quản lý bảo hiểm PVI", "ben.insurance") }),
-            new("Hợp đồng lao động", "Ký mới, Gia hạn, Chấm dứt phụ lục hợp đồng", "ki-file-added", "bg-light-primary", "text-primary", new bool[] { true, true, false, false, false }, new() { new("Tạo hợp đồng", "contract.create"), new("Gia hạn tự động", "contract.renew"), new("In hợp đồng PDF", "contract.print") }),
-            new("Tuyển dụng & Onboarding", "Kế hoạch tuyển, Bảng Kanban, Phỏng vấn, Thử việc", "ki-user-tick", "bg-light-success", "text-success", new bool[] { true, true, true, true, false }, new() { new("Đăng tin tuyển dụng", "rec.post"), new("Xem bảng Kanban", "rec.kanban"), new("Đặt lịch phỏng vấn", "rec.interview"), new("Quản lý trạng thái hồ sơ", "rec.status"), new("Xóa hồ sơ ứng viên", "rec.delete") }),
-            new("Đào tạo & Phát triển", "Khóa học nội bộ, Đăng ký học viên, Chứng chỉ", "ki-book-open", "bg-light-info", "text-info", new bool[] { true, true, true, true, true }, new() { new("Quản lý danh sách khóa học", "edu.list"), new("Đăng ký học viên", "edu.register"), new("Xem chi tiết đào tạo", "edu.details"), new("Cấp chứng chỉ", "edu.cert"), new("Xóa khóa đào tạo", "edu.delete") }),
-            new("Báo cáo & Dashboard", "Truy cập báo cáo tổng hợp, Biểu đồ thống kê", "ki-graph-3", "bg-light-warning", "text-warning", new bool[] { true, true, true, true, false }, new() { new("Xem dashboard HR", "report.dashboard"), new("Báo cáo biến động nhân sự", "report.turnover"), new("Báo cáo chi phí lương", "report.cost") }),
-            new("Cấu hình Hệ thống", "Phân quyền, Log hệ thống, API, Thông tin công ty", "ki-setting-2", "bg-light-dark", "text-dark", new bool[] { true, false, false, false, false }, new() { new("Cấu hình phân quyền", "sys.perm"), new("Xem log hệ thống", "sys.log"), new("Cài đặt API kết nối", "sys.api") })
-        };
+            var role = _roles[roleIndex];
+            var isCurrentlyEnabled = cat.AccessDefaults[roleIndex];
+            
+            foreach (var sub in cat.SubPermissions)
+            {
+                if (isCurrentlyEnabled)
+                    role.Permissions.Remove(sub.Key);
+                else if (!role.Permissions.Contains(sub.Key))
+                    role.Permissions.Add(sub.Key);
+                
+                // Update the SubPermission's internal state too if it exists
+                if (isCurrentlyEnabled)
+                    sub.AssignedRoleIds.Remove(role.Id);
+                else if (!sub.AssignedRoleIds.Contains(role.Id))
+                    sub.AssignedRoleIds.Add(role.Id);
+            }
+            
+            cat.AccessDefaults[roleIndex] = !isCurrentlyEnabled;
+            StateHasChanged();
+        }
+
+        private async Task SaveAllChanges()
+        {
+            _isLoading = true;
+            try
+            {
+                foreach (var role in _roles)
+                {
+                    await PermissionService.UpdateRoleAsync(role.Id, role);
+                }
+            }
+            catch (Exception)
+            {
+                // Handle error
+            }
+            finally
+            {
+                await LoadDataAsync();
+            }
+        }
 
         private class PermissionCategory
         {
@@ -52,8 +177,13 @@ namespace TTL.HR.Shared.Pages.Permissions
         {
             public string Action { get; set; }
             public string Key { get; set; }
-            public bool DefaultValue { get; set; } = true;
-            public SubPermission(string action, string key) { Action = action; Key = key; }
+            public List<string> AssignedRoleIds { get; set; }
+            public bool DefaultValue { get; set; } = false;
+            public bool IsEnabled(string roleId) => AssignedRoleIds.Contains(roleId);
+
+            public SubPermission(string action, string key, List<string> roleIds) { 
+                Action = action; Key = key; AssignedRoleIds = roleIds;
+            }
         }
     }
 }

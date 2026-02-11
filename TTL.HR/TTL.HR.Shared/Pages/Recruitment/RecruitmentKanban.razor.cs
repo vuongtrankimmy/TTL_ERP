@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using TTL.HR.Shared.Models;
+using TTL.HR.Application.Modules.Recruitment;
+using TTL.HR.Application.Modules.Recruitment.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,17 @@ namespace TTL.HR.Shared.Pages.Recruitment
 {
     public partial class RecruitmentKanban
     {
-        [Inject] public NavigationManager Navigation { get; set; }
-        [Inject] public IJSRuntime JS { get; set; }
+        [Inject] public IRecruitmentApplication RecruitmentApp { get; set; } = default!;
+        [Inject] public NavigationManager Navigation { get; set; } = default!;
+        [Inject] public IJSRuntime JS { get; set; } = default!;
 
         protected string SearchTerm { get; set; } = "";
-        protected int? SelectedJobId { get; set; }
+        protected string? SelectedJobId { get; set; }
 
         protected List<KanbanColumn> KanbanBoard = new();
-        protected List<JobItem> Jobs = new();
+        protected List<JobDetail> Jobs = new();
         protected List<ApplicantItem> AllApplicants = new();
+        protected bool _isLoading = true;
         
         // Modal States
         protected bool IsProfileModalOpen = false;
@@ -31,53 +34,63 @@ namespace TTL.HR.Shared.Pages.Recruitment
         protected ApplicantItem? ApplicantToSuccess;
         protected InterviewScheduleModel ScheduleModel = new();
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            Jobs = new List<JobItem>
-            {
-                new() { Id = 1, Title = "Senior .NET Developer" },
-                new() { Id = 2, Title = "HR Specialist" },
-                new() { Id = 3, Title = "Sales Executive" },
-                new() { Id = 4, Title = "Marketing Intern" },
-                new() { Id = 5, Title = "Senior UI/UX Designer" }
-            };
-
-            LoadMockData();
-            UpdateKanbanView();
+            await LoadData();
         }
 
-        private void LoadMockData()
+        private async Task LoadData()
         {
-            AllApplicants = new List<ApplicantItem>
+            _isLoading = true;
+            try
             {
-                new() { Id = 1, Name = "Nguyễn Văn Anh", Email = "anh.nv@gmail.com", Avatar = "assets/media/avatars/300-1.jpg", JobId = 1, JobTitle = "Senior .NET Developer", Status = "Phỏng vấn", AppliedDate = new DateTime(2026, 2, 1), DaysInStage = 2, HasInterviewScheduled = true, InterviewDate = new DateOnly(2026, 2, 12), InterviewTime = new TimeOnly(14, 30), History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 2, 1) } } },
-                new() { Id = 2, Name = "Trần Thị Bình", Email = "binh.tt@outlook.com", Avatar = "assets/media/avatars/300-2.jpg", JobId = 1, JobTitle = "Senior .NET Developer", Status = "Tiếp nhận", AppliedDate = new DateTime(2026, 2, 5), DaysInStage = 1, History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 2, 5) } } },
-                new() { Id = 3, Name = "Lê Văn Cường", Email = "cuong.lv@gmail.com", Avatar = "assets/media/avatars/300-3.jpg", JobId = 2, JobTitle = "HR Specialist", Status = "Tiếp nhận", AppliedDate = new DateTime(2026, 2, 3), DaysInStage = 3, History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 2, 3) } } },
-                new() { Id = 4, Name = "Phạm Thị Dung", Email = "dung.pt@gmail.com", Avatar = "assets/media/avatars/300-4.jpg", JobId = 3, JobTitle = "Sales Executive", Status = "Đề nghị", AppliedDate = new DateTime(2026, 1, 28), DaysInStage = 5, History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 1, 28) }, new() { Status = "Phỏng vấn", Date = new DateTime(2026, 2, 2) }, new() { Status = "Đề nghị", Date = new DateTime(2026, 2, 6) } } },
-                new() { Id = 5, Name = "Hoàng Văn Em", Email = "em.hv@gmail.com", Avatar = "assets/media/avatars/300-5.jpg", JobId = 5, JobTitle = "Senior UI/UX Designer", Status = "Đã tuyển", AppliedDate = new DateTime(2026, 1, 15), DaysInStage = 10, HiringNote = "Bắt đầu làm việc từ 01/3/2026", History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 1, 15) }, new() { Status = "Đã tuyển", Date = new DateTime(2026, 2, 7) } } },
-                new() { Id = 6, Name = "Vũ Thị Giang", Email = "giang.vt@gmail.com", Avatar = "assets/media/avatars/300-6.jpg", JobId = 1, JobTitle = "Senior .NET Developer", Status = "Từ chối", AppliedDate = new DateTime(2026, 2, 2), DaysInStage = 4, RejectionReason = "Không đạt bài test kỹ thuật", History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 2, 2) }, new() { Status = "Từ chối", Date = new DateTime(2026, 2, 8) } } },
-                new() { Id = 7, Name = "Đặng Văn Hùng", Email = "hung.dv@gmail.com", Avatar = "assets/media/avatars/300-7.jpg", JobId = 4, JobTitle = "Marketing Intern", Status = "Phỏng vấn", AppliedDate = new DateTime(2026, 2, 6), DaysInStage = 1, History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 2, 6) } } },
-                new() { Id = 8, Name = "Bùi Thị Kim", Email = "kim.bt@gmail.com", Avatar = "assets/media/avatars/300-8.jpg", JobId = 2, JobTitle = "HR Specialist", Status = "Tiếp nhận", AppliedDate = new DateTime(2026, 2, 7), DaysInStage = 1, History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 2, 7) } } },
-                new() { Id = 9, Name = "Ngô Văn Long", Email = "long.nv@gmail.com", Avatar = "assets/media/avatars/300-9.jpg", JobId = 3, JobTitle = "Sales Executive", Status = "Đề nghị", AppliedDate = new DateTime(2026, 2, 2), DaysInStage = 4, History = new List<StatusHistory> { new() { Status = "Phỏng vấn", Date = new DateTime(2026, 2, 5) } } },
-                new() { Id = 10, Name = "Lý Thị Mai", Email = "mai.lt@gmail.com", Avatar = "assets/media/avatars/300-10.jpg", JobId = 5, JobTitle = "Senior UI/UX Designer", Status = "Phỏng vấn", AppliedDate = new DateTime(2026, 2, 4), DaysInStage = 3, History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 2, 4) } } },
-                new() { Id = 11, Name = "Phan Văn Nam", Email = "nam.pv@gmail.com", Avatar = "assets/media/avatars/300-11.jpg", JobId = 1, JobTitle = "Senior .NET Developer", Status = "Tiếp nhận", AppliedDate = new DateTime(2026, 2, 8), DaysInStage = 0, History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 2, 8) } } },
-                new() { Id = 12, Name = "Đỗ Thị Ngọc", Email = "ngoc.dt@gmail.com", Avatar = "assets/media/avatars/300-12.jpg", JobId = 4, JobTitle = "Marketing Intern", Status = "Tiếp nhận", AppliedDate = new DateTime(2026, 2, 8), DaysInStage = 0, History = new List<StatusHistory> { new() { Status = "Tiếp nhận", Date = new DateTime(2026, 2, 8) } } }
-            };
+                var jobsList = await RecruitmentApp.GetActiveJobPostingsAsync();
+                Jobs = jobsList.ToList();
+
+                // To load all applicants for Kanban, we might need a separate API or loop through jobs
+                // For now, let's assume we can fetch all related applicants or if a job is selected, fetch for that job
+                if (!string.IsNullOrEmpty(SelectedJobId))
+                {
+                    var applicantList = await RecruitmentApp.GetApplicantsAsync(SelectedJobId);
+                    AllApplicants = applicantList.ToList();
+                }
+                else
+                {
+                    // If no job selected, maybe load a default set or empty
+                    AllApplicants = new List<ApplicantItem>();
+                    // Proactively load applicants for all active jobs if possible, but keep it efficient
+                    foreach(var job in Jobs.Take(5)) // Limit for performance
+                    {
+                         var appList = await RecruitmentApp.GetApplicantsAsync(job.Id);
+                         AllApplicants.AddRange(appList);
+                    }
+                }
+                
+                UpdateKanbanView();
+            }
+            catch (Exception)
+            {
+                // Error handling
+            }
+            finally
+            {
+                _isLoading = false;
+            }
         }
 
         protected void UpdateKanbanView()
         {
             var filtered = AllApplicants
                 .Where(a => string.IsNullOrEmpty(SearchTerm) || a.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
-                .Where(a => !SelectedJobId.HasValue || a.JobId == SelectedJobId.Value)
+                .Where(a => string.IsNullOrEmpty(SelectedJobId) || a.JobPostingId == SelectedJobId)
                 .ToList();
 
             KanbanBoard = new List<KanbanColumn>
             {
-                new() { Title = "Tiếp nhận", Status = "Tiếp nhận", ColorClass = "primary", Applicants = filtered.Where(a => a.Status == "Tiếp nhận").ToList() },
-                new() { Title = "Phỏng vấn", Status = "Phỏng vấn", ColorClass = "warning", Applicants = filtered.Where(a => a.Status == "Phỏng vấn").ToList() },
-                new() { Title = "Đề nghị", Status = "Đề nghị", ColorClass = "info", Applicants = filtered.Where(a => a.Status == "Đề nghị").ToList() },
-                new() { Title = "Kết thúc", Status = "Kết thúc", ColorClass = "success", Applicants = filtered.Where(a => a.Status == "Đã tuyển" || a.Status == "Từ chối").ToList() }
+                new() { Title = "Tiếp nhận", Status = "Tiếp nhận", ColorClass = "primary", Applicants = filtered.Where(a => a.Status == "Tiếp nhận" || a.Status == "Applied").ToList() },
+                new() { Title = "Phỏng vấn", Status = "Phỏng vấn", ColorClass = "warning", Applicants = filtered.Where(a => a.Status == "Phỏng vấn" || a.Status == "Interviewing").ToList() },
+                new() { Title = "Đề nghị", Status = "Đề nghị", ColorClass = "info", Applicants = filtered.Where(a => a.Status == "Đề nghị" || a.Status == "Offered").ToList() },
+                new() { Title = "Kết thúc", Status = "Kết thúc", ColorClass = "success", Applicants = filtered.Where(a => a.Status == "Đã tuyển" || a.Status == "Hired" || a.Status == "Từ chối" || a.Status == "Rejected").ToList() }
             };
             StateHasChanged();
         }
@@ -88,32 +101,23 @@ namespace TTL.HR.Shared.Pages.Recruitment
             UpdateKanbanView();
         }
 
-        protected void OnJobSelected(ChangeEventArgs e)
+        protected async Task OnJobSelected(ChangeEventArgs e)
         {
-            if (int.TryParse(e.Value?.ToString(), out int id)) SelectedJobId = id;
-            else SelectedJobId = null;
-            UpdateKanbanView();
+            SelectedJobId = e.Value?.ToString();
+            await LoadData();
         }
 
-        protected void ApplyStatusChange(ApplicantItem applicant, string newStatus, string? note = null)
+        protected async Task ApplyStatusChange(ApplicantItem applicant, string newStatus, string? note = null)
         {
-            if (applicant.Status != newStatus || !string.IsNullOrEmpty(note))
+            var success = await RecruitmentApp.UpdateApplicantStatusAsync(applicant.Id, newStatus, note);
+            if (success)
             {
-                if (applicant.Status != newStatus)
-                {
-                    applicant.Status = newStatus;
-                    applicant.StatusBadge = newStatus switch
-                    {
-                        "Tiếp nhận" => "badge-light-primary",
-                        "Phỏng vấn" => "badge-light-warning",
-                        "Đã tuyển" => "badge-light-success",
-                        "Từ chối" => "badge-light-danger",
-                        _ => "badge-light-secondary"
-                    };
-                }
-
-                applicant.History.Add(new StatusHistory { Status = newStatus, Date = DateTime.Now, Note = note });
-                UpdateKanbanView();
+                await LoadData();
+                await JS.InvokeVoidAsync("toastr.success", "Đã cập nhật trạng thái hồ sơ!");
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi cập nhật trạng thái.");
             }
         }
 
@@ -125,15 +129,16 @@ namespace TTL.HR.Shared.Pages.Recruitment
 
         protected void OpenScheduleModal(ApplicantItem applicant)
         {
+            var firstInterview = applicant.Interviews.FirstOrDefault();
             SelectedApplicant = applicant;
             ScheduleModel = new InterviewScheduleModel
             {
                 ApplicantId = applicant.Id,
                 ApplicantName = applicant.Name,
-                InterviewDate = applicant.InterviewDate ?? DateOnly.FromDateTime(DateTime.Today.AddDays(1)),
-                InterviewTime = applicant.InterviewTime ?? new TimeOnly(9, 0),
-                Interviewer = applicant.Interviewer ?? "Phan Thanh Tùng",
-                Location = applicant.Location ?? "Văn phòng Tầng 5 - TTL Building"
+                InterviewDate = DateOnly.FromDateTime(firstInterview?.ScheduledAt ?? DateTime.Today.AddDays(1)),
+                InterviewTime = TimeOnly.FromDateTime(firstInterview?.ScheduledAt ?? DateTime.Today.AddHours(9)),
+                Interviewer = firstInterview?.InterViewerName ?? "Phan Thanh Tùng",
+                Location = firstInterview?.Location ?? "Văn phòng Tầng 5 - TTL Building"
             };
             IsScheduleModalOpen = true;
             IsProfileModalOpen = false;
@@ -143,21 +148,18 @@ namespace TTL.HR.Shared.Pages.Recruitment
         {
             if (SelectedApplicant != null)
             {
-                string note = SelectedApplicant.HasInterviewScheduled ? "Cập nhật lịch phỏng vấn" : $"Đã hẹn phỏng vấn: {model.InterviewDate:dd/MM} lúc {model.InterviewTime}";
-                
-                // Cập nhật thông tin vào applicant hiện tại
-                SelectedApplicant.InterviewDate = model.InterviewDate;
-                SelectedApplicant.InterviewTime = model.InterviewTime;
-                SelectedApplicant.Interviewer = model.Interviewer;
-                SelectedApplicant.Location = model.Location;
-                SelectedApplicant.HasInterviewScheduled = true;
-                
-                ApplyStatusChange(SelectedApplicant, "Phỏng vấn", note);
-                
-                IsScheduleModalOpen = false;
-                
-                // Hiển thị thông báo
-                await JS.InvokeVoidAsync("toastr.success", "Đã cập nhật lịch phỏng vấn thành công!");
+                model.ScheduledAt = model.InterviewDate.ToDateTime(model.InterviewTime);
+                var success = await RecruitmentApp.ScheduleInterviewAsync(SelectedApplicant.Id, model);
+                if (success)
+                {
+                    await LoadData();
+                    IsScheduleModalOpen = false;
+                    await JS.InvokeVoidAsync("toastr.success", "Đã cập nhật lịch phỏng vấn thành công!");
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi đặt lịch phỏng vấn.");
+                }
             }
         }
 
@@ -165,10 +167,8 @@ namespace TTL.HR.Shared.Pages.Recruitment
         {
             if (ApplicantToReject != null)
             {
-                ApplicantToReject.RejectionReason = reason;
-                ApplyStatusChange(ApplicantToReject, "Từ chối", $"Lý do loại: {reason}");
+                await ApplyStatusChange(ApplicantToReject, "Từ chối", $"Lý do loại: {reason}");
                 IsRejectionModalOpen = false;
-                await JS.InvokeVoidAsync("toastr.success", "Đã cập nhật trạng thái hồ sơ!");
             }
         }
 
@@ -176,10 +176,8 @@ namespace TTL.HR.Shared.Pages.Recruitment
         {
             if (ApplicantToSuccess != null)
             {
-                ApplicantToSuccess.HiringNote = note;
-                ApplyStatusChange(ApplicantToSuccess, "Đã tuyển", $"Ghi chú tuyển dụng: {note}");
+                await ApplyStatusChange(ApplicantToSuccess, "Đã tuyển", $"Ghi chú tuyển dụng: {note}");
                 IsSuccessModalOpen = false;
-                await JS.InvokeVoidAsync("toastr.success", "Chúc mừng! Bạn đã hoàn tất tuyển dụng ứng viên.");
             }
         }
 

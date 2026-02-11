@@ -1,7 +1,6 @@
 @page "/"
 @page "/auth/login"
 @layout AuthLayout
-@inject NavigationManager Navigation
 
 <PageTitle>Đăng nhập - OrgaX HR</PageTitle>
 
@@ -20,8 +19,8 @@
     
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
-        <label class="form-label fs-6 fw-bolder text-dark">Email hoặc Tên đăng nhập</label>
-        <input type="text" placeholder="Nhập email của bạn" name="email" autocomplete="off" class="form-control bg-transparent" @bind="_email" />
+        <label class="form-label fs-6 fw-bolder text-dark">Tên đăng nhập</label>
+        <input type="text" placeholder="Nhập tên đăng nhập" name="username" autocomplete="off" class="form-control bg-transparent" @bind="_username" />
     </div>
     <!--end::Input group=-->
     <div class="fv-row mb-3">
