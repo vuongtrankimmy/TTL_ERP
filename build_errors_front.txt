@@ -1,0 +1,8 @@
+﻿d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Employees\EmployeeAdd.razor.cs(50,58): error CS1501: No overload for method 'GetEmployeesAsync' takes 2 arguments [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Employees\EmployeeList.razor.cs(79,66): error CS1501: No overload for method 'GetEmployeesAsync' takes 2 arguments [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+
+Build FAILED.
+    30 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:03.24

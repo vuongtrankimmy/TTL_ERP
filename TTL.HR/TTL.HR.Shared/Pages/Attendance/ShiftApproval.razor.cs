@@ -16,6 +16,13 @@ namespace TTL.HR.Shared.Pages.Attendance
         private ShiftRequestModel? _selectedRequest;
         private int activeTab = 0;
         private List<ShiftRequestModel> _requests = new();
+        private ShiftRequestSummaryModel _summary = new();
+
+        // Paging
+        private int _pageIndex = 1;
+        private int _pageSize = 10;
+        private long _totalCount = 0;
+        private string? _searchTerm;
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
@@ -27,11 +34,22 @@ namespace TTL.HR.Shared.Pages.Attendance
             _isLoading = true;
             try
             {
-                var result = await AttendanceService.GetShiftRequestsAsync();
+                string? status = activeTab switch
+                {
+                    0 => "Pending",
+                    1 => "Approved",
+                    2 => "Rejected",
+                    _ => null
+                };
+
+                var result = await AttendanceService.GetShiftRequestsAsync(_pageIndex, _pageSize, status, _searchTerm);
                 if (result != null)
                 {
-                    _requests = result.ToList();
+                    _requests = result.Items;
+                    _totalCount = result.TotalCount;
                 }
+
+                _summary = await AttendanceService.GetShiftRequestSummaryAsync();
             }
             catch (Exception)
             {
@@ -43,24 +61,30 @@ namespace TTL.HR.Shared.Pages.Attendance
             }
         }
 
-        private void SetTab(int index)
+        private async System.Threading.Tasks.Task SetTab(int index)
         {
             activeTab = index;
+            _pageIndex = 1;
+            await LoadData();
         }
 
-        private IEnumerable<ShiftRequestModel> FilteredRequests
+        private async System.Threading.Tasks.Task ChangePage(int newPage)
         {
-            get
-            {
-                return activeTab switch
-                {
-                    0 => _requests.Where(x => x.IsPending),
-                    1 => _requests.Where(x => x.Status == "Đã duyệt" || x.Status == "Approved"),
-                    2 => _requests.Where(x => x.Status == "Từ chối" || x.Status == "Rejected"),
-                    _ => _requests
-                };
-            }
+            if (newPage < 1 || newPage > TotalPages) return;
+            _pageIndex = newPage;
+            await LoadData();
         }
+
+        private async System.Threading.Tasks.Task Search(ChangeEventArgs e)
+        {
+            _searchTerm = e.Value?.ToString();
+            _pageIndex = 1;
+            await LoadData();
+        }
+
+        private IEnumerable<ShiftRequestModel> FilteredRequests => _requests;
+
+        private int TotalPages => (int)Math.Ceiling(_totalCount / (double)_pageSize);
 
         private bool _showActionModal = false;
         private string _modalTitle = "";

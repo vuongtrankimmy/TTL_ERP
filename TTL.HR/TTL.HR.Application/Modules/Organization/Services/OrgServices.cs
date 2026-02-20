@@ -23,6 +23,11 @@ namespace TTL.HR.Application.Modules.Organization.Services
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<DepartmentModel>>($"{ApiEndpoints.Organization.Departments}/{id}");
             return response?.Data;
         }
+        public async Task<DepartmentDetailModel?> GetDepartmentDetailAsync(string id)
+        {
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<DepartmentDetailModel>>($"{ApiEndpoints.Organization.Departments}/{id}");
+            return response?.Data;
+        }
 
         public async Task<DepartmentModel?> CreateDepartmentAsync(CreateDepartmentRequest request)
         {
@@ -49,7 +54,47 @@ namespace TTL.HR.Application.Modules.Organization.Services
         public async Task<bool> DeleteDepartmentAsync(string id)
         {
             var response = await _httpClient.DeleteAsync($"{ApiEndpoints.Organization.Departments}/{id}");
-            return response.IsSuccessStatusCode; // Should probably check for API response success flag too if needed
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<List<OrgNode>> GetOrganizationStructureAsync()
+        {
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<OrganizationNode>>>(ApiEndpoints.Organization.Structure);
+            if (response?.Data == null) return new List<OrgNode>();
+
+            return MapToOrgNodes(response.Data);
+        }
+
+        private List<OrgNode> MapToOrgNodes(List<OrganizationNode> nodes)
+        {
+            var result = new List<OrgNode>();
+            foreach (var node in nodes)
+            {
+                result.Add(MapToOrgNode(node));
+            }
+            return result;
+        }
+
+        private OrgNode MapToOrgNode(OrganizationNode node)
+        {
+            var orgNode = new OrgNode
+            {
+                Id = node.Id,
+                Name = node.ManagerName,
+                Role = node.Name, // Department Name
+                Avatar = node.ManagerAvatar ?? "assets/media/avatars/blank.png",
+                Type = "Department",
+                IsManager = true,
+                EmployeeCount = node.EmployeeCount,
+                Children = new List<OrgNode>()
+            };
+
+            foreach (var child in node.Children)
+            {
+                orgNode.Children.Add(MapToOrgNode(child));
+            }
+
+            return orgNode;
         }
     }
 

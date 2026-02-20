@@ -1,0 +1,21 @@
+  Determining projects to restore...
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Application\TTL.HR.Application.csproj : warning NU1510: PackageReference System.Net.Http.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary. [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+  All projects are up-to-date for restore.
+C:\Program Files\dotnet\sdk\10.0.200-preview.0.26103.119\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(383,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Application\TTL.HR.Application.csproj : warning NU1510: PackageReference System.Net.Http.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+  TTL.HR.Application -> d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Application\bin\Debug\net10.0\TTL.HR.Application.dll
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\WorkSchedule.razor.cs(105,64): error CS1061: 'LookupModel' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'LookupModel' could be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\WorkSchedule.razor(25,54): error CS1061: 'LookupModel' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'LookupModel' could be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\WorkSchedule.razor(25,67): error CS1061: 'LookupModel' does not contain a definition for 'Text' and no accessible extension method 'Text' accepting a first argument of type 'LookupModel' could be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+
+Build FAILED.
+
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Application\TTL.HR.Application.csproj : warning NU1510: PackageReference System.Net.Http.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary. [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Application\TTL.HR.Application.csproj : warning NU1510: PackageReference System.Net.Http.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\WorkSchedule.razor.cs(105,64): error CS1061: 'LookupModel' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'LookupModel' could be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\WorkSchedule.razor(25,54): error CS1061: 'LookupModel' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'LookupModel' could be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\WorkSchedule.razor(25,67): error CS1061: 'LookupModel' does not contain a definition for 'Text' and no accessible extension method 'Text' accepting a first argument of type 'LookupModel' could be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+    2 Warning(s)
+    3 Error(s)
+
+Time Elapsed 00:00:03.28

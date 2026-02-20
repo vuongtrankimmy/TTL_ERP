@@ -28,6 +28,12 @@ builder.Services.AddScoped<TTL.HR.Application.Modules.Payroll.Interfaces.IBenefi
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IPermissionService, TTL.HR.Application.Modules.Common.Services.PermissionService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Assets.Interfaces.IAssetService, TTL.HR.Application.Modules.Assets.Services.AssetService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.ISettingsService, TTL.HR.Application.Modules.Common.Services.SettingsService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IFileService, TTL.HR.Application.Modules.Common.Services.FileService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IFormatService, TTL.HR.Application.Modules.Common.Services.FormatService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IAuditService, TTL.HR.Application.Modules.Common.Services.AuditService>();
+
+
+
 
 // Application Layer
 builder.Services.AddScoped<TTL.HR.Application.Modules.Recruitment.IRecruitmentApplication, TTL.HR.Application.Modules.Recruitment.RecruitmentApplication>();

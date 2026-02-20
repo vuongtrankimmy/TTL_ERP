@@ -20,4 +20,13 @@ namespace TTL.HR.Application.Modules.Common.Models
         public T? Data { get; set; }
         public List<string>? Errors { get; set; }
     }
+
+    public class PagedResult<T>
+    {
+        public List<T> Items { get; set; } = new();
+        public int PageIndex { get; set; }
+        public int PageSize { get; set; }
+        public long TotalCount { get; set; }
+        public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
+    }
 }

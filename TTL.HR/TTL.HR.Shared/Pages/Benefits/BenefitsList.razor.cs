@@ -61,8 +61,8 @@ namespace TTL.HR.Shared.Pages.Benefits
             return type switch
             {
                 "Cố định hàng tháng" or "Monthly" => "badge-light-primary",
-                "Sự kiện" or "Event" => "badge-light-info",
-                "Một lần" or "One-time" => "badge-light-success",
+                "Sự kiện" or "Event" or "Yearly" => "badge-light-info",
+                "Một lần" or "One-time" or "OneTime" => "badge-light-success",
                 "Số lượng" or "Quantity" => "badge-light-warning",
                 _ => "badge-light-primary"
             };
@@ -73,8 +73,8 @@ namespace TTL.HR.Shared.Pages.Benefits
             return type switch
             {
                 "Monthly" => "Cố định hàng tháng",
-                "Event" => "Sự kiện",
-                "One-time" => "Một lần",
+                "Event" or "Yearly" => "Định kỳ năm",
+                "One-time" or "OneTime" => "Một lần",
                 "Quantity" => "Số lượng",
                 _ => type
             };

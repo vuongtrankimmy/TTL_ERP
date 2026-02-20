@@ -32,10 +32,10 @@
                                             <i class="ki-outline ki-profile-user fs-4 me-1"></i>@Course.TrainerName
                                         </span>
                                         <span class="d-flex align-items-center text-gray-400 me-5 mb-2">
-                                            <i class="ki-outline ki-geolocation fs-4 me-1"></i>Phòng đào tạo / Online
+                                            <i class="ki-outline ki-geolocation fs-4 me-1"></i>@(string.IsNullOrEmpty(Course.Location) ? "Phòng đào tạo / Online" : Course.Location)
                                         </span>
                                         <span class="d-flex align-items-center text-gray-400 mb-2">
-                                            <i class="ki-outline ki-calendar fs-4 me-1"></i>@Course.StartDate.ToString("dd/MM/yyyy") (@Course.DurationHours giờ)
+                                            <i class="ki-outline ki-calendar fs-4 me-1"></i>@Course.StartDate.ToString("dd/MM/yyyy") @(Course.EndDate.HasValue ? $" - {Course.EndDate.Value.ToString("dd/MM/yyyy")}" : "") (@Course.DurationHours giờ)
                                         </span>
                                     </div>
                                 </div>
@@ -56,11 +56,11 @@
                                             <div class="fw-bold fs-6 text-gray-400">Đã đăng ký</div>
                                         </div>
                                         <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                            <div class="fs-2 fw-bolder">20</div>
+                                            <div class="fs-2 fw-bolder">@Course.MaxParticipants</div>
                                             <div class="fw-bold fs-6 text-gray-400">Số lượng tối đa</div>
                                         </div>
                                         <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                            <div class="fs-2 fw-bolder">Bắt buộc</div>
+                                            <div class="fs-2 fw-bolder">@(Course.IsMandatory ? "Bắt buộc" : "Tự nguyện")</div>
                                             <div class="fw-bold fs-6 text-gray-400">Tính chất</div>
                                         </div>
                                     </div>
@@ -85,29 +85,29 @@
                                 @Course.Description
                             </div>
                             <div class="separator separator-dashed my-5"></div>
-                            <h4 class="fw-bold mb-4">Lịch trình dự kiến</h4>
+                            <h4 class="fw-bold mb-4">Chương trình đào tạo</h4>
                             <div class="timeline-label">
-                                <div class="timeline-item">
-                                    <div class="timeline-label fw-bolder text-gray-800 fs-6">08:00</div>
-                                    <div class="timeline-badge"><i class="fa fa-genderless text-primary fs-1"></i></div>
-                                    <div class="timeline-content d-flex flex-column ps-3">
-                                        <span class="fw-bolder text-gray-800 fs-6">Giới thiệu & Khai mạc</span>
-                                    </div>
-                                </div>
-                                <div class="timeline-item">
-                                    <div class="timeline-label fw-bolder text-gray-800 fs-6">09:00</div>
-                                    <div class="timeline-badge"><i class="fa fa-genderless text-success fs-1"></i></div>
-                                    <div class="timeline-content d-flex flex-column ps-3">
-                                        <span class="fw-bolder text-gray-800 fs-6">Phần 1: Lý thuyết cơ bản</span>
-                                    </div>
-                                </div>
-                                <div class="timeline-item">
-                                    <div class="timeline-label fw-bolder text-gray-800 fs-6">13:30</div>
-                                    <div class="timeline-badge"><i class="fa fa-genderless text-warning fs-1"></i></div>
-                                    <div class="timeline-content d-flex flex-column ps-3">
-                                        <span class="fw-bolder text-gray-800 fs-6">Phần 2: Thực hành nhóm</span>
-                                    </div>
-                                </div>
+                                @if (Course.Syllabus != null && Course.Syllabus.Any())
+                                {
+                                    @foreach (var item in Course.Syllabus.Select((value, index) => new { value, index }))
+                                    {
+                                        var timeStr = item.value.Contains(" | ") ? item.value.Split(" | ")[0] : $"P.{item.index + 1}";
+                                        var contentStr = item.value.Contains(" | ") ? item.value.Split(" | ")[1] : item.value;
+                                        <div class="timeline-item">
+                                            <div class="timeline-label fw-bolder text-gray-800 fs-6">@timeStr</div>
+                                            <div class="timeline-badge">
+                                                <i class="fa fa-genderless @(item.index % 2 == 0 ? "text-primary" : "text-success") fs-1"></i>
+                                            </div>
+                                            <div class="timeline-content d-flex flex-column ps-3">
+                                                <span class="fw-bolder text-gray-800 fs-6">@contentStr</span>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-muted fs-7 py-3">Chưa cập nhật chương trình chi tiết.</div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    <span class="symbol-label bg-light-primary text-primary fw-bold">@attendee.FullName.Substring(0, 1)</span>
+                                                                    <span class="symbol-label bg-light-primary text-primary fw-bold">@(attendee.FullName?.Length > 0 ? attendee.FullName.Substring(0, 1) : "?")</span>
                                                                 }
                                                             </div>
                                                             <div class="d-flex justify-content-start flex-column">
@@ -211,6 +211,7 @@
 <TrainingRegistrationPopup 
     IsVisible="@IsRegisterModalOpen"
     CourseTitle="@Course?.Title"
+    AlreadyEnrolledEmployeeIds="@Attendees.Select(a => a.EmployeeId).ToList()"
     OnConfirm="ConfirmRegister"
     OnCancel="CloseRegisterModal" />
 

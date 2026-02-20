@@ -34,13 +34,27 @@
 
             <!-- Basic Details -->
             <div class="row g-9 mb-8">
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Họ và tên nhân viên</label>
                     <input type="text" class="form-control form-control-solid" placeholder="VD: NGUYỄN VĂN A" @bind="newEmployee.Name" />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Số CCCD / CMND</label>
                     <input type="text" class="form-control form-control-solid" placeholder="001xxxxxxxxx" @bind="newEmployee.IdCard" />
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Ngày cấp (CCCD)</label>
+                    <div class="position-relative d-flex align-items-center">
+                        <i class="bi bi-calendar-check position-absolute ms-4 text-gray-500"></i>
+                        <input type="date" class="form-control form-control-solid ps-12" @bind="newEmployee.CccdIssueDate" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Nơi cấp (CCCD)</label>
+                    <input type="text" class="form-control form-control-solid" placeholder="Cục CS QLHC về TTXH" @bind="newEmployee.CccdIssuePlace" />
                 </div>
             </div>
 
@@ -140,7 +154,7 @@
         </div>
         <div class="card-body pt-0">
             <div class="row g-9 mb-8">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Chức vụ / Vị trí</label>
                     <select class="form-select form-select-solid" @bind="newEmployee.PositionId">
                         <option value="">Chọn chức danh...</option>
@@ -150,7 +164,7 @@
                         }
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Phòng ban</label>
                     <select class="form-select form-select-solid" @bind="newEmployee.DeptId">
                         @foreach (var item in departments)
@@ -159,12 +173,22 @@
                         }
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Người quản lý</label>
+                    <select class="form-select form-select-solid" @bind="newEmployee.ReportToId">
+                        <option value="">-- Không có --</option>
+                        @foreach (var item in allEmployees)
+                        {
+                            <option value="@item.Id">@item.FullName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Trạng thái nhân sự</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.Status">
+                    <select class="form-select form-select-solid" @bind="newEmployee.StatusId">
                         @foreach (var item in employeeStatusLookups)
                         {
-                            <option value="@item.Name">@item.Name</option>
+                            <option value="@item.Id">@item.Name</option>
                         }
                     </select>
                 </div>
@@ -172,10 +196,10 @@
             <div class="row g-9">
                 <div class="col-md-4">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Loại hợp đồng</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.ContractType">
+                    <select class="form-select form-select-solid" @bind="newEmployee.ContractTypeId">
                         @foreach (var item in contractTypeLookups)
                         {
-                            <option value="@item.Name">@item.Name</option>
+                            <option value="@item.Id">@item.Name</option>
                         }
                     </select>
                 </div>

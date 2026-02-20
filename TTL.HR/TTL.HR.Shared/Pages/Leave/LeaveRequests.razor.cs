@@ -17,6 +17,14 @@ namespace TTL.HR.Shared.Pages.Leave
         private bool _isLoading = true;
         private LeaveRequestItem? _selectedRequest;
         private LeaveRequestItem? _requestToProcess;
+
+        // Paging & Filter
+        private int _pageIndex = 1;
+        private int _pageSize = 10;
+        private long _totalCount = 0;
+        private string? _searchTerm;
+        private string? _statusFilter;
+        private LeaveStateSummaryModel _summary = new();
         
         [Inject] private ILeaveService LeaveService { get; set; } = default!;
 
@@ -30,25 +38,28 @@ namespace TTL.HR.Shared.Pages.Leave
             _isLoading = true;
             try
             {
-                var requests = await LeaveService.GetLeaveRequestsAsync();
-                if (requests != null)
+                var result = await LeaveService.GetLeaveRequestsAsync(_pageIndex, _pageSize, _statusFilter, _searchTerm);
+                if (result != null)
                 {
-                    _leaveRequests = requests.Select(r => new LeaveRequestItem
+                    _leaveRequests = result.Items.Select(r => new LeaveRequestItem
                     {
                         Id = r.Id,
                         Name = r.EmployeeName,
-                        Department = "General",
-                        Avatar = "",
+                        Department = r.Department,
+                        Avatar = r.Avatar,
                         AvatarBg = "bg-primary",
                         Type = r.Type,
-                        TypeColor = r.Type == "Nghỉ phép năm" ? "badge-light-primary" : "badge-light-warning",
+                        TypeColor = $"badge-light-{r.TypeColor}",
                         DateRange = $"{r.StartDate:dd/MM} - {r.EndDate:dd/MM}",
                         Duration = $"{r.TotalDays} ngày",
                         Reason = r.Reason,
                         Status = r.Status,
-                        StatusColor = r.Status == "Approved" ? "badge-light-success" : (r.Status == "Rejected" ? "badge-light-danger" : "badge-light-warning")
+                        StatusColor = r.StatusBadgeClass
                     }).ToList();
+                    _totalCount = result.TotalCount;
                 }
+
+                _summary = await LeaveService.GetLeaveSummaryAsync();
             }
             catch (Exception)
             {
@@ -59,6 +70,30 @@ namespace TTL.HR.Shared.Pages.Leave
                 _isLoading = false;
             }
         }
+
+        private async Task ChangePage(int newPage)
+        {
+            if (newPage < 1 || newPage > TotalPages) return;
+            _pageIndex = newPage;
+            await LoadData();
+        }
+
+        private async Task Search(ChangeEventArgs e)
+        {
+            _searchTerm = e.Value?.ToString();
+            _pageIndex = 1;
+            await LoadData();
+        }
+
+        private async Task FilterByStatus(ChangeEventArgs e)
+        {
+            var val = e.Value?.ToString();
+            _statusFilter = (val == "All" || string.IsNullOrEmpty(val)) ? null : val;
+            _pageIndex = 1;
+            await LoadData();
+        }
+
+        private int TotalPages => (int)Math.Ceiling(_totalCount / (double)_pageSize);
 
         private string _modalTitle = "";
         private string _modalHeading = "";

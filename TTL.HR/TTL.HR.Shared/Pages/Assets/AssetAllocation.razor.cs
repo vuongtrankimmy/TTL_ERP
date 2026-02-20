@@ -14,6 +14,7 @@ namespace TTL.HR.Shared.Pages.Assets
 {
     public partial class AssetAllocation
     {
+        [Parameter][SupplyParameterFromQuery] public string? AssetId { get; set; }
         [Inject] public NavigationManager Navigation { get; set; } = default!;
         [Inject] public IAssetService AssetService { get; set; } = default!;
         [Inject] public IEmployeeService EmployeeService { get; set; } = default!;
@@ -35,10 +36,18 @@ namespace TTL.HR.Shared.Pages.Assets
         private DateTime ReturnDate = DateTime.Today;
         private string ReturnCondition = "Bình thường";
         private string ReturnNote = "";
+        
+        private string SearchTerm = "";
+        private System.Timers.Timer? _searchTimer;
 
         protected override async Task OnInitializedAsync()
         {
             await LoadData();
+            if (!string.IsNullOrEmpty(AssetId))
+            {
+                NewAllocation.AssetId = AssetId;
+                IsAllocationModalOpen = true;
+            }
         }
 
         private async Task LoadData()
@@ -52,44 +61,60 @@ namespace TTL.HR.Shared.Pages.Assets
                 await Task.WhenAll(assetsTask, employeesTask);
 
                 var assets = await assetsTask;
-                Employees = await employeesTask;
+                var employeeDtos = await employeesTask;
+                Employees = employeeDtos.Select(e => new EmployeeModel
+                {
+                    Id = e.Id,
+                    Code = e.Code,
+                    Name = e.FullName,
+                    FullName = e.FullName,
+                    Email = e.Email,
+                    Dept = e.DepartmentName,
+                    Role = e.PositionName,
+                    Avatar = e.AvatarUrl,
+                    StatusId = e.StatusId,
+                    StatusName = e.StatusName
+                }).ToList();
 
                 if (assets != null)
                 {
-                    ActiveAllocations = assets
-                        .Where(a => a.Status == "Assigned")
-                        .Select(a => new AllocationViewModel
-                        {
-                            Id = a.Id,
-                            AssetName = a.Name,
-                            AssetCode = a.Code,
-                            AssetType = a.Type,
-                            EmployeeName = a.AssignedToName ?? "N/A",
-                            Department = "Kỹ thuật", // API might need to provide this
-                            EmployeeAvatar = "", // API might need to provide this
-                            AssignedDate = a.PurchaseDate, // Should ideally be AssignedDate from a handover record
-                            Condition = "Tốt"
-                        }).ToList();
-
-                    HistoryAllocations = assets
-                        .Where(a => a.Status == "Broken" || a.Status == "Lost")
-                        .Select(a => new AllocationViewModel
-                        {
-                            Id = a.Id,
-                            AssetName = a.Name,
-                            AssetCode = a.Code,
-                            AssetType = a.Type,
-                            EmployeeName = a.AssignedToName ?? "N/A",
-                            Department = "Nghỉ việc/Trả máy",
-                            EmployeeAvatar = "",
-                            AssignedDate = a.PurchaseDate,
-                            ReturnedDate = DateTime.Today,
-                            ReturnCondition = a.Status == "Broken" ? "Hỏng" : "Bình thường",
-                            Condition = "Cũ"
-                        }).ToList();
-
                     AvailableAssets = assets.Where(a => a.Status == "Available").ToList();
                 }
+
+                // Fetch Active Allocations
+                var activeResult = await AssetService.GetAllocationsAsync(1, 100, "Active", SearchTerm);
+                ActiveAllocations = activeResult.Items.Select(a => new AllocationViewModel
+                {
+                    Id = a.Id,
+                    AssetName = a.AssetName,
+                    AssetCode = a.AssetCode,
+                    AssetType = "Thiết bị", // Can be refined if DTO has it
+                    EmployeeName = a.EmployeeName,
+                    Department = "Công ty",
+                    AssignedDate = a.AllocatedDate,
+                    Condition = "Tốt",
+                    Status = a.Status,
+                    AssetId = a.AssetId
+                }).ToList();
+
+                // Fetch Return History
+                var returnResult = await AssetService.GetAllocationsAsync(1, 100, "Returned", SearchTerm);
+                HistoryAllocations = returnResult.Items.Select(a => new AllocationViewModel
+                {
+                    Id = a.Id,
+                    AssetName = a.AssetName,
+                    AssetCode = a.AssetCode,
+                    AssetType = "Thiết bị",
+                    EmployeeName = a.EmployeeName,
+                    Department = "Đã thu hồi",
+                    AssignedDate = a.AllocatedDate,
+                    ReturnedDate = a.ReturnedDate,
+                    ReturnCondition = "Bình thường",
+                    Condition = "Cũ",
+                    Status = "Returned",
+                    ActorName = a.ActorName,
+                    AssetId = a.AssetId
+                }).ToList();
             }
             catch (Exception)
             {
@@ -121,11 +146,23 @@ namespace TTL.HR.Shared.Pages.Assets
         
         private void CloseAllocationModal() => IsAllocationModalOpen = false;
 
+        private void HandleSearch()
+        {
+            _searchTimer?.Stop();
+            _searchTimer = new System.Timers.Timer(500);
+            _searchTimer.Elapsed += async (s, e) =>
+            {
+                _searchTimer.Stop();
+                await InvokeAsync(LoadData);
+            };
+            _searchTimer.Start();
+        }
+
         private async Task SaveAllocation()
         {
             if (string.IsNullOrEmpty(NewAllocation.AssetId) || string.IsNullOrEmpty(NewAllocation.EmployeeId)) return;
 
-            var success = await AssetService.AssignAssetAsync(NewAllocation.AssetId, NewAllocation.EmployeeId);
+            var success = await AssetService.AssignAssetAsync(NewAllocation.AssetId, NewAllocation.EmployeeId, "Tốt", NewAllocation.Note);
             if (success)
             {
                 await JS.InvokeVoidAsync("toastr.success", "Cấp phát tài sản thành công!");
@@ -153,7 +190,7 @@ namespace TTL.HR.Shared.Pages.Assets
         {
             if (AllocationToReturn != null)
             {
-                var success = await AssetService.ReturnAssetAsync(AllocationToReturn.Id, ReturnCondition, ReturnNote);
+                var success = await AssetService.ReturnAssetAsync(AllocationToReturn.AssetId, ReturnCondition, ReturnNote);
                 if (success)
                 {
                     await JS.InvokeVoidAsync("toastr.success", "Thu hồi tài sản thành công!");
@@ -180,6 +217,9 @@ namespace TTL.HR.Shared.Pages.Assets
             public DateTime? ReturnedDate { get; set; }
             public string Condition { get; set; } = "Tốt";
             public string ReturnCondition { get; set; } = "Bình thường";
+            public string Status { get; set; } = "";
+            public string? ActorName { get; set; }
+            public string AssetId { get; set; } = "";
         }
 
         public class AllocationRequest

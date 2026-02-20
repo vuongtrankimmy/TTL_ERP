@@ -17,10 +17,20 @@ namespace TTL.HR.Shared.Pages.Payroll
 
         private List<PayrollPeriodViewModel> Periods = new();
         private bool _isLoading = true;
+        private int _selectedYear = 0; // Default to all years
 
         protected override async Task OnInitializedAsync()
         {
             await LoadData();
+        }
+
+        private async Task OnYearChanged(ChangeEventArgs e)
+        {
+            if (int.TryParse(e.Value?.ToString(), out int year))
+            {
+                _selectedYear = year;
+                await LoadData();
+            }
         }
 
         private async Task LoadData()
@@ -28,29 +38,75 @@ namespace TTL.HR.Shared.Pages.Payroll
             _isLoading = true;
             try
             {
-                var payrolls = await PayrollService.GetPayrollsAsync();
-                if (payrolls != null)
+                int? filterYear = _selectedYear == 0 ? null : (int?)_selectedYear;
+                
+                // Fetch Periods from DB
+                var periodsFromApi = await PayrollService.GetPeriodsAsync(filterYear);
+                
+                var periodsList = new List<PayrollPeriodViewModel>();
+                
+                // Determine years to show. 
+                // If a year is selected, show that year.
+                // If "All" is selected, show all years that have at least one period record.
+                var yearsToShow = new List<int>();
+                if (_selectedYear != 0)
                 {
-                    // Group by Month/Year to show periods
-                    Periods = payrolls
-                        .GroupBy(p => new { p.Month, p.Year })
-                        .Select(g => new PayrollPeriodViewModel
-                        {
-                            Name = $"Bảng lương tháng {g.Key.Month}/{g.Key.Year}",
-                            Month = g.Key.Month,
-                            Year = g.Key.Year,
-                            Status = g.First().Status, // simplified
-                            TotalAmount = g.Sum(p => p.NetSalary),
-                            EmployeeCount = g.Count()
-                        })
-                        .OrderByDescending(p => p.Year)
-                        .ThenByDescending(p => p.Month)
-                        .ToList();
+                    yearsToShow.Add(_selectedYear);
                 }
+                else if (periodsFromApi != null && periodsFromApi.Any())
+                {
+                    yearsToShow = periodsFromApi.Select(p => p.Year).Distinct().OrderByDescending(y => y).ToList();
+                }
+                else
+                {
+                    // Fallback to current year if no data
+                    yearsToShow.Add(DateTime.Now.Year);
+                }
+
+                foreach (var year in yearsToShow)
+                {
+                    // For each year, we generate all 12 months as requested
+                    for (int month = 12; month >= 1; month--)
+                    {
+                        var official = periodsFromApi?.FirstOrDefault(p => p.Year == year && p.Month == month);
+                        if (official != null)
+                        {
+                            periodsList.Add(new PayrollPeriodViewModel
+                            {
+                                Id = official.Id,
+                                Name = official.Name,
+                                Month = official.Month,
+                                Year = official.Year,
+                                Status = official.Status,
+                                TotalAmount = official.TotalNetSalary,
+                                EmployeeCount = official.EmployeeCount,
+                                IsPlaceholder = false
+                            });
+                        }
+                        else
+                        {
+                            // Placeholder for non-existent month
+                            periodsList.Add(new PayrollPeriodViewModel
+                            {
+                                Id = "",
+                                Name = $"Bảng lương tháng {month:D2}/{year}",
+                                Month = month,
+                                Year = year,
+                                Status = "Chưa khởi tạo",
+                                TotalAmount = 0,
+                                EmployeeCount = 0,
+                                IsPlaceholder = true
+                            });
+                        }
+                    }
+                }
+
+                Periods = periodsList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await JS.InvokeVoidAsync("toastr.error", "Lỗi tải danh sách bảng lương.");
+                Console.WriteLine($"Error loading payroll periods: {ex.Message}");
+                await JS.InvokeVoidAsync("toastr.error", "Lỗi tải danh sách bảng lương. Vui lòng thử lại sau.");
             }
             finally
             {
@@ -61,11 +117,13 @@ namespace TTL.HR.Shared.Pages.Payroll
         private async Task CreateNewPeriod() 
         { 
             var now = DateTime.Now;
-            var month = now.Month;
-            var year = now.Year;
+            await CreateNewPeriod(now.Month, now.Year);
+        }
 
-            // Check if already exists
-            if (Periods.Any(p => p.Month == month && p.Year == year))
+        private async Task CreateNewPeriod(int month, int year)
+        {
+            // Check if already exists in official list
+            if (Periods.Any(p => p.Month == month && p.Year == year && !p.IsPlaceholder))
             {
                 await JS.InvokeVoidAsync("toastr.info", $"Bảng lương tháng {month}/{year} đã tồn tại.");
                 return;
@@ -87,15 +145,29 @@ namespace TTL.HR.Shared.Pages.Payroll
         {
             Navigation.NavigateTo($"/payroll/period/{year}/{month}");
         }
+        
+        private void ViewDetail(string id, int month, int year)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                Navigation.NavigateTo($"/payroll/period/{id}");
+            }
+            else
+            {
+                Navigation.NavigateTo($"/payroll/period/{year}/{month}");
+            }
+        }
 
         public class PayrollPeriodViewModel
         {
+            public string Id { get; set; } = string.Empty;
             public string Name { get; set; } = string.Empty;
             public int Month { get; set; }
             public int Year { get; set; }
             public string Status { get; set; } = string.Empty;
             public decimal TotalAmount { get; set; }
             public int EmployeeCount { get; set; }
+            public bool IsPlaceholder { get; set; }
         }
     }
 }

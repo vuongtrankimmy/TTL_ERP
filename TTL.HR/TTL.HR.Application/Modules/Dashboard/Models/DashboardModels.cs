@@ -6,11 +6,34 @@ namespace TTL.HR.Application.Modules.Dashboard.Models
     public class DashboardOverviewModel
     {
         public DashboardStats Stats { get; set; } = new();
+        public PayrollStats PayrollStats { get; set; } = new();
+        public ContractDistribution ContractDistribution { get; set; } = new();
+        public RecruitmentStats RecruitmentStats { get; set; } = new();
         public List<DepartmentStat> DepartmentDistribution { get; set; } = new();
         public List<UpcomingTraining> UpcomingTrainings { get; set; } = new();
         public List<PendingApproval> PendingApprovals { get; set; } = new();
         public List<ExpiringContract> ExpiringContracts { get; set; } = new();
         public AttendanceToday AttendanceToday { get; set; } = new();
+    }
+
+    public class PayrollStats
+    {
+        public decimal TotalBudget { get; set; }
+        public double GrowthPercentage { get; set; }
+        public string Period { get; set; } = "";
+    }
+
+    public class ContractDistribution
+    {
+        public double OfficialPercentage { get; set; }
+        public string Label { get; set; } = "";
+    }
+
+    public class RecruitmentStats
+    {
+        public int NewCandidates { get; set; }
+        public int InterviewsThisWeek { get; set; }
+        public int RecentlyHired { get; set; }
     }
 
     public class DashboardStats

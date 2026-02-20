@@ -10,13 +10,16 @@ namespace TTL.HR.Shared.Pages.User.Components
 {
     public partial class UserAttendanceHistory
     {
-        [Parameter] public string EmployeeId { get; set; } = "";
+        [Parameter] public string? EmployeeId { get; set; }
         [Inject] public IAttendanceService AttendanceService { get; set; } = default!;
 
         private bool _showExplanationDrawer = false;
         private AttendanceDetailModel? _selectedRecordForExplanation;
         private List<AttendanceDetailModel> _attendanceRecords = new();
         private bool _isLoading = true;
+
+        // Tháng đang xem, mặc định là tháng hiện tại
+        private DateTime _currentMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
         protected override async Task OnParametersSetAsync()
         {
@@ -28,20 +31,39 @@ namespace TTL.HR.Shared.Pages.User.Components
 
         private async Task LoadData()
         {
+            if (string.IsNullOrEmpty(EmployeeId)) return;
+
             _isLoading = true;
+            StateHasChanged();
             try
             {
-                var month = new DateTime(2026, 2, 1); // Current month for demo
-                var data = await AttendanceService.GetAttendanceDetailsAsync(EmployeeId, month);
+                var data = await AttendanceService.GetAttendanceDetailsAsync(EmployeeId, _currentMonth);
                 _attendanceRecords = data?.OrderByDescending(x => x.Date).ToList() ?? new List<AttendanceDetailModel>();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Error handled by parent or toastr
+                Console.WriteLine($"Error loading attendance: {ex.Message}");
+                _attendanceRecords = new List<AttendanceDetailModel>();
             }
             finally
             {
                 _isLoading = false;
+                StateHasChanged();
+            }
+        }
+
+        private async Task PreviousMonth()
+        {
+            _currentMonth = _currentMonth.AddMonths(-1);
+            await LoadData();
+        }
+
+        private async Task NextMonth()
+        {
+            if (_currentMonth < new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1))
+            {
+                _currentMonth = _currentMonth.AddMonths(1);
+                await LoadData();
             }
         }
 
@@ -57,32 +79,36 @@ namespace TTL.HR.Shared.Pages.User.Components
             _selectedRecordForExplanation = null;
         }
 
-        private string GetStatusClass(string status)
+        private string GetStatusClass(string status) => status switch
         {
-            return status switch
-            {
-                "Đúng giờ" or "On Time" => "badge-light-success",
-                "Đi muộn" or "Late" => "badge-light-warning",
-                "Về sớm" or "Early Leave" => "badge-light-warning",
-                "Nghỉ phép" or "Leave" => "badge-light-info",
-                "Ngày nghỉ" or "Holiday" => "badge-light-secondary",
-                "Vắng mặt" or "Absent" => "badge-light-danger",
-                _ => "badge-light-primary"
-            };
-        }
+            "Normal" or "On Time" or "Đúng giờ" => "badge-light-success",
+            "Late" or "Đi muộn" => "badge-light-warning",
+            "EarlyLeave" or "Early Leave" or "Về sớm" => "badge-light-warning",
+            "Leave" or "Nghỉ phép" => "badge-light-info",
+            "Holiday" or "Ngày nghỉ" => "badge-light-secondary",
+            "Absent" or "Vắng mặt" => "badge-light-danger",
+            _ => "badge-light-primary"
+        };
 
-        private string TranslateStatus(string status)
+        private string TranslateStatus(string status) => status switch
         {
-            return status switch
-            {
-                "On Time" => "Đúng giờ",
-                "Late" => "Đi muộn",
-                "Early Leave" => "Về sớm",
-                "Leave" => "Nghỉ phép",
-                "Holiday" => "Ngày nghỉ",
-                "Absent" => "Vắng mặt",
-                _ => status
-            };
-        }
+            "Normal" => "Đúng giờ",
+            "On Time" => "Đúng giờ",
+            "Late" => "Đi muộn",
+            "EarlyLeave" => "Về sớm",
+            "Early Leave" => "Về sớm",
+            "Leave" => "Nghỉ phép",
+            "Holiday" => "Ngày nghỉ",
+            "Absent" => "Vắng mặt",
+            "Ngày nghỉ" => "Ngày nghỉ",
+            "Vắng mặt" => "Vắng mặt",
+            _ => status
+        };
+
+        // Thống kê tháng
+        private int TotalWorkDays => _attendanceRecords.Count(r => r.WorkValue > 0);
+        private int LateDays => _attendanceRecords.Count(r => r.Status == "Late" || r.IsLate);
+        private int EarlyLeaveDays => _attendanceRecords.Count(r => r.Status == "EarlyLeave" || r.IsEarlyLeave);
+        private double TotalOvertimeHours => _attendanceRecords.Sum(r => r.OvertimeHours);
     }
 }

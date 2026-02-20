@@ -1,0 +1,10 @@
+﻿Using launch settings from ..\TTL_API\src\Services\IdentityService\TTL.IdentityService.Api\Properties\launchSettings.json...
+Building...
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5001
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\IdentityService\TTL.IdentityService.Api

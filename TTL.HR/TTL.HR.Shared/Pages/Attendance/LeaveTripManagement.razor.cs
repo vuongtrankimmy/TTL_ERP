@@ -36,7 +36,7 @@ namespace TTL.HR.Shared.Pages.Attendance
             try
             {
                 var result = await LeaveService.GetLeaveRequestsAsync();
-                _requests = result.ToList();
+                _requests = result?.Items ?? new List<LeaveRequestModel>();
                 ApplyFilter();
             }
             catch (Exception)

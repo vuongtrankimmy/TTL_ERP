@@ -26,11 +26,11 @@ else if (_overview != null)
                 <div class="card-body d-flex align-items-end pt-0 pb-6">
                     <div class="d-flex align-items-center flex-column mt-3 w-100">
                         <div class="d-flex justify-content-between w-100 mt-auto mb-2 px-1">
-                            <span class="fw-bolder text-white fs-6">85% Đã ký HĐ chính thức</span>
-                            <span class="fw-bold text-white fs-6">85%</span>
+                            <span class="fw-bolder text-white fs-6">@_overview.ContractDistribution.Label</span>
+                            <span class="fw-bold text-white fs-6">@_overview.ContractDistribution.OfficialPercentage%</span>
                         </div>
                         <div class="h-8px w-100 bg-white bg-opacity-25 rounded">
-                            <div class="bg-white rounded h-8px" role="progressbar" style="width: 85%;" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="bg-white rounded h-8px" role="progressbar" style="width: @_overview.ContractDistribution.OfficialPercentage%;" aria-valuenow="@_overview.ContractDistribution.OfficialPercentage" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                 </div>
@@ -45,12 +45,12 @@ else if (_overview != null)
                     <div class="card-title d-flex flex-column">
                         <div class="d-flex align-items-center">
                             <span class="fs-4 fw-semibold text-gray-400 me-1 align-self-start">VNĐ</span>
-                            <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">4.2B</span>
+                            <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">@((_overview.PayrollStats.TotalBudget / 1000000000m).ToString("N1"))B</span>
                             <span class="badge badge-light-success fs-base">
-                                <i class="ki-outline ki-arrow-up fs-5 text-success ms-n1"></i>4.5%
+                                <i class="ki-outline ki-arrow-up fs-5 text-success ms-n1"></i>@_overview.PayrollStats.GrowthPercentage%
                             </span>
                         </div>
-                        <span class="text-gray-400 pt-1 fw-semibold fs-6">Quỹ lương dự tính (Tháng 02/2026)</span>
+                        <span class="text-gray-400 pt-1 fw-semibold fs-6">Quỹ lương dự tính (@_overview.PayrollStats.Period)</span>
                     </div>
                     <div class="card-toolbar">
                         <a href="/payroll/list" class="btn btn-sm btn-light-success fw-bold">Chi tiết lương</a>
@@ -94,15 +94,15 @@ else if (_overview != null)
                     <div class="d-flex flex-column gap-3">
                         <div class="d-flex align-items-center">
                             <div class="bullet bullet-vertical h-10px bg-success me-3"></div>
-                            <span class="text-gray-700 fs-7 fw-bold">12 Ứng viên vừa trúng tuyển</span>
+                            <span class="text-gray-700 fs-7 fw-bold">@_overview.RecruitmentStats.RecentlyHired Nhân sự vừa tiếp nhận</span>
                         </div>
                         <div class="d-flex align-items-center">
                             <div class="bullet bullet-vertical h-10px bg-warning me-3"></div>
-                            <span class="text-gray-700 fs-7 fw-bold">15 Lịch phỏng vấn tuần này</span>
+                            <span class="text-gray-700 fs-7 fw-bold">@_overview.RecruitmentStats.InterviewsThisWeek Lịch phỏng vấn tuần này</span>
                         </div>
                         <div class="d-flex align-items-center">
                             <div class="bullet bullet-vertical h-10px bg-primary me-3"></div>
-                            <span class="text-gray-700 fs-7 fw-bold">45 Hồ sơ mới chờ duyệt</span>
+                            <span class="text-gray-700 fs-7 fw-bold">@_overview.RecruitmentStats.NewCandidates Hồ sơ mới trong tuần</span>
                         </div>
                     </div>
                 </div>
@@ -151,28 +151,63 @@ else if (_overview != null)
                 </div>
                 <div class="card-body pt-5">
                     <div class="row g-5">
-                        <!-- Stat 1: Có mặt -->
                         <div class="col-sm-6 col-lg-3">
                             <div class="border border-gray-300 border-dashed rounded py-3 px-4 mb-3">
                                 <span class="fs-4 fw-bolder text-gray-900">@_overview.AttendanceToday.Present.ToString("N0")</span>
                                 <div class="fw-semibold text-gray-400 fs-7">Đang làm việc</div>
                             </div>
                         </div>
-                        <!-- Stat 2: Đi muộn -->
                         <div class="col-sm-6 col-lg-3">
                             <div class="border border-gray-300 border-dashed rounded py-3 px-4 mb-3">
                                 <span class="fs-4 fw-bolder text-warning">@_overview.AttendanceToday.Late.ToString("N0")</span>
                                 <div class="fw-semibold text-gray-400 fs-7">Đi muộn</div>
                             </div>
                         </div>
-                         <!-- Stat 3: Vắng mặt -->
-                        <div class="col-sm-6 col-lg-3">
+                         <div class="col-sm-6 col-lg-3">
                             <div class="border border-gray-300 border-dashed rounded py-3 px-4 mb-3">
                                 <span class="fs-4 fw-bolder text-danger">@_overview.AttendanceToday.Absent.ToString("N0")</span>
-                                <div class="fw-semibold text-gray-400 fs-7">Vắng mặt</div>
+                                <div class="fw-semibold text-gray-400 fs-7">Vắng mặt (Không phép)</div>
+                            </div>
+                        </div>
+                         <div class="col-sm-6 col-lg-3">
+                            <div class="border border-gray-300 border-dashed rounded py-3 px-4 mb-3 bg-light-primary">
+                                <span class="fs-4 fw-bolder text-primary">@_overview.AttendanceToday.Total.ToString("N0")</span>
+                                <div class="fw-semibold text-gray-400 fs-7">Tổng quân số</div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <!--begin::Col - Department Distribution-->
+        <div class="col-xl-4">
+            <div class="card card-flush h-xl-100 shadow-sm border-0">
+                <div class="card-header pt-7">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bold text-gray-800">Cơ cấu nhân sự</span>
+                        <span class="text-gray-400 mt-1 fw-semibold fs-7">Phân bổ theo phòng ban</span>
+                    </h3>
+                </div>
+                <div class="card-body pt-5">
+                    @foreach(var dep in _overview.DepartmentDistribution.Take(4))
+                    {
+                        <div class="d-flex flex-stack mb-5">
+                            <div class="d-flex align-items-center me-2">
+                                <div class="symbol symbol-35px symbol-circle me-3">
+                                    <span class="symbol-label bg-light-info text-info fw-bold">@dep.DepartmentName.Substring(0, 1)</span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <span class="text-gray-800 fw-bold fs-7">@dep.DepartmentName</span>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="text-gray-800 fw-bold fs-7 me-3">@dep.EmployeeCount</span>
+                                <div class="m-0">
+                                    <span class="badge badge-light-primary fs-8">@((dep.EmployeeCount * 100.0 / _overview.Stats.TotalEmployees).ToString("N0"))%</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -180,7 +215,7 @@ else if (_overview != null)
 
     <!--begin::Row - Training Summary (New)-->
     <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
-        <div class="col-xl-12">
+        <div class="col-xl-7">
             <div class="card card-flush h-xl-100 shadow-sm border-0">
                  <div class="card-header pt-7">
                     <h3 class="card-title align-items-start flex-column">
@@ -190,13 +225,12 @@ else if (_overview != null)
                 </div>
                 <div class="card-body pt-2">
                     <div class="table-responsive">
-                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-4">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-3">
                             <thead>
                                 <tr class="fw-bold text-muted bg-light">
-                                    <th class="ps-4 min-w-200px rounded-start">Khóa học</th>
-                                    <th class="min-w-150px">Giảng viên</th>
-                                    <th class="min-w-120px">Thời lượng</th>
-                                    <th class="min-w-100px text-end rounded-end pe-4">Trạng thái</th>
+                                    <th class="ps-4 min-w-150px rounded-start">Khóa học</th>
+                                    <th class="min-w-100px">Giảng viên</th>
+                                    <th class="min-w-80px text-end rounded-end pe-4">Trạng thái</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -205,8 +239,49 @@ else if (_overview != null)
                                      <tr>
                                         <td class="ps-4">@course.Title</td>
                                         <td>@course.Trainer</td>
-                                        <td>@course.DurationHours giờ</td>
                                         <td class="text-end pe-4"><span class="badge badge-light-primary">@course.Status</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-5">
+            <div class="card card-flush h-xl-100 shadow-sm border-0">
+                 <div class="card-header pt-7">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bold text-gray-800">Cảnh báo hết hạn hợp đồng</span>
+                        <span class="text-gray-400 mt-1 fw-semibold fs-7">Danh sách nhân sự cần tái ký trong 30 ngày tới</span>
+                    </h3>
+                </div>
+                <div class="card-body pt-2">
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-3">
+                             <tbody>
+                                @if(!_overview.ExpiringContracts.Any())
+                                {
+                                    <tr>
+                                        <td colspan="2" class="text-center py-10 text-muted fs-7">Không có hợp đồng sắp hết hạn.</td>
+                                    </tr>
+                                }
+                                @foreach(var contract in _overview.ExpiringContracts)
+                                {
+                                     <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex flex-column">
+                                                <span class="text-gray-800 fw-bold fs-7">@contract.EmployeeName</span>
+                                                <span class="text-muted fs-8">@contract.Department</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <div class="d-flex flex-column align-items-end">
+                                                <span class="text-danger fw-bold fs-7">@contract.ExpiryDate.ToString("dd/MM/yyyy")</span>
+                                                <span class="badge badge-light-danger fs-9">Sắp hết hạn</span>
+                                            </div>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>

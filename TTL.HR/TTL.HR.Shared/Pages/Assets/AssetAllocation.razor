@@ -8,7 +8,8 @@
         <div class="card-title">
             <div class="d-flex align-items-center position-relative my-1">
                 <i class="ki-outline ki-magnifier fs-3 position-absolute ms-5 text-gray-500"></i>
-                <input type="text" class="form-control form-control-solid w-250px ps-13" placeholder="Tìm kiếm cấp phát..." />
+                <input type="text" class="form-control form-control-solid w-250px ps-13" placeholder="Tìm kiếm cấp phát..." 
+                       @bind="SearchTerm" @bind:event="oninput" @onkeyup="HandleSearch" />
             </div>
         </div>
         <div class="card-toolbar">
@@ -116,6 +117,7 @@
                                     <th class="min-w-150px">Ngày cấp</th>
                                     <th class="min-w-150px">Ngày thu hồi</th>
                                     <th class="min-w-150px text-center">Tình trạng thực tế</th>
+                                    <th class="min-w-150px">Người thực hiện</th>
                                 </tr>
                             </thead>
                             <tbody class="fw-semibold text-gray-700">
@@ -146,6 +148,14 @@
                                             <td class="text-gray-900 fw-bold">@item.ReturnedDate?.ToString("dd/MM/yyyy")</td>
                                             <td class="text-center">
                                                 <span class="badge @(item.ReturnCondition == "Hỏng" ? "badge-light-danger" : "badge-light-info") fw-bold px-4 py-3">@item.ReturnCondition</span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-circle symbol-25px me-2">
+                                                        <div class="symbol-label bg-light-warning text-warning fs-8">@(item.ActorName?.Substring(0, 1) ?? "S")</div>
+                                                    </div>
+                                                    <span class="text-gray-600 fs-7">@item.ActorName</span>
+                                                </div>
                                             </td>
                                         </tr>
                                     }

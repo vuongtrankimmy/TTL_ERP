@@ -8,9 +8,11 @@ namespace TTL.HR.Application.Modules.Organization.Interfaces
     {
         Task<List<DepartmentModel>> GetDepartmentsAsync();
         Task<DepartmentModel?> GetDepartmentAsync(string id);
+        Task<DepartmentDetailModel?> GetDepartmentDetailAsync(string id);
         Task<DepartmentModel?> CreateDepartmentAsync(CreateDepartmentRequest request);
         Task<DepartmentModel?> UpdateDepartmentAsync(string id, UpdateDepartmentRequest request);
         Task<bool> DeleteDepartmentAsync(string id);
+        Task<List<OrgNode>> GetOrganizationStructureAsync();
     }
 
     public interface IPositionService

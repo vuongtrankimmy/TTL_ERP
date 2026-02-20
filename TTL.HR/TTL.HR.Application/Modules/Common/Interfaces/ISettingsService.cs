@@ -6,5 +6,10 @@ namespace TTL.HR.Application.Modules.Common.Interfaces
     {
         Task<SystemSettingsModel?> GetSettingsAsync();
         Task<bool> UpdateSettingsAsync(SystemSettingsModel settings);
+        SystemSettingsModel? CachedSettings { get; }
+        Task InitializeAsync();
+        event Action? OnSettingsUpdated;
     }
+
+
 }

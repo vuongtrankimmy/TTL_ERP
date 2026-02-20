@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTL Core API - Index Document Tài Liệu</title>
+    <style>
+        :root {
+            --primary-color: #06b6d4;
+            /* Cyan for Core */
+            --background-color: #0f172a;
+            --card-background: #1e293b;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
+            --success-color: #10b981;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: var(--card-background);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid #334155;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            box-shadow: 0 0 8px var(--success-color);
+        }
+
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #64748b;
+            border-top: 1px solid #334155;
+            padding-top: 1rem;
+        }
+
+        .link-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .link-button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            Service Operational
+        </div>
+        <h1>TTL Core API Documentation</h1>
+        <p>
+            Main Business Logic Provider.<br>
+            Powering HR, Assets, and Organizational Management.
+        </p>
+
+        <a href="/swagger" class="link-button">Go to Swagger UI (API Docs)</a>
+
+        <div class="footer">
+            &copy; 2026 Tan Tan Loc. Enterprise Resource Planning.
+        </div>
+    </div>
+</body>
+
+</html>

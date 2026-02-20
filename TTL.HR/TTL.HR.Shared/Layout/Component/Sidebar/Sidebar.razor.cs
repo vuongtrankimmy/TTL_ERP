@@ -4,9 +4,20 @@ using Microsoft.JSInterop;
 
 namespace TTL.HR.Shared.Layout.Component.Sidebar
 {
-    public partial class Sidebar
+    public partial class Sidebar : IDisposable
     {
-        [Inject] public IJSRuntime JSRuntime { get; set; }
+        [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
+        [Inject] public TTL.HR.Application.Modules.Common.Interfaces.ISettingsService SettingsService { get; set; } = default!;
+
+        protected override void OnInitialized()
+        {
+            SettingsService.OnSettingsUpdated += HandleSettingsUpdated;
+        }
+
+        private void HandleSettingsUpdated()
+        {
+            StateHasChanged();
+        }
 
         private async Task ToggleSidebar()
         {
@@ -21,5 +32,11 @@ namespace TTL.HR.Shared.Layout.Component.Sidebar
                 await JSRuntime.InvokeVoidAsync("KTApp.init");
             }
         }
+
+        public void Dispose()
+        {
+            SettingsService.OnSettingsUpdated -= HandleSettingsUpdated;
+        }
     }
 }
+

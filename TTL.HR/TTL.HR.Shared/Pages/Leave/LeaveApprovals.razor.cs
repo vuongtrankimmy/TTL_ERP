@@ -31,9 +31,9 @@ namespace TTL.HR.Shared.Pages.Leave
             try
             {
                 var requests = await LeaveService.GetLeaveRequestsAsync();
-                if (requests != null)
+                if (requests != null && requests.Items != null)
                 {
-                    _approvals = requests.Select(r => new ApprovalItem
+                    _approvals = requests.Items.Select(r => new ApprovalItem
                     {
                         Id = int.TryParse(r.Id, out var id) ? id : 0,
                         Name = r.EmployeeName,

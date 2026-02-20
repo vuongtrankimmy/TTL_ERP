@@ -21,10 +21,15 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         }
 
         // Templates
-        public async Task<List<ContractTemplateModel>> GetTemplatesAsync()
+        public async Task<PagedResult<ContractTemplateModel>> GetTemplatesAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<ContractTemplateModel>>>(ApiEndpoints.Contracts.Templates);
-            return response?.Data ?? new List<ContractTemplateModel>();
+            var query = $"{ApiEndpoints.Contracts.Templates}?page={page}&pageSize={pageSize}";
+            if (!string.IsNullOrEmpty(searchTerm)) query += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
+            if (!string.IsNullOrEmpty(status) && status != "All") query += $"&status={status}";
+            if (!string.IsNullOrEmpty(typeId)) query += $"&typeId={typeId}";
+
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<ContractTemplateModel>>>(query);
+            return response?.Data ?? new PagedResult<ContractTemplateModel>();
         }
 
         public async Task<ContractTemplateModel?> GetTemplateAsync(string id)
@@ -36,15 +41,24 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         public async Task<ContractTemplate?> CreateTemplateAsync(ContractTemplate template)
         {
             var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Contracts.Templates, template);
-            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<ContractTemplate>>();
-            return apiResponse?.Data;
+            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
+            if (apiResponse?.Success == true)
+            {
+                template.Id = apiResponse.Data ?? string.Empty;
+                return template;
+            }
+            return null;
         }
 
         public async Task<ContractTemplate?> UpdateTemplateAsync(string id, ContractTemplate template)
         {
             var response = await _httpClient.PutAsJsonAsync($"{ApiEndpoints.Contracts.Templates}/{id}", template);
-            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<ContractTemplate>>();
-            return apiResponse?.Data;
+            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+            if (apiResponse?.Success == true)
+            {
+                return template;
+            }
+            return null;
         }
 
         public async Task<bool> DeleteTemplateAsync(string id)
@@ -54,10 +68,15 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         }
 
         // Employee Contracts
-        public async Task<List<EmployeeContractModel>> GetEmployeeContractsAsync()
+        public async Task<PagedResult<EmployeeContractModel>> GetEmployeeContractsAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<EmployeeContractModel>>>(ApiEndpoints.Contracts.Base);
-            return response?.Data ?? new List<EmployeeContractModel>();
+            var query = $"{ApiEndpoints.Contracts.Base}?page={page}&pageSize={pageSize}";
+            if (!string.IsNullOrEmpty(searchTerm)) query += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
+            if (!string.IsNullOrEmpty(status) && status != "All") query += $"&status={status}";
+            if (!string.IsNullOrEmpty(typeId)) query += $"&typeId={typeId}";
+
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<EmployeeContractModel>>>(query);
+            return response?.Data ?? new PagedResult<EmployeeContractModel>();
         }
 
         public async Task<EmployeeContractModel?> GetEmployeeContractAsync(string id)
@@ -69,15 +88,24 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         public async Task<EmployeeContract?> CreateEmployeeContractAsync(EmployeeContract contract)
         {
             var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Contracts.Base, contract);
-            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<EmployeeContract>>();
-            return apiResponse?.Data;
+            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
+            if (apiResponse?.Success == true)
+            {
+                contract.Id = apiResponse.Data ?? string.Empty;
+                return contract;
+            }
+            return null;
         }
 
         public async Task<EmployeeContract?> UpdateEmployeeContractAsync(string id, EmployeeContract contract)
         {
             var response = await _httpClient.PutAsJsonAsync($"{ApiEndpoints.Contracts.Base}/{id}", contract);
-            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<EmployeeContract>>();
-            return apiResponse?.Data;
+            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+            if (apiResponse?.Success == true)
+            {
+                return contract;
+            }
+            return null;
         }
 
         public async Task<bool> DeleteEmployeeContractAsync(string id)

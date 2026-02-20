@@ -1,0 +1,232 @@
+[
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000201"
+        },
+        "Type": "ContractType",
+        "Code": "Probation",
+        "Name": "Hợp đồng thử việc",
+        "Order": 1,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000202"
+        },
+        "Type": "ContractType",
+        "Code": "Official_12M",
+        "Name": "Hợp đồng 12 tháng",
+        "Order": 2,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000203"
+        },
+        "Type": "ContractType",
+        "Code": "Official_24M",
+        "Name": "Hợp đồng 24 tháng",
+        "Order": 3,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000204"
+        },
+        "Type": "ContractType",
+        "Code": "Official_36M",
+        "Name": "Hợp đồng 36 tháng",
+        "Order": 4,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000205"
+        },
+        "Type": "ContractType",
+        "Code": "Indefinite",
+        "Name": "Hợp đồng không xác định thời hạn",
+        "Order": 5,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000206"
+        },
+        "Type": "ContractType",
+        "Code": "Internship",
+        "Name": "Hợp đồng thực tập",
+        "Order": 6,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000207"
+        },
+        "Type": "ContractType",
+        "Code": "NDA",
+        "Name": "Thỏa thuận bảo mật (NDA)",
+        "Order": 7,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000208"
+        },
+        "Type": "ContractType",
+        "Code": "Collaborator",
+        "Name": "Hợp đồng cộng tác viên",
+        "Order": 8,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000209"
+        },
+        "Type": "ContractType",
+        "Code": "Appendix",
+        "Name": "Phụ lục hợp đồng",
+        "Order": 9,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000210"
+        },
+        "Type": "ContractType",
+        "Code": "Commitment",
+        "Name": "Bản cam kết",
+        "Order": 10,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000301"
+        },
+        "Type": "ContractStatus",
+        "Code": "Draft",
+        "Name": "Dự thảo",
+        "Order": 1,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000302"
+        },
+        "Type": "ContractStatus",
+        "Code": "Signed",
+        "Name": "Đã ký kết",
+        "Order": 2,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000303"
+        },
+        "Type": "ContractStatus",
+        "Code": "Active",
+        "Name": "Đang hiệu lực",
+        "Order": 3,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000304"
+        },
+        "Type": "ContractStatus",
+        "Code": "Completed",
+        "Name": "Đã hoàn thành",
+        "Order": 4,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000305"
+        },
+        "Type": "ContractStatus",
+        "Code": "Terminated",
+        "Name": "Đã chấm dứt",
+        "Order": 5,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000306"
+        },
+        "Type": "ContractStatus",
+        "Code": "Expired",
+        "Name": "Hết hạn",
+        "Order": 6,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000401"
+        },
+        "Type": "TemplateStatus",
+        "Code": "Active",
+        "Name": "Đang sử dụng",
+        "Order": 1,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000402"
+        },
+        "Type": "TemplateStatus",
+        "Code": "Draft",
+        "Name": "Bản nháp",
+        "Order": 2,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000403"
+        },
+        "Type": "TemplateStatus",
+        "Code": "Inactive",
+        "Name": "Ngừng sử dụng",
+        "Order": 3,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000501"
+        },
+        "Type": "EmployeeStatus",
+        "Code": "Active",
+        "Name": "Chính thức",
+        "Order": 1,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000502"
+        },
+        "Type": "EmployeeStatus",
+        "Code": "Probation",
+        "Name": "Thử việc",
+        "Order": 2,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000503"
+        },
+        "Type": "EmployeeStatus",
+        "Code": "MaternityLeave",
+        "Name": "Nghỉ thai sản",
+        "Order": 3,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000504"
+        },
+        "Type": "EmployeeStatus",
+        "Code": "Resigned",
+        "Name": "Đã thôi việc",
+        "Order": 4,
+        "IsActive": true
+    }
+]

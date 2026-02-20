@@ -1,0 +1,1945 @@
+﻿[
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  2930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2782365,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-051",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  4451178,
+        "OvertimeSalary":  1806485,
+        "TotalWorkSalary":  38538340,
+        "OvertimeHours":  5,
+        "EmployeeId":  "65bf0c300000000000000051",
+        "Status":  "Pending",
+        "BasicSalary":  42392174,
+        "EmployeeName":  "NhÃ¢n viÃªn 51",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  3175145,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-052",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  4571763,
+        "OvertimeSalary":  3710847,
+        "TotalWorkSalary":  39582363,
+        "OvertimeHours":  10,
+        "EmployeeId":  "65bf0c300000000000000052",
+        "Status":  "Draft",
+        "BasicSalary":  43540599,
+        "EmployeeName":  "NhÃ¢n viÃªn 52",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2477820,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-053",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  3420631,
+        "OvertimeSalary":  5552973,
+        "TotalWorkSalary":  29615855,
+        "OvertimeHours":  20,
+        "EmployeeId":  "65bf0c300000000000000053",
+        "Status":  "Approved",
+        "BasicSalary":  32577440,
+        "EmployeeName":  "NhÃ¢n viÃªn 53",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 }
+                             ],
+        "Allowance":  1030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  745438,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  22,
+        "EmployeeCode":  "NV-054",
+        "UnpaidLeaveDays":  0,
+        "Deduction":  0,
+        "InsuranceAmount":  1759347,
+        "OvertimeSalary":  1428042,
+        "TotalWorkSalary":  16755689,
+        "OvertimeHours":  10,
+        "EmployeeId":  "65bf0c300000000000000054",
+        "Status":  "Pending",
+        "BasicSalary":  16755689,
+        "EmployeeName":  "NhÃ¢n viÃªn 54",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  2930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  3405859,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  22,
+        "EmployeeCode":  "NV-055",
+        "UnpaidLeaveDays":  0,
+        "Deduction":  0,
+        "InsuranceAmount":  4151751,
+        "OvertimeSalary":  6739855,
+        "TotalWorkSalary":  39540484,
+        "OvertimeHours":  20,
+        "EmployeeId":  "65bf0c300000000000000055",
+        "Status":  "Released",
+        "BasicSalary":  39540484,
+        "EmployeeName":  "NhÃ¢n viÃªn 55",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 }
+                             ],
+        "Allowance":  1030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  0,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-056",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  890582,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  7710666,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000056",
+        "Status":  "Released",
+        "BasicSalary":  8481733,
+        "EmployeeName":  "NhÃ¢n viÃªn 56",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 }
+                             ],
+        "Allowance":  930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  0,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  500000,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-057",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  1172132,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  10148328,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000057",
+        "Status":  "Pending",
+        "BasicSalary":  11163161,
+        "EmployeeName":  "NhÃ¢n viÃªn 57",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  2930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2947370,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  2000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-058",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  4407781,
+        "OvertimeSalary":  1788872,
+        "TotalWorkSalary":  38162608,
+        "OvertimeHours":  5,
+        "EmployeeId":  "65bf0c300000000000000058",
+        "Status":  "Released",
+        "BasicSalary":  41978869,
+        "EmployeeName":  "NhÃ¢n viÃªn 58",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2155243,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  500000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-059",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  3587042,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  32609471,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000059",
+        "Status":  "Released",
+        "BasicSalary":  34162303,
+        "EmployeeName":  "NhÃ¢n viÃªn 59",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  500000
+                                 }
+                             ],
+        "Allowance":  1230000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  543978,
+        "DeductionDetails":  [
+                                 {
+                                     "Name":  "Pháº¡t Ä‘i muá»™n",
+                                     "Amount":  200000
+                                 }
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-060",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  200000,
+        "InsuranceAmount":  1708465,
+        "OvertimeSalary":  1386741,
+        "TotalWorkSalary":  15531500,
+        "OvertimeHours":  10,
+        "EmployeeId":  "65bf0c300000000000000060",
+        "Status":  "Draft",
+        "BasicSalary":  16271095,
+        "EmployeeName":  "NhÃ¢n viÃªn 60",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  500000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3230000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2214498,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  22,
+        "EmployeeCode":  "NV-061",
+        "UnpaidLeaveDays":  0,
+        "Deduction":  0,
+        "InsuranceAmount":  3204433,
+        "OvertimeSalary":  2601001,
+        "TotalWorkSalary":  30518413,
+        "OvertimeHours":  10,
+        "EmployeeId":  "65bf0c300000000000000061",
+        "Status":  "Released",
+        "BasicSalary":  30518413,
+        "EmployeeName":  "NhÃ¢n viÃªn 61",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  1587878,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-062",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  2947602,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  26796382,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000062",
+        "Status":  "Released",
+        "BasicSalary":  28072400,
+        "EmployeeName":  "NhÃ¢n viÃªn 62",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  1977195,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  22,
+        "EmployeeCode":  "NV-063",
+        "UnpaidLeaveDays":  0,
+        "Deduction":  0,
+        "InsuranceAmount":  3137323,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  29879271,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000063",
+        "Status":  "Approved",
+        "BasicSalary":  29879271,
+        "EmployeeName":  "NhÃ¢n viÃªn 63",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2885880,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-064",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  4567147,
+        "OvertimeSalary":  1853550,
+        "TotalWorkSalary":  39542401,
+        "OvertimeHours":  5,
+        "EmployeeId":  "65bf0c300000000000000064",
+        "Status":  "Approved",
+        "BasicSalary":  43496641,
+        "EmployeeName":  "NhÃ¢n viÃªn 64",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 }
+                             ],
+        "Allowance":  930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  1135950,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-065",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  2205978,
+        "OvertimeSalary":  3581133,
+        "TotalWorkSalary":  20054343,
+        "OvertimeHours":  20,
+        "EmployeeId":  "65bf0c300000000000000065",
+        "Status":  "Pending",
+        "BasicSalary":  21009312,
+        "EmployeeName":  "NhÃ¢n viÃªn 65",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2177335,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  500000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-066",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  3010344,
+        "OvertimeSalary":  4886923,
+        "TotalWorkSalary":  27366767,
+        "OvertimeHours":  20,
+        "EmployeeId":  "65bf0c300000000000000066",
+        "Status":  "Approved",
+        "BasicSalary":  28669946,
+        "EmployeeName":  "NhÃ¢n viÃªn 66",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2077699,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-067",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  3564920,
+        "OvertimeSalary":  1446802,
+        "TotalWorkSalary":  30865108,
+        "OvertimeHours":  5,
+        "EmployeeId":  "65bf0c300000000000000067",
+        "Status":  "Draft",
+        "BasicSalary":  33951619,
+        "EmployeeName":  "NhÃ¢n viÃªn 67",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  2930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2748313,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-068",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  3659881,
+        "OvertimeSalary":  5941365,
+        "TotalWorkSalary":  33271645,
+        "OvertimeHours":  20,
+        "EmployeeId":  "65bf0c300000000000000068",
+        "Status":  "Draft",
+        "BasicSalary":  34856009,
+        "EmployeeName":  "NhÃ¢n viÃªn 68",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 }
+                             ],
+        "Allowance":  1030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  741166,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-069",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  2045683,
+        "OvertimeSalary":  830228,
+        "TotalWorkSalary":  18597115,
+        "OvertimeHours":  5,
+        "EmployeeId":  "65bf0c300000000000000069",
+        "Status":  "Approved",
+        "BasicSalary":  19482692,
+        "EmployeeName":  "NhÃ¢n viÃªn 69",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 }
+                             ],
+        "Allowance":  1030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  379102,
+        "DeductionDetails":  [
+                                 {
+                                     "Name":  "Pháº¡t Ä‘i muá»™n",
+                                     "Amount":  200000
+                                 }
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-070",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  200000,
+        "InsuranceAmount":  1666363,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  14427388,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000070",
+        "Status":  "Approved",
+        "BasicSalary":  15870127,
+        "EmployeeName":  "NhÃ¢n viÃªn 70",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2157502,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-071",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  3477213,
+        "OvertimeSalary":  1411207,
+        "TotalWorkSalary":  31611029,
+        "OvertimeHours":  5,
+        "EmployeeId":  "65bf0c300000000000000071",
+        "Status":  "Pending",
+        "BasicSalary":  33116316,
+        "EmployeeName":  "NhÃ¢n viÃªn 71",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2516316,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-072",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  4326602,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  37459760,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000072",
+        "Status":  "Released",
+        "BasicSalary":  41205736,
+        "EmployeeName":  "NhÃ¢n viÃªn 72",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  2930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2852603,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-073",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  4010576,
+        "OvertimeSalary":  4883007,
+        "TotalWorkSalary":  34723602,
+        "OvertimeHours":  15,
+        "EmployeeId":  "65bf0c300000000000000073",
+        "Status":  "Approved",
+        "BasicSalary":  38195962,
+        "EmployeeName":  "NhÃ¢n viÃªn 73",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  1642306,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-074",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  2748347,
+        "OvertimeSalary":  3346201,
+        "TotalWorkSalary":  23795208,
+        "OvertimeHours":  15,
+        "EmployeeId":  "65bf0c300000000000000074",
+        "Status":  "Draft",
+        "BasicSalary":  26174729,
+        "EmployeeName":  "NhÃ¢n viÃªn 74",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  1840290,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-075",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  2714857,
+        "OvertimeSalary":  4407235,
+        "TotalWorkSalary":  24680517,
+        "OvertimeHours":  20,
+        "EmployeeId":  "65bf0c300000000000000075",
+        "Status":  "Pending",
+        "BasicSalary":  25855780,
+        "EmployeeName":  "NhÃ¢n viÃªn 75",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  2930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2312744,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  500000,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-076",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  3458656,
+        "OvertimeSalary":  4211025,
+        "TotalWorkSalary":  29945070,
+        "OvertimeHours":  15,
+        "EmployeeId":  "65bf0c300000000000000076",
+        "Status":  "Draft",
+        "BasicSalary":  32939577,
+        "EmployeeName":  "NhÃ¢n viÃªn 76",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  500000
+                                 }
+                             ],
+        "Allowance":  1230000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  210770,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-077",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  1402377,
+        "OvertimeSalary":  1138293,
+        "TotalWorkSalary":  12141788,
+        "OvertimeHours":  10,
+        "EmployeeId":  "65bf0c300000000000000077",
+        "Status":  "Pending",
+        "BasicSalary":  13355967,
+        "EmployeeName":  "NhÃ¢n viÃªn 77",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  500000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3230000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2366356,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-078",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  3699478,
+        "OvertimeSalary":  1501412,
+        "TotalWorkSalary":  33631621,
+        "OvertimeHours":  5,
+        "EmployeeId":  "65bf0c300000000000000078",
+        "Status":  "Released",
+        "BasicSalary":  35233127,
+        "EmployeeName":  "NhÃ¢n viÃªn 78",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  500000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3230000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  1877460,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  500000,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-079",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  3065241,
+        "OvertimeSalary":  1244010,
+        "TotalWorkSalary":  27865832,
+        "OvertimeHours":  5,
+        "EmployeeId":  "65bf0c300000000000000079",
+        "Status":  "Pending",
+        "BasicSalary":  29192776,
+        "EmployeeName":  "NhÃ¢n viÃªn 79",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  500000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3230000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  3299861,
+        "DeductionDetails":  [
+                                 {
+                                     "Name":  "Pháº¡t Ä‘i muá»™n",
+                                     "Amount":  200000
+                                 }
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  22,
+        "EmployeeCode":  "NV-080",
+        "UnpaidLeaveDays":  0,
+        "Deduction":  200000,
+        "InsuranceAmount":  4565531,
+        "OvertimeSalary":  1852894,
+        "TotalWorkSalary":  43481244,
+        "OvertimeHours":  5,
+        "EmployeeId":  "65bf0c300000000000000080",
+        "Status":  "Draft",
+        "BasicSalary":  43481244,
+        "EmployeeName":  "NhÃ¢n viÃªn 80",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 }
+                             ],
+        "Allowance":  1030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  1055366,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  2000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-081",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  2418862,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  20942526,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000081",
+        "Status":  "Approved",
+        "BasicSalary":  23036779,
+        "EmployeeName":  "NhÃ¢n viÃªn 81",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 }
+                             ],
+        "Allowance":  1030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  199978,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  22,
+        "EmployeeCode":  "NV-082",
+        "UnpaidLeaveDays":  0,
+        "Deduction":  0,
+        "InsuranceAmount":  1286958,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  12256741,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000082",
+        "Status":  "Released",
+        "BasicSalary":  12256741,
+        "EmployeeName":  "NhÃ¢n viÃªn 82",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  500000
+                                 }
+                             ],
+        "Allowance":  1230000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  699251,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  2000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-083",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  1590550,
+        "OvertimeSalary":  2582062,
+        "TotalWorkSalary":  13770999,
+        "OvertimeHours":  20,
+        "EmployeeId":  "65bf0c300000000000000083",
+        "Status":  "Released",
+        "BasicSalary":  15148099,
+        "EmployeeName":  "NhÃ¢n viÃªn 83",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  2930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2511919,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  22,
+        "EmployeeCode":  "NV-084",
+        "UnpaidLeaveDays":  0,
+        "Deduction":  0,
+        "InsuranceAmount":  3716738,
+        "OvertimeSalary":  1508417,
+        "TotalWorkSalary":  35397508,
+        "OvertimeHours":  5,
+        "EmployeeId":  "65bf0c300000000000000084",
+        "Status":  "Pending",
+        "BasicSalary":  35397508,
+        "EmployeeName":  "NhÃ¢n viÃªn 84",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  2930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2443541,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  500000,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-085",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  4179339,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  36184749,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000085",
+        "Status":  "Draft",
+        "BasicSalary":  39803224,
+        "EmployeeName":  "NhÃ¢n viÃªn 85",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  2930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  1526172,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  22,
+        "EmployeeCode":  "NV-086",
+        "UnpaidLeaveDays":  0,
+        "Deduction":  0,
+        "InsuranceAmount":  2737241,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  26068962,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000086",
+        "Status":  "Pending",
+        "BasicSalary":  26068962,
+        "EmployeeName":  "NhÃ¢n viÃªn 86",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  500000
+                                 }
+                             ],
+        "Allowance":  1230000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  306943,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  2000000,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-087",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  1279790,
+        "OvertimeSalary":  1038790,
+        "TotalWorkSalary":  11080432,
+        "OvertimeHours":  10,
+        "EmployeeId":  "65bf0c300000000000000087",
+        "Status":  "Pending",
+        "BasicSalary":  12188475,
+        "EmployeeName":  "NhÃ¢n viÃªn 87",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  3161582,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  22,
+        "EmployeeCode":  "NV-088",
+        "UnpaidLeaveDays":  0,
+        "Deduction":  0,
+        "InsuranceAmount":  3961038,
+        "OvertimeSalary":  4822692,
+        "TotalWorkSalary":  37724169,
+        "OvertimeHours":  15,
+        "EmployeeId":  "65bf0c300000000000000088",
+        "Status":  "Draft",
+        "BasicSalary":  37724169,
+        "EmployeeName":  "NhÃ¢n viÃªn 88",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 }
+                             ],
+        "Allowance":  1030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  67608,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  500000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  22,
+        "EmployeeCode":  "NV-089",
+        "UnpaidLeaveDays":  0,
+        "Deduction":  0,
+        "InsuranceAmount":  1041549,
+        "OvertimeSalary":  1268120,
+        "TotalWorkSalary":  9919513,
+        "OvertimeHours":  15,
+        "EmployeeId":  "65bf0c300000000000000089",
+        "Status":  "Approved",
+        "BasicSalary":  9919513,
+        "EmployeeName":  "NhÃ¢n viÃªn 89",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2204886,
+        "DeductionDetails":  [
+                                 {
+                                     "Name":  "Pháº¡t Ä‘i muá»™n",
+                                     "Amount":  200000
+                                 }
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-090",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  200000,
+        "InsuranceAmount":  3234309,
+        "OvertimeSalary":  5250501,
+        "TotalWorkSalary":  28002673,
+        "OvertimeHours":  20,
+        "EmployeeId":  "65bf0c300000000000000090",
+        "Status":  "Approved",
+        "BasicSalary":  30802940,
+        "EmployeeName":  "NhÃ¢n viÃªn 90",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  500000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3230000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2927684,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-091",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  4049024,
+        "OvertimeSalary":  3286546,
+        "TotalWorkSalary":  36809313,
+        "OvertimeHours":  10,
+        "EmployeeId":  "65bf0c300000000000000091",
+        "Status":  "Approved",
+        "BasicSalary":  38562137,
+        "EmployeeName":  "NhÃ¢n viÃªn 91",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  500000
+                                 }
+                             ],
+        "Allowance":  1230000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  377141,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  21,
+        "EmployeeCode":  "NV-092",
+        "UnpaidLeaveDays":  1,
+        "Deduction":  0,
+        "InsuranceAmount":  1673658,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  15215071,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000092",
+        "Status":  "Draft",
+        "BasicSalary":  15939598,
+        "EmployeeName":  "NhÃ¢n viÃªn 92",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 }
+                             ],
+        "Allowance":  1030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  256964,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  500000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-093",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  1356497,
+        "OvertimeSalary":  1651579,
+        "TotalWorkSalary":  11744561,
+        "OvertimeHours":  15,
+        "EmployeeId":  "65bf0c300000000000000093",
+        "Status":  "Approved",
+        "BasicSalary":  12919017,
+        "EmployeeName":  "NhÃ¢n viÃªn 93",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 }
+                             ],
+        "Allowance":  930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  1032454,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  2000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-094",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  2072498,
+        "OvertimeSalary":  2523333,
+        "TotalWorkSalary":  17943703,
+        "OvertimeHours":  15,
+        "EmployeeId":  "65bf0c300000000000000094",
+        "Status":  "Approved",
+        "BasicSalary":  19738073,
+        "EmployeeName":  "NhÃ¢n viÃªn 94",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 }
+                             ],
+        "Allowance":  1030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  0,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  22,
+        "EmployeeCode":  "NV-095",
+        "UnpaidLeaveDays":  0,
+        "Deduction":  0,
+        "InsuranceAmount":  858831,
+        "OvertimeSalary":  1394206,
+        "TotalWorkSalary":  8179339,
+        "OvertimeHours":  20,
+        "EmployeeId":  "65bf0c300000000000000095",
+        "Status":  "Released",
+        "BasicSalary":  8179339,
+        "EmployeeName":  "NhÃ¢n viÃªn 95",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 }
+                             ],
+        "Allowance":  1030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  870261,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-096",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  1991159,
+        "OvertimeSalary":  2424300,
+        "TotalWorkSalary":  17239469,
+        "OvertimeHours":  15,
+        "EmployeeId":  "65bf0c300000000000000096",
+        "Status":  "Approved",
+        "BasicSalary":  18963416,
+        "EmployeeName":  "NhÃ¢n viÃªn 96",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  2930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  1536531,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  0,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-097",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  2906217,
+        "OvertimeSalary":  1179471,
+        "TotalWorkSalary":  25162055,
+        "OvertimeHours":  5,
+        "EmployeeId":  "65bf0c300000000000000097",
+        "Status":  "Released",
+        "BasicSalary":  27678261,
+        "EmployeeName":  "NhÃ¢n viÃªn 97",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  500000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3230000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2826204,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-098",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  4574562,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  39606597,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000098",
+        "Status":  "Approved",
+        "BasicSalary":  43567257,
+        "EmployeeName":  "NhÃ¢n viÃªn 98",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  200000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  2930000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2150816,
+        "DeductionDetails":  [
+
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  false,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-099",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  0,
+        "InsuranceAmount":  3731801,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  32309965,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000099",
+        "Status":  "Draft",
+        "BasicSalary":  35540962,
+        "EmployeeName":  "NhÃ¢n viÃªn 99",
+        "TotalRequiredDays":  22
+    },
+    {
+        "AllowanceDetails":  [
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p cÆ¡m",
+                                     "Amount":  730000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p Ä‘iá»‡n thoáº¡i",
+                                     "Amount":  300000
+                                 },
+                                 {
+                                     "Name":  "Phá»¥ cáº¥p trÃ¡ch nhiá»‡m",
+                                     "Amount":  2000000
+                                 }
+                             ],
+        "Allowance":  3030000,
+        "CreatedAt":  "2026-02-16T02:31:23Z",
+        "Month":  2,
+        "TaxAmount":  2444259,
+        "DeductionDetails":  [
+                                 {
+                                     "Name":  "Pháº¡t Ä‘i muá»™n",
+                                     "Amount":  200000
+                                 }
+                             ],
+        "PeriodId":  "65dae2f30000000000000999",
+        "Bonus":  1000000,
+        "IsConfirmed":  true,
+        "Year":  2026,
+        "ActualWorkDays":  20,
+        "EmployeeCode":  "NV-100",
+        "UnpaidLeaveDays":  2,
+        "Deduction":  200000,
+        "InsuranceAmount":  4101927,
+        "OvertimeSalary":  0,
+        "TotalWorkSalary":  35514519,
+        "OvertimeHours":  0,
+        "EmployeeId":  "65bf0c300000000000000100",
+        "Status":  "Released",
+        "BasicSalary":  39065971,
+        "EmployeeName":  "NhÃ¢n viÃªn 100",
+        "TotalRequiredDays":  22
+    }
+]

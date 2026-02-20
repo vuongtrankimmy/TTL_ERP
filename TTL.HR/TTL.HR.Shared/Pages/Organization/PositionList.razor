@@ -17,6 +17,19 @@
                 </button>
             </div>
         </div>
+        @if (_loadError)
+        {
+            <div class="alert alert-dismissible bg-light-danger d-flex flex-column flex-sm-row p-5 mb-10 border border-danger border-dashed">
+                <i class="ki-outline ki-information-5 fs-2hx text-danger me-4 mb-5 mb-sm-0"></i>
+                <div class="d-flex flex-column pe-0 pe-sm-10">
+                    <h4 class="fw-bold text-danger">Lỗi kết nối chức danh (API Error)</h4>
+                    <span class="fs-7 fw-semibold text-gray-700">Không thể tải danh sách chức danh. Vui lòng đảm bảo các dịch vụ API đang chạy và phiên làm việc của bạn chưa hết hạn.</span>
+                </div>
+                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" @onclick="() => _loadError = false">
+                    <i class="ki-outline ki-cross fs-1 text-danger"></i>
+                </button>
+            </div>
+        }
 
         <!-- Summary Cards -->
         <div class="row g-5 g-xl-8 mb-8">
@@ -96,7 +109,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var pos in FilteredPositions)
+                                @foreach (var pos in FilteredPositions.Skip((currentPage - 1) * pageSize).Take(pageSize))
                                 {
                                     <tr class="hover-elevate cursor-pointer" @onclick="() => viewDetails(pos)">
                                         <td class="ps-7" @onclick:stopPropagation="true">
@@ -139,14 +152,7 @@
 
                     <!-- Pagination -->
                     <div class="px-7 py-5">
-                        <div class="d-flex flex-stack flex-wrap">
-                            <div class="fs-7 fw-bold text-gray-700">Hiển thị @FilteredPositions.Count() của @_positions.Count chức danh</div>
-                            <ul class="pagination pagination-circle">
-                                <li class="page-item previous disabled"><a href="javascript:;" class="page-link shadow-xs border mx-1"><i class="ki-outline ki-left"></i></a></li>
-                                <li class="page-item active"><a href="javascript:;" class="page-link shadow-xs border mx-1">1</a></li>
-                                <li class="page-item next"><a href="javascript:;" class="page-link shadow-xs border mx-1"><i class="ki-outline ki-right"></i></a></li>
-                            </ul>
-                        </div>
+                        <Pagination PageIndex="@currentPage" PageSize="@pageSize" TotalCount="@FilteredPositions.Count()" OnPageChanged="p => currentPage = p" />
                     </div>
                 </SkeletonLoading>
             </div>
@@ -249,7 +255,17 @@
 
         <div class="card-footer py-6 px-10 border-0 bg-light-light d-flex gap-3 justify-content-end">
             <button type="button" class="btn btn-sm btn-light fw-bold px-6" @onclick="closeEditDrawer">Hủy bỏ</button>
-            <button type="button" class="btn btn-sm btn-primary fw-bold px-6" @onclick="savePosition">Lưu dữ liệu</button>
+            <button type="button" class="btn btn-sm btn-primary fw-bold px-6" @onclick="savePosition" disabled="@_isLoading">
+                @if (_isLoading)
+                {
+                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    <span class="ms-1">Đang lưu...</span>
+                }
+                else
+                {
+                    <span>Lưu dữ liệu</span>
+                }
+            </button>
         </div>
     </div>
 </div>

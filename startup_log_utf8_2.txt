@@ -1,0 +1,27 @@
+﻿Using launch settings from ..\TTL_API\src\Services\CoreService\TTL.CoreService.Api\Properties\launchSettings.json...
+Building...
+D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Infrastructure\Persistence\Repositories\Repository.cs(59,100): warning CS8600: Converting null literal or possible null value to non-nullable type. [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Infrastructure\TTL.CoreService.Infrastructure.csproj]
+Resources\TTL.CoreService.Application.SharedResource.en.resx : warning MSB3568: Duplicate resource name "Label_Department" is not allowed, ignored. [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+Resources\TTL.CoreService.Application.SharedResource.en.resx : warning MSB3568: Duplicate resource name "Label_Position" is not allowed, ignored. [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+Resources\TTL.CoreService.Application.SharedResource.en.resx : warning MSB3568: Duplicate resource name "Error_CandidateNotFound" is not allowed, ignored. [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+Resources\TTL.CoreService.Application.SharedResource.vi.resx : warning MSB3568: Duplicate resource name "Label_Department" is not allowed, ignored. [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+Resources\TTL.CoreService.Application.SharedResource.vi.resx : warning MSB3568: Duplicate resource name "Label_Position" is not allowed, ignored. [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+Resources\TTL.CoreService.Application.SharedResource.vi.resx : warning MSB3568: Duplicate resource name "Error_CandidateNotFound" is not allowed, ignored. [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\Controllers\v1\HumanResources\Attendance\AttendanceController.cs(84,43): warning CS1570: XML comment has badly formed XML -- 'Whitespace is not allowed at this location.' [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\Controllers\v1\HumanResources\Payroll\PayrollController.cs(83,35): warning CS1570: XML comment has badly formed XML -- 'Whitespace is not allowed at this location.' [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\Controllers\v1\HumanResources\Employees\EmployeesController.cs(209,75): warning CS1570: XML comment has badly formed XML -- 'Whitespace is not allowed at this location.' [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\Controllers\v1\HumanResources\Benefits\BenefitsController.cs(73,101): warning CS1573: Parameter 'cancellationToken' has no matching param tag in the XML comment for 'BenefitsController.AutoRenew(int, CancellationToken)' (but other parameters do) [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\Controllers\v1\HumanResources\Employees\EmployeesController.cs(70,75): warning CS1573: Parameter 'cancellationToken' has no matching param tag in the XML comment for 'EmployeesController.GetById(string, CancellationToken)' (but other parameters do) [D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+SUCCESS: Seeded 10 items into 'salary_components' from payroll_config.json
+SUCCESS: Seeded 1 items into 'system_settings' from system_config.json
+Seeding completed successfully.
+info: TTL.BuildingBlocks.Queue.QueuedHostedService[0]
+      Queued Hosted Service is starting.
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5002
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api

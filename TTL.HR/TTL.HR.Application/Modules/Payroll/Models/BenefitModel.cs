@@ -9,11 +9,13 @@ namespace TTL.HR.Application.Modules.Payroll.Models
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";
         public string Type { get; set; } = ""; // Monthly, Event, One-time
-        public string Amount { get; set; } = ""; // Human readable amount
-        public decimal AmountValue { get; set; }
-        public string TargetPerson { get; set; } = ""; // Target audience
-        public string Status { get; set; } = "Active";
-        public string Icon { get; set; } = "ki-briefcase";
+        public decimal Amount { get; set; }
         public string Category { get; set; } = "Allowance";
+        public bool IsActive { get; set; } = true;
+        public string Icon { get; set; } = "";
+        
+        // UI Helpers
+        public string Status => IsActive ? "Active" : "Inactive";
+        public string TargetPerson { get; set; } = "Toàn bộ nhân viên"; // Default for UI if not in DB
     }
 }

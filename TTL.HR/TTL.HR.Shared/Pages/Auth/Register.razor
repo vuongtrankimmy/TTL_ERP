@@ -40,14 +40,24 @@
     <!--begin::Input group-->
     <div class="fv-row mb-8">
         <label class="form-label fs-7 fw-bolder text-dark">Mật khẩu</label>
-        <input class="form-control bg-transparent fs-7" type="password" placeholder="Tối thiểu 8 ký tự" name="password" autocomplete="off" @bind="_password" />
+        <div class="position-relative">
+            <input class="form-control bg-transparent fs-7" type="@(_showPassword ? "text" : "password")" placeholder="Tối thiểu 8 ký tự" name="password" autocomplete="off" @bind="_password" />
+            <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" @onclick="() => _showPassword = !_showPassword">
+                <i class="ki-outline @(_showPassword ? "ki-eye-slash" : "ki-eye") fs-2"></i>
+            </span>
+        </div>
     </div>
     <!--end::Input group=-->
 
     <!--begin::Input group-->
     <div class="fv-row mb-8">
         <label class="form-label fs-7 fw-bolder text-dark">Xác nhận mật khẩu</label>
-        <input class="form-control bg-transparent fs-7" type="password" placeholder="Nhập lại mật khẩu" name="confirm-password" autocomplete="off" @bind="_confirmPassword" />
+        <div class="position-relative">
+            <input class="form-control bg-transparent fs-7" type="@(_showConfirmPassword ? "text" : "password")" placeholder="Nhập lại mật khẩu" name="confirm-password" autocomplete="off" @bind="_confirmPassword" />
+            <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" @onclick="() => _showConfirmPassword = !_showConfirmPassword">
+                <i class="ki-outline @(_showConfirmPassword ? "ki-eye-slash" : "ki-eye") fs-2"></i>
+            </span>
+        </div>
     </div>
     <!--end::Input group=-->
 

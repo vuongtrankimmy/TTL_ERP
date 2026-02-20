@@ -11,8 +11,9 @@ namespace TTL.HR.Shared.Pages.Payroll
 {
     public partial class PayrollDetail
     {
-        [Parameter] public int Year { get; set; }
-        [Parameter] public int Month { get; set; }
+        [Parameter] public string? Id { get; set; }
+        [Parameter] public int? Year { get; set; }
+        [Parameter] public int? Month { get; set; }
 
         [Inject] public NavigationManager Navigation { get; set; } = default!;
         [Inject] public IPayrollService PayrollService { get; set; } = default!;
@@ -24,6 +25,7 @@ namespace TTL.HR.Shared.Pages.Payroll
         private bool IsDrawerOpen = false;
         private PayslipViewModel? SelectedSlip;
         private bool _isLoading = true;
+        private string PeriodName = "";
 
         protected override async Task OnInitializedAsync()
         {
@@ -35,29 +37,65 @@ namespace TTL.HR.Shared.Pages.Payroll
             _isLoading = true;
             try
             {
-                var payrolls = await PayrollService.GetPayrollsAsync(Month, Year);
+                IEnumerable<PayrollModel>? payrolls = null;
+                string? effectiveId = Id;
+
+                // 1. If we have Month/Year instead of Id, try to find the Period Id
+                if (string.IsNullOrEmpty(effectiveId) && Month.HasValue && Year.HasValue)
+                {
+                    var periods = await PayrollService.GetPeriodsAsync(Year.Value);
+                    var period = periods?.FirstOrDefault(p => p.Month == Month.Value);
+                    if (period != null)
+                    {
+                        effectiveId = period.Id;
+                    }
+                    else
+                    {
+                        PeriodName = $"Không tìm thấy kỳ lương tháng {Month}/{Year}";
+                    }
+                }
+
+                // 2. Fetch data using ID
+                if (!string.IsNullOrEmpty(effectiveId))
+                {
+                    var detail = await PayrollService.GetPeriodDetailAsync(effectiveId, SearchTerm);
+                    if (detail != null)
+                    {
+                        PeriodName = detail.Period.Name;
+                        payrolls = detail.Payrolls.Items;
+                    }
+                }
+
+                // 3. Map to ViewModel
                 if (payrolls != null)
                 {
                     Payslips = payrolls.Select(p => new PayslipViewModel
                     {
                         Id = p.Id,
-                        EmployeeCode = p.EmployeeId,
+                        EmployeeCode = p.EmployeeCode,
                         EmployeeName = p.EmployeeName,
-                        Department = "Kỹ thuật", // Mock department for now
-                        AvatarUrl = $"/assets/media/avatars/300-{new Random().Next(1, 10)}.jpg",
+                        Department = p.DepartmentName,
+                        AvatarUrl = string.IsNullOrEmpty(p.EmployeeAvatar) 
+                            ? $"/assets/media/avatars/300-{new Random().Next(1, 30)}.jpg" 
+                            : p.EmployeeAvatar,
                         BasicSalary = p.BasicSalary,
-                        TotalAllowances = p.Bonus,
-                        TotalDeductions = p.Deductions,
+                        TotalAllowances = p.Allowance,
+                        TotalDeductions = p.Deduction,
                         NetSalary = p.NetSalary,
-                        ActualWorkDays = 22,
-                        StandardWorkDays = 22,
+                        ActualWorkDays = (int)p.ActualWorkDays,
+                        StandardWorkDays = (int)p.TotalRequiredDays,
                         Status = (p.Status == "Closed" || p.Status == "Đã chốt") ? "Đã chốt" : "Dự thảo",
                         OriginalModel = p
                     }).ToList();
                 }
+                else
+                {
+                    Payslips = new List<PayslipViewModel>();
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error loading payroll detail: {ex.Message}");
                 await JS.InvokeVoidAsync("toastr.error", "Lỗi tải chi tiết bảng lương.");
             }
             finally
@@ -85,7 +123,16 @@ namespace TTL.HR.Shared.Pages.Payroll
 
         private async Task FinalizePayroll()
         {
-            var success = await PayrollService.LockPayrollAsync(Month, Year);
+            bool success = false;
+            if (!string.IsNullOrEmpty(Id))
+            {
+                success = await PayrollService.LockPayrollAsync(Id);
+            }
+            else if (Month.HasValue && Year.HasValue)
+            {
+                success = await PayrollService.LockPayrollAsync(Month.Value, Year.Value);
+            }
+
             if (success)
             {
                 await JS.InvokeVoidAsync("toastr.success", "Đã chốt bảng lương thành công.");
@@ -104,8 +151,8 @@ namespace TTL.HR.Shared.Pages.Payroll
             SelectedSlip.CalculateNet();
             var model = SelectedSlip.OriginalModel;
             model.BasicSalary = SelectedSlip.BasicSalary;
-            model.Bonus = SelectedSlip.TotalAllowances;
-            model.Deductions = SelectedSlip.TotalDeductions;
+            model.Allowance = SelectedSlip.TotalAllowances;
+            model.Deduction = SelectedSlip.TotalDeductions;
             model.NetSalary = SelectedSlip.NetSalary;
 
             var success = await PayrollService.UpdatePayrollAsync(SelectedSlip.Id, model);

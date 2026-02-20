@@ -23,10 +23,13 @@ namespace TTL.HR.Application.Modules.Common.Services
             return response?.Data ?? new List<PermissionWithRolesDto>();
         }
 
-        public async Task<List<RoleModel>> GetRolesAsync()
+        public async Task<List<RoleModel>> GetRolesAsync(string? searchTerm = null)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<RoleModel>>>(ApiEndpoints.Administration.Roles);
-            return response?.Data ?? new List<RoleModel>();
+            var url = ApiEndpoints.Administration.Roles;
+            if (!string.IsNullOrEmpty(searchTerm)) url += $"?SearchTerm={Uri.EscapeDataString(searchTerm)}";
+            
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<RoleModel>>>(url);
+            return response?.Data?.Items ?? new List<RoleModel>();
         }
 
         public async Task<RoleModel?> GetRoleByIdAsync(string id)
@@ -35,16 +38,46 @@ namespace TTL.HR.Application.Modules.Common.Services
             return response?.Data;
         }
 
-        public async Task<bool> CreateRoleAsync(RoleModel role)
+        public async Task<(bool Success, string Message)> CreateRoleAsync(RoleModel role)
         {
-            var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Administration.Roles, role);
-            return response.IsSuccessStatusCode;
+            var command = new {
+                Name = role.Name,
+                Description = role.Description,
+                Permissions = role.Permissions
+            };
+            var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Administration.Roles, command);
+            return await ParseResponseAsync(response, "Tạo vai trò thất bại");
         }
 
-        public async Task<bool> UpdateRoleAsync(string id, RoleModel role)
+        public async Task<(bool Success, string Message)> UpdateRoleAsync(string id, RoleModel role)
         {
-            var response = await _httpClient.PutAsJsonAsync($"{ApiEndpoints.Administration.Roles}/{id}", role);
-            return response.IsSuccessStatusCode;
+            var command = new {
+                Id = id, // Ensure ID is sent
+                Name = role.Name,
+                Description = role.Description,
+                Permissions = role.Permissions
+            };
+            var response = await _httpClient.PutAsJsonAsync($"{ApiEndpoints.Administration.Roles}/{id}", command);
+            return await ParseResponseAsync(response, "Cập nhật vai trò thất bại");
+        }
+
+        private async Task<(bool Success, string Message)> ParseResponseAsync(HttpResponseMessage response, string defaultError)
+        {
+            try
+            {
+                var result = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+                if (result != null)
+                {
+                    if (result.Success) return (true, result.Message);
+                    // Combine Message and Errors if available
+                    var msg = result.Message;
+                    if (result.Errors != null && result.Errors.Count > 0)
+                        msg += ": " + string.Join(", ", result.Errors);
+                    return (false, !string.IsNullOrEmpty(msg) ? msg : defaultError);
+                }
+            }
+            catch {}
+            return (response.IsSuccessStatusCode, response.IsSuccessStatusCode ? "Thành công" : defaultError);
         }
 
         public async Task<bool> DeleteRoleAsync(string id)
@@ -62,6 +95,12 @@ namespace TTL.HR.Application.Modules.Common.Services
         public async Task<bool> AssignRoleAsync(string roleId, string employeeId)
         {
             var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Administration.Roles}/assign", new { roleId, employeeId });
+            return response.IsSuccessStatusCode;
+        }
+        
+        public async Task<bool> AssignRolesAsync(string roleId, List<string> employeeIds)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Administration.Roles}/assign", new { roleId, employeeIds });
             return response.IsSuccessStatusCode;
         }
 

@@ -94,15 +94,51 @@
                             <div class="row mb-7">
                                 <label class="col-lg-3 fw-bold text-muted fs-7">Logo công ty</label>
                                 <div class="col-lg-9">
-                                    <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                                        <img src="assets/media/logos/demo42.svg" alt="image" class="border p-4 bg-light" />
-                                        <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-body rounded-circle border border-secondary shadow-sm p-2 cursor-pointer hover-scale">
-                                            <i class="bi bi-pencil-fill fs-8 text-muted"></i>
-                                        </div>
+                                    <div class="symbol symbol-200px symbol-lg-250px symbol-fixed position-relative border p-4 rounded shadow-xs overflow-hidden" 
+                                         style="background-image: linear-gradient(45deg, #f5f8fa 25%, transparent 25%), linear-gradient(-45deg, #f5f8fa 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f5f8fa 75%), linear-gradient(-45deg, transparent 75%, #f5f8fa 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px; background-color: #ffffff;">
+                                        @if (!string.IsNullOrEmpty(Model.LogoUrl))
+                                        {
+                                            <img src="@Model.LogoUrl" alt="Logo" style="object-fit: contain; width: 200px; max-height: 120px;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="assets/media/logos/demo42.svg" alt="image" class="opacity-25" style="width: 200px;" />
+                                        }
+
+                                        
+                                        <label for="logo-upload" class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-body rounded-circle border border-secondary shadow-sm p-3 cursor-pointer hover-scale btn btn-icon btn-active-color-primary w-35px h-35px">
+                                            <i class="bi bi-pencil-fill fs-6 text-muted"></i>
+                                            <InputFile id="logo-upload" OnChange="HandleLogoUpload" class="d-none" accept=".jpg,.jpeg,.png,.svg" />
+                                        </label>
                                     </div>
-                                    <div class="form-text mt-2 fs-8">Định dạng hỗ trợ: png, jpg, svg. Dung lượng tối đa 2MB.</div>
+                                    <div class="form-text mt-4 fs-8">Định dạng hỗ trợ: <span class="fw-bold">png, jpg, svg</span>. Dung lượng tối đa <span class="fw-bold">2MB</span>.</div>
                                 </div>
                             </div>
+
+                            <div class="row mb-7">
+                                <label class="col-lg-3 fw-bold text-muted fs-7">Favicon (Biểu tượng trình duyệt)</label>
+                                <div class="col-lg-9">
+                                    <div class="symbol symbol-50px symbol-fixed position-relative border p-2 rounded shadow-xs overflow-hidden"
+                                         style="background-image: linear-gradient(45deg, #f5f8fa 25%, transparent 25%), linear-gradient(-45deg, #f5f8fa 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f5f8fa 75%), linear-gradient(-45deg, transparent 75%, #f5f8fa 75%); background-size: 10px 10px; background-position: 0 0, 0 5px, 5px -5px, -5px 0px; background-color: #ffffff;">
+                                         @if (!string.IsNullOrEmpty(Model.FaviconUrl))
+                                         {
+                                             <img src="@Model.FaviconUrl" alt="Favicon" style="object-fit: contain; width: 32px; height: 32px;" />
+                                         }
+                                         else
+                                         {
+                                             <img src="assets/media/logos/favicon.ico" alt="image" class="opacity-25" />
+                                         }
+
+                                        
+                                        <label for="favicon-upload" class="position-absolute translate-middle bottom-0 start-100 mb-0 bg-body rounded-circle border border-secondary shadow-sm p-1 cursor-pointer hover-scale btn btn-icon btn-active-color-primary w-25px h-25px">
+                                            <i class="bi bi-pencil-fill fs-9 text-muted"></i>
+                                            <InputFile id="favicon-upload" OnChange="HandleFaviconUpload" class="d-none" accept=".ico,.png" />
+                                        </label>
+                                    </div>
+                                    <div class="form-text mt-2 fs-9">Định dạng hỗ trợ: <span class="fw-bold">ico, png</span>. Kích thước khuyến nghị <span class="fw-bold">32x32px</span>.</div>
+                                </div>
+                            </div>
+
                             <div class="row mb-6">
                                 <label class="col-lg-3 col-form-label fw-bold fs-7">Tên công ty</label>
                                 <div class="col-lg-9">

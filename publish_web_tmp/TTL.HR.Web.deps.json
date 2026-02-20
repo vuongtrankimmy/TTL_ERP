@@ -1,0 +1,56 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "TTL.HR.Web/1.0.0": {
+        "dependencies": {
+          "TTL.HR.Application": "1.0.0",
+          "TTL.HR.Shared": "1.0.0"
+        },
+        "runtime": {
+          "TTL.HR.Web.dll": {}
+        }
+      },
+      "TTL.HR.Application/1.0.0": {
+        "runtime": {
+          "TTL.HR.Application.dll": {
+            "assemblyVersion": "26.2.19.30",
+            "fileVersion": "26.2.19.30"
+          }
+        }
+      },
+      "TTL.HR.Shared/1.0.0": {
+        "dependencies": {
+          "TTL.HR.Application": "1.0.0"
+        },
+        "runtime": {
+          "TTL.HR.Shared.dll": {
+            "assemblyVersion": "26.2.20.459",
+            "fileVersion": "26.2.20.459"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TTL.HR.Web/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TTL.HR.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TTL.HR.Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -37,5 +37,28 @@ namespace TTL.HR.Application.Modules.Common.Interfaces
         Task<TTL.HR.Application.Modules.Common.Models.ApiResponse<bool>> ChangePasswordAsync(string currentPassword, string newPassword);
         Task LogoutAsync();
         Task<TTL.HR.Application.Modules.Common.Models.UserDto?> GetCurrentUserAsync();
+        Task InitializeAsync();
+    }
+
+    public interface IFormatService
+    {
+        string FormatCurrency(decimal amount);
+        string FormatDate(DateTime? date);
+        string FormatDateTime(DateTime? date);
+        string FormatNumber(decimal value, int decimals = 0);
+        string FormatNumber(double value, int decimals = 0);
+        string FormatNumber(int value, int decimals = 0);
+
+
+        string FormatPercent(double value);
+        DateTime? ToLocalTime(DateTime? utcDate);
+    }
+
+    public interface IAuditService
+    {
+        Task<List<TTL.HR.Application.Modules.Common.Models.AuditLogModel>> GetMyAuditLogsAsync();
+        Task<TTL.HR.Application.Modules.Common.Models.PagedResult<TTL.HR.Application.Modules.Common.Models.AuditLogModel>> GetPagedAuditLogsAsync(int page, int pageSize, string? userId = null, string? action = null, string? entityName = null);
     }
 }
+
+

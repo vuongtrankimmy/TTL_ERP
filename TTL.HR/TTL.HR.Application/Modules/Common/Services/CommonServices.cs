@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Common.Interfaces;
 using TTL.HR.Application.Modules.Common.Models;
 using TTL.HR.Application.Modules.Common.Constants;
@@ -54,7 +55,34 @@ namespace TTL.HR.Application.Modules.Common.Services
     public class AuthService : IAuthService
     {
         private readonly HttpClient _httpClient;
-        public AuthService(HttpClient httpClient) => _httpClient = httpClient;
+        private readonly Microsoft.JSInterop.IJSRuntime _jsRuntime;
+        private UserDto? _currentUser;
+        private const string TokenKey = "authToken";
+        private const string UserKey = "authUser";
+
+        public AuthService(HttpClient httpClient, Microsoft.JSInterop.IJSRuntime jsRuntime)
+        {
+            _httpClient = httpClient;
+            _jsRuntime = jsRuntime;
+        }
+
+        public async Task InitializeAsync()
+        {
+            try
+            {
+                var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", TokenKey);
+                if (!string.IsNullOrEmpty(token))
+                {
+                    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    var userJson = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", UserKey);
+                    if (!string.IsNullOrEmpty(userJson))
+                    {
+                        _currentUser = System.Text.Json.JsonSerializer.Deserialize<UserDto>(userJson);
+                    }
+                }
+            }
+            catch { }
+        }
 
         public async Task<ApiResponse<AuthResponse>> LoginAsync(LoginRequest request)
         {
@@ -76,7 +104,13 @@ namespace TTL.HR.Application.Modules.Common.Services
                 {
                     if (apiResponse.Data != null)
                     {
-                        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiResponse.Data.AccessToken);
+                        var token = apiResponse.Data.AccessToken;
+                        _currentUser = apiResponse.Data.User;
+                        
+                        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                        
+                        await _jsRuntime.InvokeVoidAsync("localStorage.setItem", TokenKey, token);
+                        await _jsRuntime.InvokeVoidAsync("localStorage.setItem", UserKey, System.Text.Json.JsonSerializer.Serialize(_currentUser));
                     }
                     return apiResponse;
                 }
@@ -144,15 +178,16 @@ namespace TTL.HR.Application.Modules.Common.Services
             catch { }
             finally
             {
-                // Xóa token khỏi header HttpClient cho dù gọi API thành công hay thất bại
                 _httpClient.DefaultRequestHeaders.Authorization = null;
+                _currentUser = null;
+                await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", TokenKey);
+                await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", UserKey);
             }
         }
 
         public async Task<UserDto?> GetCurrentUserAsync()
         {
-            // Implement profile detection if needed
-            return null;
+            return _currentUser;
         }
     }
 }

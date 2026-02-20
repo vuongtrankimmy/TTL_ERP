@@ -18,6 +18,20 @@
             </div>
         </div>
 
+        @if (_loadError)
+        {
+            <div class="alert alert-dismissible bg-light-danger d-flex flex-column flex-sm-row p-5 mb-10 border border-danger border-dashed">
+                <i class="ki-outline ki-information-5 fs-2hx text-danger me-4 mb-5 mb-sm-0"></i>
+                <div class="d-flex flex-column pe-0 pe-sm-10">
+                    <h4 class="fw-bold text-danger">Lỗi kết nối bộ phận (API Error)</h4>
+                    <span class="fs-7 fw-semibold text-gray-700">Không thể tải danh sách phòng ban. Vui lòng đảm bảo các dịch vụ API đang chạy và phiên làm việc của bạn chưa hết hạn.</span>
+                </div>
+                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" @onclick="() => _loadError = false">
+                    <i class="ki-outline ki-cross fs-1 text-danger"></i>
+                </button>
+            </div>
+        }
+
         <!-- Summary Cards -->
         <div class="row g-5 g-xl-8 mb-8">
             <div class="col-xl-4">
@@ -95,7 +109,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var dept in FilteredDepartments)
+                                @foreach (var dept in FilteredDepartments.Skip((currentPage - 1) * pageSize).Take(pageSize))
                                 {
                                     <tr class="hover-elevate cursor-pointer" @onclick="() => viewDetails(dept)">
                                         <td class="ps-7" @onclick:stopPropagation="true">
@@ -151,7 +165,7 @@
                                                     <span class="text-muted fs-8">/ @dept.Capacity vị trí</span>
                                                 </div>
                                                 <div class="progress h-4px w-100 bg-light-primary">
-                                                    <div class="progress-bar @dept.ProgressColor" role="progressbar" style="width: @(dept.EmployeeCount * 100 / dept.Capacity)%"></div>
+                                                    <div class="progress-bar @dept.ProgressColor" role="progressbar" style="width: @(dept.Capacity > 0 ? (dept.EmployeeCount * 100 / dept.Capacity) : 0)%"></div>
                                                 </div>
                                             </div>
                                         </td>
@@ -177,14 +191,7 @@
 
                     <!-- Pagination -->
                     <div class="px-7 py-5">
-                        <div class="d-flex flex-stack flex-wrap">
-                            <div class="fs-7 fw-bold text-gray-700">Hiển thị @FilteredDepartments.Count() của @_departments.Count phòng ban</div>
-                            <ul class="pagination pagination-circle">
-                                <li class="page-item previous disabled"><a href="javascript:;" class="page-link shadow-xs border mx-1"><i class="ki-outline ki-left"></i></a></li>
-                                <li class="page-item active"><a href="javascript:;" class="page-link shadow-xs border mx-1">1</a></li>
-                                <li class="page-item next"><a href="javascript:;" class="page-link shadow-xs border mx-1"><i class="ki-outline ki-right"></i></a></li>
-                            </ul>
-                        </div>
+                        <Pagination PageIndex="@currentPage" PageSize="@pageSize" TotalCount="@FilteredDepartments.Count()" OnPageChanged="p => currentPage = p" />
                     </div>
                 </SkeletonLoading>
             </div>
@@ -236,11 +243,12 @@
             <div class="row g-9 mb-8">
                 <div class="col-md-6">
                     <label class="fs-7 fw-bold mb-2">Trưởng phòng (Manager)</label>
-                    <select class="form-select form-select-solid fs-7" @bind="_editingDept.ManagerName">
+                    <select class="form-select form-select-solid fs-7" @bind="_editingDept.ManagerId">
                         <option value="">Chưa bổ nhiệm</option>
-                        <option value="Nguyễn Văn Lộc">Nguyễn Văn Lộc</option>
-                        <option value="Lê Thị Lan">Lê Thị Lan</option>
-                        <option value="Trần Minh Tâm">Trần Minh Tâm</option>
+                        @foreach (var emp in _employees)
+                        {
+                            <option value="@emp.Id">@emp.FullName @(string.IsNullOrEmpty(emp.Code) ? "" : $"({emp.Code})")</option>
+                        }
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -306,20 +314,20 @@
                 <div class="row g-5 mb-10">
                     <div class="col-md-4">
                         <div class="border border-dashed border-gray-300 rounded py-3 px-4 text-center">
-                            <div class="fs-6 fw-bolder text-gray-800">@_selectedDept.EmployeeCount / @_selectedDept.Capacity</div>
+                            <div class="fs-6 fw-bolder text-gray-800">@_selectedDept.ActiveMembers / @_selectedDept.Capacity</div>
                             <div class="fw-bold text-muted fs-8">Nhân sự hiện tại</div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="border border-dashed border-gray-300 rounded py-3 px-4 text-center">
-                            <div class="fs-6 fw-bolder text-success">@(_selectedDept.EmployeeCount * 100 / _selectedDept.Capacity)%</div>
+                            <div class="fs-6 fw-bolder text-success">@(_selectedDept.Capacity > 0 ? (_selectedDept.ActiveMembers * 100 / _selectedDept.Capacity) : 0)%</div>
                             <div class="fw-bold text-muted fs-8">Tỷ lệ lấp đầy</div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="border border-dashed border-gray-300 rounded py-3 px-4 text-center">
-                            <div class="fs-6 fw-bolder text-primary">05</div>
-                            <div class="fw-bold text-muted fs-8">Tuyển dụng mới</div>
+                            <div class="fs-6 fw-bolder text-primary">@_selectedDept.PendingReviews</div>
+                            <div class="fw-bold text-muted fs-8">Đánh giá chờ</div>
                         </div>
                     </div>
                 </div>
@@ -349,17 +357,39 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach(var i in Enumerable.Range(1, 10))
+                            @if (_selectedDept.Members != null && _selectedDept.Members.Any())
+                            {
+                                @foreach(var member in _selectedDept.Members)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-30px me-3">
+                                                    @if (!string.IsNullOrEmpty(member.AvatarUrl))
+                                                    {
+                                                        <img src="@member.AvatarUrl" alt="" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="symbol-label bg-light-primary text-primary fw-bolder fs-9">@member.FullName[0]</div>
+                                                    }
+                                                </div>
+                                                <span class="text-gray-800 fw-bold">@member.FullName</span>
+                                            </div>
+                                        </td>
+                                        <td>@member.PositionName</td>
+                                        <td class="text-end">
+                                            <span class="badge @(member.Status == "Active" ? "badge-light-success" : "badge-light-warning") fs-9">@member.Status</span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-30px me-3"><img src="assets/media/avatars/300-@(i%10 + 1).jpg" alt="" /></div>
-                                            <span class="text-gray-800 fw-bold">Nhân viên mẫu @i</span>
-                                        </div>
+                                    <td colspan="3" class="text-center py-10">
+                                        <div class="text-muted fs-7">Chưa có thành viên nào trong phòng ban này</div>
                                     </td>
-                                    <td>Chuyên viên</td>
-                                    <td class="text-end"><span class="badge badge-light-success fs-9">Active</span></td>
                                 </tr>
                             }
                         </tbody>

@@ -46,8 +46,7 @@ namespace TTL.HR.Shared.Pages.Training
                     return;
                 }
 
-                var participantsList = await TrainingService.GetParticipantsAsync(Id);
-                Attendees = participantsList.ToList();
+                Attendees = Course.EnrolledEmployees ?? new List<ParticipantModel>();
             }
             catch (Exception)
             {
@@ -108,17 +107,18 @@ namespace TTL.HR.Shared.Pages.Training
         {
             if (selectedEmployees == null || !selectedEmployees.Any()) return;
 
-            var employeeIds = selectedEmployees.Select(e => e.Code).ToList();
-            var success = await TrainingService.RegisterParticipantsAsync(Id, employeeIds);
+            var employeeIds = selectedEmployees.Select(e => e.Id).ToList();
+            var result = await TrainingService.RegisterParticipantsAsync(Id, employeeIds);
             
-            if (success)
+            if (result.Success)
             {
-                await JS.InvokeVoidAsync("toastr.success", "Đã đăng ký học viên thành công!");
+                await JS.InvokeVoidAsync("toastr.success", result.Message ?? "Đã đăng ký học viên thành công!");
+                IsRegisterModalOpen = false;
                 await LoadData();
             }
             else
             {
-                await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi đăng ký.");
+                await JS.InvokeVoidAsync("toastr.error", result.Message ?? "Có lỗi xảy ra khi đăng ký.");
             }
             
             CloseRegisterModal();

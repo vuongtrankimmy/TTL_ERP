@@ -345,11 +345,12 @@
                                 </div>
                                 <div class="col-md-6 mb-5">
                                     <label class="form-label fw-bold">Loại hợp đồng</label>
-                                    <select class="form-select form-select-solid" @bind="newNode.ContractType">
+                                    <select class="form-select form-select-solid" @bind="newNode.ContractTypeId">
                                         <option value="">Chọn...</option>
-                                        <option value="Thử việc">Thử việc</option>
-                                        <option value="Chính thức - Không thời hạn">Chính thức - Không thời hạn</option>
-                                        <option value="Hợp đồng 1 năm">Hợp đồng 1 năm</option>
+                                        @foreach (var item in contractTypeLookups)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -475,7 +476,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Loại hợp đồng</label>
-                                <div><span class="badge badge-light-info fw-bold">@selectedNode?.ContractType</span></div>
+                                <div><span class="badge badge-light-info fw-bold">@selectedNode?.ContractTypeName</span></div>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-1">Ngày chính thức</label>

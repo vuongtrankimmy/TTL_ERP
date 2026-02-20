@@ -5,7 +5,7 @@
 <PageTitle>Đăng nhập - OrgaX HR</PageTitle>
 
 <!--begin::Form-->
-<div class="form w-100" id="ttl_sign_in_form">
+<form class="form w-100" id="ttl_sign_in_form" @onsubmit="HandleLogin">
     <!--begin::Heading-->
     <div class="text-center mb-11">
         <!--begin::Title-->
@@ -28,13 +28,18 @@
             <label class="form-label fw-bolder text-dark fs-6 mb-0">Mật khẩu</label>
             <a href="#" class="link-primary fs-6 fw-bolder">Quên mật khẩu?</a>
         </div>
-        <input type="password" placeholder="Nhập mật khẩu" name="password" autocomplete="off" class="form-control bg-transparent" @bind="_password" />
+        <div class="position-relative mb-3">
+            <input type="@(_showPassword ? "text" : "password")" placeholder="Nhập mật khẩu" name="password" autocomplete="off" class="form-control bg-transparent" @bind="_password" />
+            <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" @onclick="() => _showPassword = !_showPassword">
+                <i class="ki-outline @(_showPassword ? "ki-eye-slash" : "ki-eye") fs-2"></i>
+            </span>
+        </div>
     </div>
     <!--end::Input group=-->
     
     <!--begin::Submit button-->
     <div class="d-grid mb-10 pt-5">
-        <button type="button" class="btn btn-primary" @onclick="HandleLogin" disabled="@_isLoading">
+        <button type="submit" class="btn btn-primary" disabled="@_isLoading">
             @if (_isLoading)
             {
                 <span class="indicator-progress" style="display: block;">
@@ -49,7 +54,7 @@
         </button>
     </div>
     <!--end::Submit button-->
-</div>
+</form>
 <!--end::Form-->
 
 

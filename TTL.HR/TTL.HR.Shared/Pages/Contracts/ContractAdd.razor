@@ -110,25 +110,35 @@
                     <div class="card shadow-sm mb-6 border-0 flex-shrink-0">
                         <div class="card-body p-6">
                             <div class="row g-5">
-                                <div class="col-md-9">
-                                    <label class="form-label fs-7 fw-bolder text-gray-700 mb-2">Tên mẫu hợp đồng</label>
+                                <div class="col-md-5">
+                                    <label class="form-label fs-7 fw-bolder text-gray-700 mb-2 required">Tên mẫu hợp đồng</label>
                                     <input type="text" class="form-control form-control-solid" @bind="TemplateModel.Name" placeholder="Nhập tên mẫu..." />
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label fs-7 fw-bolder text-gray-700 mb-2">Số hiệu mẫu (Code)</label>
                                     <input type="text" class="form-control form-control-solid" @bind="TemplateModel.Code" placeholder="Mã..." />
                                 </div>
+                                <div class="col-md-2">
+                                    <label class="form-label fs-7 fw-bolder text-gray-700 mb-2">Số lượng sử dụng</label>
+                                    <input type="text" class="form-control form-control-solid text-center fw-bolder" value="@TemplateModel.UsageCount" disabled readonly />
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label fs-7 fw-bolder text-gray-700 mb-2 required">Trạng thái</label>
+                                    <select class="form-select form-select-solid" @bind="TemplateModel.StatusId">
+                                        @foreach (var item in templateStatusLookups)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+                                </div>
                                 <div class="col-md-12">
                                     <label class="form-label fs-7 fw-bolder text-gray-700 mb-2">Loại mẫu hợp đồng</label>
-                                    <select class="form-select form-select-solid" @bind="TemplateModel.Type">
+                                    <select class="form-select form-select-solid" @bind="TemplateModel.TypeId">
                                         <option value="">-- Chọn loại hợp đồng --</option>
-                                        <option value="Probation">Thử việc</option>
-                                        <option value="Official_12M">Chính thức (12 tháng)</option>
-                                        <option value="Official_24M">Chính thức (24 tháng)</option>
-                                        <option value="Official_36M">Chính thức (36 tháng)</option>
-                                        <option value="Indefinite">Không xác định thời hạn</option>
-                                        <option value="Collaborator">Cộng tác viên</option>
-                                        <option value="NDA">Thỏa thuận bảo mật (NDA)</option>
+                                        @foreach (var item in contractTypeLookups)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
                                     </select>
                                 </div>
                                 <div class="col-12">
@@ -149,21 +159,27 @@
                         <div class="card-header border-bottom px-4 min-h-50px flex-shrink-0">
                             <!-- Fake Toolbar -->
                             <div class="card-toolbar d-flex align-items-center gap-2">
-                                <button class="btn btn-icon btn-sm btn-active-light-primary ms-0"><i class="bi bi-type-bold fs-5"></i></button>
-                                <button class="btn btn-icon btn-sm btn-active-light-primary"><i class="bi bi-type-italic fs-5"></i></button>
-                                <button class="btn btn-icon btn-sm btn-active-light-primary"><i class="bi bi-type-underline fs-5"></i></button>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary me-2" onclick="formatContract()" title="Chuẩn hóa định dạng (Font Times New Roman, 13pt, Justified)"><i class="bi bi-magic fs-5"></i></button>
                                 <div class="vr mx-2 h-20px my-auto"></div>
-                                <button class="btn btn-icon btn-sm btn-active-light-primary"><i class="bi bi-text-left fs-5"></i></button>
-                                <button class="btn btn-icon btn-sm btn-active-light-primary"><i class="bi bi-text-center fs-5"></i></button>
-                                <button class="btn btn-icon btn-sm btn-active-light-primary"><i class="bi bi-text-right fs-5"></i></button>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary ms-0" onclick="document.execCommand('bold',false,null);" title="In đậm"><i class="bi bi-type-bold fs-5"></i></button>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary" onclick="document.execCommand('italic',false,null);" title="In nghiêng"><i class="bi bi-type-italic fs-5"></i></button>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary" onclick="document.execCommand('underline',false,null);" title="Gạch chân"><i class="bi bi-type-underline fs-5"></i></button>
                                 <div class="vr mx-2 h-20px my-auto"></div>
-                                <button class="btn btn-icon btn-sm btn-active-light-primary"><i class="bi bi-link-45deg fs-5"></i></button>
-                                <button class="btn btn-icon btn-sm btn-active-light-primary"><i class="bi bi-image fs-5"></i></button>
-                                <button class="btn btn-icon btn-sm btn-active-light-primary"><i class="bi bi-table fs-5"></i></button>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary" onclick="document.execCommand('justifyLeft',false,null);" title="Canh trái"><i class="bi bi-text-left fs-5"></i></button>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary" onclick="document.execCommand('justifyCenter',false,null);" title="Canh giữa"><i class="bi bi-text-center fs-5"></i></button>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary" onclick="document.execCommand('justifyRight',false,null);" title="Canh phải"><i class="bi bi-text-right fs-5"></i></button>
+                                <div class="vr mx-2 h-20px my-auto"></div>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary" onclick="var url = prompt('Nhập đường dẫn:', 'http://'); if(url) document.execCommand('createLink',false,url);" title="Chèn liên kết"><i class="bi bi-link-45deg fs-5"></i></button>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary" onclick="var url = prompt('Nhập đường dẫn ảnh:', 'http://'); if(url) document.execCommand('insertImage',false,url);" title="Chèn ảnh"><i class="bi bi-image fs-5"></i></button>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary disabled" title="Chèn bảng (Chưa hỗ trợ)"><i class="bi bi-table fs-5"></i></button>
                             </div>
                         </div>
                         <div class="card-body p-10 bg-white overflow-auto flex-grow-1">
-                            <div class="editor-content mx-auto" style="max-width: 800px; line-height: 1.6; font-family: 'Times New Roman', Times, serif; font-size: 16px; color: #000;">
+                            <div id="contract_editor" class="editor-content mx-auto p-5" contenteditable="true" 
+                                 ondragover="allowDrop(event)" 
+                                 ondrop="drop(event)"
+                                 onpaste="handlePaste(event)"
+                                 style="max-width: 800px; line-height: 1.5; font-family: 'Times New Roman', Times, serif; font-size: 13pt; text-align: justify; color: #000; min-height: 500px; outline: none; border: 1px dashed #e4e6ef;">
                                 @((MarkupString)TemplateContent)
                             </div>
                         </div>
@@ -193,23 +209,23 @@
                                     <span class="fw-bold text-warning fs-7 text-uppercase">CÔNG TY</span>
                                 </div>
                                 <div class="d-flex flex-column gap-2">
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Ten_Cong_Ty}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Dia_Chi_Cong_Ty}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{SDT_Cong_Ty}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{MST_Cong_Ty}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{STK_Cong_Ty}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
@@ -223,27 +239,27 @@
                                     <span class="fw-bold text-primary fs-7 text-uppercase">NHÂN VIÊN</span>
                                 </div>
                                 <div class="d-flex flex-column gap-2">
-                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Ten_Nhan_Vien}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Ma_Nhan_Vien}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Ngay_Sinh}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Quoc_Tich}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Nghe_Nghiep}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{So_So_Lao_Dong}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
@@ -257,39 +273,39 @@
                                     <span class="fw-bold text-danger fs-7 text-uppercase">HỢP ĐỒNG</span>
                                 </div>
                                 <div class="d-flex flex-column gap-2">
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Ma_Hop_Dong}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Loai_Hop_Dong}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Thoi_Han_Hop_Dong}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Ngay_Bat_Dau}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Ngay_Ket_Thuc}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Dia_Diem_Lam_Viec}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Thoi_Gian_Lam_Viec}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Ngay_Ky}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                     <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Dia_Diem_Ky}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
@@ -303,11 +319,11 @@
                                     <span class="fw-bold text-info fs-7 text-uppercase">TỔ CHỨC</span>
                                 </div>
                                 <div class="d-flex flex-column gap-2">
-                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Chuc_Vu}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Phong_Ban}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
@@ -321,11 +337,11 @@
                                     <span class="fw-bold text-success fs-7 text-uppercase">LƯƠNG</span>
                                 </div>
                                 <div class="d-flex flex-column gap-2">
-                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Muc_Luong}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up">
+                                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border border-dashed border-gray-300 cursor-pointer hover-elevate-up" draggable="true" ondragstart="drag(event)">
                                         <span class="fs-7 fw-bold text-gray-700">{{Phu_Cap}}</span>
                                         <i class="bi bi-grid-3x3-gap-fill text-gray-300"></i>
                                     </div>
@@ -334,7 +350,7 @@
 
                             <!-- Help Button -->
                             <div class="mt-auto pt-4">
-                                <button class="btn btn-outline btn-outline-primary w-100 fw-bold">
+                                <button type="button" class="btn btn-outline btn-outline-primary w-100 fw-bold" @onclick="ShowHelp">
                                     <i class="bi bi-question-circle-fill me-2"></i> Hướng dẫn sử dụng
                                 </button>
                             </div>
@@ -375,6 +391,58 @@
     </div>
 </div>
 
+<!-- HELP MODAL -->
+<div class="modal fade" id="help_modal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary py-5 px-10 flex-stack">
+                <h2 class="modal-title fs-4 fw-bolder text-white">Hướng dẫn sử dụng Mẫu Hợp đồng</h2>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+            <div class="modal-body p-10 bg-white">
+                <div class="mb-10">
+                    <h3 class="fw-bolder text-dark mb-4">1. Soạn thảo nội dung</h3>
+                    <ul class="fs-6 text-gray-700">
+                        <li class="mb-2"><strong>Soạn thảo trực tiếp:</strong> Bạn có thể gõ văn bản trực tiếp vào khung soạn thảo. Các công cụ định dạng (đậm, nghiêng, gạch chân...) chưa được hỗ trợ đầy đủ trong phiên bản này, vui lòng sử dụng phím tắt (Ctrl+B, Ctrl+I) nếu cần.</li>
+                        <li class="mb-2"><strong>Copy từ Word:</strong> Bạn có thể copy nội dung từ file Word và dán vào đây. Tuy nhiên, một số định dạng phức tạp có thể bị mất hoặc hiển thị không đúng. Hãy kiểm tra kỹ sau khi dán.</li>
+                        <li class="mb-2"><strong>Canh chỉnh:</strong> Sử dụng các phím Space/Tab để canh chỉnh vị trí văn bản (ví dụ: Quốc hiệu, Tiêu ngữ).</li>
+                    </ul>
+                </div>
+
+                <div class="mb-10">
+                    <h3 class="fw-bolder text-dark mb-4">2. Chèn biến động (Quan trọng)</h3>
+                    <div class="alert alert-dismissible bg-light-primary border border-primary d-flex flex-column flex-sm-row p-5 mb-5">
+                        <i class="bi bi-info-circle-fill fs-2hx text-primary me-4 mb-5 mb-sm-0"></i>
+                        <div class="d-flex flex-column pe-0 pe-sm-10">
+                            <h5 class="mb-1">Biến là gì?</h5>
+                            <span>Biến là các từ khóa đặc biệt được bao quanh bởi hai dấu ngoặc nhọn, ví dụ: <code>{{Ten_Nhan_Vien}}</code>. Khi tạo hợp đồng cho nhân viên cụ thể, hệ thống sẽ tự động thay thế các biến này bằng thông tin thực tế của nhân viên đó.</span>
+                        </div>
+                    </div>
+                    
+                    <p class="fs-6 fw-bold text-gray-800 mb-2">Cách chèn biến:</p>
+                    <ul class="fs-6 text-gray-700">
+                        <li class="mb-2"><strong>Cách 1 (Kéo thả):</strong> Nhấn giữ chuột vào tên biến ở danh sách bên phải, kéo và thả vào vị trí mong muốn trong khung soạn thảo.</li>
+                        <li class="mb-2"><strong>Cách 2 (Gõ thủ công):</strong> Bạn có thể tự gõ chính xác mã biến (bao gồm cả dấu <code>{{</code> và <code>}}</code>). Ví dụ: gõ <code>{{Muc_Luong}}</code> để hiển thị mức lương.</li>
+                    </ul>
+                </div>
+
+                <div class="mb-0">
+                    <h3 class="fw-bolder text-dark mb-4">3. Xem trước và Lưu</h3>
+                    <ul class="fs-6 text-gray-700">
+                        <li class="mb-2"><strong>Xem thử (Preview):</strong> Nhấn nút "Xem thử" để xem mẫu hợp đồng hiển thị như thế nào khi thay thế các biến bằng dữ liệu giả định. Bạn cũng có thể in thử hợp đồng tại đây.</li>
+                        <li class="mb-2"><strong>Lưu mẫu:</strong> Sau khi hoàn tất, nhấn "Lưu thay đổi" để cập nhật mẫu hợp đồng vào hệ thống.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer bg-light p-5">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đã hiểu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Dedicated Print Container (Hidden on screen) -->
 <div id="print_only_area" class="d-none d-print-block">
     @((MarkupString)PreviewContent)
@@ -389,5 +457,160 @@
         } else {
             console.error('Modal element not found or Bootstrap not loaded');
         }
+    };
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        // Send the text: {{Variable_Name}}
+        ev.dataTransfer.setData("text", ev.target.innerText.trim());
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        
+        // Insert text at cursor position or drop target
+        if (document.caretRangeFromPoint) {
+            const range = document.caretRangeFromPoint(ev.clientX, ev.clientY);
+            if (range) {
+                const textNode = document.createTextNode(data);
+                range.insertNode(textNode);
+                range.collapse(false);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        } else if (document.caretPositionFromPoint) { // Firefox
+             const range = document.caretPositionFromPoint(ev.clientX, ev.clientY);
+             if (range) {
+                const textNode = document.createTextNode(data);
+                range.offsetNode.parentNode.insertBefore(textNode, range.offsetNode.nextSibling); // Rough approx
+             }
+        } else {
+            // Fallback: append to target
+            ev.target.innerHTML += data;
+        }
+
+        // Trigger input event to update model
+        ev.target.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    function handlePaste(e) {
+        e.preventDefault();
+        var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        var html = (e.originalEvent || e).clipboardData.getData('text/html');
+
+        if (html) {
+            // HTML Paste: Clean it first
+            var clean = cleanHtml(html);
+            // Insert cleaned HTML. The editor's root style will cascade to elements without inline styles.
+            document.execCommand('insertHTML', false, clean);
+        } else if (text) {
+            // Plain Text Paste: Auto-format as Contract Paragraphs
+            // Escape HTML chars
+            let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            
+            // Split into paragraphs to ensure proper formatting
+            let lines = safeText.split(/\r?\n/);
+            let formattedHtml = "";
+            
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (trimmed) {
+                    // Standard Contract Paragraph Style: 13pt, Times New Roman, Justify, Spacing
+                    formattedHtml += `<p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; font-family:'Times New Roman'; font-size:13pt; line-height:1.5">${trimmed}</p>`;
+                } else {
+                    // Empty line spacing
+                    formattedHtml += `<p style="margin-top:6pt; margin-bottom:6pt">&nbsp;</p>`;
+                }
+            });
+            
+            document.execCommand('insertHTML', false, formattedHtml);
+        }
+    }
+
+    function cleanHtml(input) {
+        if (!input) return "";
+        let output = input;
+
+        // 1. Remove comments
+        output = output.replace(/<!--[\s\S]*?-->/g, "");
+
+        // 2. Remove script and style blocks
+        output = output.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gm, "");
+        output = output.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gm, "");
+
+        // 3. Remove XML tags and Office namespaces
+        output = output.replace(/<\/?xml[^>]*>/g, "");
+        output = output.replace(/<\/?o:[^>]*>/g, "");
+        output = output.replace(/<\/?w:[^>]*>/g, "");
+        output = output.replace(/<\/?m:[^>]*>/g, "");
+
+        // 4. Remove Mso classes only (leave other formatting)
+        output = output.replace(/\sclass="Mso[^"]*"/gi, "");
+        // Also remove 'lang' which is useless
+        output = output.replace(/\slang="[^"]*"/gi, "");
+        
+        // 5. Remove empty spans
+        output = output.replace(/<span>\s*<\/span>/gi, "");
+
+        return output;
+    }
+
+    function formatContract() {
+        if (!confirm('Bạn có chắc chắn muốn chuẩn hóa định dạng toàn bộ văn bản về chuẩn Hợp đồng?\n(Font Times New Roman, Cỡ 13pt, Canh đều, Giãn dòng 1.5)')) return;
+
+        const editor = document.getElementById("contract_editor");
+        if (!editor) return;
+
+        // Force editor style
+        editor.style.fontFamily = "'Times New Roman', Times, serif";
+        editor.style.fontSize = "13pt";
+        editor.style.lineHeight = "1.5";
+        editor.style.textAlign = "justify";
+
+        // Select all elements inside
+        const allElements = editor.querySelectorAll("*");
+        allElements.forEach(el => {
+            // Remove inline fonts/sizes/lineheights/colors to inherit from parent
+            el.style.fontFamily = "";
+            el.style.fontSize = "";
+            el.style.lineHeight = "";
+            el.style.backgroundColor = "";
+            
+             // Reset color unless it's a link or highlight
+            if (el.tagName !== 'A' && !el.classList.contains('dynamic-value-highlight')) {
+                el.style.color = "";
+            }
+            
+            // Normalize P margins
+            if (el.tagName === 'P') {
+                el.style.marginTop = "6pt";
+                el.style.marginBottom = "6pt";
+                el.style.textAlign = "justify";
+            }
+            // Headers center bold
+            if (['H1','H2','H3'].includes(el.tagName)) {
+                el.style.textAlign = "center";
+                el.style.fontWeight = "bold";
+                el.style.marginTop = "12pt";
+                el.style.marginBottom = "12pt";
+            }
+        });
+        
+        // Trigger input
+        editor.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Helper to get HTML content from editor with basic cleaning
+    window.getEditorContent = () => {
+        const el = document.getElementById("contract_editor");
+        if (!el) return "";
+        
+        // Clean again on save just to be sure
+        return cleanHtml(el.innerHTML);
     };
 </script>

@@ -1,0 +1,7 @@
+﻿d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Application\Features\HumanResources\Contracts\Queries\GetContractTemplatesSummary\GetContractTemplatesSummaryQueryHandler.cs(34,13): error CS0117: 'ContractTemplatesSummaryDto' does not contain a definition for 'RecentTemplates' [d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Application\TTL.CoreService.Application.csproj]
+
+Build FAILED.
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:01.18

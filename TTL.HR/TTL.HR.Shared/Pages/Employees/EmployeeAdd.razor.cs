@@ -30,6 +30,7 @@ namespace TTL.HR.Shared.Pages.Employees
         private List<LookupModel> contractTypeLookups = new();
         private List<DepartmentModel> departments = new();
         private List<PositionModel> positions = new();
+        private List<EmployeeDto> allEmployees = new();
 
         private EmployeeModel newEmployee = new()
         {
@@ -46,13 +47,15 @@ namespace TTL.HR.Shared.Pages.Employees
             contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType");
             departments = await DepartmentService.GetDepartmentsAsync();
             positions = await PositionService.GetPositionsAsync();
+            var employees = await EmployeeService.GetEmployeesAsync();
+            allEmployees = employees;
 
             // Set defaults if lists are not empty
-            if (newEmployee.Gender == string.Empty) newEmployee.Gender = genderLookups.FirstOrDefault()?.Name ?? "Nam";
-            if (newEmployee.Status == string.Empty) newEmployee.Status = employeeStatusLookups.FirstOrDefault()?.Name ?? "Thử việc";
-            if (newEmployee.ContractType == string.Empty) newEmployee.ContractType = contractTypeLookups.FirstOrDefault()?.Name ?? "Hợp đồng thử việc";
-            if (newEmployee.DeptId == string.Empty) newEmployee.DeptId = departments.FirstOrDefault()?.Id ?? string.Empty;
-            if (newEmployee.PositionId == string.Empty) newEmployee.PositionId = positions.FirstOrDefault()?.Id ?? string.Empty;
+            if (string.IsNullOrEmpty(newEmployee.Gender)) newEmployee.Gender = genderLookups.FirstOrDefault()?.Name ?? "Nam";
+            if (string.IsNullOrEmpty(newEmployee.StatusId)) newEmployee.StatusId = employeeStatusLookups.FirstOrDefault()?.Id ?? string.Empty;
+            if (string.IsNullOrEmpty(newEmployee.ContractTypeId)) newEmployee.ContractTypeId = contractTypeLookups.FirstOrDefault()?.Id ?? string.Empty;
+            if (string.IsNullOrEmpty(newEmployee.DeptId)) newEmployee.DeptId = departments.FirstOrDefault()?.Id ?? string.Empty;
+            if (string.IsNullOrEmpty(newEmployee.PositionId)) newEmployee.PositionId = positions.FirstOrDefault()?.Id ?? string.Empty;
         }
 
         private CccdScanner cccdScanner;
@@ -73,7 +76,7 @@ namespace TTL.HR.Shared.Pages.Employees
                 newEmployee.Nationality = scannedData.Nationality;
                 newEmployee.Ethnicity = scannedData.Ethnicity;
                 newEmployee.Religion = scannedData.Religion;
-                newEmployee.CccdIssueDate = scannedData.IssueDate;
+                newEmployee.CccdIssueDate = DateTime.TryParse(scannedData.IssueDate, out var iDate) ? iDate : null;
                 newEmployee.CccdIssuePlace = scannedData.IssuePlace;
                 newEmployee.PlaceOfOrigin = scannedData.Hometown;
                 newEmployee.Residence = scannedData.Address;
@@ -96,35 +99,61 @@ namespace TTL.HR.Shared.Pages.Employees
 
         private async Task Submit()
         {
-            if (string.IsNullOrEmpty(newEmployee.Name))
+            // 1. Client-side Validation
+            var errors = new List<string>();
+            if (string.IsNullOrEmpty(newEmployee.Name)) errors.Add("Họ tên nhân viên");
+            if (string.IsNullOrEmpty(newEmployee.Email)) errors.Add("Email");
+            if (string.IsNullOrEmpty(newEmployee.Phone)) errors.Add("Số điện thoại");
+            if (string.IsNullOrEmpty(newEmployee.IdCard)) errors.Add("Số CCCD");
+            if (string.IsNullOrEmpty(newEmployee.DeptId)) errors.Add("Phòng ban");
+            if (string.IsNullOrEmpty(newEmployee.PositionId)) errors.Add("Chức vụ");
+            if (string.IsNullOrEmpty(newEmployee.StatusId)) errors.Add("Trạng thái");
+            if (string.IsNullOrEmpty(newEmployee.ContractTypeId)) errors.Add("Loại hợp đồng");
+
+            if (errors.Any())
             {
-                await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Vui lòng nhập họ tên nhân viên", "warning");
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Thiếu thông tin bắt buộc", 
+                    $"Vui lòng nhập đầy đủ: {string.Join(", ", errors)}", "warning");
                 return;
             }
 
+            // 2. Show Loading Animation
             await JSRuntime.InvokeVoidAsync("Swal.fire", new
             {
                 title = "Đang xử lý...",
                 text = "Hệ thống đang khởi tạo hồ sơ nhân sự mới",
                 allowOutsideClick = false,
-                showConfirmButton = false
+                showConfirmButton = false,
+                didOpen = "Swal.showLoading()" // Ensure loading spinner shows immediately
             });
-            await JSRuntime.InvokeVoidAsync("Swal.showLoading");
+            await JSRuntime.InvokeVoidAsync("Swal.showLoading"); // Fallback check
+            await Task.Delay(500); // Give UI time to render loading state
+
             try 
             {
+                // 3. Map Data to Entity
                 var employeeEntity = new Entities.Employee
                 {
-                    Code = newEmployee.Code,
+                    Code = string.IsNullOrEmpty(newEmployee.Code) ? "NV" + new Random().Next(1000, 9999) : newEmployee.Code,
                     FullName = newEmployee.Name,
                     Email = newEmployee.Email,
                     CompanyEmail = newEmployee.CompanyEmail,
                     Phone = newEmployee.Phone,
                     AvatarUrl = newEmployee.Avatar,
-                    DepartmentId = newEmployee.DeptId,
-                    PositionId = newEmployee.PositionId,
-                    JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate,
-                    Status = Enum.TryParse<Entities.EmployeeStatus>(newEmployee.Status, true, out var status) ? status : Entities.EmployeeStatus.Probation,
-                    Type = Enum.TryParse<Entities.EmploymentType>(newEmployee.ContractType, true, out var type) ? type : Entities.EmploymentType.FullTime,
+                    
+                    // Validate Foreign Keys
+                    DepartmentId = IsValidObjectId(newEmployee.DeptId) ? newEmployee.DeptId : null,
+                    PositionId = IsValidObjectId(newEmployee.PositionId) ? newEmployee.PositionId : null,
+                    ReportToId = IsValidObjectId(newEmployee.ReportToId) ? newEmployee.ReportToId : null,
+                    StatusId = IsValidObjectId(newEmployee.StatusId) ? newEmployee.StatusId : null,
+                    ContractTypeId = IsValidObjectId(newEmployee.ContractTypeId) ? newEmployee.ContractTypeId : null,
+                    
+                    JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Now,
+                    Salary = ParseSalary(newEmployee.Salary),
+                    ContractEndDate = newEmployee.ContractExpiry ?? newEmployee.ContractEndDate,
+                    Workplace = newEmployee.Workplace,
+                    IsAccountActive = newEmployee.IsActive,
+
                     PersonalDetails = new Entities.PersonalInfo
                     {
                         DOB = newEmployee.DOB,
@@ -132,35 +161,73 @@ namespace TTL.HR.Shared.Pages.Employees
                         Address = newEmployee.Address,
                         Hometown = newEmployee.Hometown,
                         IdCardNumber = newEmployee.IdCard,
+                        IdCardIssueDate = newEmployee.CccdIssueDate,
                         IdCardPlace = newEmployee.CccdIssuePlace,
                         TaxCode = newEmployee.TaxId,
                         BankAccount = newEmployee.BankAccountNumber,
-                        BankName = newEmployee.BankName
+                        BankName = newEmployee.BankName,
+                        Nationality = string.IsNullOrEmpty(newEmployee.Nationality) ? "Việt Nam" : newEmployee.Nationality,
+                        Ethnicity = string.IsNullOrEmpty(newEmployee.Ethnicity) ? "Kinh" : newEmployee.Ethnicity,
+                        Religion = string.IsNullOrEmpty(newEmployee.Religion) ? "Không" : newEmployee.Religion,
+                        MaritalStatus = string.IsNullOrEmpty(newEmployee.MaritalStatus) ? "Độc thân" : newEmployee.MaritalStatus,
+                        PlaceOfOrigin = newEmployee.PlaceOfOrigin,
+                        Residence = newEmployee.Residence,
+                        SocialInsuranceId = newEmployee.SocialInsuranceId
+                    },
+                    
+                    EmergencyContact = new Entities.EmergencyContact
+                    {
+                        Name = newEmployee.EmergencyContactName,
+                        Relation = newEmployee.EmergencyContactRelation,
+                        Phone = newEmployee.EmergencyContactPhone
                     }
                 };
 
-                var created = await EmployeeService.CreateEmployeeAsync(employeeEntity);
+                // 4. Send API Request
+                var result = await EmployeeService.CreateEmployeeAsync(employeeEntity);
+                
+                // Ensure loading is closed
+                await JSRuntime.InvokeVoidAsync("Swal.close");
 
-                if (created != null)
+                // 5. Handle Response
+                if (!string.IsNullOrEmpty(result) && IsValidObjectId(result))
                 {
                     await JSRuntime.InvokeVoidAsync("Swal.fire", new
                     {
                         title = "Thành công!",
-                        text = "Hồ sơ nhân viên " + created.FullName + " (" + created.Code + ") đã được lưu thành công.",
+                        text = $"Hồ sơ nhân viên {newEmployee.Name} ({newEmployee.Code}) đã được tạo.",
                         icon = "success",
-                        confirmButtonText = "Đóng"
+                        confirmButtonText = "Hoàn tất"
                     });
                     Navigation.NavigateTo("/employees");
                 }
                 else 
                 {
-                    await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Không thể lưu hồ sơ nhân viên. Vui lòng thử lại.", "error");
+                    var errorMsg = !string.IsNullOrEmpty(result) ? result : "Không thể lưu hồ sơ. Vui lòng kiểm tra lại dữ liệu hoặc thử lại.";
+                    if (errorMsg.Length > 500) errorMsg = errorMsg.Substring(0, 500) + "..."; // Truncate long error messages (likely HTML)
+                    await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", errorMsg, "error");
                 }
             }
             catch (Exception ex)
             {
                 await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi hệ thống", ex.Message, "error");
             }
+        }
+
+        private bool IsValidObjectId(string? id)
+        {
+            if (string.IsNullOrWhiteSpace(id)) return false;
+            if (id.Length != 24) return false;
+            return System.Text.RegularExpressions.Regex.IsMatch(id, @"^[0-9a-fA-F]{24}$");
+        }
+
+        private decimal? ParseSalary(string? salaryStr)
+        {
+            if (string.IsNullOrWhiteSpace(salaryStr)) return null;
+            var cleaned = new string(salaryStr.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray());
+            cleaned = cleaned.Replace(",", ".");
+            if (cleaned.Count(c => c == '.') > 1) cleaned = new string(cleaned.Where(char.IsDigit).ToArray());
+            return decimal.TryParse(cleaned, out var result) ? result : null;
         }
     }
 }

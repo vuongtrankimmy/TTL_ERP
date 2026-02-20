@@ -14,7 +14,7 @@
                         <div class="d-flex flex-center flex-column mb-5">
                             <div class="symbol symbol-100px symbol-circle mb-7 shadow-sm">
                                 <div class="symbol-label bg-light-primary">
-                                    <i class="ki-outline ki-laptop fs-3x text-primary"></i>
+                                    <i class="@(GetAssetIcon(Asset.Category)) fs-3x text-primary"></i>
                                 </div>
                             </div>
                             <span class="fs-2 text-gray-900 fw-bolder mb-1 text-center">@Asset.Name</span>
@@ -47,9 +47,13 @@
                                 <span class="fw-bold text-gray-800 me-2">Ngày mua:</span>
                                 <span class="text-gray-600">@Asset.PurchaseDate?.ToString("dd/MM/yyyy")</span>
                             </div>
+                            <div class="d-flex flex-stack mb-4">
+                                <span class="fw-bold text-gray-800 me-2">Thông số KT:</span>
+                                <span class="text-gray-600">@Asset.Specification</span>
+                            </div>
                             <div class="d-flex flex-stack">
-                                <span class="fw-bold text-gray-800 me-2">Nhà cung cấp:</span>
-                                <span class="text-gray-600">Đang cập nhật</span>
+                                <span class="fw-bold text-gray-800 me-2">Bảo hành:</span>
+                                <span class="text-gray-600">@Asset.WarrantyPeriod</span>
                             </div>
                         </div>
                         
@@ -81,7 +85,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <span class="text-gray-900 fw-bold fs-4 d-block">@Asset.AssignedToName</span>
-                            <span class="text-muted fw-semibold">Phòng Kỹ thuật • Đang sử dụng</span>
+                            <span class="text-muted fw-semibold">Đang sử dụng tài sản</span>
                         </div>
                         <div>
                             <span class="badge badge-light-primary fw-bold px-4 py-2">ĐÃ BÀN GIAO</span>
@@ -93,9 +97,12 @@
                         <div class="d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap">
                             <div class="mb-3 mb-md-0 fw-semibold">
                                 <h4 class="text-gray-900 fw-bold">Ghi chú bàn giao</h4>
-                                <div class="fs-6 text-gray-700 pe-7">Máy mới 100%, đầy đủ phụ kiện: Sạc, túi chống sốc, chuột không dây.</div>
+                                <div class="fs-6 text-gray-700 pe-7">Tài sản đang được nhân viên bảo quản và sử dụng cho công việc.</div>
                             </div>
-                            <button class="btn btn-info px-6 align-self-center text-nowrap fw-bold">Xem biên bản</button>
+                            <div class="d-flex gap-3">
+                                <button class="btn btn-warning px-6 align-self-center text-nowrap fw-bold" @onclick="RequestMaintenance">Bảo trì</button>
+                                <button class="btn btn-danger px-6 align-self-center text-nowrap fw-bold" @onclick="RevokeAsset">Thu hồi</button>
+                            </div>
                         </div>
                     </div>
                 }
@@ -109,8 +116,8 @@
                                 Tài sản này hiện đang trong kho và sẵn sàng để cấp phát cho nhân viên mới.
                             </div>
                             <div class="d-flex flex-center flex-wrap gap-2">
-                                <button class="btn btn-outline btn-outline-success btn-active-success fw-bold">Bảo trì tài sản</button>
-                                <button class="btn btn-success fw-bold" @onclick='() => Navigation.NavigateTo("/assets/allocation")'>Cấp phát ngay</button>
+                                <button class="btn btn-outline btn-outline-success btn-active-success fw-bold" @onclick="RequestMaintenance">Bảo trì tài sản</button>
+                                <button class="btn btn-success fw-bold" @onclick='() => Navigation.NavigateTo($"/assets/allocation?AssetId={Id}")'>Cấp phát ngay</button>
                             </div>
                         </div>
                     </div>
@@ -147,3 +154,33 @@
         </div>
     </div>
 </div>
+
+<!-- Revoke Confirmation Modal -->
+<GenericActionModal 
+    IsVisible="@IsRevokeModalVisible" 
+    Title="Xác nhận thu hồi"
+    Heading="Thu hồi tài sản?"
+    Message="@($"Bạn có chắc chắn muốn thu hồi tài sản {Asset?.Name} từ nhân viên {Asset?.AssignedToName}?")"
+    Color="danger"
+    Icon="ki-outline ki-arrows-loop"
+    ConfirmLabel="Xác nhận thu hồi"
+    CancelLabel="Bỏ qua"
+    ShowReasonInput="true"
+    ReasonPlaceholder="Nhập lý do thu hồi (vd: Thu hồi định kỳ, Nhân viên nghỉ việc...)"
+    OnConfirmed="HandleRevokeConfirmed"
+    OnCancelled="() => IsRevokeModalVisible = false" />
+
+<!-- Maintenance Confirmation Modal -->
+<GenericActionModal 
+    IsVisible="@IsMaintenanceModalVisible" 
+    Title="Yêu cầu bảo trì"
+    Heading="Báo hỏng/Bảo trì?"
+    Message="@($"Gửi yêu cầu bảo trì cho tài sản {Asset?.Name}? Trạng thái tài sản sẽ chuyển sang 'Đang bảo trì'.")"
+    Color="warning"
+    Icon="ki-outline ki-setting-4"
+    ConfirmLabel="Gửi yêu cầu"
+    CancelLabel="Bỏ qua"
+    ShowReasonInput="true"
+    ReasonPlaceholder="Mô tả tình trạng hỏng hóc hoặc lý do bảo trì..."
+    OnConfirmed="HandleMaintenanceConfirmed"
+    OnCancelled="() => IsMaintenanceModalVisible = false" />

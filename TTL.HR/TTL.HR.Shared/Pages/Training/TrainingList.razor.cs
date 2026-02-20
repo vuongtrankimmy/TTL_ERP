@@ -50,17 +50,19 @@ namespace TTL.HR.Shared.Pages.Training
                 {
                     _trainings = courses.Select(c => new TrainingItemViewModel
                     {
-                        Id = int.TryParse(c.Id, out var id) ? id : 0,
+                        IdString = c.Id,
+                        Id = int.TryParse(c.Id, out _) ? 0 : 0, // Id is string now in backend, but keeping int for UI if needed
                         Title = c.Title,
-                        Code = $"TRN-{c.Id}",
-                        Category = "Technical", // Default
+                        Code = c.Code,
+                        Category = c.Category,
                         Trainer = c.TrainerName,
                         Duration = $"{c.DurationHours}h",
-                        Type = "Internal",
-                        IsMandatory = true,
+                        Type = c.IsMandatory ? "Bắt buộc" : "Tự nguyện",
+                        IsMandatory = c.IsMandatory,
                         Status = c.Status,
-                        Participants = 0,
-                        MaxParticipants = 20
+                        Participants = c.EnrolledCount,
+                        MaxParticipants = c.MaxParticipants,
+                        EnrolledEmployeeIds = c.EnrolledEmployeeIds ?? new List<string>()
                     }).ToList();
                 }
             }
@@ -79,7 +81,7 @@ namespace TTL.HR.Shared.Pages.Training
             _isGridView = isGrid;
         }
 
-        private void HandleEdit(int id)
+        private void HandleEdit(string id)
         {
             Navigation.NavigateTo($"/training/add?id={id}");
         }
@@ -100,7 +102,7 @@ namespace TTL.HR.Shared.Pages.Training
         {
             if (ItemToDelete != null)
             {
-                var success = await TrainingService.DeleteCourseAsync(ItemToDelete.Id.ToString());
+                var success = await TrainingService.DeleteCourseAsync(ItemToDelete.IdString);
                 if (success)
                 {
                     _trainings.Remove(ItemToDelete);
@@ -138,14 +140,21 @@ namespace TTL.HR.Shared.Pages.Training
 
         private async Task ConfirmRegister(List<TrainingRegistrationPopup.EmployeeSelectViewModel> selectedEmployees)
         {
-            if (ItemToRegister != null)
+            if (ItemToRegister != null && selectedEmployees.Any())
             {
-                int available = ItemToRegister.MaxParticipants - ItemToRegister.Participants;
-                int toAdd = Math.Min(selectedEmployees.Count, available);
+                var employeeIds = selectedEmployees.Select(e => e.Id).ToList();
+                var result = await TrainingService.RegisterParticipantsAsync(ItemToRegister.IdString, employeeIds);
                 
-                ItemToRegister.Participants += toAdd;
-                CloseRegisterModal();
-                await JS.InvokeVoidAsync("toastr.success", $"Đã đăng ký thành công {toAdd} học viên vào khóa học!");
+                if (result.Success)
+                {
+                    await JS.InvokeVoidAsync("toastr.success", result.Message ?? $"Đã đăng ký thành công {selectedEmployees.Count} học viên vào khóa học!");
+                    CloseRegisterModal();
+                    await LoadData();
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", result.Message ?? "Có lỗi khi đăng ký học viên.");
+                }
             }
         }
 
@@ -157,6 +166,7 @@ namespace TTL.HR.Shared.Pages.Training
 
         public class TrainingItemViewModel
         {
+            public string IdString { get; set; } = "";
             public int Id { get; set; }
             public string Title { get; set; } = "";
             public string Code { get; set; } = "";
@@ -168,6 +178,7 @@ namespace TTL.HR.Shared.Pages.Training
             public string Status { get; set; } = "";
             public int Participants { get; set; }
             public int MaxParticipants { get; set; }
+            public List<string> EnrolledEmployeeIds { get; set; } = new();
 
             public string StatusBadge => Status switch
             {

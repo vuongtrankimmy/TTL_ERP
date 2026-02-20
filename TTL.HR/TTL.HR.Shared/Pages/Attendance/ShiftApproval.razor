@@ -7,19 +7,19 @@
 			<ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
 				<li class="nav-item">
 					<a class="nav-link text-active-primary py-4 me-10 @(activeTab == 0 ? "active" : "")" href="#" @onclick="() => SetTab(0)" @onclick:preventDefault>
-						Chờ duyệt <span class="badge badge-circle badge-light-danger ms-2 w-20px h-20px fs-9">@_requests.Count(x => x.IsPending)</span>
+						Chờ duyệt <span class="badge badge-circle badge-light-danger ms-2 w-20px h-20px fs-9">@_summary.PendingCount</span>
 					</a>
 				</li>
 				<li class="nav-item">
-                    <a class="nav-link text-active-primary py-4 me-10 @(activeTab == 1 ? "active" : "")" href="#" @onclick="() => SetTab(1)" @onclick:preventDefault>
-                        Đã duyệt <span class="badge badge-circle badge-light-success ms-2 w-20px h-20px fs-9">@_requests.Count(x => x.Status == "Đã duyệt")</span>
-                    </a>
-                </li>
+					<a class="nav-link text-active-primary py-4 me-10 @(activeTab == 1 ? "active" : "")" href="#" @onclick="() => SetTab(1)" @onclick:preventDefault>
+						Đã duyệt <span class="badge badge-circle badge-light-success ms-2 w-20px h-20px fs-9">@_summary.ApprovedCount</span>
+					</a>
+				</li>
 				<li class="nav-item">
-                    <a class="nav-link text-active-primary py-4 @(activeTab == 2 ? "active" : "")" href="#" @onclick="() => SetTab(2)" @onclick:preventDefault>
-                        Từ chối <span class="badge badge-circle badge-light-danger ms-2 w-20px h-20px fs-9">@_requests.Count(x => x.Status == "Từ chối")</span>
-                    </a>
-                </li>
+					<a class="nav-link text-active-primary py-4 @(activeTab == 2 ? "active" : "")" href="#" @onclick="() => SetTab(2)" @onclick:preventDefault>
+						Từ chối <span class="badge badge-circle badge-light-danger ms-2 w-20px h-20px fs-9">@_summary.RejectedCount</span>
+					</a>
+				</li>
 			</ul>
 		</div>
 
@@ -34,7 +34,7 @@
 								<path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
 							</svg>
 						</span>
-						<input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm theo tên, mã NV..." />
+						<input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm theo tên, mã NV..." @oninput="Search" value="@_searchTerm" />
 					</div>
 
 					<!-- Department -->
@@ -69,7 +69,7 @@
 			<div class="d-flex align-items-center">
 				<div class="form-check form-check-sm form-check-custom form-check-solid me-5">
 					<input class="form-check-input" type="checkbox" id="check_all_requests" />
-					<label class="form-check-label fw-bold text-gray-700 fs-7 ms-2 text-nowrap" for="check_all_requests">Chọn tất cả (12 yêu cầu)</label>
+					<label class="form-check-label fw-bold text-gray-700 fs-7 ms-2 text-nowrap" for="check_all_requests">Chọn tất cả (@_requests.Count yêu cầu trên trang)</label>
 				</div>
 			</div>
 			<div class="d-flex align-items-center gap-3 text-end justify-content-end">
@@ -168,11 +168,21 @@
 					</div>
 					<!-- Pagination -->
 					<div class="d-flex flex-stack flex-wrap px-7 py-5 border-top">
-						<div class="fs-7 fw-bold text-gray-700">Hiển thị 1-4 trên tổng số 12 yêu cầu</div>
+						<div class="fs-7 fw-bold text-gray-700">Hiển thị @FilteredRequests.Count() trên tổng số @_totalCount yêu cầu</div>
 						<ul class="pagination">
-							<li class="page-item previous disabled"><a href="#" class="page-link">Trước</a></li>
-							<li class="page-item active"><a href="#" class="page-link">1</a></li>
-							<li class="page-item next"><a href="#" class="page-link">Sau</a></li>
+							<li class="page-item previous @(_pageIndex <= 1 ? "disabled" : "")">
+								<a href="#" class="page-link" @onclick="() => ChangePage(_pageIndex - 1)" @onclick:preventDefault>Trước</a>
+							</li>
+							@for (int i = 1; i <= TotalPages; i++)
+							{
+								var pageNumber = i;
+								<li class="page-item @(_pageIndex == pageNumber ? "active" : "")">
+									<a href="#" class="page-link" @onclick="() => ChangePage(pageNumber)" @onclick:preventDefault>@pageNumber</a>
+								</li>
+							}
+							<li class="page-item next @(_pageIndex >= TotalPages ? "disabled" : "")">
+								<a href="#" class="page-link" @onclick="() => ChangePage(_pageIndex + 1)" @onclick:preventDefault>Sau</a>
+							</li>
 						</ul>
 					</div>
 				</SkeletonLoading>

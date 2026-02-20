@@ -1,0 +1,83 @@
+@using TTL.HR.Application.Modules.Common.Models
+@using TTL.HR.Shared.Components.Common
+
+<div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn shadow-sm border-0">
+    <div class="card-header border-0 pt-5 ms-3">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bold fs-3 mb-1">Nhật ký hoạt động</span>
+            <span class="text-muted mt-1 fw-semibold fs-7 text-uppercase">Tracking chi tiết các thao tác trên hệ thống</span>
+        </h3>
+        <div class="card-toolbar">
+            <div class="d-flex align-items-center position-relative my-1">
+                <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4 text-gray-500"></i>
+                <input type="text" class="form-control form-control-solid w-250px ps-12 fs-7" placeholder="Tìm kiếm thao tác..." @bind="SearchTerm" @bind:event="oninput">
+            </div>
+        </div>
+    </div>
+    <div class="card-body py-3">
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="10">
+            <div class="table-responsive">
+                <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 mb-0 ms-3">
+                    <thead class="bg-light">
+                        <tr class="fw-bold text-muted text-uppercase fs-8 border-bottom-0">
+                            <th class="ps-4 min-w-150px rounded-start">Thời gian</th>
+                            <th class="min-w-150px">Thao tác</th>
+                            <th class="min-w-120px">Phân hệ</th>
+                            <th class="min-w-300px">Chi tiết</th>
+                            <th class="min-w-100px text-center">Trạng thái</th>
+                            <th class="min-w-120px text-end rounded-end pe-4">Địa chỉ IP</th>
+                        </tr>
+                    </thead>
+                    <tbody class="fw-semibold text-gray-700">
+                        @if (FilteredLogs.Any())
+                        {
+                            @foreach (var log in FilteredLogs)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex flex-column">
+                                            <span class="text-gray-900 fw-bold fs-6">@log.Timestamp.ToString("HH:mm:ss")</span>
+                                            <span class="text-muted fs-7">@log.Timestamp.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-35px me-3">
+                                                <span class="symbol-label bg-light-@GetActionColor(log.Action) text-@GetActionColor(log.Action)">
+                                                    <i class="ki-outline @GetActionIcon(log.Action) fs-4"></i>
+                                                </span>
+                                            </div>
+                                            <span class="text-gray-800 fw-bold fs-6">@log.Action</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-light-secondary fw-bold">@log.Module</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-gray-600 fs-7">@log.Description</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-light-@(log.Status == "Success" ? "success" : "danger") fw-bold px-3 py-1">
+                                            @(log.Status == "Success" ? "Thành công" : "Thất bại")
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <span class="text-muted fs-7 fw-bold">@log.IpAddress</span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-20">
+                                    <div class="text-muted fs-4">Không có nhật ký hoạt động nào.</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </SkeletonLoading>
+    </div>
+</div>

@@ -18,22 +18,36 @@ namespace TTL.HR.Shared.Pages.Training
         private List<CourseModel> Courses = new();
         private bool _isLoading = true;
 
+        private bool _loadFailed = false;
+
         protected override async Task OnInitializedAsync()
         {
             await LoadData();
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender && _loadFailed)
+            {
+                try {
+                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi tải danh sách khóa học.");
+                } catch { }
+            }
+        }
+
         private async Task LoadData()
         {
             _isLoading = true;
+            _loadFailed = false;
             try
             {
                 var result = await TrainingService.GetCoursesAsync();
                 Courses = result.ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi tải danh sách khóa học.");
+                System.Console.WriteLine($"CourseList Error: {ex.Message}");
+                _loadFailed = true;
             }
             finally
             {

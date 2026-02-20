@@ -1,0 +1,480 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TTL.CoreService.Api</name>
+    </assembly>
+    <members>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.Administration.PermissionsController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách toàn bộ quyền hạn và các vai trò đang sở hữu
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.Administration.RolesController.GetAll(TTL.CoreService.Application.Features.Administration.Roles.Queries.GetRoles.GetRolesQuery,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách vai trò
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.Administration.RolesController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Xem chi tiết vai trò
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.Administration.RolesController.Create(TTL.CoreService.Application.Features.Administration.Roles.Commands.CreateRole.CreateRoleCommand,System.Threading.CancellationToken)">
+            <summary>
+            Tạo vai trò mới
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.Administration.RolesController.Update(System.String,TTL.CoreService.Application.Features.Administration.Roles.Commands.UpdateRole.UpdateRoleCommand,System.Threading.CancellationToken)">
+            <summary>
+            Cập nhật vai trò
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.Administration.RolesController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Xóa vai trò
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.Administration.RolesController.GetPermissions(System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách quyền hạn khả dụng
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.Administration.RolesController.AssignRole(TTL.CoreService.Api.Controllers.v1.Administration.RolesController.AssignRoleRequest,System.Threading.CancellationToken)">
+            <summary>
+            Gán vai trò cho nhân viên (Hỗ trợ hàng loạt)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.Administration.RolesController.UnassignRole(TTL.CoreService.Api.Controllers.v1.Administration.RolesController.UnassignRoleRequest,System.Threading.CancellationToken)">
+            <summary>
+            Gỡ vai trò khỏi nhân viên
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.FilesController.Upload(Microsoft.AspNetCore.Http.IFormFile,System.String)">
+            <summary>
+            Táº£i lên tự»‡p đ‘Ã­nh ký¨m (HÃ¬nh áº£nh, TÃ i liá»‡u, PDF...)
+            </summary>
+            <param name="file">Tá»‡p tin</param>
+            <param name="folder">ThÆ° má»¥c phÃ¢n loáº¡i (Vd: leave, contracts, avatar)</param>
+            <returns>ThÃ´ng tin file đ‘Ã£ tựº£i lên</returns>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Assets.AssetsController.GetAll(TTL.CoreService.Application.Features.HumanResources.Assets.Queries.GetAssets.GetAssetsQuery,System.Threading.CancellationToken)">
+            <summary>
+            Tra cứu danh sách tài sản và thiết bị bàn giao
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Assets.AssetsController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Xem chi tiết thông tin và lịch sử sử dụng tài sản
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Assets.AssetsController.GetHistory(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy lịch sử biến động và sử dụng của tài sản (Timeline)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Assets.AssetsController.Create(TTL.CoreService.Application.Features.HumanResources.Assets.Commands.CreateAsset.CreateAssetCommand,System.Threading.CancellationToken)">
+            <summary>
+            Nhập kho tài sản mới vào hệ thống
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Assets.AssetsController.Allocate(TTL.CoreService.Application.Features.HumanResources.Assets.Commands.AllocateAsset.AllocateAssetCommand,System.Threading.CancellationToken)">
+            <summary>
+            Bàn giao tài sản cho nhân viên sử dụng
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Assets.AssetsController.GetAllocations(TTL.CoreService.Application.Features.HumanResources.Assets.Queries.GetAllocations.GetAllocationsQuery,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách cấp phát tài sản (Đang sử dụng hoặc Lịch sử)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Assets.AssetsController.Revoke(TTL.CoreService.Application.Features.HumanResources.Assets.Commands.RevokeAsset.RevokeAssetCommand,System.Threading.CancellationToken)">
+            <summary>
+            Thu hồi tài sản từ nhân viên
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Assets.AssetsController.CreateMaintenanceRequest(TTL.CoreService.Application.Features.HumanResources.Assets.Commands.CreateMaintenanceRequest.CreateMaintenanceRequestCommand,System.Threading.CancellationToken)">
+            <summary>
+            Tạo yêu cầu bảo trì/sửa chữa thiết bị
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Assets.AssetsController.GetStats(System.Threading.CancellationToken)">
+            <summary>
+            Thống kê tổng quan tình trạng tài sản
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Assets.AssetsController.GetCategories(System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách danh mục tài sản
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:TTL.CoreService.Api.Controllers.v1.HumanResources.Attendance.AttendanceController.GetLeaveTripSummary(System.Threading.CancellationToken)" -->
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Attendance.AttendanceController.GetShiftRequests(TTL.CoreService.Application.Features.HumanResources.Attendance.Queries.GetShiftChangeRequests.GetShiftChangeRequestsQuery,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách đề xuất đổi ca / đăng ký ca
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Attendance.AttendanceController.GetShiftSummary(System.Threading.CancellationToken)">
+            <summary>
+            Lấy tổng số lượng yêu cầu theo từng trạng thái (cho Badge Tab)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Attendance.AttendanceController.GetShiftRequestById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy chi tiết đề xuất đổi ca
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Attendance.AttendanceController.CreateShiftRequest(TTL.CoreService.Application.Features.HumanResources.Attendance.Commands.CreateShiftChangeRequest.CreateShiftChangeRequestCommand,System.Threading.CancellationToken)">
+            <summary>
+            Tạo đề xuất đổi ca làm việc
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Attendance.AttendanceController.ApproveShiftRequest(TTL.CoreService.Application.Features.HumanResources.Attendance.Commands.ApproveShiftChangeRequest.ApproveShiftChangeRequestCommand,System.Threading.CancellationToken)">
+            <summary>
+            Duyệt đề xuất đổi ca làm việc
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Attendance.AttendanceController.ProcessShiftRequest(System.String,TTL.CoreService.Api.Controllers.v1.HumanResources.Attendance.AttendanceController.ProcessShiftRequestDto,System.Threading.CancellationToken)">
+            <summary>
+            Duyệt/Từ chối đề xuất đổi ca với ID trong path (Khớp với Frontend service)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Attendance.AttendanceController.BulkApproveShiftRequest(TTL.CoreService.Application.Features.HumanResources.Attendance.Commands.BulkApproveShiftChangeRequest.BulkApproveShiftChangeRequestCommand,System.Threading.CancellationToken)">
+            <summary>
+            Duyệt nhanh nhiều đề xuất đổi ca cùng lúc
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Benefits.BenefitsController.GetBenefits(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách các loại phụ cấp và phúc lợi
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Benefits.BenefitsController.Create(TTL.CoreService.Application.Features.HumanResources.Benefits.Commands.CreateBenefit.CreateBenefitCommand,System.Threading.CancellationToken)">
+            <summary>
+            Tạo mới một loại phụ cấp/phúc lợi trong hệ thống
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Benefits.BenefitsController.AssignToEmployee(TTL.CoreService.Application.Features.HumanResources.Benefits.Commands.AssignBenefitToEmployee.AssignBenefitToEmployeeCommand,System.Threading.CancellationToken)">
+            <summary>
+            Gán phụ cấp cho một nhân viên cụ thể
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Benefits.BenefitsController.GetByEmployee(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách phụ cấp/phúc lợi của một nhân viên cụ thể
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Benefits.BenefitsController.AutoRenew(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Tự động gia hạn các gói phúc lợi sắp hết hạn
+            </summary>
+            <param name="daysThreshold">Số ngày chuẩn bị hết hạn (mặc định 7 ngày)</param>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Benefits.BenefitsController.GetReport(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Báo cáo biến động phụ cấp/phúc lợi theo tháng
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.GetAll(TTL.CoreService.Application.Features.HumanResources.Employees.Queries.GetEmployees.GetEmployeesQuery,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách nhân viên có phân trang và lọc
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.GetAnalytics(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Lấy báo cáo thống kê nhân sự (Biểu đồ, tỷ lệ biến động)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy chi tiết thông tin hồ sơ nhân viên
+            </summary>
+            <param name="id">ID nhân viên</param>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.GetDigitalProfile(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy bộ hồ sơ điện tử của nhân viên
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.UploadDocument(System.String,TTL.CoreService.Application.Features.HumanResources.Employees.Commands.UploadEmployeeDocument.UploadEmployeeDocumentCommand,System.Threading.CancellationToken)">
+            <summary>
+            Upload tài liệu cho hồ sơ điện tử (CCCD, Bằng cấp, v.v.)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.CheckExpirations(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Kiểm tra và gửi thông báo cho các tài liệu sắp hết hạn (Chạy định kỳ)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.GetPendingDocuments(System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách tất cả tài liệu đang chờ duyệt (Dành cho HR)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.VerifyDocument(System.String,TTL.CoreService.Application.Features.HumanResources.Employees.Commands.VerifyEmployeeDocument.VerifyEmployeeDocumentCommand,System.Threading.CancellationToken)">
+            <summary>
+            Duyệt hoặc Từ chối một tài liệu (Dành cho HR)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.GetFluctuationReport(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Lấy báo cáo biến động nhân sự (Mới, Thử việc, Nghỉ việc)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.ExportFluctuation(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Xuất báo cáo biến động nhân sự ra file Excel
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.SendScheduledReport(System.Int32,System.Int32,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Kích hoạt gửi báo cáo biến động nhân sự qua Email cho Ban Giám đốc
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.GetDashboard(System.Threading.CancellationToken)">
+            <summary>
+            Lấy dữ liệu tổng hợp cho Dashboard (Biểu đồ, thống kê)
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:TTL.CoreService.Api.Controllers.v1.HumanResources.Employees.EmployeesController.GetManpowerForecast(System.Int32,System.Threading.CancellationToken)" -->
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.LeaveManagement.LeaveController.GetSummary(System.Threading.CancellationToken)">
+            <summary>
+            Lấy tổng số lượng đơn nghỉ phép theo trạng thái (cho Badge Tab)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.LeaveManagement.LeaveController.GetMonthlyReport(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Báo cáo thống kê tình hình nghỉ phép theo tháng
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.LeaveManagement.LeaveController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy chi tiết đơn xin nghỉ phép
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.LeaveManagement.LeaveController.GetAllBalances(TTL.CoreService.Application.Features.HumanResources.LeaveManagement.Queries.GetLeaveBalances.GetLeaveBalancesQuery,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách quỹ phép của tất cả nhân viên (Quản lý)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.LeaveManagement.LeaveController.UpdateBalance(TTL.CoreService.Application.Features.HumanResources.LeaveManagement.Commands.UpdateLeaveBalance.UpdateLeaveBalanceCommand,System.Threading.CancellationToken)">
+            <summary>
+            Cập nhật quỹ phép (Điều chỉnh thủ công)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.LeaveManagement.LeaveController.BulkApprove(TTL.CoreService.Application.Features.HumanResources.LeaveManagement.Commands.BulkApproveLeaveRequest.BulkApproveLeaveRequestCommand,System.Threading.CancellationToken)">
+            <summary>
+            Duyệt nhanh nhiều đơn nghỉ phép cùng lúc
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.LeaveManagement.LeaveController.BulkReject(TTL.CoreService.Application.Features.HumanResources.LeaveManagement.Commands.BulkApproveLeaveRequest.BulkApproveLeaveRequestCommand,System.Threading.CancellationToken)">
+            <summary>
+            Từ chối hàng loạt nhiều đơn nghỉ phép cùng lúc
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.LeaveManagement.LeaveController.QuickApprove(System.Collections.Generic.List{System.String},System.String,System.Threading.CancellationToken)">
+            <summary>
+            Phê duyệt nhanh một danh sách ID đơn nghỉ (Approved = true)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Payroll.PayrollController.GetPeriods(System.Nullable{System.Int32},System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách các kỳ lương (Theo năm)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Payroll.PayrollController.GetPeriodDetail(System.String,System.String,System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Lấy chi tiết một kỳ lương và danh sách bảng lương nhân viên
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Payroll.PayrollController.Export(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Xuất bảng lương ra file Excel
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:TTL.CoreService.Api.Controllers.v1.HumanResources.Payroll.PayrollController.SendPayslip(System.String,System.String,System.Threading.CancellationToken)" -->
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Payroll.PayrollController.Confirm(TTL.CoreService.Application.Features.HumanResources.Payroll.Commands.ConfirmPayroll.ConfirmPayrollCommand,System.Threading.CancellationToken)">
+            <summary>
+            Nhân viên xác nhận hoặc phản hồi về bảng lương
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Payroll.PayrollController.Calculate(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Chạy tính toán lương tự động cho một kỳ
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Payroll.PayrollController.Generate(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Khởi tạo kỳ lương mới cho tháng/năm
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Payroll.PayrollController.UpdatePayroll(System.String,TTL.CoreService.Application.Features.HumanResources.Payroll.Commands.UpdatePayroll.UpdatePayrollCommand,System.Threading.CancellationToken)">
+            <summary>
+            Cập nhật điều chỉnh bảng lương nhân viên
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.CandidatesController.GetAll(TTL.CoreService.Application.Features.HumanResources.Recruitment.Queries.GetCandidates.GetCandidatesQuery,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách ứng viên tuyển dụng
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.CandidatesController.Create(TTL.CoreService.Application.Features.HumanResources.Recruitment.Commands.CreateCandidate.CreateCandidateCommand,System.Threading.CancellationToken)">
+            <summary>
+            Tiếp nhận hồ sơ ứng viên mới
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.CandidatesController.UpdateStatus(TTL.CoreService.Application.Features.HumanResources.Recruitment.Commands.UpdateCandidateStatus.UpdateCandidateStatusCommand,System.Threading.CancellationToken)">
+            <summary>
+            Cập nhật trạng thái trong quy trình tuyển dụng
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.GetJobs(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách tin tuyển dụng
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.GetJobDetail(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy chi tiết tin tuyển dụng
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.GetCandidates(TTL.CoreService.Application.Features.HumanResources.Recruitment.Queries.GetCandidates.GetCandidatesQuery,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách ứng viên
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.GetCandidateDetail(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy chi tiết ứng viên
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.Apply(TTL.CoreService.Application.Features.HumanResources.Recruitment.Commands.CreateCandidate.CreateCandidateCommand,System.Threading.CancellationToken)">
+            <summary>
+            Ứng tuyển vị trí (Tạo mới ứng viên)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.UpdateStatus(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Cập nhật trạng thái ứng viên (Duyệt/Phỏng vấn/Từ chối)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.Hire(System.String,System.DateTime,System.Threading.CancellationToken)">
+            <summary>
+            Chốt tuyển dụng (Chuyển ứng viên thành nhân viên chính thức)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.ScheduleInterview(System.String,TTL.CoreService.Application.Features.HumanResources.Recruitment.Commands.ScheduleInterview.ScheduleInterviewCommand,System.Threading.CancellationToken)">
+            <summary>
+            Đặt lịch phỏng vấn cho ứng viên
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.UpdateInterviewResult(System.String,TTL.CoreService.Application.Features.HumanResources.Recruitment.Commands.UpdateInterviewResult.UpdateInterviewResultCommand,System.Threading.CancellationToken)">
+            <summary>
+            Cập nhật kết quả phỏng vấn
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.SendOffer(System.String,TTL.CoreService.Application.Features.HumanResources.Recruitment.Commands.SendOffer.SendOfferCommand,System.Threading.CancellationToken)">
+            <summary>
+            Gửi thư mời nhận việc (Offer Letter) cho ứng viên
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.GetOnboardingStatus(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy trạng thái Onboarding của nhân viên mới
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Recruitment.RecruitmentController.CompleteOnboardingTask(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Hoàn thành một tực vụ Onboarding
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Training.TrainingController.GetCourseDetail(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy chi tiết khóa học và danh sách học viên
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Training.TrainingController.GetEmployeeEnrollments(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách khóa học của nhân viên cụ thể
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Training.TrainingController.GetAnalytics(System.Threading.CancellationToken)">
+            <summary>
+            Lấy thống kê và phân tích đào tạo toàn công ty
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.HumanResources.Training.TrainingController.GetEmployeeCertificates(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách chứng chỉ của nhân viên
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.System.NotificationsController.GetMyNotifications(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Lấy danh sách thông báo của tôi (Chuông thông báo)
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.System.NotificationsController.MarkAsRead(System.String,System.Threading.CancellationToken)">
+            <summary>
+            đÃ¡nh dáº¥u thÃ´ng bÃ¡o đ‘Ã£ đ‘á»c
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.System.SettingsController.GetSettings(System.Threading.CancellationToken)">
+            <summary>
+            Lấy thông tin cấu hình hệ thống
+            </summary>
+        </member>
+        <member name="M:TTL.CoreService.Api.Controllers.v1.System.SettingsController.UpdateSettings(TTL.CoreService.Application.Features.System.Settings.Commands.UpdateSystemSettings.UpdateSystemSettingsCommand,System.Threading.CancellationToken)">
+            <summary>
+            Cập nhật cấu hình hệ thống
+            </summary>
+        </member>
+        <member name="T:Program">
+            <summary>
+            Auto-generated public partial Program class for top-level statement apps.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.CreateDocumentationId(System.Type)">
+            <summary>
+            Generates a documentation comment ID for a type.
+            Example: T:Namespace.Outer+Inner`1 becomes T:Namespace.Outer.Inner`1
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.CreateDocumentationId(System.Reflection.PropertyInfo)">
+            <summary>
+            Generates a documentation comment ID for a property.
+            Example: P:Namespace.ContainingType.PropertyName or for an indexer P:Namespace.ContainingType.Item(System.Int32)
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.CreateDocumentationId(System.Type,System.String)">
+            <summary>
+            Generates a documentation comment ID for a property given its container type and property name.
+            Example: P:Namespace.ContainingType.PropertyName
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.CreateDocumentationId(System.Reflection.MethodInfo)">
+            <summary>
+            Generates a documentation comment ID for a method (or constructor).
+            For example:
+              M:Namespace.ContainingType.MethodName(ParamType1,ParamType2)~ReturnType
+              M:Namespace.ContainingType.#ctor(ParamType)
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.GetTypeDocId(System.Type,System.Boolean,System.Boolean)">
+            <summary>
+            Generates a documentation ID string for a type.
+            This method handles nested types (replacing '+' with '.'),
+            generic types, arrays, pointers, by-ref types, and generic parameters.
+            The <paramref name="includeGenericArguments"/> flag controls whether
+            constructed generic type arguments are emitted, while <paramref name="omitGenericArity"/>
+            controls whether the generic arity marker (e.g. "`1") is appended.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.NormalizeDocId(System.String)">
+            <summary>
+            Normalizes a documentation comment ID to match the compiler-style format.
+            Strips the return type suffix for ordinary methods but retains it for conversion operators.
+            </summary>
+            <param name="docId">The documentation comment ID to normalize.</param>
+            <returns>The normalized documentation comment ID.</returns>
+        </member>
+    </members>
+</doc>

@@ -8,14 +8,21 @@ namespace TTL.HR.Shared.Layout.Component.Header
 {
     public partial class Header : IDisposable
     {
-        [Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+        [Inject] public TTL.HR.Application.Modules.Common.Interfaces.ISettingsService SettingsService { get; set; } = default!;
 
         private List<BreadcrumbItem> _breadcrumbs = new();
 
         protected override void OnInitialized()
         {
             NavigationManager.LocationChanged += HandleLocationChanged;
+            SettingsService.OnSettingsUpdated += HandleSettingsUpdated;
             UpdateBreadcrumbs();
+        }
+
+        private void HandleSettingsUpdated()
+        {
+            StateHasChanged();
         }
 
         private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
@@ -23,6 +30,7 @@ namespace TTL.HR.Shared.Layout.Component.Header
             UpdateBreadcrumbs();
             StateHasChanged();
         }
+
 
         private void UpdateBreadcrumbs()
         {
@@ -60,7 +68,9 @@ namespace TTL.HR.Shared.Layout.Component.Header
         public void Dispose()
         {
             NavigationManager.LocationChanged -= HandleLocationChanged;
+            SettingsService.OnSettingsUpdated -= HandleSettingsUpdated;
         }
+
 
         private class BreadcrumbItem
         {

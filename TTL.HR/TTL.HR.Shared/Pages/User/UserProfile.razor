@@ -117,6 +117,10 @@
                         <li class="nav-item mt-2">
                             <a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "attendance" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("attendance")'>Chấm công</a>
                         </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "audit" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("audit")'>Nhật ký hoạt động</a>
+                        </li>
+
                     </ul>
                     <!--begin::Navs-->
                 </div>
@@ -362,8 +366,14 @@
             }
             else if (activeTab == "attendance")
             {
-                <UserAttendanceHistory />
+                <UserAttendanceHistory EmployeeId="@employeeId" />
+
             }
+            else if (activeTab == "audit")
+            {
+                <UserAuditLog />
+            }
+
         </div>
     </div>
     <!--end::Content-->
@@ -423,16 +433,31 @@
             <div class="modal-body py-10 px-lg-10">
                 <div class="fv-row mb-8">
                     <label class="required fs-6 fw-semibold mb-2">Mật khẩu hiện tại</label>
-                    <input type="password" class="form-control form-control-solid" placeholder="********" />
+                    <div class="position-relative">
+                        <input type="@(_showCurrentPassword ? "text" : "password")" class="form-control form-control-solid" placeholder="********" />
+                        <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" @onclick="() => _showCurrentPassword = !_showCurrentPassword">
+                            <i class="ki-outline @(_showCurrentPassword ? "ki-eye-slash" : "ki-eye") fs-2"></i>
+                        </span>
+                    </div>
                 </div>
                 <div class="fv-row mb-8">
                     <label class="required fs-6 fw-semibold mb-2">Mật khẩu mới</label>
-                    <input type="password" class="form-control form-control-solid" placeholder="********" />
+                    <div class="position-relative">
+                        <input type="@(_showNewPassword ? "text" : "password")" class="form-control form-control-solid" placeholder="********" />
+                        <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" @onclick="() => _showNewPassword = !_showNewPassword">
+                            <i class="ki-outline @(_showNewPassword ? "ki-eye-slash" : "ki-eye") fs-2"></i>
+                        </span>
+                    </div>
                     <div class="text-muted fs-8 mt-2">Sử dụng ít nhất 8 ký tự, bao gồm chữ cái, chữ số và ký hiệu.</div>
                 </div>
                 <div class="fv-row mb-8">
                     <label class="required fs-6 fw-semibold mb-2">Xác nhận mật khẩu mới</label>
-                    <input type="password" class="form-control form-control-solid" placeholder="********" />
+                    <div class="position-relative">
+                        <input type="@(_showConfirmNewPassword ? "text" : "password")" class="form-control form-control-solid" placeholder="********" />
+                        <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" @onclick="() => _showConfirmNewPassword = !_showConfirmNewPassword">
+                            <i class="ki-outline @(_showConfirmNewPassword ? "ki-eye-slash" : "ki-eye") fs-2"></i>
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer flex-center">

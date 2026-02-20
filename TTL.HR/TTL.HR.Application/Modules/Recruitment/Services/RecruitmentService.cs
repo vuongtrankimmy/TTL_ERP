@@ -34,8 +34,9 @@ namespace TTL.HR.Application.Modules.Recruitment.Services
 
         public async Task<IEnumerable<ApplicantItem>> GetApplicantsAsync(string jobId)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<ApplicantItem>>>($"{ApiEndpoints.Recruitment.Jobs}/{jobId}/applicants");
-            return response?.Data ?? new List<ApplicantItem>();
+            var url = $"{ApiEndpoints.Recruitment.CandidatesFull}?jobPostingId={jobId}&pageSize=100";
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<ApplicantItem>>>(url);
+            return response?.Data?.Items ?? new List<ApplicantItem>();
         }
 
         public async Task<bool> AddApplicantAsync(string jobId, ApplicantRequest applicant)

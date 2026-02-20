@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Common.Interfaces;
 using TTL.HR.Application.Modules.Common.Models;
 using TTL.HR.Application.Modules.HumanResource.Interfaces;
@@ -14,14 +15,21 @@ namespace TTL.HR.Shared.Pages.Administration
     {
         [Inject] private IPermissionService PermissionService { get; set; } = default!;
         [Inject] private IEmployeeService EmployeeService { get; set; } = default!;
+        [Inject] private IJSRuntime JS { get; set; } = default!;
 
         private bool _isLoading = true;
         private RoleModel? _selectedRole;
         private bool _showUserPicker = false;
         private bool _showAddRoleDrawer = false;
         private bool _showRoleDetailDrawer = false;
+        private bool _isEditMode = false;
+        private string _editingRoleId = "";
+        private bool _isDeleteModalOpen = false;
+        private RoleModel? _roleToDelete;
+        [Parameter, SupplyParameterFromQuery(Name = "q")] public string _employeeSearchQuery { get; set; } = "";
         private string _memberSearchQuery = "";
-        private string _employeeSearchQuery = "";
+        private string RoleSearchTerm = "";
+        private System.Timers.Timer? _roleSearchTimer;
 
         private List<RoleModel> _roles = new();
         private List<PermissionDto> _allPermissions = new();
@@ -39,9 +47,10 @@ namespace TTL.HR.Shared.Pages.Administration
             .ToList();
 
         private string _newRoleName = "";
+        private string _newRoleDescription = "";
         private List<SelectedPerm> _availablePerms = new();
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnParametersSetAsync()
         {
             await LoadDataAsync();
         }
@@ -51,9 +60,9 @@ namespace TTL.HR.Shared.Pages.Administration
             _isLoading = true;
             try
             {
-                _roles = await PermissionService.GetRolesAsync();
+                _roles = await PermissionService.GetRolesAsync(RoleSearchTerm);
                 _allPermissions = await PermissionService.GetAllAvailablePermissionsAsync();
-                _availablePerms = _allPermissions.Select(p => new SelectedPerm(p.Name, p.Code)).ToList();
+                _availablePerms = _allPermissions.Select(p => new SelectedPerm(p.Name, p.Code, p.Id, p.Group)).ToList();
             }
             catch { }
             finally
@@ -62,39 +71,95 @@ namespace TTL.HR.Shared.Pages.Administration
             }
         }
 
-        private string GetPermissionName(string code)
+        private void HandleRoleSearch()
         {
-            return _allPermissions.FirstOrDefault(p => p.Code == code)?.Name ?? code;
+            _roleSearchTimer?.Stop();
+            _roleSearchTimer = new System.Timers.Timer(500);
+            _roleSearchTimer.Elapsed += async (s, e) =>
+            {
+                _roleSearchTimer.Stop();
+                await InvokeAsync(LoadDataAsync);
+            };
+            _roleSearchTimer.Start();
         }
 
-        private void openAddRole() => _showAddRoleDrawer = true;
+        private async Task ClearRoleSearch()
+        {
+            RoleSearchTerm = "";
+            await LoadDataAsync();
+        }
+
+        private string GetPermissionName(string idOrCode)
+        {
+            return _allPermissions.FirstOrDefault(p => p.Id == idOrCode || p.Code == idOrCode)?.Name ?? idOrCode;
+        }
+
+        private void openAddRole() {
+            _isEditMode = false;
+            _showAddRoleDrawer = true;
+        }
+
+        private void openEditRole(RoleModel role) {
+            _isEditMode = true;
+            _editingRoleId = role.Id;
+            _newRoleName = role.Name;
+            _newRoleDescription = role.Description;
+            
+            // Map selected perms
+            _availablePerms.ForEach(x => x.IsSelected = role.Permissions.Contains(x.Id) || role.Permissions.Contains(x.Code));
+            
+            _showAddRoleDrawer = true;
+        }
+
         private void closeAddRole() {
             _showAddRoleDrawer = false;
             _newRoleName = "";
+            _newRoleDescription = "";
+            _editingRoleId = "";
             _availablePerms.ForEach(x => x.IsSelected = false);
         }
 
         private async Task confirmCreateRole() {
             if (string.IsNullOrWhiteSpace(_newRoleName)) return;
             
-            var selectedPermCodes = _availablePerms.Where(x => x.IsSelected).Select(x => x.Code).ToList();
-            var newRole = new RoleModel { 
+            var selectedPermIds = _availablePerms.Where(x => x.IsSelected).Select(x => x.Id).ToList();
+            var roleData = new RoleModel { 
                 Name = _newRoleName, 
-                Description = "Tạo mới từ hệ thống",
-                Permissions = selectedPermCodes 
+                Description = string.IsNullOrWhiteSpace(_newRoleDescription) ? "Mô tả vai trò" : _newRoleDescription,
+                Permissions = selectedPermIds 
             };
 
-            var result = await PermissionService.CreateRoleAsync(newRole);
-            if (result)
+            (bool Success, string Message) result;
+            if (_isEditMode) {
+                roleData.Id = _editingRoleId;
+                result = await PermissionService.UpdateRoleAsync(_editingRoleId, roleData);
+            } else {
+                result = await PermissionService.CreateRoleAsync(roleData);
+            }
+
+            if (result.Success)
             {
+                await JS.InvokeVoidAsync("toastr.success", result.Message ?? (_isEditMode ? "Cập nhật vai trò thành công" : "Tạo vai trò thành công"));
                 await LoadDataAsync();
                 closeAddRole();
             }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", result.Message ?? (_isEditMode ? "Cập nhật vai trò thất bại" : "Tạo vai trò thất bại"));
+            }
+            StateHasChanged();
         }
 
-        private void openRoleDetail(RoleModel role) {
+        private async Task openRoleDetail(RoleModel role) {
             _selectedRole = role;
             _showRoleDetailDrawer = true;
+            // Fetch full detail (including members) from API
+            var detail = await PermissionService.GetRoleByIdAsync(role.Id);
+            if (detail != null)
+            {
+                _selectedRole = detail;
+                StateHasChanged();
+            }
         }
 
         private void closeRoleDetail() => _showRoleDetailDrawer = false;
@@ -108,8 +173,8 @@ namespace TTL.HR.Shared.Pages.Administration
                     Id = e.Id,
                     Name = e.FullName, 
                     Code = e.Code, 
-                    Position = e.Role, 
-                    Avatar = e.Avatar ?? "assets/media/avatars/blank.png" 
+                    Position = e.PositionName, 
+                    Avatar = string.IsNullOrEmpty(e.AvatarUrl) ? "assets/media/avatars/blank.png" : e.AvatarUrl
                 }).ToList();
             _showUserPicker = true;
         }
@@ -119,19 +184,22 @@ namespace TTL.HR.Shared.Pages.Administration
         private async Task confirmAddUsers() {
             if (_selectedRole == null) return;
 
-            var selected = _pickerEmployees.Where(x => x.IsSelected).ToList();
-            bool anySuccess = false;
-            foreach(var s in selected) {
-                var result = await PermissionService.AssignRoleAsync(_selectedRole.Id, s.Id);
-                if (result) anySuccess = true;
-            }
-
-            if (anySuccess)
-            {
-                _selectedRole = await PermissionService.GetRoleByIdAsync(_selectedRole.Id);
-                await LoadDataAsync();
+            var selectedIds = _pickerEmployees.Where(x => x.IsSelected).Select(x => x.Id).ToList();
+            if (selectedIds.Any()) {
+                var result = await PermissionService.AssignRolesAsync(_selectedRole.Id, selectedIds);
+                if (result)
+                {
+                    await JS.InvokeVoidAsync("toastr.success", $"Đã thêm {selectedIds.Count} nhân viên vào vai trò");
+                    _selectedRole = await PermissionService.GetRoleByIdAsync(_selectedRole.Id);
+                    await LoadDataAsync();
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Thêm nhân viên thất bại");
+                }
             }
             closeAddUser();
+            StateHasChanged();
         }
 
         private async Task removeUser(RoleMemberDto user) {
@@ -139,9 +207,40 @@ namespace TTL.HR.Shared.Pages.Administration
             var result = await PermissionService.UnassignRoleAsync(_selectedRole.Id, user.Id);
             if (result)
             {
+                await JS.InvokeVoidAsync("toastr.success", "Đã xóa nhân viên khỏi vai trò");
                 _selectedRole = await PermissionService.GetRoleByIdAsync(_selectedRole.Id);
                 await LoadDataAsync();
             }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Xóa nhân viên thất bại");
+            }
+            StateHasChanged();
+        }
+
+        private void promptDeleteRole(RoleModel role) {
+            _roleToDelete = role;
+            _isDeleteModalOpen = true;
+        }
+
+        private void closeDeleteModal() {
+            _isDeleteModalOpen = false;
+            _roleToDelete = null;
+        }
+
+        private async Task confirmDeleteRole() {
+            if (_roleToDelete == null) return;
+            var result = await PermissionService.DeleteRoleAsync(_roleToDelete.Id);
+            if (result) {
+                await JS.InvokeVoidAsync("toastr.success", "Đã xóa vai trò thành công");
+                await LoadDataAsync();
+                closeDeleteModal();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Xóa vai trò thất bại");
+            }
+            StateHasChanged();
         }
 
         public class EmployeePickerItem {
@@ -156,8 +255,15 @@ namespace TTL.HR.Shared.Pages.Administration
         public class SelectedPerm {
             public string Name { get; set; } = string.Empty;
             public string Code { get; set; } = string.Empty;
+            public string Id { get; set; } = string.Empty;
+            public string Group { get; set; } = string.Empty;
             public bool IsSelected { get; set; }
-            public SelectedPerm(string name, string code) { Name = name; Code = code; }
+            public SelectedPerm(string name, string code, string id, string group) { 
+                Name = name; 
+                Code = code; 
+                Id = id; 
+                Group = string.IsNullOrWhiteSpace(group) ? "Hệ thống" : group;
+            }
         }
     }
 }

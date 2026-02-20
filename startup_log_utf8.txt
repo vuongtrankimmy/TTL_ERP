@@ -1,0 +1,67 @@
+﻿Using launch settings from ..\TTL_API\src\Services\CoreService\TTL.CoreService.Api\Properties\launchSettings.json...
+Building...
+dotnet : Unhandled exception. System.AggregateException: Some services are 
+not able to be constructed (Error while validating the service descriptor 
+'ServiceType: MediatR.IRequestHandler`2[TTL.CoreService.Application.Feature
+s.HumanResources.Attendance.Commands.CloseMonthlyAttendance.CloseMonthlyAtt
+endanceCommand,System.Boolean] Lifetime: Transient ImplementationType: TTL.
+CoreService.Application.Features.HumanResources.Attendance.Commands.CloseMo
+nthlyAttendance.CloseMonthlyAttendanceCommandHandler': Unable to resolve 
+service for type 'TTL.CoreService.Domain.Repositories.IRepository`1[TTL.Cor
+eService.Domain.Entities.Attendances.AttendancePeriod]' while attempting 
+to activate 'TTL.CoreService.Application.Features.HumanResources.Attendance
+.Commands.CloseMonthlyAttendance.CloseMonthlyAttendanceCommandHandler'.)
+At line:1 char:1
++ dotnet run --project ..\TTL_API\src\Services\CoreService\TTL.CoreServ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Unhandled excep...mmandHandle 
+   r'.):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ ---> System.InvalidOperationException: Error while validating the service 
+descriptor 'ServiceType: MediatR.IRequestHandler`2[TTL.CoreService.Applicat
+ion.Features.HumanResources.Attendance.Commands.CloseMonthlyAttendance.Clos
+eMonthlyAttendanceCommand,System.Boolean] Lifetime: Transient 
+ImplementationType: TTL.CoreService.Application.Features.HumanResources.Att
+endance.Commands.CloseMonthlyAttendance.CloseMonthlyAttendanceCommandHandle
+r': Unable to resolve service for type 'TTL.CoreService.Domain.Repositories
+.IRepository`1[TTL.CoreService.Domain.Entities.Attendances.AttendancePeriod
+]' while attempting to activate 'TTL.CoreService.Application.Features.Human
+Resources.Attendance.Commands.CloseMonthlyAttendance.CloseMonthlyAttendance
+CommandHandler'.
+ ---> System.InvalidOperationException: Unable to resolve service for type 
+'TTL.CoreService.Domain.Repositories.IRepository`1[TTL.CoreService.Domain.E
+ntities.Attendances.AttendancePeriod]' while attempting to activate 'TTL.Co
+reService.Application.Features.HumanResources.Attendance.Commands.CloseMont
+hlyAttendance.CloseMonthlyAttendanceCommandHandler'.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactor
+y.CreateArgumentCallSites(ServiceIdentifier serviceIdentifier, Type 
+implementationType, CallSiteChain callSiteChain, ParameterInfo[] 
+parameters, Boolean throwIfCallSiteNotFound)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactor
+y.CreateConstructorCallSite(ResultCache lifetime, ServiceIdentifier 
+serviceIdentifier, Type implementationType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactor
+y.CreateExact(ServiceDescriptor descriptor, ServiceIdentifier 
+serviceIdentifier, CallSiteChain callSiteChain, Int32 slot)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactor
+y.GetCallSite(ServiceDescriptor serviceDescriptor, CallSiteChain 
+callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.ValidateServ
+ice(ServiceDescriptor descriptor)
+   --- End of inner exception stack trace ---
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.ValidateServ
+ice(ServiceDescriptor descriptor)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider..ctor(IColle
+ction`1 serviceDescriptors, ServiceProviderOptions options)
+   --- End of inner exception stack trace ---
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider..ctor(IColle
+ction`1 serviceDescriptors, ServiceProviderOptions options)
+   at Microsoft.Extensions.DependencyInjection.ServiceCollectionContainerBu
+ilderExtensions.BuildServiceProvider(IServiceCollection services, 
+ServiceProviderOptions options)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\MONEY\2026\TAN_TAN_LOC\TTL_API\s
+rc\Services\CoreService\TTL.CoreService.Api\Program.cs:line 79
+   at Program.<Main>(String[] args)

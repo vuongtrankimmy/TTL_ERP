@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TTL.HR.Application.Modules.Training.Models;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Application.Modules.Training.Interfaces
 {
@@ -15,6 +16,7 @@ namespace TTL.HR.Application.Modules.Training.Interfaces
         Task<bool> RegisterCourseAsync(string courseId);
         Task<IEnumerable<ParticipantModel>> GetParticipantsAsync(string courseId);
         Task<bool> RemoveParticipantAsync(string courseId, string employeeId);
-        Task<bool> RegisterParticipantsAsync(string courseId, List<string> employeeIds);
+        Task<ApiResponse<bool>> RegisterParticipantsAsync(string courseId, List<string> employeeIds);
+        Task<TrainingAnalyticsModel?> GetAnalyticsAsync();
     }
 }

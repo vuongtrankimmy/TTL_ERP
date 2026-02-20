@@ -1,0 +1,9 @@
+﻿  Determining projects to restore...
+d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Shared\TTL.BuildingBlocks\TTL.BuildingBlocks.csproj : warning NU1903: Package 'Newtonsoft.Json' 9.0.1 has a known high severity vulnerability, https://github.com/advisories/GHSA-5crp-9r3c-p9vr [d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Gateway\TTL.Gateway\TTL.Gateway.csproj]
+  Restored d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Gateway\TTL.Gateway\TTL.Gateway.csproj (in 210 ms).
+  Restored d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Shared\TTL.BuildingBlocks\TTL.BuildingBlocks.csproj (in 210 ms).
+C:\Program Files\dotnet\sdk\10.0.200-preview.0.26103.119\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(383,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Gateway\TTL.Gateway\TTL.Gateway.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Shared\TTL.BuildingBlocks\TTL.BuildingBlocks.csproj : warning NU1903: Package 'Newtonsoft.Json' 9.0.1 has a known high severity vulnerability, https://github.com/advisories/GHSA-5crp-9r3c-p9vr
+  TTL.BuildingBlocks -> d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Shared\TTL.BuildingBlocks\bin\Release\net10.0\TTL.BuildingBlocks.dll
+  TTL.Gateway -> d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Gateway\TTL.Gateway\bin\Release\net10.0\TTL.Gateway.dll
+  TTL.Gateway -> D:\MONEY\2026\TAN_TAN_LOC\Deploy\API\Gateway\

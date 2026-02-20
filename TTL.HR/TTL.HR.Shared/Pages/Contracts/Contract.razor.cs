@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.HumanResource.Interfaces;
 using TTL.HR.Application.Modules.HumanResource.Models;
+using TTL.HR.Application.Modules.Common.Models;
+using TTL.HR.Application.Modules.Common.Interfaces;
 
 namespace TTL.HR.Shared.Pages.Contracts
 {
@@ -14,74 +16,133 @@ namespace TTL.HR.Shared.Pages.Contracts
         [Inject] public NavigationManager Navigation { get; set; } = default!;
         [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
         [Inject] public IContractService ContractService { get; set; } = default!;
+        [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
 
-        private string ActiveTab = "Templates";
+        private List<LookupModel> contractTypeLookups = new();
+        private List<LookupModel> templateStatusLookups = new();
+        private List<LookupModel> contractStatusLookups = new();
+
+        private string FilterTypeId = "";
+        private string FilterStatusId = "";
         private string SearchQuery = "";
         private ContractTemplateModel? selectedTemplate;
         private string deleteConfirmInput = "";
 
-        private List<ContractTemplateModel> AllTemplates = new();
-        private List<EmployeeContractModel> AllEmployeeContracts = new();
+        private string ActiveTab = "Templates";
+        private PagedResult<ContractTemplateModel> TemplateData = new();
+        private PagedResult<EmployeeContractModel> ContractData = new();
+        private int PageIndex = 1;
+        private int PageSize = 10;
+        private bool IsLoading = false;
 
         protected override async Task OnInitializedAsync()
         {
+            contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType");
+            templateStatusLookups = await MasterDataService.GetCachedLookupsAsync("TemplateStatus");
+            contractStatusLookups = await MasterDataService.GetCachedLookupsAsync("ContractStatus");
+
             await LoadData();
         }
 
         private async Task LoadData()
         {
-            AllTemplates = await ContractService.GetTemplatesAsync();
-            AllEmployeeContracts = await ContractService.GetEmployeeContractsAsync();
+            IsLoading = true;
+            try
+            {
+                if (ActiveTab.StartsWith("Templates") || ActiveTab == "All" || ActiveTab == "Active" || ActiveTab == "Draft")
+                {
+                    var status = ActiveTab == "Templates" || ActiveTab == "All" ? FilterStatusId : ActiveTab;
+                    // If ActiveTab is Active/Draft, it's a fixed filter. If it's Templates/All, we use FilterStatusId.
+                    
+                    // Actually, the backend GetTemplatesAsync takes 'status' as a string.
+                    // I should probably pass IDs now.
+                    TemplateData = await ContractService.GetTemplatesAsync(PageIndex, PageSize, SearchQuery, status, FilterTypeId);
+                }
+                else if (ActiveTab == "EmployeeContracts")
+                {
+                    ContractData = await ContractService.GetEmployeeContractsAsync(PageIndex, PageSize, SearchQuery, FilterStatusId, FilterTypeId);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading data: {ex.Message}");
+                // Optionally show UI feedback here
+            }
+            IsLoading = false;
             StateHasChanged();
         }
 
-        private IEnumerable<ContractTemplateModel> FilteredTemplates
+        private async Task ChangePage(int page)
         {
-            get
-            {
-                var templates = ActiveTab switch
-                {
-                    "Active" => AllTemplates.Where(t => t.Status == "Active"),
-                    "Draft" => AllTemplates.Where(t => t.Status == "Draft"),
-                    _ => AllTemplates
-                };
-
-                if (!string.IsNullOrWhiteSpace(SearchQuery))
-                {
-                    templates = templates.Where(t =>
-                        t.Name.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
-                        t.Code.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase));
-                }
-
-                return templates;
-            }
+            PageIndex = page;
+            await LoadData();
         }
 
-        private IEnumerable<EmployeeContractModel> FilteredEmployeeContracts
+        private async Task ApplyFilters()
         {
-            get
-            {
-                var result = AllEmployeeContracts;
-                if (!string.IsNullOrWhiteSpace(SearchQuery))
-                {
-                    result = result.Where(c =>
-                        c.EmployeeName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
-                        c.ContractNumber.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
-                }
-                return result;
-            }
+            PageIndex = 1;
+            await LoadData();
         }
 
-        private void SetActiveTab(string tab)
+        private async Task ResetFilters()
+        {
+            FilterTypeId = "";
+            FilterStatusId = "";
+            PageIndex = 1;
+            await LoadData();
+        }
+
+        private async Task OnSearchChanged(ChangeEventArgs e)
+        {
+            SearchQuery = e.Value?.ToString() ?? "";
+            PageIndex = 1;
+            await LoadData();
+        }
+
+
+
+        private async Task SetActiveTab(string tab)
         {
             ActiveTab = tab;
+            PageIndex = 1;
+            SearchQuery = "";
+            
+            // Clear current data if switching to a different entity type to avoid UI flickers 
+            // with mismatched data during loading
+            if (tab == "EmployeeContracts")
+            {
+                TemplateData = new();
+            }
+            else
+            {
+                ContractData = new();
+            }
+
+            StateHasChanged(); // Show loading state immediately
+            await LoadData();
         }
 
-        private void ShowDetail(ContractTemplateModel template)
+        private async Task ShowDetail(ContractTemplateModel template)
         {
-            selectedTemplate = template;
-            StateHasChanged();
-            JSRuntime.InvokeVoidAsync("openContractDetail");
+            try
+            {
+                selectedTemplate = template;
+                StateHasChanged();
+                await JSRuntime.InvokeVoidAsync("openContractDetail");
+
+                // Fetch full details (e.g. content) from API
+                var fullDetails = await ContractService.GetTemplateAsync(template.Id);
+                if (fullDetails != null)
+                {
+                    selectedTemplate = fullDetails;
+                    StateHasChanged();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error showing detail: {ex.Message}");
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Không thể tải chi tiết mẫu hợp đồng.", "error");
+            }
         }
 
         private bool IsDeleteButtonEnabled => deleteConfirmInput.ToUpper() == "XÓA";
@@ -104,7 +165,8 @@ namespace TTL.HR.Shared.Pages.Contracts
             
             if (success)
             {
-                AllTemplates.Remove(selectedTemplate);
+                await LoadData();
+
                 
                 // Đóng các UI
                 await JSRuntime.InvokeVoidAsync("hideAllContractUI");

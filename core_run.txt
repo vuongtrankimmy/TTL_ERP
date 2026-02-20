@@ -1,0 +1,17 @@
+﻿Using launch settings from d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\Properties\launchSettings.json...
+dotnet : Unhandled exception. System.InvalidOperationException: JWT_SECRET 
+is not configured.
+At line:1 char:1
++ dotnet run --project d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\C ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Unhandled excep...not configu 
+   red.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   at TTL.BuildingBlocks.Auth.AuthExtensions.AddCustomJwtAuthentication(ISe
+rviceCollection services, IConfiguration configuration) in d:\MONEY\2026\TA
+N_TAN_LOC\TTL_API\src\Shared\TTL.BuildingBlocks\Auth\AuthExtensions.cs:line
+ 20
+   at Program.<Main>$(String[] args) in d:\MONEY\2026\TAN_TAN_LOC\TTL_API\s
+rc\Services\CoreService\TTL.CoreService.Api\Program.cs:line 52
+   at Program.<Main>(String[] args)

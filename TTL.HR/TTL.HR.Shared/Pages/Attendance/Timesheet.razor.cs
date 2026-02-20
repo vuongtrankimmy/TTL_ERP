@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Attendance.Interfaces;
 using TTL.HR.Application.Modules.Attendance.Models;
+using TTL.HR.Application.Modules.Common.Constants;
+using System.Net.Http;
 
 namespace TTL.HR.Shared.Pages.Attendance
 {
@@ -13,6 +15,7 @@ namespace TTL.HR.Shared.Pages.Attendance
     {
         [Inject] public IAttendanceService AttendanceService { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
+        [Inject] private HttpClient _httpClient { get; set; } = default!;
 
         private List<AttendanceModel> _timesheets = new();
         private bool _showDetail = false;
@@ -33,9 +36,10 @@ namespace TTL.HR.Shared.Pages.Attendance
                 var data = await AttendanceService.GetTimesheetsAsync();
                 _timesheets = data?.ToList() ?? new List<AttendanceModel>();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await JS.InvokeVoidAsync("toastr.error", "Lỗi tải dữ liệu bảng công.");
+                var url = $"{_httpClient.BaseAddress}{ApiEndpoints.Attendance.Timesheets}";
+                await JS.InvokeVoidAsync("toastr.error", $"Lỗi tải dữ liệu bảng công: {ex.Message} (URL: {url})");
             }
             finally
             {

@@ -1,7 +1,66 @@
 @page "/attendance"
+@namespace TTL.HR.Shared.Pages.Attendance
+
+@inject IFormatService FormatService
+
+
 
 <div class="post d-flex flex-column-fluid pt-8" id="kt_post">
     <div id="kt_content_container" class="container-fluid">
+
+        <!-- Summary Stats Dashboard -->
+        <div class="row g-5 mb-8">
+            <div class="col-md-3">
+                <div class="card shadow-sm h-100 border-start border-primary border-4 bg-light-primary bg-opacity-10">
+                    <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
+                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng nhân sự</span>
+                        <div class="d-flex align-items-center">
+                            <span class="fs-2qx fw-bold text-gray-800 me-2">@FilteredEmployees.Count</span>
+
+                            <span class="badge badge-light-primary fw-bold px-2 py-1">Tháng @_currentMonth/@_currentYear</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm h-100 border-start border-success border-4 bg-light-success bg-opacity-10">
+                    <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
+                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng công thực tế</span>
+                        <div class="d-flex align-items-center">
+                            <span class="fs-2qx fw-bold text-gray-800 me-2">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.ActualWork), 1)</span>
+
+
+                            <span class="text-success fs-7 fw-bold"><i class="bi bi-check-circle-fill me-1"></i>Hợp lệ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm h-100 border-start border-info border-4 bg-light-info bg-opacity-10">
+                    <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
+                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng giờ tăng ca</span>
+                        <div class="d-flex align-items-center">
+                            <span class="fs-2qx fw-bold text-gray-800 me-2">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.OvertimeHours), 1)</span>
+
+
+                            <span class="text-info fs-7 fw-bold">Giờ (OT)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm h-100 border-start border-danger border-4 bg-light-danger bg-opacity-10">
+                    <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
+                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng vi phạm (Phút)</span>
+                        <div class="d-flex align-items-center">
+                            <span class="fs-2qx fw-bold text-gray-800 me-2">@(FilteredEmployees.Sum(e => e.LateMinutes + e.EarlyLeaveMinutes))</span>
+
+                            <span class="text-danger fs-7 fw-bold"><i class="bi bi-clock-history me-1"></i>Muộn/Sớm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Filters Bar -->
         <div class="card mb-8 shadow-sm">
@@ -14,30 +73,34 @@
                                 <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
                             </svg>
                         </span>
-                        <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm tên, mã nhân viên..." />
+                        <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm tên, mã nhân viên..." 
+                               value="@_searchTerm" @oninput="(e) => OnSearchChange(e.Value?.ToString() ?? string.Empty)" />
                     </div>
 
                     <!-- Period -->
                     <div class="w-md-175px me-4 my-1">
-                        <select class="form-select form-select-solid fs-7 fw-bold">
-                            <option>Tháng 02/2026</option>
-                            <option>Tháng 01/2026</option>
-                            <option>Tháng 12/2025</option>
+                        <select class="form-select form-select-solid fs-7 fw-bold" @onchange="OnPeriodChange">
+                            @foreach (var p in _periods)
+                            {
+                                <option value="@p.ToString("yyyy-MM-dd")" selected="@(p.Month == _currentMonth && p.Year == _currentYear)">Tháng @p.ToString("MM/yyyy")</option>
+                            }
                         </select>
                     </div>
 
                     <!-- Department -->
                     <div class="w-md-175px me-4 my-1">
-                        <select class="form-select form-select-solid fs-7 fw-bold">
-                            <option>Phòng ban: Tất cả</option>
-                            <option>Phòng Kỹ thuật</option>
-                            <option>Phòng Nhân sự</option>
+                        <select class="form-select form-select-solid fs-7 fw-bold" @onchange="OnDepartmentChange">
+                            <option value="">Phòng ban: Tất cả</option>
+                            @foreach (var d in _departments)
+                            {
+                                <option value="@d.Id">@d.Name</option>
+                            }
                         </select>
                     </div>
 
                     <!-- Actions -->
                     <div class="ms-auto my-1 d-flex gap-2">
-                        <button class="btn btn-icon btn-light-primary btn-sm" title="Làm mới dữ liệu"><i class="bi bi-arrow-repeat fs-5"></i></button>
+                        <button class="btn btn-icon btn-light-primary btn-sm" title="Làm mới dữ liệu" @onclick="RefreshData"><i class="bi bi-arrow-repeat fs-5"></i></button>
                         <button class="btn btn-light-primary fw-bold fs-7 px-6 ms-2"><i class="bi bi-funnel me-1"></i>Lọc thêm</button>
                     </div>
                 </div>
@@ -49,12 +112,19 @@
             <div class="d-flex align-items-center">
                 <div class="form-check form-check-sm form-check-custom form-check-solid me-5">
                     <input class="form-check-input" type="checkbox" id="check_all_timesheet" />
-                    <label class="form-check-label fw-bold text-gray-700 fs-7 ms-2 text-nowrap" for="check_all_timesheet">Chọn tất cả (124 nhân viên)</label>
+                    <label class="form-check-label fw-bold text-gray-700 fs-7 ms-2 text-nowrap" for="check_all_timesheet">Chọn tất cả (@FilteredEmployees.Count nhân viên)</label>
                 </div>
             </div>
             <div class="d-flex align-items-center gap-3 text-end justify-content-end">
                 <button class="btn btn-sm btn-light border border-gray-300 px-3 py-2 fs-8 fw-semibold"><i class="bi bi-file-earmark-excel fs-6 me-1"></i>Xuất Excel</button>
-                <button class="btn btn-sm btn-primary px-4 py-2 fs-8 fw-semibold"><i class="bi bi-lock fs-7 me-1"></i>Chốt công tháng</button>
+                @if (_isPeriodLocked)
+                {
+                    <button class="btn btn-sm btn-success px-4 py-2 fs-8 fw-semibold" disabled><i class="bi bi-check-circle fs-7 me-1"></i>Đã chốt công</button>
+                }
+                else
+                {
+                    <button class="btn btn-sm btn-primary px-4 py-2 fs-8 fw-semibold" @onclick="LockMonth" disabled="@_isLoading"><i class="bi bi-lock fs-7 me-1"></i>Chốt công tháng</button>
+                }
             </div>
         </div>
 
@@ -69,49 +139,90 @@
                                     <th class="w-10px pe-2"></th>
                                     <th class="min-w-180px">NHÂN VIÊN</th>
                                     <th class="min-w-120px">PHÒNG BAN</th>
-                                    <th class="min-w-80px text-center">CÔNG CHUẨN</th>
-                                    <th class="min-w-80px text-center">CÔNG THỰC</th>
-                                    <th class="min-w-80px text-center">MUỘN/SỚM</th>
-                                    <th class="min-w-80px text-center">NGHỈ/LỄ</th>
-                                    <th class="min-w-80px text-center">TĂNG CA</th>
+                                    <th class="min-w-60px text-center">CHUẨN</th>
+                                    <th class="min-w-60px text-center">THỰC</th>
+                                    <th class="min-w-80px text-center">GIỜ CÔNG</th>
+                                    <th class="min-w-60px text-center">MUỘN (P)</th>
+                                    <th class="min-w-60px text-center">SỚM (P)</th>
+                                    <th class="min-w-60px text-center">PHÉP</th>
+                                    <th class="min-w-60px text-center">LỄ</th>
+                                    <th class="min-w-70px text-center">TĂNG CA</th>
                                     <th class="min-w-100px text-center">TRẠNG THÁI</th>
                                     <th class="min-w-100px text-end pe-7">THAO TÁC</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var emp in _employees)
+                                @if (FilteredEmployees.Any())
                                 {
-                                    <tr class="hover-elevate cursor-pointer" @onclick="() => openDetail(emp)">
-                                        <td><div class="form-check form-check-sm form-check-custom form-check-solid"><input class="form-check-input timesheet-checkbox" type="checkbox" value="1" @onclick:stopPropagation /></div></td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="symbol symbol-40px symbol-circle me-3">
-                                                    @if (!string.IsNullOrEmpty(emp.Avatar))
-                                                    {
-                                                        <img src="@emp.Avatar" alt="user" />
-                                                     }
-                                                     else
-                                                     {
-                                                        <div class="symbol-label bg-light-danger text-danger fw-bolder">@emp.EmployeeName.Substring(0, 1)</div>
-                                                     }
+                                    @foreach (var emp in FilteredEmployees)
+                                    {
+                                        <tr class="hover-elevate cursor-pointer" @onclick="() => openDetail(emp)">
+                                            <td><div class="form-check form-check-sm form-check-custom form-check-solid"><input class="form-check-input timesheet-checkbox" type="checkbox" value="1" @onclick:stopPropagation /></div></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-40px symbol-circle me-3">
+                                                        @if (!string.IsNullOrEmpty(emp.Avatar))
+                                                        {
+                                                            <img src="@emp.Avatar" alt="user" />
+                                                         }
+                                                         else
+                                                         {
+                                                            <div class="symbol-label bg-light-danger text-danger fw-bolder">@(emp.EmployeeName?.Length > 0 ? emp.EmployeeName.Substring(0, 1) : "N")</div>
+                                                         }
+                                                    </div>
+                                                    <div class="d-flex justify-content-start flex-column"><span class="text-dark fw-bolder fs-6">@emp.EmployeeName</span><span class="text-muted fw-bold fs-7">@emp.EmployeeId • @emp.Role</span></div>
                                                 </div>
-                                                <div class="d-flex justify-content-start flex-column"><span class="text-dark fw-bolder fs-6">@emp.EmployeeName</span><span class="text-muted fw-bold fs-7">@emp.EmployeeId • @emp.Role</span></div>
-                                            </div>
-                                        </td>
-                                        <td><span class="text-gray-700 fw-bold">@emp.Department</span></td>
-                                        <td class="text-center fw-bolder text-gray-800">@emp.StandardWork</td>
-                                        <td class="text-center fw-bolder text-primary">@emp.ActualWork</td>
-                                        <td class="text-center"><span class="text-danger fw-bold">@emp.LateCount</span>/<span class="text-gray-600 fw-bold">@emp.EarlyLeaveCount</span></td>
-                                        <td class="text-center"><span class="text-warning fw-bold">@emp.LeaveDays</span>/<span class="text-gray-600 fw-bold">@emp.HolidayDays</span></td>
-                                        <td class="text-center fw-bold text-success">@emp.OvertimeHours h</td>
-                                        <td class="text-center">
-                                            <span class="badge @GetStatusColor(emp.Status) fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
-                                                <span class="bullet bullet-dot @(GetStatusColor(emp.Status).Replace("badge-light-", "bg-")) w-6px h-6px me-2"></span>@emp.Status
-                                            </span>
-                                        </td>
-                                        <td class="text-end">
-                                            <button class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => openDetail(emp)" @onclick:stopPropagation><i class="bi bi-eye-fill fs-6"></i></button>
-                                            <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công" @onclick:stopPropagation><i class="bi bi-check-lg fs-5"></i></button>
+                                            </td>
+                                            <td><span class="text-gray-700 fw-bold">@emp.Department</span></td>
+                                            <td class="text-center fw-bolder text-gray-800">@emp.StandardWork</td>
+                                            <td class="text-center fw-bolder text-primary">@emp.ActualWork</td>
+                                            <td class="text-center fw-bold text-dark">@FormatService.FormatNumber(emp.TotalWorkingHours, 1) h</td>
+
+                                            <td class="text-center"><span class="text-danger fw-bold">@emp.LateMinutes</span></td>
+                                            <td class="text-center"><span class="text-gray-600 fw-bold">@emp.EarlyLeaveMinutes</span></td>
+                                            <td class="text-center"><span class="text-warning fw-bold">@emp.LeaveDays</span></td>
+                                            <td class="text-center"><span class="text-gray-600 fw-bold">@emp.HolidayDays</span></td>
+                                            <td class="text-center fw-bold text-success">@emp.OvertimeHours h</td>
+                                            <td class="text-center">
+                                                <span class="badge @GetStatusColor(emp.Status) fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                                    <span class="bullet bullet-dot @GetStatusBulletClass(emp.Status) w-6px h-6px me-2"></span>@TranslateStatus(emp.Status)
+                                                </span>
+                                            </td>
+                                            <td class="text-end">
+                                                <button class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => openDetail(emp)" @onclick:stopPropagation><i class="bi bi-eye-fill fs-6"></i></button>
+                                                @if (emp.Status == "Locked" || emp.Status == "Đã chốt")
+                                                {
+                                                    <button class="btn btn-icon btn-sm btn-success border border-success border-opacity-10" title="Đã chốt" disabled @onclick:stopPropagation><i class="bi bi-check-all fs-5"></i></button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công" @onclick:stopPropagation><i class="bi bi-check-lg fs-5"></i></button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                    <!-- Totals Row -->
+                                    <tr class="fw-bolder bg-light">
+                                        <td></td>
+                                        <td colspan="2" class="text-end ps-0">TỔNG CỘNG (@FilteredEmployees.Count NS):</td>
+                                        <td class="text-center">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.StandardWork))</td>
+                                        <td class="text-center text-primary">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.ActualWork), 1)</td>
+                                        <td class="text-center text-dark">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.TotalWorkingHours), 1) h</td>
+                                        <td class="text-center text-danger">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.LateMinutes))</td>
+                                        <td class="text-center text-gray-600">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.EarlyLeaveMinutes))</td>
+                                        <td class="text-center text-warning">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.LeaveDays))</td>
+                                        <td class="text-center text-gray-600">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.HolidayDays))</td>
+                                        <td class="text-center text-success">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.OvertimeHours), 1) h</td>
+
+
+                                        <td colspan="2"></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="10" class="text-center py-20">
+                                            <div class="text-muted fs-4">Không tìm thấy dữ liệu chấm công.</div>
                                         </td>
                                     </tr>
                                 }
@@ -121,7 +232,7 @@
                     <!-- Pagination -->
                     <div class="px-7 py-5">
                         <div class="d-flex flex-stack flex-wrap">
-                            <div class="fs-7 fw-bold text-gray-700">Hiển thị 1 đến 10 của 124 nhân viên</div>
+                            <div class="fs-7 fw-bold text-gray-700">Hiển thị @FilteredEmployees.Count nhân viên</div>
                             <ul class="pagination">
                                 <li class="page-item previous disabled"><a href="#" class="page-link"><i class="next"></i></a></li>
                                 <li class="page-item active"><a href="#" class="page-link">1</a></li>
@@ -144,7 +255,7 @@
         <div class="card-header pe-5">
             <div class="card-title">
                 <div class="d-flex justify-content-center flex-column me-3">
-                    <span class="fs-4 fw-bolder text-gray-900 lh-1">Chi tiết công tháng 02/2026</span>
+                    <span class="fs-4 fw-bolder text-gray-900 lh-1">Chi tiết công tháng @_currentMonth/@_currentYear</span>
                     <span class="fs-7 fw-bold text-muted mt-2">MÃ NV: @(_selectedEmployee?.Id ?? "---")</span>
                 </div>
             </div>
@@ -221,38 +332,52 @@
                     <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4">
                         <thead>
                             <tr class="fw-bold text-muted fs-8 text-uppercase">
-                                <th class="min-w-100px">Ngày</th>
-                                <th class="min-w-100px text-center">Giờ vào</th>
-                                <th class="min-w-100px text-center">Giờ ra</th>
-                                <th class="min-w-80px text-end">Công</th>
+                                <th class="min-w-80px">Ngày</th>
+                                <th class="min-w-70px text-center">Giờ vào</th>
+                                <th class="min-w-70px text-center">Giờ ra</th>
+                                <th class="min-w-60px text-center">Muộn</th>
+                                <th class="min-w-60px text-center">Sớm</th>
+                                <th class="min-w-60px text-center">OT</th>
+                                <th class="min-w-60px text-end">Công</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var detail in _selectedDetails)
                             {
                                 <tr>
-                                    <td><span class="text-gray-800 fw-bold fs-7">@detail.Date.ToString("dd/MM") - @detail.DayOfWeek</span></td>
+                                    <td><span class="text-gray-800 fw-bold fs-8">@FormatService.FormatDate(detail.Date).Substring(0, 5)</span></td>
                                     <td class="text-center">
                                         @if (detail.CheckIn.HasValue)
                                         {
-                                            <span class="badge @(detail.IsLate ? "badge-light-danger" : "badge-light-success") fs-7 fw-bold">@detail.CheckIn.Value.ToString("HH:mm")</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-muted fs-8">--:--</span>
+                                            <span class="text-gray-800 fs-8">@detail.CheckIn.Value.ToString("HH:mm")</span>
                                         }
                                     </td>
                                     <td class="text-center">
                                         @if (detail.CheckOut.HasValue)
                                         {
-                                            <span class="badge @(detail.IsEarlyLeave ? "badge-light-danger" : "badge-light-success") fs-7 fw-bold">@detail.CheckOut.Value.ToString("HH:mm")</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-muted fs-8">--:--</span>
+                                            <span class="text-gray-800 fs-8">@detail.CheckOut.Value.ToString("HH:mm")</span>
                                         }
                                     </td>
-                                    <td class="text-end"><span class="text-gray-800 fw-bolder fs-7">@detail.WorkValue.ToString("0.0")</span></td>
+                                    <td class="text-center">
+                                        @if (detail.LateMinutes > 0)
+                                        {
+                                            <span class="text-danger fw-bold fs-8">@detail.LateMinutes p</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (detail.EarlyLeaveMinutes > 0)
+                                        {
+                                            <span class="text-warning fw-bold fs-8">@detail.EarlyLeaveMinutes p</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (detail.OvertimeHours > 0)
+                                        {
+                                            <span class="text-success fw-bold fs-8">@FormatService.FormatNumber(detail.OvertimeHours, 1)</span>
+                                        }
+                                    </td>
+                                    <td class="text-end"><span class="text-gray-900 fw-bolder fs-8">@FormatService.FormatNumber(detail.WorkValue, 1)</span></td>
+
                                 </tr>
                             }
                         </tbody>
@@ -276,7 +401,14 @@
         <!-- Footer -->
         <div class="card-footer border-0 d-flex gap-3 justify-content-between p-10">
             <button type="button" class="btn btn-light flex-grow-1 fs-7 fw-bold" @onclick="closeDetail">Đóng</button>
-            <button type="button" class="btn btn-primary flex-grow-1 fs-7 fw-bold">Chốt công nhanh</button>
+            @if (_isPeriodLocked)
+            {
+                <button type="button" class="btn btn-light-success flex-grow-1 fs-7 fw-bold" disabled>Đã chốt công xong</button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-primary flex-grow-1 fs-7 fw-bold" @onclick="LockMonth" disabled="@_isLoading">Chốt công nhanh</button>
+            }
         </div>
     </div>
 </div>

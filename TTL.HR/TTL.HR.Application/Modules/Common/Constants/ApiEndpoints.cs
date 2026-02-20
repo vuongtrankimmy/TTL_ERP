@@ -20,7 +20,7 @@ namespace TTL.HR.Application.Modules.Common.Constants
         {
             public const string Base = $"{CorePrefix}/Recruitment";
             public const string Jobs = $"{Base}/jobs";
-            public const string Candidates = $"{CorePrefix}/Candidates";
+            public const string Candidates = $"{Base}/candidates";
             public const string CandidatesFull = $"{Base}/candidates";
             public const string Apply = $"{Base}/apply";
         }
@@ -29,7 +29,10 @@ namespace TTL.HR.Application.Modules.Common.Constants
         {
             public const string Base = $"{CorePrefix}/Employees";
             public const string Dashboard = $"{Base}/dashboard";
+            public const string Me = $"{Base}/me";
+            public const string AttendanceDetail = $"{Base}/me/attendance";
         }
+
 
         public static class Departments
         {
@@ -111,6 +114,8 @@ namespace TTL.HR.Application.Modules.Common.Constants
         public static class System
         {
             public const string Settings = $"{CorePrefix}/system/settings";
+            public const string Audit = $"{CorePrefix}/Audit";
         }
+
     }
 }

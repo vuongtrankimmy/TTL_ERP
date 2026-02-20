@@ -1,7 +1,11 @@
+@page "/payroll/period/{Id}"
 @page "/payroll/period/{Year:int}/{Month:int}"
 @using TTL.HR.Shared.Components.Common
+@inject IFormatService FormatService
 
-<PageTitle>Chi tiết bảng lương tháng @Month/@Year - TTL.HR</PageTitle>
+
+
+<PageTitle>Chi tiết bảng lương - TTL.HR</PageTitle>
 
 <div class="card card-flush shadow-sm border-0">
     <!--begin::Header-->
@@ -14,7 +18,14 @@
             
             <div class="ms-3 d-none d-md-block">
                 <div class="p-3 bg-light rounded fw-bold text-gray-700">
-                    Kỳ lương tháng @Month/@Year
+                    @if (!string.IsNullOrEmpty(PeriodName))
+                    {
+                        @PeriodName
+                    }
+                    else
+                    {
+                        @($"Kỳ lương tháng {Month}/{Year}")
+                    }
                 </div>
             </div>
         </div>
@@ -81,13 +92,17 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="text-end fw-bold">@slip.BasicSalary.ToString("N0") đ</td>
-                                    <td class="text-end text-success fw-bold">+@slip.TotalAllowances.ToString("N0") đ</td>
+                                    <td class="text-end fw-bold">@FormatService.FormatCurrency(slip.BasicSalary)</td>
+
+                                    <td class="text-end text-success fw-bold">+@FormatService.FormatCurrency(slip.TotalAllowances)</td>
+
                                     <td class="text-center">
                                         <span class="fw-bold">@slip.ActualWorkDays</span>/@slip.StandardWorkDays
                                     </td>
-                                    <td class="text-end text-danger fw-bold">-@slip.TotalDeductions.ToString("N0") đ</td>
-                                    <td class="text-end fw-bolder text-primary fs-5">@slip.NetSalary.ToString("N0") đ</td>
+                                    <td class="text-end text-danger fw-bold">-@FormatService.FormatCurrency(slip.TotalDeductions)</td>
+
+                                    <td class="text-end fw-bolder text-primary fs-5">@FormatService.FormatCurrency(slip.NetSalary)</td>
+
                                     <td class="text-center">
                                         <span class="badge @(slip.Status == "Đã chốt" ? "badge-light-success" : "badge-light-warning") fw-bold py-2 px-3">@slip.Status</span>
                                     </td>
@@ -104,11 +119,11 @@
                     <tfoot class="bg-light-primary bg-opacity-10">
                         <tr class="fw-bolder fs-6 text-gray-800">
                             <td colspan="2" class="ps-10 py-5">TỔNG CỘNG (@FilteredPayslips.Count() nhân viên)</td>
-                            <td class="text-end">@Payslips.Sum(p => p.BasicSalary).ToString("N0") đ</td>
-                            <td class="text-end text-success">+@Payslips.Sum(p => p.TotalAllowances).ToString("N0") đ</td>
+                            <td class="text-end">@FormatService.FormatCurrency(Payslips.Sum(p => p.BasicSalary))</td>
+                            <td class="text-end text-success">+@FormatService.FormatCurrency(Payslips.Sum(p => p.TotalAllowances))</td>
                             <td class="text-center">--</td>
-                            <td class="text-end text-danger">-@Payslips.Sum(p => p.TotalDeductions).ToString("N0") đ</td>
-                            <td class="text-end text-primary fs-4">@Payslips.Sum(p => p.NetSalary).ToString("N0") đ</td>
+                            <td class="text-end text-danger">-@FormatService.FormatCurrency(Payslips.Sum(p => p.TotalDeductions))</td>
+                            <td class="text-end text-primary fs-4">@FormatService.FormatCurrency(Payslips.Sum(p => p.NetSalary))</td>
                             <td></td>
                         </tr>
                     </tfoot>
@@ -168,7 +183,8 @@
                         <span class="text-white fw-bold fs-6">THỰC LĨNH SAU ĐIỀU CHỈNH</span>
                         <span class="text-gray-500 fs-8">Tính toán tự động theo công thức</span>
                     </div>
-                    <span class="text-primary fw-bolder fs-1">@((SelectedSlip.BasicSalary + SelectedSlip.TotalAllowances - SelectedSlip.TotalDeductions).ToString("N0")) đ</span>
+                    <span class="text-primary fw-bolder fs-1">@FormatService.FormatCurrency(SelectedSlip.BasicSalary + SelectedSlip.TotalAllowances - SelectedSlip.TotalDeductions)</span>
+
                 </div>
             </div>
             <div class="card-footer border-0 py-8 px-9 d-flex gap-3">

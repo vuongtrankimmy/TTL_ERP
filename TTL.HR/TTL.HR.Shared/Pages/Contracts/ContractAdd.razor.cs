@@ -8,6 +8,8 @@ using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.HumanResource.Interfaces;
 using TTL.HR.Application.Modules.HumanResource.Models;
 using Entities = TTL.HR.Application.Modules.HumanResource.Entities;
+using TTL.HR.Application.Modules.Common.Interfaces;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Shared.Pages.Contracts
 {
@@ -18,9 +20,12 @@ namespace TTL.HR.Shared.Pages.Contracts
         [Inject] public NavigationManager Navigation { get; set; } = default!;
         [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
         [Inject] public IContractService ContractService { get; set; } = default!;
+        [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
 
-        private string PreviewContent = "<p class='text-center text-muted mt-5'>Đang tải bản xem trước...</p>";
+        private List<LookupModel> contractTypeLookups = new();
+        private List<LookupModel> templateStatusLookups = new();
         private ContractTemplateModel TemplateModel = new();
+        private string PreviewContent = "";
         private bool IsLoading = false;
 
         protected override async Task OnInitializedAsync()
@@ -32,6 +37,9 @@ namespace TTL.HR.Shared.Pages.Contracts
                 document.body.removeAttribute('data-kt-drawer');
             ");
 
+            contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType");
+            templateStatusLookups = await MasterDataService.GetCachedLookupsAsync("TemplateStatus");
+
             if (!string.IsNullOrEmpty(Id))
             {
                 await LoadTemplate();
@@ -40,7 +48,7 @@ namespace TTL.HR.Shared.Pages.Contracts
             {
                 TemplateModel = new ContractTemplateModel
                 {
-                    Status = "Active",
+                    StatusId = templateStatusLookups.FirstOrDefault(x => x.Name == "Active")?.Id ?? "65dae2f30000000000000401", // Default to Active
                     Icon = "bi bi-file-earmark-text",
                     Color = "primary",
                     ContentHtml = TemplateContent
@@ -51,13 +59,25 @@ namespace TTL.HR.Shared.Pages.Contracts
         private async Task LoadTemplate()
         {
             IsLoading = true;
-            var model = await ContractService.GetTemplateAsync(Id!);
-            if (model != null)
+            try
             {
-                TemplateModel = model;
-                TemplateContent = model.ContentHtml;
+                Console.WriteLine($"Loading template with ID: {Id}");
+                var model = await ContractService.GetTemplateAsync(Id!);
+                if (model != null)
+                {
+                    TemplateModel = model;
+                    TemplateContent = model.ContentHtml;
+                }
             }
-            IsLoading = false;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading template: {ex.Message}");
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Không thể tải dữ liệu mẫu hợp đồng.", "error");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         // Mock Data for Preview
@@ -258,6 +278,13 @@ namespace TTL.HR.Shared.Pages.Contracts
 
         private async Task ShowPreview()
         {
+            // 0. Get latest content from editor
+            try 
+            {
+               TemplateContent = await JSRuntime.InvokeAsync<string>("getEditorContent");
+            }
+            catch (Exception) { /* If editor not ready, use existing TemplateContent */ }
+
             // 1. Reset and clone template
             string processedHtml = TemplateContent;
 
@@ -291,50 +318,116 @@ namespace TTL.HR.Shared.Pages.Contracts
             await JSRuntime.InvokeVoidAsync("showModal", "#preview_modal");
         }
 
-        private async Task SaveTemplate() { 
-            IsLoading = true;
-            TemplateModel.ContentHtml = TemplateContent;
-            
-            bool success;
-            if (string.IsNullOrEmpty(Id))
-            {
-                var result = await ContractService.CreateTemplateAsync(new Entities.ContractTemplate {
-                    Name = TemplateModel.Name,
-                    Code = TemplateModel.Code,
-                    Description = TemplateModel.Description,
-                    Type = TemplateModel.Type,
-                    Status = TemplateModel.Status,
-                    ContentHtml = TemplateModel.ContentHtml,
-                    Icon = TemplateModel.Icon,
-                    Color = TemplateModel.Color
-                });
-                success = result != null;
-            }
-            else
-            {
-                var result = await ContractService.UpdateTemplateAsync(Id, new Entities.ContractTemplate {
-                    Name = TemplateModel.Name,
-                    Code = TemplateModel.Code,
-                    Description = TemplateModel.Description,
-                    Type = TemplateModel.Type,
-                    Status = TemplateModel.Status,
-                    ContentHtml = TemplateModel.ContentHtml,
-                    Icon = TemplateModel.Icon,
-                    Color = TemplateModel.Color
-                });
-                success = result != null;
-            }
+        private async Task ShowHelp()
+        {
+            await JSRuntime.InvokeVoidAsync("showModal", "#help_modal");
+        }
 
-            IsLoading = false;
+        private async Task SaveTemplate() { 
+            Console.WriteLine("SaveTemplate called.");
+            IsLoading = true;
+            bool success = false;
+            try
+            {
+                // Validation
+                if (string.IsNullOrWhiteSpace(TemplateModel.Name))
+                {
+                     await JSRuntime.InvokeVoidAsync("Swal.fire", "Cảnh báo", "Vui lòng nhập tên mẫu hợp đồng.", "warning");
+                     IsLoading = false;
+                     return;
+                }
+                if (string.IsNullOrWhiteSpace(TemplateModel.Code))
+                {
+                     await JSRuntime.InvokeVoidAsync("Swal.fire", "Cảnh báo", "Vui lòng nhập số hiệu mẫu (Code).", "warning");
+                     IsLoading = false;
+                     return;
+                }
+                if (string.IsNullOrWhiteSpace(TemplateModel.TypeId))
+                {
+                     await JSRuntime.InvokeVoidAsync("Swal.fire", "Cảnh báo", "Vui lòng chọn loại hợp đồng.", "warning");
+                     IsLoading = false;
+                     return;
+                }
+                if (string.IsNullOrWhiteSpace(TemplateModel.StatusId))
+                {
+                     await JSRuntime.InvokeVoidAsync("Swal.fire", "Cảnh báo", "Vui lòng chọn trạng thái.", "warning");
+                     IsLoading = false;
+                     return;
+                }
+
+                // Get content from editor
+                Console.WriteLine("Fetching editor content...");
+                TemplateContent = await JSRuntime.InvokeAsync<string>("getEditorContent");
+                Console.WriteLine($"Editor content retrieved. Length: {TemplateContent?.Length ?? 0}");
+                
+                TemplateModel.ContentHtml = TemplateContent;
+                
+                if (string.IsNullOrEmpty(Id))
+                {
+                    Console.WriteLine("Creating new template...");
+                    var result = await ContractService.CreateTemplateAsync(new Entities.ContractTemplate {
+                        Name = TemplateModel.Name,
+                        Code = TemplateModel.Code,
+                        Description = TemplateModel.Description,
+                        TypeId = TemplateModel.TypeId,
+                        StatusId = TemplateModel.StatusId,
+                        ContentHtml = TemplateModel.ContentHtml,
+                        Icon = TemplateModel.Icon,
+                        Color = TemplateModel.Color
+                    });
+                    success = result != null;
+                    Console.WriteLine($"Create result: {success}");
+                }
+                else
+                {
+                    Console.WriteLine($"Updating template. Param Id: {Id}, Model Id: {TemplateModel.Id}");
+                    
+                    if (string.IsNullOrEmpty(TemplateModel.Id))
+                    {
+                        await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Không tìm thấy ID của bản ghi để cập nhật. Vui lòng tải lại trang.", "error");
+                        IsLoading = false;
+                        return;
+                    }
+
+                    // Fix: Use TemplateModel.Id because Id parameter might be a Code (e.g. "HD-CTV")
+                    // The backend needs the real ObjectId for updates
+                    var result = await ContractService.UpdateTemplateAsync(TemplateModel.Id, new Entities.ContractTemplate {
+                        Id = TemplateModel.Id,
+                        Name = TemplateModel.Name,
+                        Code = TemplateModel.Code,
+                        Description = TemplateModel.Description,
+                        TypeId = TemplateModel.TypeId,
+                        StatusId = TemplateModel.StatusId,
+                        ContentHtml = TemplateModel.ContentHtml,
+                        Icon = TemplateModel.Icon,
+                        Color = TemplateModel.Color
+                    });
+                    success = result != null;
+                    Console.WriteLine($"Update result: {success}");
+                }
+
+                if (!success)
+                {
+                    await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Không thể lưu mẫu hợp đồng (API trả về null). Vui lòng thử lại.", "error");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving template: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", $"Đã xảy ra lỗi: {ex.Message}", "error");
+                success = false;
+            }
+            finally
+            {
+                IsLoading = false;
+                StateHasChanged();
+            }
 
             if (success)
             {
                 await JSRuntime.InvokeVoidAsync("Swal.fire", "Thành công", "Đã lưu mẫu hợp đồng.", "success");
                 Navigation.NavigateTo("/contracts"); 
-            }
-            else
-            {
-                await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Không thể lưu mẫu hợp đồng. Vui lòng thử lại.", "error");
             }
         }
     }

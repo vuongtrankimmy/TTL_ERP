@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -13,8 +13,8 @@
     <TieredPGO>true</TieredPGO>
     <GarbageCollectionAdaptationMode>2</GarbageCollectionAdaptationMode>
 
-    <AssemblyVersion>26.2.11.269</AssemblyVersion>
-    <FileVersion>26.2.11.269</FileVersion>
+    <AssemblyVersion>26.2.20.330</AssemblyVersion>
+    <FileVersion>26.2.20.330</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

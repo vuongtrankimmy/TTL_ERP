@@ -5,42 +5,150 @@
         },
         "Name": "Super Administrator",
         "Code": "ADMIN",
-        "Description": "Quản trị viên hệ thống toàn quyền",
+        "Description": "Quản trị viên hệ thống toàn quyền - Có tất cả quyền hạn",
         "IsSystemRole": true,
         "PermissionIds": [
             {
                 "$oid": "65fc4a4a0000000000000001"
-            }, // SYS_DASHBOARD
+            },
             {
                 "$oid": "65fc4a4a0000000000000002"
-            }, // SYS_CONFIG
+            },
+            {
+                "$oid": "65fc4a4a0000000000000003"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000004"
+            },
             {
                 "$oid": "65fc4a4a0000000000000010"
-            }, // HR_EMP_VIEW
+            },
             {
                 "$oid": "65fc4a4a0000000000000011"
-            }, // HR_EMP_CREATE
+            },
             {
                 "$oid": "65fc4a4a0000000000000012"
-            }, // HR_EMP_EDIT
+            },
             {
                 "$oid": "65fc4a4a0000000000000013"
-            }, // HR_EMP_DELETE
+            },
+            {
+                "$oid": "65fc4a4a0000000000000014"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000015"
+            },
             {
                 "$oid": "65fc4a4a0000000000000020"
-            }, // REC_JOB
+            },
             {
                 "$oid": "65fc4a4a0000000000000021"
-            }, // REC_CANDIDATE
+            },
+            {
+                "$oid": "65fc4a4a0000000000000022"
+            },
             {
                 "$oid": "65fc4a4a0000000000000030"
-            }, // PAY_ADMIN
+            },
+            {
+                "$oid": "65fc4a4a0000000000000031"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000032"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000033"
+            },
             {
                 "$oid": "65fc4a4a0000000000000040"
-            }, // AST_MANAGE
+            },
+            {
+                "$oid": "65fc4a4a0000000000000041"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000042"
+            },
             {
                 "$oid": "65fc4a4a0000000000000050"
-            } // TRN_MANAGE
+            },
+            {
+                "$oid": "65fc4a4a0000000000000051"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000052"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000060"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000061"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000062"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000063"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000070"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000071"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000072"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000073"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000080"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000081"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000082"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000083"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000090"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000091"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000092"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000093"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a0"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a1"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a2"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a3"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a4"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000b0"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000b1"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000b2"
+            }
         ],
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
@@ -53,33 +161,81 @@
         },
         "Name": "HR Manager",
         "Code": "HR_MGR",
-        "Description": "Quản lý nhân sự và tuyển dụng",
+        "Description": "Trưởng phòng Nhân sự - Quản lý nhân sự và tuyển dụng",
         "IsSystemRole": false,
         "PermissionIds": [
             {
                 "$oid": "65fc4a4a0000000000000001"
-            }, // SYS_DASHBOARD
+            },
             {
                 "$oid": "65fc4a4a0000000000000010"
-            }, // HR_EMP_VIEW
+            },
             {
                 "$oid": "65fc4a4a0000000000000011"
-            }, // HR_EMP_CREATE
+            },
             {
                 "$oid": "65fc4a4a0000000000000012"
-            }, // HR_EMP_EDIT
+            },
             {
                 "$oid": "65fc4a4a0000000000000013"
-            }, // HR_EMP_DELETE
+            },
+            {
+                "$oid": "65fc4a4a0000000000000014"
+            },
             {
                 "$oid": "65fc4a4a0000000000000020"
-            }, // REC_JOB
+            },
             {
                 "$oid": "65fc4a4a0000000000000021"
-            }, // REC_CANDIDATE
+            },
+            {
+                "$oid": "65fc4a4a0000000000000022"
+            },
             {
                 "$oid": "65fc4a4a0000000000000050"
-            } // TRN_MANAGE
+            },
+            {
+                "$oid": "65fc4a4a0000000000000052"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000060"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000070"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000080"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000081"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000082"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000083"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000090"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000091"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000093"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a0"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a1"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a3"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000b0"
+            }
         ],
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
@@ -97,13 +253,34 @@
         "PermissionIds": [
             {
                 "$oid": "65fc4a4a0000000000000001"
-            }, // SYS_DASHBOARD
+            },
             {
                 "$oid": "65fc4a4a0000000000000010"
-            }, // HR_EMP_VIEW (Chỉ xem)
+            },
             {
                 "$oid": "65fc4a4a0000000000000030"
-            } // PAY_ADMIN
+            },
+            {
+                "$oid": "65fc4a4a0000000000000031"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000032"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000033"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a0"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a1"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000b0"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000b1"
+            }
         ],
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
@@ -116,15 +293,198 @@
         },
         "Name": "General Employee",
         "Code": "EMPLOYEE",
-        "Description": "Nhân viên thông thường",
+        "Description": "Nhân viên thông thường - Chỉ xem thông tin cá nhân",
         "IsSystemRole": true,
         "PermissionIds": [
             {
                 "$oid": "65fc4a4a0000000000000001"
-            }, // SYS_DASHBOARD
+            },
             {
                 "$oid": "65fc4a4a0000000000000031"
-            } // PAY_SELF (Xem lương mình)
+            },
+            {
+                "$oid": "65fc4a4a0000000000000041"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000042"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000051"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000080"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000092"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a2"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a4"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000b1"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000b2"
+            }
+        ],
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc5b5b0000000000000005"
+        },
+        "Name": "Department Manager",
+        "Code": "DEPT_MGR",
+        "Description": "Trưởng bộ phận - Quản lý nhân viên trong phòng ban",
+        "IsSystemRole": false,
+        "PermissionIds": [
+            {
+                "$oid": "65fc4a4a0000000000000001"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000010"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000015"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000031"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000032"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000041"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000051"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000052"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000060"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000070"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000080"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000091"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000092"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a1"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a2"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000a3"
+            },
+            {
+                "$oid": "65fc4a4a00000000000000b1"
+            }
+        ],
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc5b5b0000000000000006"
+        },
+        "Name": "Recruiter",
+        "Code": "RECRUITER",
+        "Description": "Chuyên viên tuyển dụng nhân sự",
+        "IsSystemRole": false,
+        "PermissionIds": [
+            {
+                "$oid": "65fc4a4a0000000000000001"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000010"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000011"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000020"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000021"
+            }
+        ],
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc5b5b0000000000000007"
+        },
+        "Name": "Asset Manager",
+        "Code": "ASSET_MGR",
+        "Description": "Quản lý kho tài sản và thiết bị công ty",
+        "IsSystemRole": false,
+        "PermissionIds": [
+            {
+                "$oid": "65fc4a4a0000000000000001"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000010"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000040"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000041"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000042"
+            }
+        ],
+        "CreatedAt": {
+            "$date": "2024-01-01T00:00:00Z"
+        },
+        "IsDeleted": false
+    },
+    {
+        "_id": {
+            "$oid": "65fc5b5b0000000000000008"
+        },
+        "Name": "Training Officer",
+        "Code": "TRAINING_OFFICER",
+        "Description": "Chuyên viên phụ trách đào tạo và phát triển nhân viên",
+        "IsSystemRole": false,
+        "PermissionIds": [
+            {
+                "$oid": "65fc4a4a0000000000000001"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000010"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000050"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000051"
+            },
+            {
+                "$oid": "65fc4a4a0000000000000052"
+            }
         ],
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"

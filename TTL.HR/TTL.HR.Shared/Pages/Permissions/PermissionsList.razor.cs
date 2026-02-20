@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System.Collections.Generic;
 using TTL.HR.Application.Modules.Common.Interfaces;
 using TTL.HR.Application.Modules.Common.Models;
@@ -8,6 +9,7 @@ namespace TTL.HR.Shared.Pages.Permissions
     public partial class PermissionsList
     {
         [Inject] private IPermissionService PermissionService { get; set; } = default!;
+        [Inject] private IJSRuntime JS { get; set; } = default!;
 
         private bool _isLoading = true;
         private bool _showRoleDrawer = false;
@@ -44,7 +46,7 @@ namespace TTL.HR.Shared.Pages.Permissions
                         GetGroupBg(g.Key),
                         GetGroupColor(g.Key),
                         CalculateAccessDefaults(g.ToList()),
-                        g.Select(p => new SubPermission(p.Name, p.Code, p.AssignedRoles.Select(ar => ar.Id).ToList())).ToList()
+                        g.Select(p => new SubPermission(p.Name, p.Id, p.AssignedRoles.Select(ar => ar.Id).ToList())).ToList()
                     )).ToList();
             }
             catch (Exception)
@@ -71,39 +73,47 @@ namespace TTL.HR.Shared.Pages.Permissions
 
         private string GetGroupIcon(string group) => group switch
         {
-            "Nhân sự" => "ki-people",
-            "Lương thưởng" => "ki-wallet",
-            "Chấm công" => "ki-timer",
-            "Nghỉ phép" => "ki-calendar",
-            "Tuyển dụng" => "ki-user-tick",
-            "Đào tạo" => "ki-book-open",
-            "Dashboard" => "ki-graph-3",
-            "Hệ thống" => "ki-setting-2",
-            "Hợp đồng" => "ki-file-added",
-            "Tài sản" => "ki-package",
-            _ => "ki-shield"
+            "Nhân sự" => "ki-outline ki-profile-user",
+            "Tính lương" => "ki-outline ki-wallet",
+            "Chấm công" => "ki-outline ki-timer",
+            "Nghỉ phép" => "ki-outline ki-calendar-tick",
+            "Tuyển dụng" => "ki-outline ki-user-tick",
+            "Đào tạo" => "ki-outline ki-teacher",
+            "Hệ thống" => "ki-outline ki-setting-2",
+            "Tổ chức" => "ki-outline ki-office-bag",
+            "Tài sản" => "ki-outline ki-package",
+            "Phúc lợi" => "ki-outline ki-heart",
+            _ => "ki-outline ki-shield"
         };
 
         private string GetGroupBg(string group) => group switch
         {
             "Nhân sự" => "bg-light-primary",
-            "Lương thưởng" => "bg-light-success",
+            "Tính lương" => "bg-light-success",
             "Chấm công" => "bg-light-warning",
             "Nghỉ phép" => "bg-light-info",
-            "Đào tạo" => "bg-light-info",
+            "Tuyển dụng" => "bg-light-danger",
+            "Đào tạo" => "bg-light-primary",
             "Hệ thống" => "bg-light-dark",
-            _ => "bg-light-danger"
+            "Tổ chức" => "bg-light-warning",
+            "Tài sản" => "bg-light-success",
+            "Phúc lợi" => "bg-light-danger",
+            _ => "bg-light-primary"
         };
 
         private string GetGroupColor(string group) => group switch
         {
             "Nhân sự" => "text-primary",
-            "Lương thưởng" => "text-success",
+            "Tính lương" => "text-success",
             "Chấm công" => "text-warning",
             "Nghỉ phép" => "text-info",
-            "Đào tạo" => "text-info",
+            "Tuyển dụng" => "text-danger",
+            "Đào tạo" => "text-primary",
             "Hệ thống" => "text-dark",
-            _ => "text-danger"
+            "Tổ chức" => "text-warning",
+            "Tài sản" => "text-success",
+            "Phúc lợi" => "text-danger",
+            _ => "text-primary"
         };
 
         private void openAddRole() => _showRoleDrawer = true;
@@ -127,7 +137,7 @@ namespace TTL.HR.Shared.Pages.Permissions
                 else if (!role.Permissions.Contains(sub.Key))
                     role.Permissions.Add(sub.Key);
                 
-                // Update the SubPermission's internal state too if it exists
+                // Update the SubPermission's internal state too
                 if (isCurrentlyEnabled)
                     sub.AssignedRoleIds.Remove(role.Id);
                 else if (!sub.AssignedRoleIds.Contains(role.Id))
@@ -138,23 +148,54 @@ namespace TTL.HR.Shared.Pages.Permissions
             StateHasChanged();
         }
 
+        private void ToggleSinglePermission(SubPermission sub, int roleIndex)
+        {
+            var role = _roles[roleIndex];
+            if (sub.AssignedRoleIds.Contains(role.Id))
+            {
+                sub.AssignedRoleIds.Remove(role.Id);
+                role.Permissions.Remove(sub.Key);
+            }
+            else
+            {
+                sub.AssignedRoleIds.Add(role.Id);
+                role.Permissions.Add(sub.Key);
+            }
+
+            // Update parent category's AccessDefaults for the matrix view
+            // Re-calculate if ANY sub-permission in this category is enabled for this role
+            if (_selectedCategory != null)
+            {
+                _selectedCategory.AccessDefaults[roleIndex] = _selectedCategory.SubPermissions.Any(p => p.AssignedRoleIds.Contains(role.Id));
+            }
+            StateHasChanged();
+        }
+
         private async Task SaveAllChanges()
         {
             _isLoading = true;
             try
             {
+                bool allSuccess = true;
                 foreach (var role in _roles)
                 {
-                    await PermissionService.UpdateRoleAsync(role.Id, role);
+                    var result = await PermissionService.UpdateRoleAsync(role.Id, role);
+                    if (!result.Success) allSuccess = false;
                 }
+                
+                if (allSuccess)
+                    await JS.InvokeVoidAsync("toastr.success", "Đã lưu tất cả thay đổi phân quyền");
+                else
+                    await JS.InvokeVoidAsync("toastr.warning", "Một số thay đổi có thể chưa được lưu. Vui lòng kiểm tra lại.");
             }
             catch (Exception)
             {
-                // Handle error
+                await JS.InvokeVoidAsync("toastr.error", "Lưu thay đổi thất bại. Vui lòng thử lại.");
             }
             finally
             {
                 await LoadDataAsync();
+                StateHasChanged();
             }
         }
 

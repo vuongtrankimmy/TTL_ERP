@@ -17,12 +17,18 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
         public string PositionId { get; set; } = string.Empty;
         public string ReportToId { get; set; } = string.Empty;
 
-        public EmployeeStatus Status { get; set; } = EmployeeStatus.Active;
-        public EmploymentType Type { get; set; } = EmploymentType.FullTime;
+        public string StatusId { get; set; } = string.Empty;
+        public string ContractTypeId { get; set; } = string.Empty;
         public DateTime? JoinDate { get; set; }
         public DateTime? TerminationDate { get; set; }
 
+        public decimal? Salary { get; set; }
+        public DateTime? ContractEndDate { get; set; }
+        public string Workplace { get; set; } = string.Empty;
+        public bool IsAccountActive { get; set; }
+
         public PersonalInfo PersonalDetails { get; set; } = new();
+        public EmergencyContact EmergencyContact { get; set; } = new();
 
         public string Username { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
@@ -41,6 +47,20 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
         public string TaxCode { get; set; } = string.Empty;
         public string BankAccount { get; set; } = string.Empty;
         public string BankName { get; set; } = string.Empty;
+        public string Nationality { get; set; } = "Việt Nam";
+        public string Ethnicity { get; set; } = "Kinh";
+        public string Religion { get; set; } = "Không";
+        public string MaritalStatus { get; set; } = "Độc thân";
+        public string PlaceOfOrigin { get; set; } = string.Empty;
+        public string Residence { get; set; } = string.Empty;
+        public string SocialInsuranceId { get; set; } = string.Empty;
+    }
+
+    public class EmergencyContact
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Relation { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
     }
 
     public enum EmployeeStatus { Active, Probation, MaternityLeave, Resigned, Terminated }

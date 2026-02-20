@@ -14,10 +14,20 @@ namespace TTL.HR.Application.Modules.Leave.Services
     {
         private readonly HttpClient _httpClient;
         public LeaveService(HttpClient httpClient) => _httpClient = httpClient;
-        public async Task<IEnumerable<LeaveRequestModel>> GetLeaveRequestsAsync()
+        public async Task<PagedResult<LeaveRequestModel>> GetLeaveRequestsAsync(int page = 1, int pageSize = 10, string? status = null, string? searchTerm = null)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<LeaveRequestModel>>>(ApiEndpoints.Leave.Base);
-            return response?.Data ?? new List<LeaveRequestModel>();
+            var url = $"{ApiEndpoints.Leave.Base}?page={page}&pageSize={pageSize}";
+            if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
+            if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={searchTerm}";
+
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<LeaveRequestModel>>>(url);
+            return response?.Data ?? new PagedResult<LeaveRequestModel>();
+        }
+
+        public async Task<LeaveStateSummaryModel> GetLeaveSummaryAsync()
+        {
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<LeaveStateSummaryModel>>($"{ApiEndpoints.Leave.Base}/summary");
+            return response?.Data ?? new LeaveStateSummaryModel();
         }
         public async Task<bool> SubmitLeaveRequestAsync(LeaveRequestModel request)
         {

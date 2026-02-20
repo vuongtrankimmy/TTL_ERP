@@ -1,5 +1,37 @@
-﻿@page "/not-found"
+﻿@page "/404"
+@page "/not-found"
 @layout MainLayout
 
-<h3>Not Found</h3>
-<p>Sorry, the content you are looking for does not exist.</p>
+<PageTitle>404 - Không tìm thấy trang</PageTitle>
+
+<div class="d-flex flex-column flex-center flex-column-fluid p-10 mt-10">
+    <!--begin::Illustration-->
+    <img src="assets/media/illustrations/sketchy-1/18.png" alt="" class="mw-100 mb-10 h-lg-450px" />
+    <!--end::Illustration-->
+    
+    <!--begin::Message-->
+    <h1 class="fw-bold mb-5" style="color: #181C32; font-size: 3rem;">Úi! Hệ thống không tìm thấy trang này</h1>
+    <!--end::Message-->
+    
+    <!--begin::Text-->
+    <div class="fw-semibold fs-3 text-muted mb-10 text-center">
+        Có vẻ như đường dẫn bạn truy cập không tồn tại hoặc đã bị di dời. <br/> 
+        Đừng lo lắng, hãy thử quay lại trang Dashboard của bạn.
+    </div>
+    <!--end::Text-->
+    
+    <!--begin::Link-->
+    <div class="d-flex gap-4">
+        <a href="javascript:history.back()" class="btn btn-light-primary fw-bold px-8 py-3">
+            <i class="bi bi-arrow-left me-2"></i> Quay lại trang trước
+        </a>
+        <a href="/dashboard" class="btn btn-primary fw-bold px-8 py-3">
+            Về Dashboard <i class="bi bi-house-door ms-2"></i>
+        </a>
+    </div>
+    <!--end::Link-->
+</div>
+
+@code {
+    // This page is a fallback for unknown routes
+}

@@ -1,0 +1,103 @@
+
+<div class="d-flex flex-stack flex-wrap pt-10">
+    <div class="fs-6 fw-bold text-gray-700">
+        @if (TotalCount > 0)
+        {
+            <span>Hiển thị @FromRecord đến @ToRecord trong tổng số @TotalCount bản ghi</span>
+        }
+        else
+        {
+            <span>Không có dữ liệu hiển thị</span>
+        }
+    </div>
+    
+    @if (TotalPages > 1)
+    {
+        <ul class="pagination">
+            <li class="page-item previous @(PageIndex == 1 ? "disabled" : "")">
+                <a href="javascript:;" class="page-link" @onclick="() => ChangePage(PageIndex - 1)">
+                    <i class="ki-outline ki-left fs-2"></i>
+                </a>
+            </li>
+
+            @foreach (var pageNum in GetVisiblePages())
+            {
+                if (pageNum == -1)
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item @(PageIndex == pageNum ? "active" : "")">
+                        <a href="javascript:;" class="page-link" @onclick="() => ChangePage(pageNum)">@pageNum</a>
+                    </li>
+                }
+            }
+
+            <li class="page-item next @(PageIndex == TotalPages ? "disabled" : "")">
+                <a href="javascript:;" class="page-link" @onclick="() => ChangePage(PageIndex + 1)">
+                    <i class="ki-outline ki-right fs-2"></i>
+                </a>
+            </li>
+        </ul>
+    }
+</div>
+
+@code {
+    [Parameter] public int PageIndex { get; set; } = 1;
+    [Parameter] public int PageSize { get; set; } = 10;
+    [Parameter] public long TotalCount { get; set; } = 0;
+    [Parameter] public EventCallback<int> OnPageChanged { get; set; }
+
+    private int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
+    private long FromRecord => TotalCount == 0 ? 0 : (PageIndex - 1) * PageSize + 1;
+    private long ToRecord => Math.Min(PageIndex * (long)PageSize, TotalCount);
+
+    private async Task ChangePage(int newPage)
+    {
+        if (newPage >= 1 && newPage <= TotalPages && newPage != PageIndex)
+        {
+            await OnPageChanged.InvokeAsync(newPage);
+        }
+    }
+
+    private List<int> GetVisiblePages()
+    {
+        var pages = new List<int>();
+        var total = TotalPages;
+        var current = PageIndex;
+
+        if (total <= 7)
+        {
+            for (int i = 1; i <= total; i++) pages.Add(i);
+        }
+        else
+        {
+            pages.Add(1);
+
+            if (current > 4)
+            {
+                pages.Add(-1); // Ellipsis
+            }
+
+            var start = Math.Max(2, current - 2);
+            var end = Math.Min(total - 1, current + 2);
+
+            for (int i = start; i <= end; i++)
+            {
+                pages.Add(i);
+            }
+
+            if (current < total - 3)
+            {
+                pages.Add(-1); // Ellipsis
+            }
+
+            pages.Add(total);
+        }
+
+        return pages;
+    }
+}

@@ -19,6 +19,8 @@ namespace TTL.HR.Shared.Pages.Auth
         private string _password = "";
         private string _confirmPassword = "";
         private bool _isLoading = false;
+        private bool _showPassword = false;
+        private bool _showConfirmPassword = false;
 
         private async Task HandleRegister()
         {

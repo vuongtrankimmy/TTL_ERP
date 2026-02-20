@@ -1,4 +1,6 @@
 @inherits LayoutComponentBase
+@inject ISettingsService SettingsService
+
 
 <div class="d-flex flex-column flex-root" id="kt_app_root">
     <!--begin::Authentication - Sign-in -->
@@ -7,9 +9,18 @@
         <div class="d-flex flex-column flex-center p-10 p-lg-20">
             <!--begin::Logo-->
             <a href="/" class="mb-10">
-                <img alt="Logo" src="assets/media/logos/demo42.svg" class="h-50px" />
+                @if (!string.IsNullOrEmpty(SettingsService.CachedSettings?.LogoUrl))
+                {
+                    <img alt="Logo" src="@SettingsService.CachedSettings.LogoUrl" class="w-200px w-lg-250px" style="object-fit: contain;" />
+                }
+                else
+                {
+                    <img alt="Logo" src="assets/media/logos/demo42.svg" class="h-60px" />
+                }
             </a>
+
             <!--end::Logo-->
+
             <!--begin::Wrapper-->
             <div class="w-lg-500px bg-body shadow-sm rounded p-10 p-lg-15 mx-auto">
                 @Body

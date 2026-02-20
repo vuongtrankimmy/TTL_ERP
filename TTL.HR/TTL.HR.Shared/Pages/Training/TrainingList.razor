@@ -40,6 +40,10 @@
                         </div>
 
                         <div class="px-1 border-end h-25px"></div>
+                        
+                        <a href="/training/analytics" class="btn btn-light-info fw-bold me-2">
+                            <i class="ki-outline ki-chart-line fs-2 me-1"></i>Thống kê
+                        </a>
 
                         <a href="/training/add" class="btn btn-primary fw-bold">
                             <i class="ki-outline ki-plus fs-2 me-1"></i>Tạo khóa học mới
@@ -74,7 +78,7 @@
                                         <tr>
                                             <td class="ps-4">
                                                 <div class="d-flex flex-column">
-                                                    <a href="/training/details/@course.Id" class="text-dark fw-bolder text-hover-primary fs-6">@course.Title</a>
+                                                    <a href="/training/details/@course.IdString" class="text-dark fw-bolder text-hover-primary fs-6">@course.Title</a>
                                                     <div class="d-flex align-items-center">
                                                         <span class="text-muted fs-7">@course.Code</span>
                                                         @if (course.IsMandatory)
@@ -93,7 +97,7 @@
                                                 <div class="d-flex flex-column w-100 align-items-center">
                                                     <span class="text-gray-800 fw-bold fs-7 mb-1">@course.Participants/@course.MaxParticipants</span>
                                                     <div class="progress h-4px w-100 max-w-100px">
-                                                        <div class="progress-bar bg-primary" style="width: @((course.Participants * 100) / course.MaxParticipants)%"></div>
+                                                        <div class="progress-bar bg-primary" style="width: @(course.MaxParticipants > 0 ? (course.Participants * 100) / course.MaxParticipants : 0)%"></div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -106,8 +110,8 @@
                                                         title="Đăng ký tham gia" @onclick="() => HandleRegister(course)">
                                                     <i class="ki-outline ki-plus-square fs-3"></i>
                                                 </button>
-                                                <a href="/training/details/@course.Id" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Chi tiết"><i class="ki-outline ki-eye fs-3"></i></a>
-                                                <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Sửa" @onclick="() => HandleEdit(course.Id)"><i class="ki-outline ki-pencil fs-3"></i></button>
+                                                <a href="/training/details/@course.IdString" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Chi tiết"><i class="ki-outline ki-eye fs-3"></i></a>
+                                                <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Sửa" @onclick="() => HandleEdit(course.IdString)"><i class="ki-outline ki-pencil fs-3"></i></button>
                                                 <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" title="Xóa" @onclick="() => HandleDelete(course)"><i class="ki-outline ki-trash fs-3"></i></button>
                                             </td>
                                         </tr>
@@ -129,13 +133,13 @@
                                 <div class="card-body p-9 d-flex flex-column h-100">
                                     <div class="d-flex flex-stack mb-5">
                                         <div class="symbol symbol-50px symbol-circle">
-                                            <div class="symbol-label bg-light-primary text-primary fw-bold fs-2">@course.Code.Substring(0, 1)</div>
+                                            <div class="symbol-label bg-light-primary text-primary fw-bold fs-2">@(course.Code?.Length > 0 ? course.Code.Substring(0, 1) : "?")</div>
                                         </div>
                                         <span class="badge @course.StatusBadge fw-bold px-3 py-2">@course.Status</span>
                                     </div>
 
                                     <div class="mb-5 flex-grow-1">
-                                        <a href="/training/details/@course.Id" class="fs-4 text-gray-800 text-hover-primary fw-bolder mb-1">@course.Title</a>
+                                        <a href="/training/details/@course.IdString" class="fs-4 text-gray-800 text-hover-primary fw-bolder mb-1">@course.Title</a>
                                         <div class="d-flex align-items-center mt-1">
                                             <span class="fw-bold text-gray-500 fs-7">@course.Code</span>
                                             @if (course.IsMandatory)
@@ -147,7 +151,7 @@
 
                                     <div class="d-flex align-items-center mb-5">
                                         <div class="symbol symbol-35px symbol-circle me-3">
-                                            <div class="symbol-label bg-light-info text-info fs-7 fw-bold">@course.Trainer.Substring(0, 1)</div>
+                                            <div class="symbol-label bg-light-info text-info fs-7 fw-bold">@(course.Trainer?.Length > 0 ? course.Trainer.Substring(0, 1) : "?")</div>
                                         </div>
                                         <div class="d-flex flex-column">
                                             <span class="text-gray-800 fw-bold fs-7">@course.Trainer</span>
@@ -165,19 +169,19 @@
                                     <div class="d-flex flex-column mb-5">
                                         <div class="d-flex flex-stack mb-2">
                                             <span class="text-gray-800 fw-bold fs-7">@course.Participants/@course.MaxParticipants học viên</span>
-                                            <span class="text-muted fs-8">@((course.Participants * 100) / course.MaxParticipants)%</span>
+                                            <span class="text-muted fs-8">@(course.MaxParticipants > 0 ? (course.Participants * 100) / course.MaxParticipants : 0)%</span>
                                         </div>
                                         <div class="progress h-6px w-100 mt-1">
-                                            <div class="progress-bar bg-primary" style="width: @((course.Participants * 100) / course.MaxParticipants)%"></div>
+                                            <div class="progress-bar bg-primary" style="width: @(course.MaxParticipants > 0 ? (course.Participants * 100) / course.MaxParticipants : 0)%"></div>
                                         </div>
                                     </div>
 
                                     <div class="d-flex flex-stack mt-auto pt-4 border-top">
                                         <div class="d-flex align-items-center">
-                                            <a href="/training/details/@course.Id" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Chi tiết">
+                                            <a href="/training/details/@course.IdString" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Chi tiết">
                                                 <i class="ki-outline ki-eye fs-3"></i>
                                             </a>
-                                            <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Sửa" @onclick="() => HandleEdit(course.Id)">
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Sửa" @onclick="() => HandleEdit(course.IdString)">
                                                 <i class="ki-outline ki-pencil fs-3"></i>
                                             </button>
                                             <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" title="Xóa" @onclick="() => HandleDelete(course)">
@@ -211,5 +215,6 @@
 <TrainingRegistrationPopup 
     IsVisible="@IsRegisterModalOpen"
     CourseTitle="@ItemToRegister?.Title"
+    AlreadyEnrolledEmployeeIds="@(ItemToRegister?.EnrolledEmployeeIds ?? new List<string>())"
     OnConfirm="ConfirmRegister"
     OnCancel="CloseRegisterModal" />

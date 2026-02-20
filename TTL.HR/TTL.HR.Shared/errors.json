@@ -1,0 +1,1850 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Microsoft (R) Visual C# Compiler",
+        "version": "5.3.0.0",
+        "fileVersion": "5.3.0-2.26103.119 (a2bfa4671c2a489b874fb53ff7d5ad54cbd9c80f)",
+        "semanticVersion": "5.3.0",
+        "language": "en-US"
+      },
+      "results": [
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'NavigationManager' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Layout/Component/Header/Header.razor.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 43,
+                  "endLine": 11,
+                  "endColumn": 60
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Layout/Component/Header/Header.razor.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 43,
+                  "endLine": 11,
+                  "endColumn": 60
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS0168",
+          "level": "warning",
+          "message": "The variable 'ex' is declared but never used",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Login.razor.cs",
+                "region": {
+                  "startLine": 61,
+                  "startColumn": 30,
+                  "endLine": 61,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'AuthService' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Logout.razor.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 38,
+                  "endLine": 10,
+                  "endColumn": 49
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Logout.razor.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 38,
+                  "endLine": 10,
+                  "endColumn": 49
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Navigation' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Logout.razor.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 43,
+                  "endLine": 11,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Logout.razor.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 43,
+                  "endLine": 11,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'JS' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Login.razor.cs",
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 36,
+                  "endLine": 12,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Login.razor.cs",
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 36,
+                  "endLine": 12,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'AuthService' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Login.razor.cs",
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 38,
+                  "endLine": 13,
+                  "endColumn": 49
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Login.razor.cs",
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 38,
+                  "endLine": 13,
+                  "endColumn": 49
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Navigation' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Login.razor.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 43,
+                  "endLine": 14,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Login.razor.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 43,
+                  "endLine": 14,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8601",
+          "level": "warning",
+          "message": "Possible null reference assignment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Organization/OrganizationStructure.razor.cs",
+                "region": {
+                  "startLine": 112,
+                  "startColumn": 31,
+                  "endLine": 112,
+                  "endColumn": 63
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Possible null reference argument for parameter 'node' in 'int OrganizationStructure.CountNodes(OrgNode node)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Organization/OrganizationStructure.razor.cs",
+                "region": {
+                  "startLine": 122,
+                  "startColumn": 48,
+                  "endLine": 122,
+                  "endColumn": 56
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'JSRuntime' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Layout/Component/Sidebar/Sidebar.razor.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 36,
+                  "endLine": 9,
+                  "endColumn": 45
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Layout/Component/Sidebar/Sidebar.razor.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 36,
+                  "endLine": 9,
+                  "endColumn": 45
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Node' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Organization/OrgNodeView.razor.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 36,
+                  "endLine": 10,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Organization/OrgNodeView.razor.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 36,
+                  "endLine": 10,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8625",
+          "level": "warning",
+          "message": "Cannot convert null literal to non-nullable reference type.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 96,
+                  "startColumn": 28,
+                  "endLine": 96,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8625",
+          "level": "warning",
+          "message": "Cannot convert null literal to non-nullable reference type.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 136,
+                  "startColumn": 30,
+                  "endLine": 136,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'JS' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Register.razor.cs",
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 36,
+                  "endLine": 12,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Register.razor.cs",
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 36,
+                  "endLine": 12,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'AuthService' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Register.razor.cs",
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 38,
+                  "endLine": 13,
+                  "endColumn": 49
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Register.razor.cs",
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 38,
+                  "endLine": 13,
+                  "endColumn": 49
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Navigation' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Register.razor.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 43,
+                  "endLine": 14,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Auth/Register.razor.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 43,
+                  "endLine": 14,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable field 'ItemToRegister' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 23,
+                  "startColumn": 39,
+                  "endLine": 23,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 23,
+                  "startColumn": 39,
+                  "endLine": 23,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable field 'ItemToDelete' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 27,
+                  "startColumn": 39,
+                  "endLine": 27,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 27,
+                  "startColumn": 39,
+                  "endLine": 27,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Navigation' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 30,
+                  "startColumn": 66,
+                  "endLine": 30,
+                  "endColumn": 76
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 30,
+                  "startColumn": 66,
+                  "endLine": 30,
+                  "endColumn": 76
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'JS' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 27,
+                  "endLine": 33,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 27,
+                  "endLine": 33,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'TrainingService' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 36,
+                  "startColumn": 33,
+                  "endLine": 36,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingList.razor.cs",
+                "region": {
+                  "startLine": 36,
+                  "startColumn": 33,
+                  "endLine": 36,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable field 'cccdScanner' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeAdd.razor.cs",
+                "region": {
+                  "startLine": 58,
+                  "startColumn": 29,
+                  "endLine": 58,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeAdd.razor.cs",
+                "region": {
+                  "startLine": 58,
+                  "startColumn": 29,
+                  "endLine": 58,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8602",
+          "level": "warning",
+          "message": "Dereference of a possibly null reference.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeList.razor",
+                "region": {
+                  "startLine": 186,
+                  "startColumn": 103,
+                  "endLine": 186,
+                  "endColumn": 119
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8602",
+          "level": "warning",
+          "message": "Dereference of a possibly null reference.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeList.razor",
+                "region": {
+                  "startLine": 394,
+                  "startColumn": 106,
+                  "endLine": 394,
+                  "endColumn": 122
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS0414",
+          "level": "warning",
+          "message": "The field 'RecruitmentAdd._isSaving' is assigned but its value is never used",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Recruitment/RecruitmentAdd.razor.cs",
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 22,
+                  "endLine": 22,
+                  "endColumn": 31
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0414",
+          "level": "warning",
+          "message": "The field 'PermissionsList._showRoleDrawer' is assigned but its value is never used",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Permissions/PermissionsList.razor.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 22,
+                  "endLine": 15,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0414",
+          "level": "warning",
+          "message": "The field 'EmployeeList.isContextMenuVisible' is assigned but its value is never used",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeList.razor.cs",
+                "region": {
+                  "startLine": 32,
+                  "startColumn": 22,
+                  "endLine": 32,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CA1816",
+          "level": "note",
+          "message": "Change Header.Dispose() to call GC.SuppressFinalize(object). This will prevent derived types that introduce a finalizer from needing to re-implement 'IDisposable' to call it.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Layout/Component/Header/Header.razor.cs",
+                "region": {
+                  "startLine": 60,
+                  "startColumn": 21,
+                  "endLine": 60,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetTitle' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Layout/Component/Header/Header.razor.cs",
+                "region": {
+                  "startLine": 34,
+                  "startColumn": 24,
+                  "endLine": 34,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1860",
+          "level": "note",
+          "message": "Prefer comparing 'Count' to 0 rather than using 'Any()', both for clarity and for performance",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Administration/Roles.razor.cs",
+                "region": {
+                  "startLine": 161,
+                  "startColumn": 17,
+                  "endLine": 161,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "DiagnosticPropertyKey": "Count"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetStatusColor' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Assets/AssetDetail.razor.cs",
+                "region": {
+                  "startLine": 60,
+                  "startColumn": 24,
+                  "endLine": 60,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'TranslateStatus' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Assets/AssetDetail.razor.cs",
+                "region": {
+                  "startLine": 73,
+                  "startColumn": 24,
+                  "endLine": 73,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'TranslateStatus' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Assets/AssetInventory.razor.cs",
+                "region": {
+                  "startLine": 61,
+                  "startColumn": 24,
+                  "endLine": 61,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetStatusColor' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Assets/AssetInventory.razor.cs",
+                "region": {
+                  "startLine": 74,
+                  "startColumn": 24,
+                  "endLine": 74,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1862",
+          "level": "note",
+          "message": "Prefer using 'string.Equals(string, StringComparison)' to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Contracts/Contract.razor.cs",
+                "region": {
+                  "startLine": 148,
+                  "startColumn": 47,
+                  "endLine": 148,
+                  "endColumn": 84
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "LeftOffendingMethod": "ToUpper",
+              "RightOffendingMethod": null
+            }
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetStatusClass' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/User/Components/UserAttendanceHistory.razor.cs",
+                "region": {
+                  "startLine": 60,
+                  "startColumn": 24,
+                  "endLine": 60,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'TranslateStatus' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/User/Components/UserAttendanceHistory.razor.cs",
+                "region": {
+                  "startLine": 74,
+                  "startColumn": 24,
+                  "endLine": 74,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA2012",
+          "level": "note",
+          "message": "ValueTask instances returned from method calls should always be used, typically awaited. Not doing so often represents a functional bug, but even if it doesn't, it can result in degraded performance if the target method pools objects for use with ValueTasks.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeList.razor.cs",
+                "region": {
+                  "startLine": 454,
+                  "startColumn": 13,
+                  "endLine": 454,
+                  "endColumn": 60
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetTypeBadgeClass' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Benefits/BenefitsList.razor.cs",
+                "region": {
+                  "startLine": 59,
+                  "startColumn": 24,
+                  "endLine": 59,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'TranslateType' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Benefits/BenefitsList.razor.cs",
+                "region": {
+                  "startLine": 71,
+                  "startColumn": 24,
+                  "endLine": 71,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetIconByBenefit' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Benefits/BenefitsList.razor.cs",
+                "region": {
+                  "startLine": 83,
+                  "startColumn": 24,
+                  "endLine": 83,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetStatusBadgeClass' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Attendance/Timesheet.razor.cs",
+                "region": {
+                  "startLine": 74,
+                  "startColumn": 24,
+                  "endLine": 74,
+                  "endColumn": 43
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetStatusBulletClass' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Attendance/Timesheet.razor.cs",
+                "region": {
+                  "startLine": 86,
+                  "startColumn": 24,
+                  "endLine": 86,
+                  "endColumn": 44
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'TranslateStatus' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Attendance/Timesheet.razor.cs",
+                "region": {
+                  "startLine": 98,
+                  "startColumn": 24,
+                  "endLine": 98,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'CountTotalEmployees' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Organization/OrgNodeView.razor.cs",
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 21,
+                  "endLine": 13,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetTypeClass' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Attendance/LeaveTripManagement.razor.cs",
+                "region": {
+                  "startLine": 159,
+                  "startColumn": 24,
+                  "endLine": 159,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetStatusClass' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Attendance/LeaveTripManagement.razor.cs",
+                "region": {
+                  "startLine": 169,
+                  "startColumn": 24,
+                  "endLine": 169,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1860",
+          "level": "note",
+          "message": "Prefer comparing 'Count' to 0 rather than using 'Any()', both for clarity and for performance",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeList.razor.cs",
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 31,
+                  "endLine": 55,
+                  "endColumn": 46
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "DiagnosticPropertyKey": "Count"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1860",
+          "level": "note",
+          "message": "Prefer comparing 'Count' to 0 rather than using 'Any()', both for clarity and for performance",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeList.razor.cs",
+                "region": {
+                  "startLine": 60,
+                  "startColumn": 22,
+                  "endLine": 60,
+                  "endColumn": 45
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "DiagnosticPropertyKey": "Count"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1860",
+          "level": "note",
+          "message": "Prefer comparing 'Count' to 0 rather than using 'Any()', both for clarity and for performance",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeList.razor.cs",
+                "region": {
+                  "startLine": 64,
+                  "startColumn": 22,
+                  "endLine": 64,
+                  "endColumn": 43
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "DiagnosticPropertyKey": "Count"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1860",
+          "level": "note",
+          "message": "Prefer comparing 'Count' to 0 rather than using 'Any()', both for clarity and for performance",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeList.razor.cs",
+                "region": {
+                  "startLine": 68,
+                  "startColumn": 22,
+                  "endLine": 68,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "DiagnosticPropertyKey": "Count"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1860",
+          "level": "note",
+          "message": "Prefer comparing 'Count' to 0 rather than using 'Any()', both for clarity and for performance",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeList.razor.cs",
+                "region": {
+                  "startLine": 72,
+                  "startColumn": 22,
+                  "endLine": 72,
+                  "endColumn": 47
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "DiagnosticPropertyKey": "Count"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1860",
+          "level": "note",
+          "message": "Prefer comparing 'Count' to 0 rather than using 'Any()', both for clarity and for performance",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeList.razor.cs",
+                "region": {
+                  "startLine": 75,
+                  "startColumn": 26,
+                  "endLine": 75,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "DiagnosticPropertyKey": "Count"
+            }
+          }
+        },
+        {
+          "ruleId": "CA2012",
+          "level": "note",
+          "message": "ValueTask instances returned from method calls should always be used, typically awaited. Not doing so often represents a functional bug, but even if it doesn't, it can result in degraded performance if the target method pools objects for use with ValueTasks.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Organization/OrganizationStructure.razor.cs",
+                "region": {
+                  "startLine": 102,
+                  "startColumn": 13,
+                  "endLine": 102,
+                  "endColumn": 60
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetAssetIcon' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Assets/AssetAllocation.razor.cs",
+                "region": {
+                  "startLine": 119,
+                  "startColumn": 24,
+                  "endLine": 119,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1860",
+          "level": "note",
+          "message": "Prefer comparing 'Count' to 0 rather than using 'Any()', both for clarity and for performance",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Training/TrainingDetails.razor.cs",
+                "region": {
+                  "startLine": 109,
+                  "startColumn": 47,
+                  "endLine": 109,
+                  "endColumn": 70
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "DiagnosticPropertyKey": "Count"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetGroupIcon' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Permissions/PermissionsList.razor.cs",
+                "region": {
+                  "startLine": 74,
+                  "startColumn": 24,
+                  "endLine": 74,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetGroupBg' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Permissions/PermissionsList.razor.cs",
+                "region": {
+                  "startLine": 89,
+                  "startColumn": 24,
+                  "endLine": 89,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetGroupColor' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Permissions/PermissionsList.razor.cs",
+                "region": {
+                  "startLine": 100,
+                  "startColumn": 24,
+                  "endLine": 100,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetStatusColor' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Attendance/Attendance.razor.cs",
+                "region": {
+                  "startLine": 75,
+                  "startColumn": 24,
+                  "endLine": 75,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'TranslateStatus' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Attendance/Attendance.razor.cs",
+                "region": {
+                  "startLine": 99,
+                  "startColumn": 24,
+                  "endLine": 99,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetStatusBulletClass' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Attendance/Attendance.razor.cs",
+                "region": {
+                  "startLine": 87,
+                  "startColumn": 24,
+                  "endLine": 87,
+                  "endColumn": 44
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetStatusColor' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Payroll/PayrollDetail.razor.cs",
+                "region": {
+                  "startLine": 175,
+                  "startColumn": 24,
+                  "endLine": 175,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'SumEmployees' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Organization/OrganizationStructure.razor.cs",
+                "region": {
+                  "startLine": 83,
+                  "startColumn": 21,
+                  "endLine": 83,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'CountNodes' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Organization/OrganizationStructure.razor.cs",
+                "region": {
+                  "startLine": 91,
+                  "startColumn": 21,
+                  "endLine": 91,
+                  "endColumn": 31
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetLevelBadge' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Organization/PositionList.razor.cs",
+                "region": {
+                  "startLine": 78,
+                  "startColumn": 24,
+                  "endLine": 78,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'ParseSalary' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/MONEY/2026/TAN_TAN_LOC/TTL_ERP/TTL.HR/TTL.HR.Shared/Pages/Employees/EmployeeList.razor.cs",
+                "region": {
+                  "startLine": 510,
+                  "startColumn": 26,
+                  "endLine": 510,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CA1816": {
+          "id": "CA1816",
+          "shortDescription": "Dispose methods should call SuppressFinalize",
+          "fullDescription": "A method that is an implementation of Dispose does not call GC.SuppressFinalize; or a method that is not an implementation of Dispose calls GC.SuppressFinalize; or a method calls GC.SuppressFinalize and passes something other than this (Me in Visual Basic).",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1816",
+          "properties": {
+            "category": "Usage",
+            "isEnabledByDefault": true,
+            "tags": [
+              "PortedFromFxCop",
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA1822": {
+          "id": "CA1822",
+          "shortDescription": "Mark members as static",
+          "fullDescription": "Members that do not access instance data or call instance methods can be marked as static. After you mark the methods as static, the compiler will emit nonvirtual call sites to these members. This can give you a measurable performance gain for performance-sensitive code.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "PortedFromFxCop",
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA1860": {
+          "id": "CA1860",
+          "shortDescription": "Avoid using 'Enumerable.Any()' extension method",
+          "fullDescription": "Prefer using 'IsEmpty', 'Count' or 'Length' properties whichever available, rather than calling 'Enumerable.Any()'. The intent is clearer and it is more performant than using 'Enumerable.Any()' extension method.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1860",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA1862": {
+          "id": "CA1862",
+          "shortDescription": "Use the 'StringComparison' method overloads to perform case-insensitive string comparisons",
+          "fullDescription": "Avoid calling 'ToLower', 'ToUpper', 'ToLowerInvariant' and 'ToUpperInvariant' to perform case-insensitive string comparisons, as in 'string.ToLower() == string.ToLower()', because they lead to an allocation. Instead, use 'string.Equals(string, StringComparison)' to perform case-insensitive comparisons. Switching to using an overload that takes a 'StringComparison' might cause subtle changes in behavior, so it's important to conduct thorough testing after applying the suggestion. Additionally, if a culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1862",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA2012": {
+          "id": "CA2012",
+          "shortDescription": "Use ValueTasks correctly",
+          "fullDescription": "ValueTasks returned from member invocations are intended to be directly awaited.  Attempts to consume a ValueTask multiple times or to directly access one's result before it's known to be completed may result in an exception or corruption.  Ignoring such a ValueTask is likely an indication of a functional bug and may degrade performance.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2012",
+          "properties": {
+            "category": "Reliability",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CS0168": {
+          "id": "CS0168",
+          "shortDescription": "Variable is declared but never used",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0168)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS0414": {
+          "id": "CS0414",
+          "shortDescription": "Field is assigned but its value is never used",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0414)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8601": {
+          "id": "CS8601",
+          "shortDescription": "Possible null reference assignment.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8601)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8602": {
+          "id": "CS8602",
+          "shortDescription": "Dereference of a possibly null reference.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8602)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8604": {
+          "id": "CS8604",
+          "shortDescription": "Possible null reference argument.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8604)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8618": {
+          "id": "CS8618",
+          "shortDescription": "Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8618)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8625": {
+          "id": "CS8625",
+          "shortDescription": "Cannot convert null literal to non-nullable reference type.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8625)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

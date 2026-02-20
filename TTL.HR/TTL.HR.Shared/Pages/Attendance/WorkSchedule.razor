@@ -13,31 +13,32 @@
                                 <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
                             </svg>
                         </span>
-                        <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm theo tên, mã NV..." />
+                        <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm theo tên, mã NV..." @bind="_searchTerm" @bind:event="oninput" @onkeyup="@(() => ApplyFilters())" />
                     </div>
 
                     <!-- Department -->
                     <div class="w-md-175px me-4 my-1">
-                        <select class="form-select form-select-solid fs-7 fw-bold">
-                            <option>Phòng ban: Tất cả</option>
-                            <option>Kỹ thuật Phần mềm</option>
-                            <option>Hành chính</option>
-                            <option>Sản xuất</option>
+                        <select class="form-select form-select-solid fs-7 fw-bold" @onchange="OnDepartmentChange">
+                            <option value="">Phòng ban: Tất cả</option>
+                            @foreach (var dept in _departments)
+                            {
+                                <option value="@dept.Id">@dept.Name</option>
+                            }
                         </select>
                     </div>
 
                     <!-- Type -->
                     <div class="w-md-150px me-4 my-1">
-                        <select class="form-select form-select-solid fs-7 fw-bold">
-                            <option>Loại ca: Tất cả</option>
-                            <option>Ca hành chính</option>
-                            <option>Ca sản xuất</option>
-                            <option>Ca đặc thù</option>
+                        <select class="form-select form-select-solid fs-7 fw-bold" @onchange="OnShiftTypeChange">
+                            <option value="">Loại ca: Tất cả</option>
+                            <option value="hành chính">Ca hành chính</option>
+                            <option value="sản xuất">Ca sản xuất</option>
+                            <option value="đêm">Ca đêm</option>
                         </select>
                     </div>
 
                     <div class="ms-auto my-1">
-                        <button class="btn btn-light-primary fw-bold fs-7 px-6"><i class="bi bi-funnel me-1"></i>Lọc thêm</button>
+                        <button class="btn btn-light-primary fw-bold fs-7 px-6" @onclick="RefreshData"><i class="bi bi-arrow-clockwise me-1"></i>Làm mới</button>
                     </div>
                 </div>
             </div>
@@ -47,18 +48,34 @@
         <div class="d-flex flex-stack mb-6">
             <div class="d-flex align-items-center">
                 <div class="form-check form-check-sm form-check-custom form-check-solid me-5">
-                    <input class="form-check-input" type="checkbox" id="check_all_staff" />
-                    <label class="form-check-label fw-bold text-gray-700 fs-7 ms-2 text-nowrap" for="check_all_staff">Chọn tất cả (124 nhân viên)</label>
+                    <input class="form-check-input" type="checkbox" id="check_all_staff" checked="@_isAllSelected" @onchange="ToggleSelectAll" />
+                    <label class="form-check-label fw-bold text-gray-700 fs-7 ms-2 text-nowrap" for="check_all_staff">Đã chọn @_selectedEmpIds.Count nhân viên</label>
                 </div>
             </div>
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-sm btn-primary px-4 py-2 fs-8 fw-semibold"><i class="bi bi-calendar-check fs-7 me-1"></i>Cập nhật lịch</button>
-                <button class="btn btn-sm btn-light fw-bolder px-5 text-gray-700 border"><i class="bi bi-file-earmark-excel me-2"></i>Xuất Excel</button>
+                <button class="btn btn-sm btn-primary px-4 py-2 fs-8 fw-semibold" @onclick="OpenBulkAssign" disabled="@(_selectedEmpIds.Count == 0)"><i class="bi bi-calendar-check fs-7 me-1"></i>Cập nhật lịch</button>
+                <button class="btn btn-sm btn-light fw-bolder px-5 text-gray-700 border" @onclick="ExportExcel"><i class="bi bi-file-earmark-excel me-2"></i>Xuất Excel</button>
             </div>
         </div>
 
         <!-- Table -->
         <div class="card shadow-sm border-0">
+            <div class="card-header border-0 pt-5">
+                <div class="card-title">
+                    <h3 class="card-label fw-bolder text-dark">Lịch làm việc nhân viên</h3>
+                    <span class="text-muted mt-1 fw-bold fs-7 ms-2">Tuần: @_startDate.ToString("dd/MM") - @_endDate.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div class="card-toolbar">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-icon btn-sm btn-light-primary me-2" @onclick="() => ChangeWeek(-1)"><i class="bi bi-chevron-left"></i></button>
+                        <div class="position-relative">
+                            <i class="bi bi-calendar-range fs-4 position-absolute ms-4 mt-2 text-primary"></i>
+                            <input type="text" class="form-control form-control-white form-control-sm w-225px ps-12 fs-7 fw-bold border-gray-300" readonly value="@_startDate.ToString("dd/MM/yyyy") - @_endDate.ToString("dd/MM/yyyy")" />
+                        </div>
+                        <button class="btn btn-icon btn-sm btn-light-primary ms-2" @onclick="() => ChangeWeek(1)"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
             <div class="card-body p-0">
                 <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="10" Columns="5">
                     <div class="table-responsive">
@@ -73,12 +90,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var emp in _schedules)
+                                @foreach (var emp in _pagedSchedules)
                                 {
                                     <tr class="hover-elevate cursor-pointer" @onclick="() => openDetail(emp)">
                                         <td>
                                             <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                <input class="form-check-input staff-checkbox" type="checkbox" value="1" @onclick:stopPropagation />
+                                                <input class="form-check-input staff-checkbox" type="checkbox" checked="@_selectedEmpIds.Contains(emp.Id)" @onchange="@(e => ToggleSelectEmp(emp.Id, e))" @onclick:stopPropagation />
                                             </div>
                                         </td>
                                         <td>
@@ -111,15 +128,9 @@
                                             }
                                         </td>
                                         <td>
-                                            <select class="form-select form-select-sm form-select-solid fs-8 py-1.5 fw-semibold" @onclick:stopPropagation>
-                                                <option value="">-- Chọn ca mới --</option>
-                                                <option>Ca hành chính</option>
-                                                <option>Ca sáng (06:00-14:00)</option>
-                                                <option>Ca chiều (14:00-22:00)</option>
-                                                <option>Ca đêm (22:00-06:00)</option>
-                                                <option>Ca gãy</option>
-                                                <option>Ca 12h</option>
-                                            </select>
+                                            <button class="btn btn-sm btn-light-primary fs-8 py-1 px-3" @onclick="() => openDetail(emp)" @onclick:stopPropagation>
+                                                <i class="ki-outline ki-calendar-edit fs-6 me-1"></i>Điều chỉnh
+                                            </button>
                                         </td>
                                     </tr>
                                 }
@@ -128,12 +139,48 @@
                     </div>
                     <!-- Pagination -->
                     <div class="d-flex flex-stack flex-wrap px-7 py-5">
-                        <div class="fs-7 fw-bold text-gray-700">Hiển thị 10 trong tổng số 124 nhân viên</div>
+                        <div class="fs-7 fw-bold text-gray-700">Hiển thị @(_pagedSchedules.Count) trong tổng số @(_filteredSchedules.Count) nhân viên</div>
                         <ul class="pagination">
-                            <li class="page-item previous disabled"><a href="#" class="page-link"><i class="ki-outline ki-left fs-6"></i></a></li>
-                            <li class="page-item active"><a href="#" class="page-link">1</a></li>
-                            <li class="page-item"><a href="#" class="page-link">2</a></li>
-                            <li class="page-item next"><a href="#" class="page-link"><i class="ki-outline ki-right fs-6"></i></a></li>
+                            <li class="page-item previous @(_currentPage == 1 ? "disabled" : "")">
+                                <a href="javascript:void(0)" class="page-link" @onclick="() => ChangePage(_currentPage - 1)">
+                                    <i class="ki-outline ki-left fs-6"></i>
+                                </a>
+                            </li>
+
+                            @if (_totalPages <= 7)
+                            {
+                                @for (int i = 1; i <= _totalPages; i++)
+                                {
+                                    <li class="page-item @(i == _currentPage ? "active" : "")">
+                                        <a href="javascript:void(0)" class="page-link" @onclick="() => ChangePage(i)">@i</a>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <li class="page-item @(1 == _currentPage ? "active" : "")">
+                                    <a href="javascript:void(0)" class="page-link" @onclick="() => ChangePage(1)">1</a>
+                                </li>
+                                @if (_currentPage > 3) { <li class="page-item disabled"><a class="page-link">...</a></li> }
+
+                                @for (int i = Math.Max(2, _currentPage - 1); i <= Math.Min(_totalPages - 1, _currentPage + 1); i++)
+                                {
+                                    <li class="page-item @(i == _currentPage ? "active" : "")">
+                                        <a href="javascript:void(0)" class="page-link" @onclick="() => ChangePage(i)">@i</a>
+                                    </li>
+                                }
+
+                                @if (_currentPage < _totalPages - 2) { <li class="page-item disabled"><a class="page-link">...</a></li> }
+                                <li class="page-item @(_totalPages == _currentPage ? "active" : "")">
+                                    <a href="javascript:void(0)" class="page-link" @onclick="() => ChangePage(_totalPages)">@_totalPages</a>
+                                </li>
+                            }
+
+                            <li class="page-item next @(_currentPage == _totalPages ? "disabled" : "")">
+                                <a href="javascript:void(0)" class="page-link" @onclick="() => ChangePage(_currentPage + 1)">
+                                    <i class="ki-outline ki-right fs-6"></i>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </SkeletonLoading>
@@ -164,8 +211,12 @@
         <div class="card-header pe-5">
             <div class="card-title">
                 <div class="d-flex justify-content-center flex-column me-3">
-                    <span class="fs-4 fw-bolder text-gray-900 lh-1">Chi tiết lịch làm việc</span>
-                    <span class="fs-7 fw-bold text-muted mt-2">Mã NV: @(_selectedSchedule?.Id ?? "---")</span>
+                    <span class="fs-4 fw-bolder text-gray-900 lh-1">
+                        @(_selectedSchedule != null ? "Chi tiết lịch làm việc" : "Cập nhật lịch hàng loạt")
+                    </span>
+                    <span class="fs-7 fw-bold text-muted mt-2">
+                        @(_selectedSchedule != null ? $"Mã NV: {_selectedSchedule.EmployeeId}" : $"Đang chọn: {_assignModel.EmployeeIds.Count} nv")
+                    </span>
                 </div>
             </div>
             <div class="card-toolbar">
@@ -211,62 +262,65 @@
                                 <span class="text-muted fw-bold">Thời gian:</span>
                                 <span class="text-gray-800 fw-bolder">@(_selectedSchedule.CurrentShift.Contains("(") ? _selectedSchedule.CurrentShift.Split('(')[1].Replace(")", "") : "Theo lịch công tác")</span>
                             </div>
-                            <div class="d-flex flex-stack fs-7">
-                                <span class="text-muted fw-bold">Nghỉ giữa ca:</span>
-                                <span class="text-gray-800 fw-bolder">60 phút</span>
-                            </div>
-                            <div class="d-flex flex-stack fs-7">
-                                <span class="text-muted fw-bold">Tính công:</span>
-                                <span class="text-gray-800 fw-bolder">1.0 ngày công</span>
-                            </div>
-                            <div class="d-flex flex-stack fs-7">
-                                <span class="text-muted fw-bold">Phụ cấp ca:</span>
-                                <span class="text-success fw-bolder">@(_selectedSchedule.CurrentShift.Contains("đêm") ? "130% lương" : "Mặc định")</span>
-                            </div>
+                            <!-- Static content for stats -->
                         </div>
                     </div>
                 </div>
 
                 <!-- Schedule History / Calendar Mini -->
                 <h3 class="fw-bolder fs-6 mb-5 text-gray-800 text-uppercase">Lịch làm việc tuần này</h3>
-                <div class="row g-3 mb-8">
-                    @foreach (var day in new[] { "T2", "T3", "T4", "T5", "T6", "T7", "CN" })
-                    {
-                        <div class="col">
-                            <div class="border rounded py-3 px-1 text-center bg-white @(day == "CN" ? "bg-light-danger opacity-50" : "")">
-                                <div class="fs-9 fw-bold text-muted mb-1">@day</div>
-                                <div class="fs-8 fw-bolder @(day == "CN" ? "text-danger" : "text-gray-800")">@(day == "CN" ? "OFF" : "CA")</div>
+                <div class="row g-2 mb-8">
+                    @{
+                        var days = new[] { "T2", "T3", "T4", "T5", "T6", "T7", "CN" };
+                        for (int i = 0; i < days.Length; i++)
+                        {
+                            var dayLabel = days[i];
+                            var shiftCode = _selectedSchedule.WeeklySchedule.Count > i ? _selectedSchedule.WeeklySchedule[i] : "-";
+                            <div class="col">
+                                <div class="border rounded py-3 px-0 text-center bg-white @(dayLabel == "CN" ? "bg-light-danger opacity-75" : "")" style="min-width: 0;">
+                                    <div class="fs-10 fw-bold text-muted mb-1">@dayLabel</div>
+                                    <div class="fs-9 fw-bolder @(dayLabel == "CN" ? "text-danger" : "text-gray-800")">@shiftCode</div>
+                                </div>
                             </div>
-                        </div>
+                        }
                     }
                 </div>
-
-                <!-- Assignment Section -->
-                <div class="border-top pt-5">
-                    <h3 class="fw-bolder fs-6 mb-5 text-gray-800 text-uppercase">Gán lịch làm việc tháng tới</h3>
-                    <div class="mb-5">
-                        <label class="form-label fs-7 fw-bold text-gray-700">Chọn ca làm việc mới</label>
-                        <select class="form-select form-select-solid fs-7">
-                            <option value="">Giữ nguyên ca hiện tại</option>
-                            <option>Ca hành chính (08h00 - 17h00)</option>
-                            <option>Ca sáng (06h00 - 14h00)</option>
-                            <option>Ca chiều (14h00 - 22h00)</option>
-                            <option>Ca đêm (22h00 - 06h00)</option>
-                            <option>Ca gãy (Split)</option>
-                        </select>
-                    </div>
-                    <div class="mb-5">
-                        <label class="form-label fs-7 fw-bold text-gray-700">Ngày bắt đầu áp dụng</label>
-                        <input type="date" class="form-control form-control-solid fs-7" value="2026-03-01" />
-                    </div>
-                </div>
             }
+
+            <!-- Assignment Section (Shared) -->
+            <div class="border-top pt-5">
+                <h3 class="fw-bolder fs-6 mb-5 text-gray-800 text-uppercase">
+                    @(_selectedSchedule != null ? "Gán lịch làm việc tháng tới" : "Thiết lập lịch làm việc chung")
+                </h3>
+                <div class="mb-5">
+                    <label class="form-label fs-7 fw-bold text-gray-700">Chọn ca làm việc mới</label>
+                    <select class="form-select form-select-solid fs-7" @bind="_assignModel.ShiftId">
+                        <option value="">-- Chọn ca làm việc --</option>
+                        @foreach (var shift in _shifts)
+                        {
+                            <option value="@shift.Id">@shift.Name (@shift.StartTime - @shift.EndTime)</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-5">
+                    <label class="form-label fs-7 fw-bold text-gray-700">Ngày bắt đầu áp dụng</label>
+                    <input type="date" class="form-control form-control-solid fs-7" @bind="_assignModel.StartDate" />
+                </div>
+                <!-- Logic for end date if needed? For now default to 1 month ahead in model init -->
+                 <div class="mb-5">
+                    <label class="form-label fs-7 fw-bold text-gray-700">Ghi chú</label>
+                    <textarea class="form-control form-control-solid fs-7" rows="3" @bind="_assignModel.Note"></textarea>
+                </div>
+            </div>
         </div>
 
         <!-- Footer -->
         <div class="card-footer border-0 d-flex gap-3 justify-content-between p-10">
             <button type="button" class="btn btn-light flex-grow-1 fs-7 fw-bold" @onclick="closeDetail">Hủy bỏ</button>
-            <button type="button" class="btn btn-primary flex-grow-1 fs-7 fw-bold">Lưu thay đổi</button>
+            <button type="button" class="btn btn-primary flex-grow-1 fs-7 fw-bold" @onclick="SaveSchedule" disabled="@(_isProcessing)">
+                @if (_isProcessing) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                Lưu thay đổi
+            </button>
         </div>
     </div>
 </div>

@@ -18,6 +18,11 @@
             </ul>
         </div>
         <div class="d-flex align-items-center gap-2 gap-lg-3">
+            <div class="d-flex align-items-center position-relative my-1">
+                <i class="ki-outline ki-magnifier fs-4 position-absolute ms-4 text-gray-500"></i>
+                <input type="text" class="form-control form-control-sm form-control-solid w-200px ps-12" 
+                       placeholder="Tìm vai trò..." @bind="RoleSearchTerm" @bind:event="oninput" @onkeyup="HandleRoleSearch" />
+            </div>
             <button type="button" class="btn btn-sm btn-primary fw-bold" @onclick="openAddRole">
                 <i class="ki-outline ki-plus fs-2"></i> Tạo vai trò
             </button>
@@ -39,6 +44,13 @@
         else
         {
             <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-5 g-xl-9">
+                @if (!_roles.Any() && !string.IsNullOrEmpty(RoleSearchTerm))
+                {
+                    <div class="col-12 text-center py-20">
+                        <div class="text-muted fs-5 fw-bold">Không tìm thấy vai trò nào phù hợp với từ khóa "@RoleSearchTerm"</div>
+                        <button class="btn btn-link py-2" @onclick="ClearRoleSearch">Xóa tìm kiếm</button>
+                    </div>
+                }
                 @foreach (var role in _roles)
                 {
                     <div class="col-md-4">
@@ -51,11 +63,11 @@
                             <div class="card-body pt-1">
                                 <div class="fw-bolder text-gray-600 mb-5">Tổng số: <span class="text-primary">@role.UsersCount</span> người dùng</div>
                                 <div class="d-flex flex-column text-gray-600 fs-7">
-                                    @foreach (var p in role.Permissions.Take(5))
+                                    @for (int i = 0; i < Math.Min(5, role.PermissionNames.Count); i++)
                                     {
                                         <div class="d-flex align-items-center py-1">
                                             <span class="bullet bg-primary opacity-50 me-3"></span>
-                                            <span>@GetPermissionName(p)</span>
+                                            <span>@(role.PermissionNames[i])</span>
                                         </div>
                                     }
                                     @if (role.Permissions.Count > 5)
@@ -68,9 +80,18 @@
                                 </div>
                             </div>
                             <div class="card-footer flex-wrap pt-0 pb-7">
-                                <button type="button" class="btn btn-light btn-active-light-primary btn-sm me-2 fw-bold" @onclick="() => openRoleDetail(role)">
-                                    <i class="ki-outline ki-information-5 fs-5 me-1"></i>Thành viên & Chi tiết
+                                <button type="button" class="btn btn-light btn-sm me-2 fw-bold" @onclick="() => openRoleDetail(role)">
+                                    <i class="ki-outline ki-information-5 fs-5 me-1"></i>Thành viên
                                 </button>
+                                <button type="button" class="btn btn-light-primary btn-sm me-2 fw-bold" @onclick="() => openEditRole(role)">
+                                    <i class="ki-outline ki-pencil fs-5 me-1"></i>Sửa
+                                </button>
+                                @if (!role.IsSystem)
+                                {
+                                    <button type="button" class="btn btn-light-danger btn-sm fw-bold" @onclick="() => promptDeleteRole(role)">
+                                        <i class="ki-outline ki-trash fs-5 me-1"></i>Xóa
+                                    </button>
+                                }
                             </div>
                         </div>
                     </div>
@@ -97,8 +118,8 @@
         <div class="card-header pe-5 py-6">
             <div class="card-title">
                 <div class="d-flex justify-content-center flex-column">
-                    <span class="fs-4 fw-bolder text-gray-900 lh-1">Thiết lập vai trò mới</span>
-                    <span class="fs-8 fw-bold text-muted mt-2">Cấu hình tên nhóm và các quyền cơ bản ban đầu</span>
+                    <span class="fs-4 fw-bolder text-gray-900 lh-1">@(_isEditMode ? "Chỉnh sửa vai trò" : "Thiết lập vai trò mới")</span>
+                    <span class="fs-8 fw-bold text-muted mt-2">@(_isEditMode ? "Cập nhật tên, mô tả và quyền hạn của vai trò" : "Cấu hình tên nhóm và các quyền cơ bản ban đầu")</span>
                 </div>
             </div>
             <div class="card-toolbar">
@@ -109,22 +130,35 @@
         </div>
 
         <div class="card-body hover-scroll-overlay-y py-8 px-10">
-            <div class="mb-10">
+            <div class="mb-5">
                 <label class="required fs-7 fw-bold mb-3">Tên vai trò / Nhóm</label>
                 <input type="text" class="form-control form-control-solid fs-7" placeholder="VD: Giám sát ATTT" @bind="_newRoleName" />
             </div>
+
+            <div class="mb-10">
+                <label class="fs-7 fw-bold mb-3">Mô tả</label>
+                <textarea class="form-control form-control-solid fs-7" rows="2" placeholder="Ghi chú ngắn gọn về mục đích của vai trò..." @bind="_newRoleDescription"></textarea>
+            </div>
             
             <div class="mb-10">
-                <label class="fs-7 fw-bold mb-5">Danh sách quyền cơ bản (Chọn nhanh)</label>
-                <div class="d-flex flex-column gap-3">
-                    @foreach (var p in _availablePerms)
+                <label class="fs-7 fw-bold mb-5">Danh sách quyền hạn</label>
+                <div class="hover-scroll-y" style="max-height: 400px">
+                    @foreach (var group in _availablePerms.GroupBy(x => x.Group))
                     {
-                        <div class="form-check form-check-custom form-check-solid">
-                            <input class="form-check-input w-20px h-20px" type="checkbox" @bind="p.IsSelected" id="perm_@p.Code" />
-                            <label class="form-check-label" for="perm_@p.Code">
-                                <span class="fw-bold text-gray-800 fs-7">@p.Name</span>
-                                <span class="text-muted fs-9 ms-2">(@p.Code)</span>
-                            </label>
+                        <div class="mb-5">
+                            <h6 class="fs-8 text-uppercase fw-bolder text-gray-600 mb-3 border-bottom pb-2">@group.Key</h6>
+                            <div class="d-flex flex-column gap-3 ps-2">
+                                @foreach (var p in group)
+                                {
+                                    <div class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input w-15px h-15px" type="checkbox" @bind="p.IsSelected" id="perm_@p.Id" />
+                                        <label class="form-check-label" for="perm_@p.Id">
+                                            <span class="fw-bold text-gray-800 fs-7">@p.Name</span>
+                                            <span class="text-muted ms-1" style="font-size: 0.65rem">(@p.Code)</span>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     }
                 </div>
@@ -133,7 +167,7 @@
 
         <div class="card-footer py-6 px-10 border-0 bg-light-light d-flex gap-3 justify-content-end">
             <button type="button" class="btn btn-sm btn-light fw-bold px-6" @onclick="closeAddRole">Hủy bỏ</button>
-            <button type="button" class="btn btn-sm btn-primary fw-bold px-6" @onclick="confirmCreateRole">Tạo vai trò</button>
+            <button type="button" class="btn btn-sm btn-primary fw-bold px-6" @onclick="confirmCreateRole">@(_isEditMode ? "Lưu thay đổi" : "Tạo vai trò")</button>
         </div>
     </div>
 </div>
@@ -166,14 +200,29 @@
                 <div class="row row-cols-2 g-3">
                     @if (_selectedRole != null)
                     {
-                        @foreach (var p in _selectedRole.Permissions)
+                        @if (_selectedRole.PermissionNames.Any())
                         {
-                            <div class="col">
-                                <div class="d-flex align-items-center p-3 rounded bg-light-light border border-dashed border-gray-300">
-                                    <span class="bullet bg-primary me-3"></span>
-                                    <span class="text-gray-700 fs-7">@GetPermissionName(p)</span>
+                            @foreach (var pName in _selectedRole.PermissionNames)
+                            {
+                                <div class="col">
+                                    <div class="d-flex align-items-center p-3 rounded bg-light-light border border-dashed border-gray-300">
+                                        <span class="bullet bg-primary me-3"></span>
+                                        <span class="text-gray-700 fs-7">@pName</span>
+                                    </div>
                                 </div>
-                            </div>
+                            }
+                        }
+                        else
+                        {
+                             @foreach (var pId in _selectedRole.Permissions)
+                             {
+                                <div class="col">
+                                    <div class="d-flex align-items-center p-3 rounded bg-light-light border border-dashed border-gray-300">
+                                        <span class="bullet bg-primary me-3"></span>
+                                        <span class="text-gray-700 fs-7">@GetPermissionName(pId)</span>
+                                    </div>
+                                </div>
+                             }
                         }
                     }
                 </div>
@@ -302,3 +351,12 @@
 {
     <div class="drawer-overlay" style="z-index: 1055; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);" @onclick="() => { closeAddUser(); closeAddRole(); closeRoleDetail(); }"></div>
 }
+
+<!-- Delete Confirmation Modal -->
+<TTL.HR.Shared.Components.Common.DeleteConfirmationModal 
+    IsVisible="@_isDeleteModalOpen"
+    Title="Xóa Vai trò"
+    Message="Bạn đang yêu cầu xóa vai trò"
+    ItemName="@(_roleToDelete?.Name ?? "")"
+    OnConfirmed="confirmDeleteRole"
+    OnCancelled="closeDeleteModal" />

@@ -30,7 +30,7 @@
         {
             <div class="dept-stats">
                 <span><i class="bi bi-diagram-3 me-1"></i>@Node.Children.Count(c => c.Type == "Department")</span>
-                <span><i class="bi bi-people me-1"></i>@CountTotalEmployees(Node)</span>
+                <span><i class="bi bi-people me-1"></i>@Node.EmployeeCount</span>
             </div>
         }
     </div>

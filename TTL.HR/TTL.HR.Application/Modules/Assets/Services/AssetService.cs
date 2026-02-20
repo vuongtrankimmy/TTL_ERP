@@ -16,23 +16,48 @@ namespace TTL.HR.Application.Modules.Assets.Services
         public AssetService(HttpClient httpClient) => _httpClient = httpClient;
         public async Task<IEnumerable<AssetModel>> GetAssetsAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<AssetModel>>>(ApiEndpoints.Assets.Base);
-            return response?.Data ?? new List<AssetModel>();
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<AssetModel>>>(ApiEndpoints.Assets.Base);
+            return response?.Data?.Items ?? new List<AssetModel>();
+        }
+
+        public async Task<PagedResult<AssetAllocationDto>> GetAllocationsAsync(int page, int pageSize, string? status = null, string? searchTerm = null)
+        {
+            var url = $"{ApiEndpoints.Assets.Base}/allocations?Page={page}&PageSize={pageSize}";
+            if (!string.IsNullOrEmpty(status)) url += $"&Status={status}";
+            if (!string.IsNullOrEmpty(searchTerm)) url += $"&SearchTerm={searchTerm}";
+
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<AssetAllocationDto>>>(url);
+            return response?.Data ?? new PagedResult<AssetAllocationDto> { Items = new List<AssetAllocationDto>(), PageIndex = page, PageSize = pageSize };
         }
         public async Task<AssetModel?> GetAssetAsync(string id)
         {
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<AssetModel>>($"{ApiEndpoints.Assets.Base}/{id}");
             return response?.Data;
         }
-        public async Task<bool> AssignAssetAsync(string assetId, string employeeId)
+        public async Task<IEnumerable<AssetHistoryModel>> GetAssetHistoryAsync(string assetId)
         {
-            var response = await _httpClient.PostAsync($"{ApiEndpoints.Assets.Base}/{assetId}/assign/{employeeId}", null);
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<IEnumerable<AssetHistoryModel>>>($"{ApiEndpoints.Assets.Base}/{assetId}/history");
+            return response?.Data ?? new List<AssetHistoryModel>();
+        }
+
+        public async Task<bool> AssignAssetAsync(string assetId, string employeeId, string condition, string note)
+        {
+            var command = new { AssetId = assetId, EmployeeId = employeeId, Condition = condition, Note = note, AllocatedDate = DateTime.Now };
+            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Assets.Base}/allocate", command);
             return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> ReturnAssetAsync(string assetId, string condition, string note)
         {
-            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Assets.Base}/{assetId}/return", new { Condition = condition, Note = note });
+            var command = new { AssetId = assetId, Condition = condition, Note = note, ReturnedDate = DateTime.Now };
+            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Assets.Base}/revoke", command);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> RequestMaintenanceAsync(string assetId, string issue, string priority)
+        {
+            var command = new { AssetId = assetId, IssueDescription = issue, Priority = priority, RequestedDate = DateTime.Now };
+            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Assets.Base}/maintenance", command);
             return response.IsSuccessStatusCode;
         }
 

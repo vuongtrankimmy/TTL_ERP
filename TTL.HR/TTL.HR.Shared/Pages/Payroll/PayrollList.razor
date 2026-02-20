@@ -10,6 +10,16 @@
                 <i class="ki-outline ki-magnifier fs-3 position-absolute ms-4 text-gray-500"></i>
                 <input type="text" class="form-control form-control-solid w-250px ps-12" placeholder="Tìm kiếm bảng lương...">
             </div>
+
+            <div class="ms-3">
+                <select class="form-select form-select-solid w-150px" @onchange="OnYearChanged">
+                    <option value="0" selected="@(_selectedYear == 0)">Tất cả các năm</option>
+                    @for (int year = DateTime.Now.Year; year >= 2024; year--)
+                    {
+                        <option value="@year" selected="@(year == _selectedYear)">Năm @year</option>
+                    }
+                </select>
+            </div>
         </div>
         <div class="card-toolbar">
             <button type="button" class="btn btn-primary fw-bold" @onclick="CreateNewPeriod">
@@ -19,7 +29,7 @@
     </div>
     
     <div class="card-body pt-0">
-        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="5">
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="12">
             <div class="table-responsive">
                 <table class="table align-middle table-row-dashed fs-6 gy-5">
                     <thead>
@@ -29,7 +39,7 @@
                             <th class="min-w-100px text-center">Nhân viên</th>
                             <th class="min-w-150px text-end">Tổng chi trả</th>
                             <th class="min-w-120px text-center">Trạng thái</th>
-                            <th class="text-end min-w-100px">Thao tác</th>
+                            <th class="text-end min-w-120px">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody class="fw-semibold text-gray-700">
@@ -37,36 +47,75 @@
                         {
                             @foreach (var period in Periods)
                             {
-                                <tr>
+                                <tr class="@(period.IsPlaceholder ? "opacity-75" : "")">
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="symbol symbol-40px me-3">
-                                                <div class="symbol-label bg-light-success">
-                                                    <i class="ki-outline ki-dollar text-success fs-2"></i>
+                                                <div class="symbol-label @(period.IsPlaceholder ? "bg-light-secondary" : "bg-light-success")">
+                                                    <i class="ki-outline ki-dollar @(period.IsPlaceholder ? "text-gray-400" : "text-success") fs-2"></i>
                                                 </div>
                                             </div>
-                                            <a href="javascript:void(0)" @onclick="() => ViewDetail(period.Month, period.Year)" class="text-gray-800 text-hover-primary fw-bold fs-6">@period.Name</a>
+                                            @if (period.IsPlaceholder)
+                                            {
+                                                <span class="text-gray-500 fw-bold fs-6">@period.Name</span>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:void(0)" @onclick="() => ViewDetail(period.Id, period.Month, period.Year)" class="text-gray-800 text-hover-primary fw-bold fs-6">@period.Name</a>
+                                            }
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <span class="badge badge-light fw-bold fs-7">@period.Month/@period.Year</span>
+                                        <span class="badge badge-light fw-bold fs-7">@period.Month.ToString("D2")/@period.Year</span>
                                     </td>
                                     <td class="text-center">
-                                        <span class="text-gray-600 fw-bold">@period.EmployeeCount nhận viên</span>
+                                        @if (period.IsPlaceholder)
+                                        {
+                                            <span class="text-gray-400 fs-7 italic">--</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-gray-600 fw-bold">@period.EmployeeCount nhân viên</span>
+                                        }
                                     </td>
                                     <td class="text-end">
-                                        <span class="text-dark fw-bolder fs-6">@period.TotalAmount.ToString("N0") VND</span>
+                                        @if (period.IsPlaceholder)
+                                        {
+                                            <span class="text-gray-400 fs-7 italic">--</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-dark fw-bolder fs-6">@period.TotalAmount.ToString("N0") VND</span>
+                                        }
                                     </td>
                                     <td class="text-center">
-                                        <div class="badge @(period.Status == "Closed" || period.Status == "Đã chốt" ? "badge-light-success" : "badge-light-warning") fw-bold px-4 py-3">@(period.Status == "Closed" || period.Status == "Đã chốt" ? "Đã chốt" : "Dự thảo")</div>
+                                        @if (period.IsPlaceholder)
+                                        {
+                                            <div class="badge badge-light fw-bold px-4 py-3 text-gray-500">Chưa khởi tạo</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="badge @(period.Status == "Closed" || period.Status == "Đã chốt" ? "badge-light-success" : "badge-light-warning") fw-bold px-4 py-3">
+                                                @(period.Status == "Closed" || period.Status == "Đã chốt" ? "Đã chốt" : "Dự thảo")
+                                            </div>
+                                        }
                                     </td>
                                     <td class="text-end">
-                                        <button class="btn btn-sm btn-icon btn-light-primary btn-active-primary me-2 hover-scale" title="Xem chi tiết" @onclick="() => ViewDetail(period.Month, period.Year)">
-                                            <i class="ki-outline ki-eye fs-2"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-icon btn-light-danger btn-active-danger hover-scale" title="Xóa">
-                                            <i class="ki-outline ki-trash fs-2"></i>
-                                        </button>
+                                        @if (period.IsPlaceholder)
+                                        {
+                                            <button class="btn btn-sm btn-light-primary fw-bold hover-scale" @onclick="() => CreateNewPeriod(period.Month, period.Year)">
+                                                <i class="ki-outline ki-plus fs-4 me-1"></i> Khởi tạo
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-sm btn-icon btn-light-primary btn-active-primary me-2 hover-scale" title="Xem chi tiết" @onclick="() => ViewDetail(period.Id, period.Month, period.Year)">
+                                                <i class="ki-outline ki-eye fs-2"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-icon btn-light-danger btn-active-danger hover-scale" title="Xóa">
+                                                <i class="ki-outline ki-trash fs-2"></i>
+                                            </button>
+                                        }
                                     </td>
                                 </tr>
                             }

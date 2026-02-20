@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Organization.Interfaces;
 using TTL.HR.Application.Modules.Organization.Models;
 
@@ -11,15 +12,19 @@ namespace TTL.HR.Shared.Pages.Organization
     {
         [Inject] private IPositionService PositionService { get; set; } = default!;
         [Inject] private IDepartmentService DepartmentService { get; set; } = default!;
+        [Inject] private Microsoft.JSInterop.IJSRuntime JS { get; set; } = default!;
 
         private bool _showEditDrawer = false;
         private bool _showDetailDrawer = false;
         private bool _showConfirmDeleteModal = false;
         private bool _isNewPosition = true;
+        private bool _loadError = false;
         
         private string _searchTerm = "";
         private string _levelFilter = "All";
         private bool _isLoading = true;
+        private int currentPage = 1;
+        private int pageSize = 10;
 
         private List<DepartmentModel> _departments = new();
         private List<PositionItem> _positions = new();
@@ -42,15 +47,17 @@ namespace TTL.HR.Shared.Pages.Organization
                 _positions = positions.Select(p => new PositionItem
                 {
                     Id = p.Id,
-                    NameVN = p.Name,
-                    NameEN = p.Code, // Assuming Code as EN name for now or map accordingly
+                    NameVN = p.Name ?? "",
+                    NameEN = p.Code ?? "", // Assuming Code as EN name for now or map accordingly
                     Group = p.DepartmentName ?? "",
                     DepartmentId = p.DepartmentId,
-                    LevelName = p.Level,
-                    LevelBadge = GetLevelBadge(p.Level),
+                    LevelName = p.Level ?? "Nhân viên",
+                    LevelBadge = GetLevelBadge(p.Level ?? ""),
                     ActiveEmployees = 0, // Need API to provide this or fetch separately
-                    SalaryRange = "Thỏa thuận",
+                    SalaryRange = p.BaseSalaryRangeMin > 0 ? $"{p.BaseSalaryRangeMin} - {p.BaseSalaryRangeMax}" : "Thỏa thuận",
                     JobDescription = p.Description ?? "",
+                    Requirements = p.Requirements != null ? string.Join("\n", p.Requirements) : "",
+                    Benefits = p.Benefits != null ? string.Join("\n", p.Benefits) : "",
                     Icon = "ki-outline ki-briefcase",
                     IconBg = "bg-light-primary",
                     IconColor = "text-primary"
@@ -58,6 +65,7 @@ namespace TTL.HR.Shared.Pages.Organization
             }
             catch (Exception ex)
             {
+                _loadError = true;
                 Console.WriteLine($"Error loading positions: {ex.Message}");
             }
             finally
@@ -81,8 +89,10 @@ namespace TTL.HR.Shared.Pages.Organization
         };
 
         private IEnumerable<PositionItem> FilteredPositions => _positions
-            .Where(x => string.IsNullOrEmpty(_searchTerm) || x.NameVN.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) || x.NameEN.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase))
-            .Where(x => _levelFilter == "All" || x.LevelName.Contains(_levelFilter));
+            .Where(x => string.IsNullOrEmpty(_searchTerm) || 
+                       (x.NameVN?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) || 
+                       (x.NameEN?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) ?? false))
+            .Where(x => _levelFilter == "All" || (x.LevelName?.Contains(_levelFilter) ?? false));
 
         private void resetFilters() { _searchTerm = ""; _levelFilter = "All"; }
 
@@ -128,35 +138,64 @@ namespace TTL.HR.Shared.Pages.Organization
 
         private async System.Threading.Tasks.Task savePosition() {
             _isLoading = true;
+            bool success = false;
             try
             {
+                // Helper to split text to list for API consistency
+                List<string> ToList(string? text) => string.IsNullOrWhiteSpace(text) 
+                    ? new List<string>() 
+                    : text.Split('\n', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+
                 if (_isNewPosition) {
-                    await PositionService.CreatePositionAsync(new CreatePositionRequest
-                    {
-                        Name = _editingPos.NameVN,
-                        Code = _editingPos.NameEN,
-                        DepartmentId = _editingPos.DepartmentId,
-                        Level = _editingPos.LevelName,
-                        Description = _editingPos.JobDescription
-                    });
-                }
-                else
-                {
-                    await PositionService.UpdatePositionAsync(_editingPos.Id, new UpdatePositionRequest
+                    var result = await PositionService.CreatePositionAsync(new CreatePositionRequest
                     {
                         Name = _editingPos.NameVN,
                         Code = _editingPos.NameEN,
                         DepartmentId = _editingPos.DepartmentId,
                         Level = _editingPos.LevelName,
                         Description = _editingPos.JobDescription,
+                        Requirements = ToList(_editingPos.Requirements),
+                        Benefits = ToList(_editingPos.Benefits),
+                        Responsibilities = ToList(_editingPos.JobDescription),
+                        BaseSalaryRangeMin = 0,
+                        BaseSalaryRangeMax = 0
+                    });
+                    success = result != null;
+                }
+                else
+                {
+                    var result = await PositionService.UpdatePositionAsync(_editingPos.Id, new UpdatePositionRequest
+                    {
+                        Id = _editingPos.Id,
+                        Name = _editingPos.NameVN,
+                        Code = _editingPos.NameEN,
+                        DepartmentId = _editingPos.DepartmentId,
+                        Level = _editingPos.LevelName,
+                        Description = _editingPos.JobDescription,
+                        Requirements = ToList(_editingPos.Requirements),
+                        Benefits = ToList(_editingPos.Benefits),
+                        Responsibilities = ToList(_editingPos.JobDescription),
+                        BaseSalaryRangeMin = 0,
+                        BaseSalaryRangeMax = 0,
                         IsActive = true
                     });
+                    success = result != null;
                 }
-                await LoadData();
-                closeEditDrawer();
+
+                if (success)
+                {
+                    await JS.InvokeVoidAsync("toastr.success", _isNewPosition ? "Thêm chức danh thành công" : "Cập nhật chức danh thành công");
+                    await LoadData();
+                    closeEditDrawer();
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Lỗi: Không thể lưu thông tin. Vui lòng kiểm tra lại mã hoặc quyền hạn.");
+                }
             }
             catch (Exception ex)
             {
+                await JS.InvokeVoidAsync("toastr.error", $"Lỗi hệ thống: {ex.Message}");
                 Console.WriteLine($"Error saving position: {ex.Message}");
             }
             finally
@@ -178,18 +217,30 @@ namespace TTL.HR.Shared.Pages.Organization
 
         private async System.Threading.Tasks.Task confirmDeletePosition() {
             if (_positionToDelete != null) {
+                _isLoading = true;
                 try
                 {
-                    await PositionService.DeletePositionAsync(_positionToDelete.Id);
-                    await LoadData();
+                    var success = await PositionService.DeletePositionAsync(_positionToDelete.Id);
+                    if (success)
+                    {
+                        await JS.InvokeVoidAsync("toastr.success", "Xóa chức danh thành công");
+                        await LoadData();
+                    }
+                    else
+                    {
+                        await JS.InvokeVoidAsync("toastr.error", "Lỗi: Không thể xóa chức danh này. Có thể vị trí này đang được gắn với nhân viên.");
+                    }
                 }
                 catch (Exception ex)
                 {
+                    await JS.InvokeVoidAsync("toastr.error", $"Lỗi hệ thống: {ex.Message}");
                     Console.WriteLine($"Error deleting position: {ex.Message}");
                 }
                 finally
                 {
+                    _isLoading = false;
                     closeDeleteModal();
+                    StateHasChanged();
                 }
             }
         }

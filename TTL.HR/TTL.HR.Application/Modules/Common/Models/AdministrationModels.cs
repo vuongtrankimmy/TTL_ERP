@@ -4,6 +4,7 @@ namespace TTL.HR.Application.Modules.Common.Models
 {
     public class PermissionDto
     {
+        public string Id { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Group { get; set; } = string.Empty;
@@ -26,7 +27,9 @@ namespace TTL.HR.Application.Modules.Common.Models
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public List<string> Permissions { get; set; } = new();
+        public List<string> PermissionNames { get; set; } = new();
         public int UsersCount { get; set; }
+        public bool IsSystem { get; set; }
         public List<RoleMemberDto> Members { get; set; } = new();
     }
 

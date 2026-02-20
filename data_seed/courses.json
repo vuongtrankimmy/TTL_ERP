@@ -5,12 +5,17 @@
         },
         "Title": "Hội Nhập Văn Hóa Doanh Nghiệp (Onboarding)",
         "Code": "TRN-ONB",
-        "Description": "Khóa học bắt buộc cho nhân viên mới về quy định chung",
+        "Description": "Khóa học bắt buộc cho nhân viên mới về quy định chung về văn hóa, nội quy và các quy trình làm việc tại công ty.",
         "DurationHours": 4,
         "TrainerName": "Nguyễn Thị Mai (HR)",
         "IsMandatory": true,
+        "Location": "Hội trường lầu 3",
+        "MaxParticipants": 100,
         "MaterialUrl": "/trainings/onboard.pdf",
         "Status": "Active",
+        "StartDate": {
+            "$date": "2024-01-10T08:00:00Z"
+        },
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -22,11 +27,19 @@
         },
         "Title": "Kỹ Năng Giao Tiếp Hiệu Quả",
         "Code": "SOFT-COMM",
-        "Description": "Nâng cao khả năng trình bày và lắng nghe",
+        "Description": "Nâng cao khả năng trình bày, lắng nghe và giải quyết xung đột trong môi trường công sở.",
         "DurationHours": 8,
-        "TrainerName": "Dr. Lê Thẩm Dương (External)",
+        "TrainerName": "Dr. Lê Thẩm Dương",
         "IsMandatory": false,
+        "Location": "Phòng họp Lotus",
+        "MaxParticipants": 40,
         "Status": "Active",
+        "StartDate": {
+            "$date": "2024-02-15T08:30:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-02-16T17:00:00Z"
+        },
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -38,11 +51,16 @@
         },
         "Title": "Quản Lý Thời Gian (Time Management)",
         "Code": "SOFT-TIME",
-        "Description": "Sắp xếp công việc theo ma trận Eisenhower",
+        "Description": "Sắp xếp công việc theo ma trận Eisenhower, tối ưu hóa năng suất làm việc cá nhân.",
         "DurationHours": 4,
         "TrainerName": "Internal Senior Manager",
         "IsMandatory": false,
+        "Location": "Phòng đào tạo 1",
+        "MaxParticipants": 25,
         "Status": "Active",
+        "StartDate": {
+            "$date": "2024-03-05T13:30:00Z"
+        },
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -52,13 +70,21 @@
         "_id": {
             "$oid": "65fc2b2b0000000000000004"
         },
-        "Title": "Microsoft Excel Nâng Cao (Data & Pivot)",
+        "Title": "Microsoft Excel Nâng Cao",
         "Code": "TECH-EXCEL",
-        "Description": "Xử lý dữ liệu lớn, Pivot Table, Power Query",
+        "Description": "Xử lý dữ liệu lớn, Pivot Table, Power Query và tự động hóa với VBA cơ bản.",
         "DurationHours": 16,
         "TrainerName": "Trung Tâm Tin Học KHTN",
         "IsMandatory": true,
+        "Location": "Phòng máy tính 2",
+        "MaxParticipants": 20,
         "Status": "Active",
+        "StartDate": {
+            "$date": "2024-03-20T08:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-03-22T17:00:00Z"
+        },
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -70,11 +96,19 @@
         },
         "Title": "Lãnh Đạo Đội Nhóm (Leadership)",
         "Code": "MGT-LEAD",
-        "Description": "Dành cho Team Leader và Manager mới bổ nhiệm",
+        "Description": "Dành cho Team Leader và Manager mới bổ nhiệm, kỹ năng điều phối và truyền cảm hứng.",
         "DurationHours": 24,
         "TrainerName": "Dale Carnegie VN",
         "IsMandatory": true,
+        "Location": "Resort Vũng Tàu (Off-site)",
+        "MaxParticipants": 15,
         "Status": "Active",
+        "StartDate": {
+            "$date": "2024-04-10T08:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-04-12T17:00:00Z"
+        },
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -86,11 +120,16 @@
         },
         "Title": "An Toàn Lao Động (HSE)",
         "Code": "REQ-HSE",
-        "Description": "Quy định an toàn PCCC và lao động tại nhà máy",
+        "Description": "Quy định an toàn PCCC và lao động tại nhà máy, sơ cấp cứu cơ bản.",
         "DurationHours": 4,
         "TrainerName": "Sở Lao Động TBXH",
         "IsMandatory": true,
+        "Location": "Sân nhà máy",
+        "MaxParticipants": 200,
         "Status": "Active",
+        "StartDate": {
+            "$date": "2024-05-02T08:00:00Z"
+        },
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -102,11 +141,19 @@
         },
         "Title": "Tiếng Anh Giao Tiếp (Business English)",
         "Code": "LANG-ENG",
-        "Description": "Tiếng Anh thương mại cơ bản",
+        "Description": "Tiếng Anh thương mại cơ bản cho giao tiếp email và họp hành.",
         "DurationHours": 40,
         "TrainerName": "VUS",
         "IsMandatory": false,
+        "Location": "Online Zoom",
+        "MaxParticipants": 30,
         "Status": "Active",
+        "StartDate": {
+            "$date": "2024-05-20T18:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-07-20T20:00:00Z"
+        },
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -118,11 +165,19 @@
         },
         "Title": "Lập Trình .NET Core & Microservices",
         "Code": "TECH-NET",
-        "Description": "Architecture Pattern cho dự án mới",
+        "Description": "Architecture Pattern, Dependency Injection, Middleware cho dự án ERP sắp tới.",
         "DurationHours": 32,
         "TrainerName": "Tech Lead (IT Dept)",
         "IsMandatory": true,
+        "Location": "Phòng họp IT",
+        "MaxParticipants": 10,
         "Status": "Active",
+        "StartDate": {
+            "$date": "2024-06-01T09:00:00Z"
+        },
+        "EndDate": {
+            "$date": "2024-06-30T17:00:00Z"
+        },
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -134,11 +189,16 @@
         },
         "Title": "Kỹ Năng Bán Hàng & Chốt Sales",
         "Code": "SKILL-SALE",
-        "Description": "Quy trình 7 bước bán hàng hiệu quả",
+        "Description": "Quy trình 7 bước bán hàng hiệu quả và kỹ thuật xử lý từ chối.",
         "DurationHours": 12,
         "TrainerName": "Sales Director",
         "IsMandatory": true,
+        "Location": "Văn phòng kinh doanh",
+        "MaxParticipants": 50,
         "Status": "Active",
+        "StartDate": {
+            "$date": "2024-07-15T08:00:00Z"
+        },
         "CreatedAt": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -150,11 +210,16 @@
         },
         "Title": "Digital Marketing Masterclass",
         "Code": "MKT-DIGI",
-        "Description": "Cập nhật xu hướng Marketing 2026",
+        "Description": "Cập nhật xu hướng Marketing 2026, AI trong Content và quảng cáo.",
         "DurationHours": 20,
         "TrainerName": "Google Expert",
         "IsMandatory": false,
+        "Location": "Online Webinar",
+        "MaxParticipants": 100,
         "Status": "Draft",
+        "StartDate": {
+            "$date": "2024-08-01T09:00:00Z"
+        },
         "CreatedAt": {
             "$date": "2024-04-01T00:00:00Z"
         },

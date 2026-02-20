@@ -1,0 +1,25 @@
+  Determining projects to restore...
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Application\TTL.HR.Application.csproj : warning NU1510: PackageReference System.Net.Http.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary. [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+  All projects are up-to-date for restore.
+C:\Program Files\dotnet\sdk\10.0.200-preview.0.26103.119\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(383,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Application\TTL.HR.Application.csproj : warning NU1510: PackageReference System.Net.Http.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+  TTL.HR.Application -> d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Application\bin\Debug\net10.0\TTL.HR.Application.dll
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Contracts\Contract.razor.cs(18,25): error CS0246: The type or namespace name 'IMasterDataService' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Contracts\ContractAdd.razor.cs(21,25): error CS0246: The type or namespace name 'IMasterDataService' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Contracts\ContractAdd.razor.cs(23,22): error CS0246: The type or namespace name 'LookupModel' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Contracts\ContractAdd.razor.cs(24,22): error CS0246: The type or namespace name 'LookupModel' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Organization\OrganizationStructure.razor.cs(15,25): error CS0246: The type or namespace name 'IMasterDataService' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+
+Build FAILED.
+
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Application\TTL.HR.Application.csproj : warning NU1510: PackageReference System.Net.Http.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary. [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Application\TTL.HR.Application.csproj : warning NU1510: PackageReference System.Net.Http.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Contracts\Contract.razor.cs(18,25): error CS0246: The type or namespace name 'IMasterDataService' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Contracts\ContractAdd.razor.cs(21,25): error CS0246: The type or namespace name 'IMasterDataService' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Contracts\ContractAdd.razor.cs(23,22): error CS0246: The type or namespace name 'LookupModel' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Contracts\ContractAdd.razor.cs(24,22): error CS0246: The type or namespace name 'LookupModel' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Organization\OrganizationStructure.razor.cs(15,25): error CS0246: The type or namespace name 'IMasterDataService' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+    2 Warning(s)
+    5 Error(s)
+
+Time Elapsed 00:00:02.92

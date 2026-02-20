@@ -1,0 +1,12 @@
+﻿Using launch settings from d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Gateway\TTL.Gateway\Properties\launchSettings.json...
+info: Yarp.ReverseProxy.Configuration.ConfigProvider.ConfigurationConfigProvider[1]
+      Loading proxy data from config.
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5069
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Gateway\TTL.Gateway
+info: Microsoft.Hosting.Lifetime[0]

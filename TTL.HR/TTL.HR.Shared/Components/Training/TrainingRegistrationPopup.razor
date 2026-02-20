@@ -44,58 +44,83 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var emp in FilteredEmployees)
+                                    @if (_isLoading)
                                     {
-                                        <tr>
-                                            <td class="ps-4">
-                                                <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="checkbox" checked="@emp.IsSelected" @onchange="() => emp.IsSelected = !emp.IsSelected" />
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="symbol symbol-35px me-3">
-                                                        <div class="symbol-label bg-light-primary text-primary fw-bold">@emp.FullName[0]</div>
-                                                    </div>
-                                                    <div class="d-flex justify-content-start flex-column">
-                                                        <span class="text-dark fw-bold text-hover-primary fs-6">@emp.FullName</span>
-                                                        <span class="text-muted fw-bold d-block fs-7">@emp.Code</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="text-gray-700 fw-bold">@emp.Department</span>
-                                            </td>
-                                            <td class="text-end pe-4">
-                                                <span class="badge @(emp.Status == "Active" ? "badge-light-success" : "badge-light-warning") fw-bold">@emp.Status</span>
-                                            </td>
-                                        </tr>
-                                    }
-                                    @if (!FilteredEmployees.Any())
-                                    {
-                                        <tr>
-                                            <td colspan="4" class="text-center py-10">
-                                                <span class="text-muted fs-6">Không tìm thấy nhân viên phù hợp</span>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
+                                         <tr>
+                                             <td colspan="4" class="text-center py-10">
+                                                 <div class="spinner-border text-primary" role="status">
+                                                     <span class="visually-hidden">Loading...</span>
+                                                 </div>
+                                                 <div class="text-muted mt-2">Đang tải danh sách nhân viên...</div>
+                                             </td>
+                                         </tr>
+                                     }
+                                     else
+                                     {
+                                         @foreach (var emp in FilteredEmployees)
+                                         {
+                                             <tr @onclick="() => ToggleEmployeeSelection(emp)" 
+                                                 class="@(emp.IsAlreadyEnrolled ? "" : "cursor-pointer hover-bg-light")"
+                                                 style="@(emp.IsAlreadyEnrolled ? "opacity: 0.8;" : "")">
+                                                  <td class="ps-4">
+                                                      <div class="form-check form-check-sm form-check-custom form-check-solid" @onclick:stopPropagation>
+                                                          <input class="form-check-input" type="checkbox" 
+                                                                 @bind="emp.IsSelected" 
+                                                                 disabled="@emp.IsAlreadyEnrolled" />
+                                                      </div>
+                                                  </td>
+                                                  <td>
+                                                      <div class="d-flex align-items-center">
+                                                          <div class="symbol symbol-35px me-3">
+                                                              <div class="symbol-label bg-light-primary text-primary fw-bold">@(emp.FullName?.Length > 0 ? emp.FullName.Substring(0, 1) : "?")</div>
+                                                          </div>
+                                                          <div class="d-flex justify-content-start flex-column">
+                                                              <span class="text-dark fw-bold text-hover-primary fs-6">@emp.FullName</span>
+                                                              <span class="text-muted fw-bold d-block fs-7">@emp.Code</span>
+                                                          </div>
+                                                      </div>
+                                                  </td>
+                                                  <td>
+                                                      <span class="text-gray-700 fw-bold">@emp.Department</span>
+                                                  </td>
+                                                  <td class="text-end pe-4">
+                                                      @if (emp.IsAlreadyEnrolled)
+                                                      {
+                                                          <span class="badge badge-light-info fw-bold">Đã tham gia</span>
+                                                      }
+                                                      else
+                                                      {
+                                                          <span class="badge @(emp.Status == "Active" ? "badge-light-success" : "badge-light-warning") fw-bold">@emp.Status</span>
+                                                      }
+                                                  </td>
+                                             </tr>
+                                         }
+                                         @if (!FilteredEmployees.Any())
+                                         {
+                                             <tr>
+                                                 <td colspan="4" class="text-center py-10">
+                                                     <span class="text-muted fs-6">Không tìm thấy nhân viên phù hợp</span>
+                                                 </td>
+                                             </tr>
+                                         }
+                                     }
+                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer border-0 pt-0 pb-10 justify-content-center">
-                    <div class="bg-light-info rounded p-3 me-5 d-flex align-items-center">
-                        <i class="ki-outline ki-information-5 text-info fs-2 me-2"></i>
-                        <span class="text-info fw-bold">Đã chọn @SelectedCount nhân viên</span>
-                    </div>
+                     <div class="bg-light-info rounded p-3 me-5 d-flex align-items-center">
+                         <i class="ki-outline ki-information-5 text-info fs-2 me-2"></i>
+                         <span class="text-info fw-bold">Đã chọn @(AllEmployees.Count(e => e.IsSelected && !e.IsAlreadyEnrolled)) nhân viên mới</span>
+                     </div>
                     <button type="button" class="btn btn-light me-3 fw-bold px-9" @onclick="OnCancel">Hủy bỏ</button>
-                    <button type="button" class="btn btn-primary fw-bold px-9 shadow-sm" 
-                            disabled="@(SelectedCount == 0)"
-                            @onclick="() => OnConfirm.InvokeAsync(SelectedEmployees)">
-                        Tiếp nhận đăng ký
-                    </button>
+                     <button type="button" class="btn btn-primary fw-bold px-9 shadow-sm" 
+                             disabled="@(!AllEmployees.Any(e => e.IsSelected && !e.IsAlreadyEnrolled))"
+                             @onclick="() => OnConfirm.InvokeAsync(AllEmployees.Where(e => e.IsSelected && !e.IsAlreadyEnrolled).ToList())">
+                         Tiếp nhận đăng ký
+                     </button>
                 </div>
             </div>
         </div>

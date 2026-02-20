@@ -27,7 +27,7 @@
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label required fw-bold fs-6">Mã khóa học</label>
                             <div class="col-lg-8 fv-row">
-                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: COM-2024" @bind="_course.Id" disabled="@_isEdit" />
+                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: COM-2024" @bind="_course.Code" />
                             </div>
                         </div>
                         <div class="row mb-6">
@@ -40,9 +40,18 @@
                         </div>
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label fw-bold fs-6">
-                                <span class="required">Loại hình đào tạo</span>
+                                <span class="required">Danh mục & Trạng thái</span>
                             </label>
-                            <div class="col-lg-8 fv-row">
+                            <div class="col-lg-4 fv-row">
+                                <select class="form-select form-select-solid form-select-lg fw-bold" @bind="_course.Category">
+                                    <option value="General">General</option>
+                                    <option value="Technical">Technical</option>
+                                    <option value="Soft Skills">Soft Skills</option>
+                                    <option value="Management">Management</option>
+                                    <option value="Onboarding">Onboarding</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 fv-row">
                                 <select class="form-select form-select-solid form-select-lg fw-bold" @bind="_course.Status">
                                     <option value="Draft">Draft</option>
                                     <option value="Active">Active</option>
@@ -52,39 +61,106 @@
                             </div>
                         </div>
                          <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">Ngày bắt đầu</label>
-                            <div class="col-lg-8 fv-row">
-                                <input type="date" class="form-control form-control-lg form-control-solid" @bind="_course.StartDate" />
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Cấp độ & Bắt buộc</label>
+                            <div class="col-lg-4 fv-row">
+                                <select class="form-select form-select-solid form-select-lg fw-bold" @bind="_course.Level">
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Advanced">Advanced</option>
+                                </select>
                             </div>
-                        </div>
-                        <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">Thời lượng</label>
-                            <div class="col-lg-8 fv-row">
-                                <input type="number" class="form-control form-control-lg form-control-solid" placeholder="Số giờ: 12" @bind="_course.DurationHours" />
+                            <div class="col-lg-4 fv-row d-flex align-items-center">
+                                <div class="form-check form-check-custom form-check-solid">
+                                    <input class="form-check-input" type="checkbox" @bind="_course.IsMandatory" id="isMandatory" />
+                                    <label class="form-check-label fw-bold ps-2" for="isMandatory">Khóa học bắt buộc</label>
+                                </div>
                             </div>
                         </div>
                          <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">Địa điểm</label>
-                            <div class="col-lg-8 fv-row">
-                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: Phòng họp 1 hoặc Zoom Link" />
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="required">Thời gian đào tạo</span>
+                            </label>
+                            <div class="col-lg-4 fv-row">
+                                <input type="date" class="form-control form-control-lg form-control-solid" @bind="_course.StartDate" />
+                                <div class="form-text">Ngày bắt đầu</div>
+                            </div>
+                            <div class="col-lg-4 fv-row">
+                                <input type="date" class="form-control form-control-lg form-control-solid" @bind="_course.EndDate" />
+                                <div class="form-text">Ngày kết thúc (không bắt buộc)</div>
+                            </div>
+                        </div>
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Thời lượng & Địa điểm</label>
+                            <div class="col-lg-4 fv-row">
+                                <input type="number" class="form-control form-control-lg form-control-solid" placeholder="Số giờ: 12" @bind="_course.DurationHours" />
+                                <div class="form-text">Số giờ học</div>
+                            </div>
+                            <div class="col-lg-4 fv-row">
+                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: Phòng họp 1 hoặc Zoom Link" @bind="_course.Location" />
+                                <div class="form-text">Địa điểm / Link</div>
                             </div>
                         </div>
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label fw-bold fs-6">Số lượng học viên tối đa</label>
                             <div class="col-lg-8 fv-row">
-                                <input type="number" class="form-control form-control-lg form-control-solid" placeholder="30" value="30" />
+                                <input type="number" class="form-control form-control-lg form-control-solid" placeholder="30" @bind="_course.MaxParticipants" />
                             </div>
                         </div>
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label fw-bold fs-6">Nội dung chi tiết (Syllabus)</label>
                             <div class="col-lg-8 fv-row">
-                                <textarea class="form-control form-control-lg form-control-solid" rows="5" placeholder="Nhập tóm tắt nội dung khóa học..." @bind="_course.Description"></textarea>
-                            </div>
-                        </div>
-                        <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">Yêu cầu người học</label>
-                            <div class="col-lg-8 fv-row">
-                                <textarea class="form-control form-control-lg form-control-solid" rows="3" placeholder="Ví dụ: Đã hoàn thành khóa cơ bản..."></textarea>
+                                <textarea class="form-control form-control-lg form-control-solid mb-3" rows="3" placeholder="Tóm tắt nội dung khóa học..." @bind="_course.Description"></textarea>
+                                
+                                <div class="separator separator-dashed my-5"></div>
+                                <h5 class="fw-bold mb-3">Chương trình đào tạo</h5>
+                                <div class="d-flex gap-2 mb-3">
+                                    <input type="time" class="form-control form-control-solid w-125px" @bind="_newSyllabusTime" />
+                                    <input type="text" class="form-control form-control-solid" placeholder="Nhập tên chương/mục..." @bind="_newSyllabusItem" @onkeyup="HandleSyllabusKeyUp" />
+                                    @if (_editingSyllabusIndex.HasValue)
+                                    {
+                                        <button type="button" class="btn btn-primary btn-sm px-4" @onclick="AddSyllabusItem">Cập nhật</button>
+                                        <button type="button" class="btn btn-light btn-sm px-4" @onclick="CancelEditSyllabus">Hủy</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-light-primary btn-sm px-4" @onclick="AddSyllabusItem">Thêm</button>
+                                    }
+                                </div>
+                                
+                                <div class="mh-300px scroll-y">
+                                    @if (_course.Syllabus != null && _course.Syllabus.Any())
+                                    {
+                                        @foreach (var item in _course.Syllabus.Select((value, index) => new { value, index }))
+                                        {
+                                            <div class="d-flex align-items-center bg-light rounded p-3 mb-2 border @(_editingSyllabusIndex == item.index ? "border-primary border-dashed" : "border-transparent")">
+                                                <div class="d-flex flex-column min-w-80px border-end me-3">
+                                                    @{
+                                                        var timeStr = item.value.Contains(" | ") ? item.value.Split(" | ")[0] : "--:--";
+                                                        var contentStr = item.value.Contains(" | ") ? item.value.Split(" | ")[1] : item.value;
+                                                    }
+                                                    <span class="fw-bolder text-primary fs-6">@timeStr</span>
+                                                    <span class="text-muted fs-8 fw-bold">Phần @(item.index + 1)</span>
+                                                </div>
+                                                <span class="flex-grow-1 text-gray-800 fw-semibold">@contentStr</span>
+                                                <div class="d-flex gap-1">
+                                                    <button type="button" class="btn btn-icon btn-sm btn-active-light-primary" @onclick="() => EditSyllabusItem(item.index)">
+                                                        <i class="ki-outline ki-pencil fs-3"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-icon btn-sm btn-active-light-danger" @onclick="() => RemoveSyllabusItem(item.index)">
+                                                        <i class="ki-outline ki-trash fs-3"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="p-10 border border-dashed rounded text-center text-muted fs-7">
+                                            <i class="ki-outline ki-book-open fs-2x mb-3 d-block text-gray-300"></i>
+                                            Chưa có nội dung chương trình nào được tạo
+                                        </div>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>

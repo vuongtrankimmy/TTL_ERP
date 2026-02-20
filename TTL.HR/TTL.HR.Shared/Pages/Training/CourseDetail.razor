@@ -100,7 +100,7 @@
                                                                     }
                                                                     else
                                                                     {
-                                                                        <span class="symbol-label bg-light-primary text-primary fw-bold">@p.FullName.Substring(0, 1)</span>
+                                                                        <span class="symbol-label bg-light-primary text-primary fw-bold">@(p.FullName?.Length > 0 ? p.FullName.Substring(0, 1) : "?")</span>
                                                                     }
                                                                 </div>
                                                                 <div class="d-flex justify-content-start flex-column">

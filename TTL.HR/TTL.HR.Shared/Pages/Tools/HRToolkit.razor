@@ -1,0 +1,269 @@
+@page "/tools/hr-toolkit"
+@layout MainLayout
+@using System.Globalization
+
+<PageTitle>HR Toolkit - Công cụ tiện ích nhân sự</PageTitle>
+
+<div class="d-flex flex-column flex-column-fluid">
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-fluid">
+            <!-- Header -->
+            <div class="card mb-10 border-0 shadow-sm bg-primary">
+                <div class="card-body py-10 px-10 d-flex align-items-center">
+                    <div class="me-8">
+                        <div class="symbol symbol-70px symbol-circle bg-white bg-opacity-10 d-flex align-items-center justify-content-center">
+                            <i class="bi bi-tools text-white fs-2tx"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-white fw-bold m-0 fs-1">HR Toolkit</h1>
+                        <p class="text-white text-opacity-75 fs-6 m-0 mt-2">Tổng hợp các công cụ tính toán và xử lý dữ liệu nhân sự nhanh chóng, không lưu trữ dữ liệu lên máy chủ.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-10">
+                <!-- TOOL 1: GROSS to NET -->
+                <div class="col-xl-6">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-header border-0 pt-7">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bold text-gray-800 fs-3">Tính lương Gross -> Net</span>
+                                <span class="text-muted mt-1 fw-semibold fs-7">Quy đổi lương theo quy định hiện hành</span>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-5">
+                                <label class="form-label fw-bold">Thu nhập Gross (VNĐ)</label>
+                                <div class="position-relative">
+                                    <input type="number" class="form-control form-control-solid fs-2 fw-bold text-primary" @bind="grossSalary" @bind:event="oninput" />
+                                    <span class="position-absolute end-0 top-50 translate-middle-y me-4 text-gray-400 fw-bold">₫</span>
+                                </div>
+                            </div>
+
+                            <div class="row g-5 mb-8">
+                                <div class="col-6">
+                                    <label class="form-label fw-bold">Người phụ thuộc</label>
+                                    <input type="number" class="form-control form-control-solid" @bind="dependants" @bind:event="oninput" />
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label fw-bold">Vùng bảo hiểm</label>
+                                    <select class="form-select form-select-solid" @bind="insuranceRegion">
+                                        <option value="1">Vùng I (Mức max 4.68M)</option>
+                                        <option value="2">Vùng II</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="separator separator-dashed my-8"></div>
+
+                            <div class="bg-light-success rounded p-6">
+                                <div class="d-flex flex-stack mb-4">
+                                    <span class="text-gray-700 fw-bold">Lương NET nhận được:</span>
+                                    <span class="text-success fw-bolder fs-1">@FormatCurrency(netSalary) ₫</span>
+                                </div>
+                                <div class="d-flex flex-stack fs-7 mb-2">
+                                    <span class="text-gray-600">Bảo hiểm (10.5%):</span>
+                                    <span class="text-gray-800 fw-bold">- @FormatCurrency(insuranceAmount)</span>
+                                </div>
+                                <div class="d-flex flex-stack fs-7">
+                                    <span class="text-gray-600">Thuế TNCN:</span>
+                                    <span class="text-gray-800 fw-bold">- @FormatCurrency(pitAmount)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOOL 2: Working Days Counter -->
+                <div class="col-xl-6">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-header border-0 pt-7">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bold text-gray-800 fs-3">Đếm ngày làm việc</span>
+                                <span class="text-muted mt-1 fw-semibold fs-7">Tính tổng số ngày công sau khi trừ T7, CN</span>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-5 mb-8">
+                                <div class="col-6">
+                                    <label class="form-label fw-bold">Từ ngày</label>
+                                    <input type="date" class="form-control form-control-solid" @bind="startDate" />
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label fw-bold">Đến ngày</label>
+                                    <input type="date" class="form-control form-control-solid" @bind="endDate" />
+                                </div>
+                            </div>
+
+                            <div class="mb-8">
+                                <div class="form-check form-check-custom form-check-solid mb-3">
+                                    <input class="form-check-input" type="checkbox" @bind="includeSaturdays" id="incSat" />
+                                    <label class="form-check-label fw-bold" for="incSat">Tính cả Thứ 7</label>
+                                </div>
+                            </div>
+
+                            <div class="bg-light-info rounded p-6">
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="fs-4 text-gray-600 mb-1">Tổng ngày</div>
+                                        <div class="fs-2tx fw-bold text-info">@totalDays</div>
+                                    </div>
+                                    <div class="col-4 border-start">
+                                        <div class="fs-4 text-gray-600 mb-1">Ngày nghỉ</div>
+                                        <div class="fs-2tx fw-bold text-danger">@weekendDays</div>
+                                    </div>
+                                    <div class="col-4 border-start">
+                                        <div class="fs-4 text-gray-600 mb-1">Ngày công</div>
+                                        <div class="fs-2tx fw-bold text-primary">@workDays</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOOL 3: CCCD Logic Parser -->
+                <div class="col-xl-12">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header border-0 pt-7">
+                            <h3 class="card-title">
+                                <span class="card-label fw-bold text-gray-800 fs-3">Giải mã số CCCD (12 số)</span>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap gap-5 align-items-end mb-10">
+                                <div class="flex-grow-1 min-w-250px">
+                                    <label class="form-label fw-bold">Nhập số CCCD cần kiểm tra</label>
+                                    <input type="text" class="form-control form-control-solid form-control-lg" placeholder="VD: 034199008899" @bind="cccdNumber" maxlength="12" />
+                                </div>
+                                <button class="btn btn-primary btn-lg px-10" @onclick="ParseCCCD">Phân tích dữ liệu</button>
+                            </div>
+
+                            @if (cccdInfo != null)
+                            {
+                                <div class="row g-5">
+                                    <div class="col-md-3">
+                                        <div class="border border-dashed border-gray-300 rounded p-5 text-center bg-light">
+                                            <div class="fs-7 text-gray-600 mb-1">Thế kỷ & Giới tính</div>
+                                            <div class="fs-4 fw-bold text-gray-800">@cccdInfo.GenderCentury</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="border border-dashed border-gray-300 rounded p-5 text-center bg-light">
+                                            <div class="fs-7 text-gray-600 mb-1">Năm sinh</div>
+                                            <div class="fs-4 fw-bold text-gray-800">@cccdInfo.BirthYear</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="border border-dashed border-gray-300 rounded p-5 text-center bg-light">
+                                            <div class="fs-7 text-gray-600 mb-1">Nơi đăng ký khai sinh</div>
+                                            <div class="fs-4 fw-bold text-gray-800">@cccdInfo.ProvinceName</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="border border-dashed border-gray-300 rounded p-5 text-center bg-light">
+                                            <div class="fs-7 text-gray-600 mb-1">Số định danh</div>
+                                            <div class="fs-4 fw-bold text-gray-800">@cccdInfo.UniqueId</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-5 text-muted fst-italic">
+                                    Hệ thống bóc tách dữ liệu dựa trên quy chuẩn mã số định danh cá nhân của Bộ Công an.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Gross to Net Logic
+    private decimal grossSalary = 15000000;
+    private int dependants = 0;
+    private int insuranceRegion = 1;
+    
+    private decimal insuranceAmount => Math.Min(grossSalary, 20 * 1800000) * 0.105m; // Fake logic for demo
+    private decimal pitAmount {
+        get {
+            decimal taxable = grossSalary - insuranceAmount - 11000000 - (dependants * 4400000);
+            if (taxable <= 0) return 0;
+            if (taxable <= 5000000) return taxable * 0.05m;
+            return 250000 + (taxable - 5000000) * 0.1m;
+        }
+    }
+    private decimal netSalary => grossSalary - insuranceAmount - pitAmount;
+
+    // Working Days Logic
+    private DateTime startDate = DateTime.Today.AddDays(-30);
+    private DateTime endDate = DateTime.Today;
+    private bool includeSaturdays = false;
+
+    private int totalDays => (endDate - startDate).Days + 1;
+    private int workDays {
+        get {
+            int count = 0;
+            for (var d = startDate; d <= endDate; d = d.AddDays(1)) {
+                if (d.DayOfWeek != DayOfWeek.Sunday && (includeSaturdays || d.DayOfWeek != DayOfWeek.Saturday)) count++;
+            }
+            return count;
+        }
+    }
+    private int weekendDays => totalDays - workDays;
+
+    // CCCD Logic
+    private string cccdNumber = "";
+    private CccdResult? cccdInfo;
+
+    private void ParseCCCD()
+    {
+        if (cccdNumber.Length != 12) return;
+        
+        var provinceCode = cccdNumber.Substring(0, 3);
+        var genderCentury = cccdNumber[3];
+        var year = cccdNumber.Substring(4, 2);
+        
+        cccdInfo = new CccdResult {
+            ProvinceName = GetProvinceName(provinceCode),
+            GenderCentury = GetGender(genderCentury),
+            BirthYear = GetFullYear(genderCentury, year),
+            UniqueId = cccdNumber.Substring(6)
+        };
+    }
+
+    private string GetProvinceName(string code) => code switch {
+        "001" => "TP. Hà Nội",
+        "034" => "Tỉnh Thái Bình",
+        "079" => "TP. Hồ Chí Minh",
+        _ => "Tỉnh/Thành khác"
+    };
+
+    private string GetGender(char code) => code switch {
+        '0' => "Nam (Thế kỷ 20)",
+        '1' => "Nữ (Thế kỷ 20)",
+        '2' => "Nam (Thế kỷ 21)",
+        '3' => "Nữ (Thế kỷ 21)",
+        _ => "Khác"
+    };
+
+    private string GetFullYear(char code, string yy) {
+        int century = int.Parse(code.ToString());
+        string prefix = (century / 2 == 0) ? "19" : "20";
+        return prefix + yy;
+    }
+
+    private string FormatCurrency(decimal amount) => amount.ToString("N0", new CultureInfo("vi-VN"));
+
+    public class CccdResult {
+        public string ProvinceName { get; set; } = "";
+        public string GenderCentury { get; set; } = "";
+        public string BirthYear { get; set; } = "";
+        public string UniqueId { get; set; } = "";
+    }
+}

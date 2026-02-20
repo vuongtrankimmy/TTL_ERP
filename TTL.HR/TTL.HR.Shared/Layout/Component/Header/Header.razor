@@ -9,10 +9,19 @@
 			</div>
 			<!--begin::Logo image-->
 			<a href="/">
-				<img alt="Logo" src="assets/media/logos/demo42.svg" class="h-30px" />
+                @if (!string.IsNullOrEmpty(SettingsService.CachedSettings?.LogoUrl))
+                {
+                    <img alt="Logo" src="@SettingsService.CachedSettings.LogoUrl" style="width: 120px; max-height: 35px; object-fit: contain;" />
+                }
+                else
+                {
+                    <img alt="Logo" src="assets/media/logos/demo42.svg" class="h-30px" />
+                }
 			</a>
+
 			<!--end::Logo image-->
 		</div>
+
 		<!--end::Sidebar toggle-->
 		<!--begin::Toolbar wrapper-->
 		<div class="app-navbar flex-lg-grow-1" id="kt_app_header_navbar">

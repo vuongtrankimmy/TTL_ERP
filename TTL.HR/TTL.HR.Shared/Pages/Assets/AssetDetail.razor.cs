@@ -21,6 +21,10 @@ namespace TTL.HR.Shared.Pages.Assets
         private List<HistoryViewModel> AllocationHistory = new();
         private bool _isLoading = true;
 
+        // Modal states
+        private bool IsRevokeModalVisible = false;
+        private bool IsMaintenanceModalVisible = false;
+
         protected override async Task OnInitializedAsync()
         {
             await LoadData();
@@ -34,12 +38,14 @@ namespace TTL.HR.Shared.Pages.Assets
                 Asset = await AssetService.GetAssetAsync(Id);
                 if (Asset != null)
                 {
-                    // Mock history for now since API might not have it yet
-                    AllocationHistory = new List<HistoryViewModel>
-                    {
-                        new HistoryViewModel { Date = Asset.PurchaseDate ?? DateTime.Today.AddYears(-1), Action = "Nhập kho", Description = "Mua mới từ nhà cung cấp", Actor = "Hệ thống" },
-                        new HistoryViewModel { Date = DateTime.Today.AddMonths(-6), Action = "Bàn giao", Description = $"Bàn giao cho {Asset.AssignedToName ?? "nhân viên"}", Actor = "Admin" }
-                    };
+                    var history = await AssetService.GetAssetHistoryAsync(Id);
+                    AllocationHistory = history.Select(h => new HistoryViewModel 
+                    { 
+                        Date = h.Date, 
+                        Action = h.Action, 
+                        Description = h.Description, 
+                        Actor = h.Actor 
+                    }).ToList();
                 }
             }
             catch (Exception)
@@ -50,6 +56,60 @@ namespace TTL.HR.Shared.Pages.Assets
             {
                 _isLoading = false;
             }
+        }
+
+        private void ShowRevokeModal()
+        {
+            IsRevokeModalVisible = true;
+        }
+
+        private void ShowMaintenanceModal()
+        {
+            IsMaintenanceModalVisible = true;
+        }
+
+        private async Task HandleRevokeConfirmed(string reason)
+        {
+            IsRevokeModalVisible = false;
+            if (Asset == null) return;
+
+            var success = await AssetService.ReturnAssetAsync(Id, "Bình thường", string.IsNullOrWhiteSpace(reason) ? "Thu hồi định kỳ" : reason);
+            if (success)
+            {
+                await JS.InvokeVoidAsync("toastr.success", "Đã thu hồi tài sản thành công!");
+                await LoadData();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi thu hồi tài sản.");
+            }
+        }
+
+        private async Task HandleMaintenanceConfirmed(string issue)
+        {
+            IsMaintenanceModalVisible = false;
+            if (Asset == null) return;
+
+            var success = await AssetService.RequestMaintenanceAsync(Id, string.IsNullOrWhiteSpace(issue) ? "Yêu cầu bảo trì từ người dùng" : issue, "Urgent");
+            if (success)
+            {
+                await JS.InvokeVoidAsync("toastr.success", "Đã gửi yêu cầu bảo trì thành công!");
+                await LoadData();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi gửi yêu cầu bảo trì.");
+            }
+        }
+
+        private async Task RevokeAsset() // Keeping this for backward compatibility if needed, but we'll use ShowRevokeModal
+        {
+            ShowRevokeModal();
+        }
+
+        private async Task RequestMaintenance()
+        {
+            ShowMaintenanceModal();
         }
 
         private void EditAsset()
@@ -82,6 +142,16 @@ namespace TTL.HR.Shared.Pages.Assets
                 _ => status
             };
         }
+
+        private string GetAssetIcon(string? type) => type?.ToLower() switch
+        {
+            "laptop" or "máy tính" => "ki-outline ki-laptop",
+            "mobile" or "điện thoại" => "ki-outline ki-phone",
+            "vehicle" or "xe" => "ki-outline ki-car",
+            "furniture" or "nội thất" => "ki-outline ki-home",
+            "tablet" => "ki-outline ki-tablet",
+            _ => "ki-outline ki-briefcase"
+        };
 
         public class HistoryViewModel
         {

@@ -8,10 +8,15 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string FullName { get; set; } = string.Empty;
         public string AvatarUrl { get; set; } = string.Empty;
         public string DepartmentId { get; set; } = string.Empty;
+        public string ReportToId { get; set; } = string.Empty;
         public string Workplace { get; set; } = string.Empty;
         public DateTime? OfficialJoinDate { get; set; }
         public string Password { get; set; } = string.Empty;
         public EmployeePersonalDetails? PersonalDetails { get; set; } = new();
+        public EmployeeEmergencyContact? EmergencyContact { get; set; } = new();
+        public EmployeeAttendanceSummary? AttendanceSummary { get; set; } = new();
+        public List<EmployeeAuditLog>? AuditLogs { get; set; } = new();
+        public List<EmployeeModulePermission>? ModulePermissions { get; set; } = new();
 
         // Compatibility properties or existing ones
         public string Id { get; set; } = string.Empty;
@@ -23,7 +28,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string Role { get; set; } = string.Empty;
         public string PositionId { get; set; } = string.Empty;
         public DateTime? JoinDate { get; set; }
-        public string Status { get; set; } = string.Empty;
+        public string StatusId { get; set; } = string.Empty;
+        public string StatusName { get; set; } = string.Empty;
         public string Avatar { get; set; } = string.Empty;
         public string IdCard { get; set; } = string.Empty;
         public DateTime? DOB { get; set; }
@@ -31,17 +37,21 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string Phone { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public string Hometown { get; set; } = string.Empty;
-        public string ContractType { get; set; } = string.Empty;
+        public string ContractTypeId { get; set; } = string.Empty;
+        public string ContractTypeName { get; set; } = string.Empty;
         public string Salary { get; set; } = string.Empty;
+        public decimal? SalaryAmount { get; set; }
         public DateTime? ContractExpiry { get; set; }
+        public DateTime? ContractEndDate { get; set; }
         public string Username { get; set; } = string.Empty;
         public bool IsActive { get; set; }
+        public bool IsAccountActive { get; set; }
         public string Nationality { get; set; } = "Việt Nam";
         public string Ethnicity { get; set; } = "Kinh";
         public string Religion { get; set; } = "Không";
         public string PlaceOfOrigin { get; set; } = string.Empty;
         public string Residence { get; set; } = string.Empty;
-        public string CccdIssueDate { get; set; } = string.Empty;
+        public DateTime? CccdIssueDate { get; set; }
         public string CccdIssuePlace { get; set; } = string.Empty;
         public string TaxId { get; set; } = string.Empty;
         public string SocialInsuranceId { get; set; } = string.Empty;
@@ -66,6 +76,47 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string Ethnicity { get; set; } = string.Empty;
         public string Religion { get; set; } = string.Empty;
         public string TaxCode { get; set; } = string.Empty;
+        public string BankAccount { get; set; } = string.Empty;
+        public string BankName { get; set; } = string.Empty;
+        public string MaritalStatus { get; set; } = string.Empty;
+        public string PlaceOfOrigin { get; set; } = string.Empty;
+        public string Residence { get; set; } = string.Empty;
+        public string SocialInsuranceId { get; set; } = string.Empty;
+        public DateTime? IdCardIssueDate { get; set; }
+        public string IdCardPlace { get; set; } = string.Empty;
+    }
+
+    public class EmployeeEmergencyContact
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Relation { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+    }
+
+    public class EmployeeAttendanceSummary
+    {
+        public string CurrentShift { get; set; } = string.Empty;
+        public int TotalWorkingDays { get; set; }
+        public int LeavesTaken { get; set; }
+        public int RemainingLeaves { get; set; }
+        public double OvertimeHours { get; set; }
+    }
+
+    public class EmployeeAuditLog
+    {
+        public DateTime Timestamp { get; set; }
+        public string Action { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string Detail { get; set; } = string.Empty;
+    }
+
+    public class EmployeeModulePermission
+    {
+        public string ModuleName { get; set; } = string.Empty;
+        public bool CanView { get; set; }
+        public bool CanAdd { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanDelete { get; set; }
     }
 
     public class CccdData
@@ -81,5 +132,23 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string Religion { get; set; } = "Không";
         public string IssueDate { get; set; } = string.Empty;
         public string IssuePlace { get; set; } = string.Empty;
+    }
+    public class EmployeeDto
+    {
+        public string Id { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string AvatarUrl { get; set; } = string.Empty;
+        public string DepartmentId { get; set; } = string.Empty;
+        public string DepartmentName { get; set; } = string.Empty;
+        public string PositionId { get; set; } = string.Empty;
+        public string PositionName { get; set; } = string.Empty;
+        public string StatusId { get; set; } = string.Empty;
+        public string StatusName { get; set; } = string.Empty;
+        public string ContractTypeId { get; set; } = string.Empty;
+        public string ContractTypeName { get; set; } = string.Empty;
+        public DateTime? JoinDate { get; set; }
     }
 }

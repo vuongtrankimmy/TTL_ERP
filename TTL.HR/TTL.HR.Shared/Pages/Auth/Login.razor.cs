@@ -16,6 +16,7 @@ namespace TTL.HR.Shared.Pages.Auth
         private string _username = "admin";
         private string _password = "admin";
         private bool _isLoading = false;
+        private bool _showPassword = false;
 
         public async Task HandleLogin()
         {

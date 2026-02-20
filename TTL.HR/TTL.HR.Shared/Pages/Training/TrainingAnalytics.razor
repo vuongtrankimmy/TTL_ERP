@@ -1,0 +1,158 @@
+@page "/training/analytics"
+@using TTL.HR.Shared.Components.Common
+@using TTL.HR.Application.Modules.Training.Models
+
+<PageTitle>Thống kê đào tạo - TTL.HR</PageTitle>
+
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+        <!-- Header -->
+        <div class="d-flex flex-wrap flex-stack mb-6">
+            <h3 class="fw-bolder my-2">Thống kê đào tạo
+            <span class="fs-6 text-gray-400 fw-bold ms-1">Tổng quan và xu hướng</span></h3>
+            <div class="d-flex my-2">
+                <a href="/training" class="btn btn-sm btn-light btn-active-primary me-3">
+                    <i class="ki-outline ki-arrow-left fs-4 me-1"></i> Quay lại danh sách
+                </a>
+                <button class="btn btn-sm btn-primary" @onclick="LoadData">
+                    <i class="ki-outline ki-arrows-circle fs-4 me-1"></i> Làm mới
+                </button>
+            </div>
+        </div>
+
+        <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card" Rows="2" Columns="4">
+            @if (_analytics != null)
+            {
+                <!-- Stat Cards -->
+                <div class="row g-6 g-xl-9 mb-6">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body p-9">
+                                <div class="fs-2hx fw-bolder">@_analytics.TotalCourses</div>
+                                <div class="fs-6 fw-bold text-gray-400">Tổng số khóa học</div>
+                                <div class="fs-7 fw-bold text-success mt-2">@_analytics.ActiveCourses đang hoạt động</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card h-100 shadow-sm border-0 border-top border-primary border-4">
+                            <div class="card-body p-9">
+                                <div class="fs-2hx fw-bolder">@_analytics.TotalEnrollments</div>
+                                <div class="fs-6 fw-bold text-gray-400">Tổng lượt đăng ký</div>
+                                <div class="fs-7 fw-bold text-gray-400 mt-2">Tính từ đầu năm</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body p-9">
+                                <div class="fs-2hx fw-bolder text-success">@_analytics.CompletedEnrollments</div>
+                                <div class="fs-6 fw-bold text-gray-400">Đã hoàn thành</div>
+                                <div class="fs-7 fw-bold text-success mt-2">Dựa trên bài kiểm tra</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body p-9">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="fs-2hx fw-bolder">@_analytics.CompletionRate%</div>
+                                </div>
+                                <div class="fs-6 fw-bold text-gray-400">Tỉ lệ hoàn thành</div>
+                                <div class="progress h-7px bg-light-success mt-4">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: @_analytics.CompletionRate%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-6 g-xl-9">
+                    <!-- Top Courses -->
+                    <div class="col-xl-6">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-header border-0 pt-5">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <span class="card-label fw-bolder text-dark">Khóa học phổ biến nhất</span>
+                                    <span class="text-muted mt-1 fw-bold fs-7">Xếp theo số lượng học viên</span>
+                                </h3>
+                            </div>
+                            <div class="card-body pt-3">
+                                <div class="table-responsive">
+                                    <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                                        <thead>
+                                            <tr class="fw-bolder text-muted">
+                                                <th class="min-w-150px">Khóa học</th>
+                                                <th class="min-w-100px text-center">Học viên</th>
+                                                <th class="min-w-100px text-end">Điểm TB</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var course in _analytics.TopCourses)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="symbol symbol-45px me-5">
+                                                                <span class="symbol-label bg-light-primary text-primary fw-bold">@course.CourseName.Substring(0, 1)</span>
+                                                            </div>
+                                                            <div class="d-flex justify-content-start flex-column">
+                                                                <span class="text-dark fw-bolder fs-6">@course.CourseName</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="text-gray-800 fw-bolder fs-6">@course.EnrolledCount</span>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <span class="badge badge-light-primary fw-bolder fs-7">@course.AvgScore / 10</span>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trend Chart Placeholder -->
+                    <div class="col-xl-6">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-header border-0 pt-5">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <span class="card-label fw-bolder text-dark">Xu hướng đào tạo (6 tháng)</span>
+                                    <span class="text-muted mt-1 fw-bold fs-7">So sánh Đăng ký vs Hoàn thành</span>
+                                </h3>
+                            </div>
+                            <div class="card-body d-flex flex-column pt-3">
+                                <div class="flex-grow-1 min-h-250px d-flex align-items-end justify-content-between px-5">
+                                    @foreach (var trend in _analytics.EnrollmentTrends)
+                                    {
+                                        <div class="d-flex flex-column align-items-center w-50px">
+                                            <div class="d-flex align-items-end mb-2 h-150px gap-1">
+                                                <div class="bg-primary opacity-75 rounded-top w-15px" style="height: @(trend.Enrolled * 10)px;" title="Enrolled: @trend.Enrolled"></div>
+                                                <div class="bg-success rounded-top w-15px" style="height: @(trend.Completed * 10)px;" title="Completed: @trend.Completed"></div>
+                                            </div>
+                                            <span class="text-gray-400 fw-bold fs-8">@trend.Month</span>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="d-flex flex-center mt-5">
+                                    <div class="d-flex align-items-center me-5">
+                                        <span class="bullet bullet-dot bg-primary me-2 h-10px w-10px"></span>
+                                        <span class="fw-bold text-gray-600 fs-7">Đăng ký</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span class="bullet bullet-dot bg-success me-2 h-10px w-10px"></span>
+                                        <span class="fw-bold text-gray-600 fs-7">Hoàn thành</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </SkeletonLoading>
+    </div>
+</div>

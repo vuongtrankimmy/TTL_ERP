@@ -8,10 +8,24 @@ namespace TTL.HR.Application.Modules.Common.Services
     public class SettingsService : ISettingsService
     {
         private readonly HttpClient _httpClient;
+        private SystemSettingsModel? _cachedSettings;
 
         public SettingsService(HttpClient httpClient)
         {
             _httpClient = httpClient;
+        }
+
+        public SystemSettingsModel? CachedSettings => _cachedSettings;
+
+        public event Action? OnSettingsUpdated;
+
+        public async Task InitializeAsync()
+
+        {
+            if (_cachedSettings == null)
+            {
+                await GetSettingsAsync();
+            }
         }
 
         public async Task<SystemSettingsModel?> GetSettingsAsync()
@@ -19,6 +33,10 @@ namespace TTL.HR.Application.Modules.Common.Services
             try
             {
                 var response = await _httpClient.GetFromJsonAsync<ApiResponse<SystemSettingsModel>>(ApiEndpoints.System.Settings);
+                if (response?.Data != null)
+                {
+                    _cachedSettings = response.Data;
+                }
                 return response?.Data;
             }
             catch
@@ -32,7 +50,14 @@ namespace TTL.HR.Application.Modules.Common.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.System.Settings, settings);
-                return response.IsSuccessStatusCode;
+                if (response.IsSuccessStatusCode)
+                {
+                    _cachedSettings = settings;
+                    OnSettingsUpdated?.Invoke();
+                    return true;
+                }
+
+                return false;
             }
             catch
             {
@@ -40,4 +65,5 @@ namespace TTL.HR.Application.Modules.Common.Services
             }
         }
     }
+
 }

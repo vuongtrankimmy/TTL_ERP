@@ -110,7 +110,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var job in _jobs)
+                                @foreach (var job in _jobs.Skip((currentPage - 1) * pageSize).Take(pageSize))
                                 {
                                     <tr class="hover-elevate">
                                         <td class="ps-4">
@@ -152,6 +152,10 @@
                                 }
                             </tbody>
                         </table>
+                    </div>
+                    
+                    <div class="px-7 py-5">
+                        <Pagination PageIndex="@currentPage" PageSize="@pageSize" TotalCount="@_jobs.Count" OnPageChanged="p => currentPage = p" />
                     </div>
                 </SkeletonLoading>
             </div>
