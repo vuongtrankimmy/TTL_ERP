@@ -57,7 +57,19 @@
                 }
             }
         };
+        window.showModal = (selector) => {
+            const el = document.querySelector(selector);
+            if (el && typeof bootstrap !== 'undefined') {
+                const modal = bootstrap.Modal.getOrCreateInstance(el);
+                modal.show();
+            } else if (el && typeof $ !== 'undefined') {
+                $(el).modal('show');
+            } else {
+                console.error('Modal element not found or Bootstrap not loaded');
+            }
+        };
     </script>
+
 </body>
 
 </html>

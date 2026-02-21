@@ -31,6 +31,9 @@ namespace TTL.HR.Application.Modules.Common.Constants
             public const string Dashboard = $"{Base}/dashboard";
             public const string Me = $"{Base}/me";
             public const string AttendanceDetail = $"{Base}/me/attendance";
+            public static string DigitalProfile(string employeeId) => $"{Base}/{employeeId}/digital-profile";
+            public static string Documents(string employeeId) => $"{Base}/{employeeId}/documents";
+
         }
 
 
@@ -114,6 +117,7 @@ namespace TTL.HR.Application.Modules.Common.Constants
         public static class System
         {
             public const string Settings = $"{CorePrefix}/system/settings";
+            public const string CodeGeneratorConfigs = $"{CorePrefix}/system/settings/code-generator";
             public const string Audit = $"{CorePrefix}/Audit";
         }
 

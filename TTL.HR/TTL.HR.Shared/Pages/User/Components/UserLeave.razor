@@ -1,0 +1,221 @@
+@using TTL.HR.Application.Modules.Leave.Models
+@using TTL.HR.Application.Modules.Leave.Interfaces
+@inject ILeaveService LeaveService
+
+<div class="row g-5 g-xl-10 animate__animated animate__fadeIn">
+    <!--begin::Col-->
+    <div class="col-xl-4">
+        <div class="card card-flush h-xl-100 shadow-sm border-0">
+            <div class="card-header pt-5">
+                <h3 class="card-title align-items-start flex-column">
+                    <span class="card-label fw-bold text-gray-900 fs-3">Số dư phép năm</span>
+                    <span class="text-gray-400 mt-1 fw-semibold fs-6">Năm @DateTime.Now.Year</span>
+                </h3>
+            </div>
+            <div class="card-body pt-2 text-center">
+                @if (_balance == null && _isLoading)
+                {
+                    <div class="py-10"><div class="spinner-border text-primary"></div></div>
+                }
+                else
+                {
+                    <div class="d-flex flex-center position-relative mb-7">
+                        <div class="position-absolute translate-middle-y top-50 start-50">
+                            <span class="text-gray-900 fw-bold fs-2hx">@(_balance?.RemainingDays ?? 0)</span>
+                            <span class="text-gray-400 fw-semibold fs-4 d-block">Ngày khả dụng</span>
+                        </div>
+                        <!-- Drawing a visual indicator here -->
+                        <div class="symbol symbol-circle symbol-150px border border-gray-300 border-dashed"></div>
+                    </div>
+                    <div class="d-flex flex-stack fs-4 mb-3">
+                        <div class="fw-bold text-gray-500">Tổng quỹ phép</div>
+                        <div class="fw-bold text-gray-800">@(_balance?.EntitledDays ?? 0)</div>
+                    </div>
+                    <div class="d-flex flex-stack fs-4 mb-3">
+                        <div class="fw-bold text-gray-500">Đã nghỉ + Chờ duyệt</div>
+                        <div class="fw-bold text-danger">@((_balance?.UsedDays ?? 0) + (_balance?.PendingDays ?? 0))</div>
+                    </div>
+                }
+                <div class="separator separator-dashed my-3"></div>
+                <button class="btn btn-primary w-100 py-3 shadow-sm" @onclick="ShowRequestModal" disabled="@(employeeId == null)">
+                    <i class="ki-outline ki-plus fs-2"></i> Tạo đơn nghỉ phép
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--end::Col-->
+
+    <!--begin::Col-->
+    <div class="col-xl-8">
+        <div class="card card-flush h-xl-100 shadow-sm border-0">
+            <div class="card-header pt-7">
+                <h3 class="card-title align-items-start flex-column">
+                    <span class="card-label fw-bold text-gray-900 fs-3">Lịch sử đơn từ</span>
+                    <span class="text-gray-400 mt-1 fw-semibold fs-6">Dữ liệu thực tế từ hệ thống</span>
+                </h3>
+            </div>
+            <div class="card-body pt-5">
+                @if (_isLoading)
+                {
+                    <div class="d-flex flex-center py-10"><div class="spinner-border text-primary"></div></div>
+                }
+                else if (!_leaveRequests.Any())
+                {
+                    <div class="text-center py-10">
+                        <i class="ki-outline ki-notification-on fs-3x text-gray-300 mb-3"></i>
+                        <p class="text-gray-500">Bạn chưa có yêu cầu nào.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                            <thead>
+                                <tr class="fw-bold text-muted text-uppercase fs-7">
+                                    <th>Loại đơn</th>
+                                    <th>Thời gian</th>
+                                    <th>Lý do</th>
+                                    <th class="text-end">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var leave in _leaveRequests)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-40px me-3">
+                                                    <span class="symbol-label bg-light-primary"><i class="ki-outline ki-calendar-8 fs-2 text-primary"></i></span>
+                                                </div>
+                                                <span class="text-gray-900 fw-bold fs-6">@leave.Type</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-gray-800 fs-6">@leave.StartDate.ToString("dd/MM/yyyy") - @leave.EndDate.ToString("dd/MM/yyyy")</div>
+                                            <span class="text-muted fs-7">@leave.TotalDays ngày</span>
+                                        </td>
+                                        <td><span class="text-gray-600 fs-7">@leave.Reason</span></td>
+                                        <td class="text-end"><span class="badge @leave.StatusBadgeClass">@leave.Status</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (_isModalOpen)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header">
+                    <h3 class="modal-title fw-bold">Gửi yêu cầu nghỉ phép</h3>
+                    <div class="btn btn-icon btn-sm" @onclick="CloseModal"><i class="ki-outline ki-cross fs-1"></i></div>
+                </div>
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(_error)) { <div class="alert alert-danger">@_error</div> }
+                    <div class="mb-5">
+                        <label class="form-label fw-bold">Loại nghỉ phép</label>
+                        <select class="form-select form-select-solid" @bind="_newRequest.Type">
+                            <option value="Nghỉ phép năm">Nghỉ phép năm</option>
+                            <option value="Nghỉ không lương">Nghỉ không lương</option>
+                            <option value="Nghỉ ốm">Nghỉ ốm (Có BHXH)</option>
+                            <option value="Công tác">Đi công tác</option>
+                        </select>
+                    </div>
+                    <div class="row mb-5">
+                         <div class="col-6">
+                            <label class="form-label fw-bold">Từ ngày</label>
+                            <input type="date" class="form-control form-control-solid" @bind="_newRequest.StartDate" />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-bold">Đến ngày</label>
+                            <input type="date" class="form-control form-control-solid" @bind="_newRequest.EndDate" />
+                        </div>
+                    </div>
+                    <div class="mb-5">
+                        <label class="form-label fw-bold">Lý do nghỉ</label>
+                        <textarea class="form-control form-control-solid" rows="3" @bind="_newRequest.Reason" placeholder="Vui lòng nhập lý do chi tiết..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" @onclick="CloseModal">Hủy</button>
+                    <button class="btn btn-primary" @onclick="SubmitRequest" disabled="@_isSubmitting">
+                        @if (_isSubmitting) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                        Gửi yêu cầu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string? EmployeeId { get; set; }
+    private string? employeeId => EmployeeId;
+
+    private List<LeaveRequestModel> _leaveRequests = new();
+    private LeaveBalanceModel? _balance;
+    private bool _isLoading = true;
+    private bool _isModalOpen = false;
+    private bool _isSubmitting = false;
+    private string? _error;
+
+    private LeaveRequestModel _newRequest = new() { StartDate = DateTime.Now, EndDate = DateTime.Now, Type = "Nghỉ phép năm" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _isLoading = true;
+        try
+        {
+             var result = await LeaveService.GetLeaveRequestsAsync(1, 10); // Simple fetch
+             _leaveRequests = result.Items.Where(x => x.EmployeeId == employeeId).ToList();
+             
+             if (employeeId != null)
+             {
+                 _balance = await LeaveService.GetLeaveBalanceAsync(employeeId, DateTime.Now.Year);
+             }
+        }
+        catch { }
+        _isLoading = false;
+    }
+
+    private void ShowRequestModal()
+    {
+        _error = null;
+        _isModalOpen = true;
+        _newRequest = new() { StartDate = DateTime.Today, EndDate = DateTime.Today, Type = "Nghỉ phép năm", EmployeeId = employeeId ?? "" };
+    }
+
+    private void CloseModal() => _isModalOpen = false;
+
+    private async Task SubmitRequest()
+    {
+        if (string.IsNullOrEmpty(_newRequest.Reason)) { _error = "Vui lòng nhập lý do."; return; }
+        if (_newRequest.EndDate < _newRequest.StartDate) { _error = "Ngày kết thúc không thể trước ngày bắt đầu."; return; }
+
+        _isSubmitting = true;
+        _error = null;
+        
+        var success = await LeaveService.SubmitLeaveRequestAsync(_newRequest);
+        if (success)
+        {
+            await LoadData();
+            CloseModal();
+        }
+        else
+        {
+            _error = "Không thể gửi yêu cầu. Vui lòng kiểm tra lại quỹ phép của bạn.";
+        }
+        _isSubmitting = false;
+    }
+}

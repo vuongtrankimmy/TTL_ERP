@@ -68,12 +68,13 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         }
 
         // Employee Contracts
-        public async Task<PagedResult<EmployeeContractModel>> GetEmployeeContractsAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null)
+        public async Task<PagedResult<EmployeeContractModel>> GetEmployeeContractsAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null, string? employeeId = null)
         {
             var query = $"{ApiEndpoints.Contracts.Base}?page={page}&pageSize={pageSize}";
             if (!string.IsNullOrEmpty(searchTerm)) query += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
             if (!string.IsNullOrEmpty(status) && status != "All") query += $"&status={status}";
             if (!string.IsNullOrEmpty(typeId)) query += $"&typeId={typeId}";
+            if (!string.IsNullOrEmpty(employeeId)) query += $"&employeeId={employeeId}";
 
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<EmployeeContractModel>>>(query);
             return response?.Data ?? new PagedResult<EmployeeContractModel>();

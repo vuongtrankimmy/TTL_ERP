@@ -1,0 +1,82 @@
+@using TTL.HR.Application.Modules.HumanResource.Models
+
+<div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+    <div class="card-header border-0 pt-5">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bold fs-3 mb-1">Hợp đồng lao động</span>
+            <span class="text-muted mt-1 fw-semibold fs-7">Danh sách các hợp đồng pháp lý của bạn</span>
+        </h3>
+    </div>
+    <div class="card-body py-3">
+        @if (_contracts == null || !_contracts.Any())
+        {
+            <div class="text-center py-10">
+                <i class="ki-outline ki-document fs-5x text-gray-300 mb-4"></i>
+                <div class="text-muted fs-5">Chưa có thông tin hợp đồng được cập nhật.</div>
+            </div>
+        }
+        else
+        {
+            <div class="row g-6 g-xl-9">
+                @foreach (var contract in _contracts)
+                {
+                    <div class="col-md-6 col-xl-4">
+                        <div class="card border-hover-primary border-dashed">
+                            <div class="card-header border-0 pt-9">
+                                <div class="card-title m-0">
+                                    <div class="symbol symbol-50px w-50px bg-light-primary">
+                                        <i class="ki-outline ki-file-text fs-2x text-primary p-3"></i>
+                                    </div>
+                                </div>
+                                <div class="card-toolbar">
+                                    <span class="badge @(contract.IsActive ? "badge-light-success" : "badge-light-secondary") fw-bold me-auto px-4 py-3">
+                                        @(contract.IsActive ? "Đang hiệu lực" : "Hết hạn")
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-body p-9">
+                                <div class="fs-3 fw-bold text-gray-900">@contract.ContractNumber</div>
+                                <p class="text-gray-400 fw-semibold fs-5 mt-1 mb-7">@contract.ContractType</p>
+                                <div class="d-flex flex-wrap mb-5">
+                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-7 mb-3">
+                                        <div class="fs-6 text-gray-800 fw-bold">@contract.StartDate.ToString("dd/MM/yyyy")</div>
+                                        <div class="fw-semibold text-gray-400">Ngày bắt đầu</div>
+                                    </div>
+                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 mb-3">
+                                        <div class="fs-6 text-gray-800 fw-bold">@(contract.EndDate?.ToString("dd/MM/yyyy") ?? "Không thời hạn")</div>
+                                        <div class="fw-semibold text-gray-400">Ngày kết thúc</div>
+                                    </div>
+                                </div>
+                                <div class="h-4px w-100 bg-light mb-5">
+                                    <div class="bg-primary rounded h-4px" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <button class="btn btn-sm btn-light-primary w-100">
+                                    <i class="ki-outline ki-file-down fs-3"></i> Tải bản gốc
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? EmployeeId { get; set; }
+
+    private List<ContractModel> _contracts = new()
+    {
+        new ContractModel { ContractNumber = "HĐLĐ/2021/001", ContractType = "Hợp đồng không xác định thời hạn", StartDate = new DateTime(2021, 1, 1), IsActive = true },
+        new ContractModel { ContractNumber = "HĐTV/2020/055", ContractType = "Hợp đồng thử việc", StartDate = new DateTime(2020, 10, 1), EndDate = new DateTime(2020, 12, 31), IsActive = false }
+    };
+
+    public class ContractModel
+    {
+        public string ContractNumber { get; set; } = "";
+        public string ContractType { get; set; } = "";
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public bool IsActive { get; set; }
+    }
+}

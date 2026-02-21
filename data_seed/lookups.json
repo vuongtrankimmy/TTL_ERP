@@ -228,5 +228,45 @@
         "Name": "Đã thôi việc",
         "Order": 4,
         "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000601"
+        },
+        "Type": "Workplace",
+        "Code": "HCM_OFFICE",
+        "Name": "Văn phòng Hồ Chí Minh",
+        "Order": 1,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000602"
+        },
+        "Type": "Workplace",
+        "Code": "HN_OFFICE",
+        "Name": "Văn phòng Hà Nội",
+        "Order": 2,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000603"
+        },
+        "Type": "Workplace",
+        "Code": "BD_WAREHOUSE",
+        "Name": "Kho Bình Dương",
+        "Order": 3,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000604"
+        },
+        "Type": "Workplace",
+        "Code": "LA_FACTORY",
+        "Name": "Nhà máy Long An",
+        "Order": 4,
+        "IsActive": true
     }
 ]

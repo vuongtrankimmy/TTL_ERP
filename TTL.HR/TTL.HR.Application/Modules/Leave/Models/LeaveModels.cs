@@ -65,4 +65,14 @@ namespace TTL.HR.Application.Modules.Leave.Models
         public int RejectedCount { get; set; }
         public int TotalCount { get; set; }
     }
+
+    public class LeaveBalanceModel
+    {
+        public string EmployeeId { get; set; } = "";
+        public int Year { get; set; }
+        public double EntitledDays { get; set; }
+        public double UsedDays { get; set; }
+        public double RemainingDays { get; set; }
+        public double PendingDays { get; set; }
+    }
 }

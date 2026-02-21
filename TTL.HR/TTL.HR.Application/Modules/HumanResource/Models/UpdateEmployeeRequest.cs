@@ -10,6 +10,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string CompanyEmail { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string AvatarUrl { get; set; } = string.Empty;
+        public string TimekeepingCode { get; set; } = string.Empty;
         public string DepartmentId { get; set; } = string.Empty;
         public string PositionId { get; set; } = string.Empty;
         public string? ReportToId { get; set; }

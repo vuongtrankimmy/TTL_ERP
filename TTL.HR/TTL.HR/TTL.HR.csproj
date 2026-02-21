@@ -44,8 +44,8 @@
     <TieredPGO>true</TieredPGO>
     <GarbageCollectionAdaptationMode>1</GarbageCollectionAdaptationMode>
 
-    <AssemblyVersion>26.2.20.80</AssemblyVersion>
-    <FileVersion>26.2.20.80</FileVersion>
+    <AssemblyVersion>26.2.21.83</AssemblyVersion>
+    <FileVersion>26.2.21.83</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,4 +1,5 @@
 @page "/employees/add"
+@page "/employees/edit/{Id}"
 
 
 <CccdScanner @ref="cccdScanner" />
@@ -15,32 +16,58 @@
             </div>
         </div>
         <div class="card-body pt-0">
-            <!-- AI Scanner Area -->
-            <div class="py-10 px-8 border border-primary border-dashed rounded-3 bg-light-primary text-center mb-10 position-relative overflow-hidden">
-                <div class="position-absolute top-50 start-50 translate-middle opacity-5" style="z-index: 0;">
-                    <i class="bi bi-qr-code-scan" style="font-size: 10rem;"></i>
-                </div>
-                <div class="position-relative" style="z-index: 1;">
-                    <div class="mb-4">
-                        <i class="bi bi-qr-code-scan fs-3x text-primary opacity-75"></i>
+            <!-- AI Scanner & Avatar Area -->
+            <div class="row mb-10">
+                <div class="col-lg-4">
+                    <div class="card card-flush shadow-sm border-0 bg-light-info h-100 min-h-200px">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-4">Ảnh đại diện</label>
+                            <div class="image-input image-input-outline @(string.IsNullOrEmpty(newEmployee.Avatar) ? "image-input-empty" : "")" style="width: 150px; height: 150px;">
+                                <div class="image-input-wrapper w-150px h-150px shadow-sm" style="background-image: url('@(string.IsNullOrEmpty(newEmployee.Avatar) ? "assets/media/svg/avatars/001-boy.svg" : newEmployee.Avatar)')"></div>
+                                <label class="btn btn-icon btn-circle btn-active-color-primary w-30px h-30px bg-body shadow" data-kt-image-input-action="change" title="Thay đổi ảnh">
+                                    <i class="bi bi-pencil-fill fs-7"></i>
+                                    <InputFile OnChange="UploadAvatar" accept=".png, .jpg, .jpeg" class="d-none" />
+                                </label>
+                            </div>
+                            <div class="text-muted fs-8 mt-4 text-center">Cho phép: png, jpg, jpeg. <br/>Tối đa 2MB.</div>
+                        </div>
                     </div>
-                    <div class="fw-bolder fs-5 text-gray-800 mb-1">Tính năng Scan CCCD Thông minh</div>
-                    <div class="text-gray-500 fs-7 mb-6">Sử dụng công nghệ AI OCR để tự động nhận diện thông tin từ thẻ CCCD. Nhanh chóng, chính xác & bảo mật.</div>
-                    <button type="button" class="btn btn-primary px-10 fw-bolder shadow-sm" @onclick="ScanCCCD">
-                        <i class="bi bi-upc-scan me-2"></i> Bấm quét thẻ hoặc kéo thả ảnh vào đây
-                    </button>
+                </div>
+                <div class="col-lg-8">
+                    <div class="py-10 px-8 border border-primary border-dashed rounded-3 bg-light-primary text-center h-100 d-flex flex-column align-items-center justify-content-center position-relative overflow-hidden">
+                        <div class="position-absolute top-50 start-50 translate-middle opacity-5" style="z-index: 0;">
+                            <i class="bi bi-qr-code-scan" style="font-size: 10rem;"></i>
+                        </div>
+                        <div class="position-relative" style="z-index: 1;">
+                            <div class="mb-4">
+                                <i class="bi bi-qr-code-scan fs-3x text-primary opacity-75"></i>
+                            </div>
+                            <div class="fw-bolder fs-5 text-gray-800 mb-1">Tính năng Scan CCCD Thông minh</div>
+                            <div class="text-gray-500 fs-7 mb-6">Sử dụng công nghệ AI OCR để tự động nhận diện thông tin từ thẻ CCCD.</div>
+                            <button type="button" class="btn btn-primary px-10 fw-bolder shadow-sm" @onclick="ScanCCCD">
+                                <i class="bi bi-upc-scan me-2"></i> Bấm quét thẻ hoặc kéo thả ảnh vào đây
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Basic Details -->
             <div class="row g-9 mb-8">
                 <div class="col-md-6">
-                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Họ và tên nhân viên</label>
-                    <input type="text" class="form-control form-control-solid" placeholder="VD: NGUYỄN VĂN A" @bind="newEmployee.Name" />
+                    <TTLInput Type="TTLInput.InputDataType.Name" 
+                              Label="Họ và tên nhân viên" 
+                              @bind-Value="newEmployee.Name" 
+                              Placeholder="VD: NGUYỄN VĂN A" 
+                              IsRequired="true" 
+                              Hint="Hệ thống sẽ tự động chuyển thành CHỮ HOA." />
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Số CCCD / CMND</label>
-                    <input type="text" class="form-control form-control-solid" placeholder="001xxxxxxxxx" @bind="newEmployee.IdCard" />
+                    <TTLInput Type="TTLInput.InputDataType.CCCD" 
+                              Label="Số CCCD / CMND" 
+                              @bind-Value="newEmployee.IdCard" 
+                              Placeholder="001xxxxxxxxx" 
+                              IsRequired="false" 
+                              Hint="Nhập 12 chữ số (không bắt buộc)." />
                 </div>
             </div>
 
@@ -102,17 +129,29 @@
             </div>
 
             <div class="row g-9">
-                <div class="col-md-4">
-                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Email cá nhân</label>
-                    <input type="email" class="form-control form-control-solid" placeholder="email@example.com" @bind="newEmployee.Email" />
+                <div class="col-md-6">
+                    <TTLInput Type="TTLInput.InputDataType.Email" 
+                              Label="Email cá nhân" 
+                              @bind-Value="newEmployee.Email" 
+                              Placeholder="example@mail.com" 
+                              IsRequired="false" 
+                              Hint="Địa chỉ email cá nhân (không bắt buộc)." />
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Số điện thoại</label>
-                    <input type="tel" class="form-control form-control-solid" placeholder="09xx xxx xxx" @bind="newEmployee.Phone" />
+                <div class="col-md-6">
+                    <TTLInput Type="TTLInput.InputDataType.Phone" 
+                              Label="Số điện thoại" 
+                              @bind-Value="newEmployee.Phone" 
+                              Placeholder="090xxxxxxx" 
+                              IsRequired="false" 
+                              Hint="Số điện thoại liên lạc (không bắt buộc)." />
                 </div>
+            </div>
+            <div class="row g-9 mt-8">
                 <div class="col-md-4">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Nơi làm việc (Văn phòng)</label>
-                    <input type="text" class="form-control form-control-solid" placeholder="Trụ sở chính" @bind="newEmployee.Workplace" />
+                    <TTLInput Type="TTLInput.InputDataType.Text" 
+                              Label="Nơi làm việc (Văn phòng)" 
+                              @bind-Value="newEmployee.Workplace" 
+                              Placeholder="Trụ sở chính" />
                 </div>
             </div>
         </div>
@@ -130,13 +169,39 @@
         </div>
         <div class="card-body pt-0">
             <div class="row g-9">
-                <div class="col-md-6">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Quê quán (Nguyên quán)</label>
-                    <textarea class="form-control form-control-solid" rows="1" placeholder="Ghi theo CCCD..." @bind="newEmployee.PlaceOfOrigin"></textarea>
+                <div class="col-md-4">
+                    <TTLInput Type="TTLInput.InputDataType.Address" 
+                              Label="Quê quán" 
+                              @bind-Value="newEmployee.Hometown" 
+                              Placeholder="Ghi theo CCCD..." />
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Nơi thường trú</label>
-                    <textarea class="form-control form-control-solid" rows="1" placeholder="Địa chỉ hiện tại..." @bind="newEmployee.Residence"></textarea>
+                <div class="col-md-4">
+                    <TTLInput Type="TTLInput.InputDataType.Address" 
+                              Label="Nơi sinh" 
+                              @bind-Value="newEmployee.PlaceOfOrigin" 
+                              Placeholder="Ghi theo CCCD..." />
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex flex-stack mb-2">
+                        <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-0">Nơi thường trú</label>
+                        <button type="button" class="btn btn-sm btn-light-info fw-bold py-1 px-3" @onclick="GetResidenceCoordinates">
+                            <i class="bi bi-geo-alt-fill me-1"></i> Lấy tọa độ
+                        </button>
+                    </div>
+                    <TTLInput Type="TTLInput.InputDataType.Address" 
+                              @bind-Value="newEmployee.Residence" 
+                              Placeholder="Địa chỉ hiện tại..." />
+                    
+                    @if (newEmployee.Latitude != 0 && newEmployee.Longitude != 0)
+                    {
+                        <div class="mt-2 p-3 bg-light-success bg-opacity-50 rounded border border-success border-dashed">
+                            <i class="bi bi-pin-map-fill text-success me-2"></i>
+                            <span class="fs-9 fw-bold text-gray-800">
+                                @newEmployee.Latitude.ToString("F6"), @newEmployee.Longitude.ToString("F6")
+                            </span>
+                            <span class="badge badge-light-success fs-9 ms-2">Đã xác định</span>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -174,6 +239,27 @@
                     </select>
                 </div>
                 <div class="col-md-3">
+                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Nơi làm việc</label>
+                    <select class="form-select form-select-solid" @bind="newEmployee.Workplace">
+                        <option value="">-- Chọn địa điểm --</option>
+                        @foreach (var item in workplaceLookups)
+                        {
+                            <option value="@item.Name">@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Trạng thái nhân sự</label>
+                    <select class="form-select form-select-solid" @bind="newEmployee.StatusId">
+                        @foreach (var item in employeeStatusLookups)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row g-9">
+                <div class="col-md-3">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Người quản lý</label>
                     <select class="form-select form-select-solid" @bind="newEmployee.ReportToId">
                         <option value="">-- Không có --</option>
@@ -184,17 +270,6 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Trạng thái nhân sự</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.StatusId">
-                        @foreach (var item in employeeStatusLookups)
-                        {
-                            <option value="@item.Id">@item.Name</option>
-                        }
-                    </select>
-                </div>
-            </div>
-            <div class="row g-9">
-                <div class="col-md-4">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Loại hợp đồng</label>
                     <select class="form-select form-select-solid" @bind="newEmployee.ContractTypeId">
                         @foreach (var item in contractTypeLookups)
@@ -203,18 +278,27 @@
                         }
                     </select>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Ngày bắt đầu làm việc</label>
+                <div class="col-md-3">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Ngày gia nhập</label>
                     <div class="position-relative d-flex align-items-center">
                         <i class="bi bi-calendar-event position-absolute ms-4 text-gray-500"></i>
-                        <input type="text" class="form-control form-control-solid ps-12" placeholder="dd/mm/yyyy" @bind="newEmployee.OfficialJoinDate" />
+                        <input type="date" class="form-control form-control-solid ps-12" @bind="newEmployee.OfficialJoinDate" />
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Mức lương cơ bản (VNĐ)</label>
                     <div class="position-relative d-flex align-items-center">
                         <span class="position-absolute ms-4 fw-bold text-gray-400">₫</span>
                         <input type="text" class="form-control form-control-solid ps-12 text-end fw-bold text-primary" placeholder="10.000.000" @bind="newEmployee.Salary" />
+                    </div>
+                </div>
+            </div>
+            <div class="row g-9 mt-4">
+                <div class="col-md-3">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mã chấm công (NV cũ)</label>
+                    <div class="position-relative d-flex align-items-center">
+                        <i class="bi bi-person-badge position-absolute ms-4 text-gray-500"></i>
+                        <input type="text" class="form-control form-control-solid ps-12" placeholder="VD: NV001" @bind="newEmployee.TimekeepingCode" />
                     </div>
                 </div>
             </div>
@@ -299,36 +383,172 @@
         </div>
         <div class="card-body pt-0">
             <div class="row g-7">
+                <!-- Document: ID CARD -->
                 <div class="col-md-6">
-                    <div class="d-flex flex-stack border border-dashed border-gray-300 rounded p-5">
+                    @{
+                        var idCardDoc = uploadedDocuments.FirstOrDefault(x => x.DocumentType == "IDCard");
+                    }
+                    <div class="d-flex flex-stack border border-dashed @(idCardDoc != null ? "border-success bg-light-success" : "border-gray-300") rounded p-5">
                         <div class="d-flex align-items-center">
                             <div class="symbol symbol-40px me-4">
-                                <div class="symbol-label bg-light-danger">
-                                    <i class="bi bi-file-earmark-pdf fs-2 text-danger"></i>
+                                <div class="symbol-label @(idCardDoc != null ? "bg-success" : "bg-light-danger")">
+                                    <i class="bi @(idCardDoc != null ? "bi-check2-circle text-white" : "bi-file-earmark-pdf text-danger") fs-2"></i>
                                 </div>
                             </div>
                             <div class="ms-1">
                                 <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Ảnh CCCD (Mặt trước/sau)</span>
-                                <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
+                                @if (idCardDoc != null)
+                                {
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-light-success fs-9 px-2 py-1">Đã tải lên (@idCardDoc.FileSizeDisplay)</span>
+                                        <a href="@idCardDoc.FileUrl" target="_blank" class="ms-3 text-primary fs-9 fw-bold">Xem lại</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
+                                }
                             </div>
                         </div>
-                        <button class="btn btn-sm btn-light-primary fw-bolder px-5">TẢI LÊN</button>
+                        <label class="btn btn-sm @(idCardDoc != null ? "btn-success" : "btn-light-primary") fw-bolder px-5 mb-0">
+                            @(idCardDoc != null ? "TẢI LẠI" : "TẢI LÊN")
+                            <InputFile OnChange='(e) => UploadDocument(e, "IDCard")' accept=".pdf, .jpg, .jpeg, .png" class="d-none" />
+                        </label>
                     </div>
                 </div>
+
+                <!-- Document: DEGREES -->
                 <div class="col-md-6">
-                    <div class="d-flex flex-stack border border-dashed border-gray-300 rounded p-5">
+                    @{
+                        var degreeDoc = uploadedDocuments.FirstOrDefault(x => x.DocumentType == "Certification");
+                    }
+                    <div class="d-flex flex-stack border border-dashed @(degreeDoc != null ? "border-success bg-light-success" : "border-gray-300") rounded p-5">
                         <div class="d-flex align-items-center">
                             <div class="symbol symbol-40px me-4">
-                                <div class="symbol-label bg-light-success">
-                                    <i class="bi bi-patch-check fs-2 text-success"></i>
+                                <div class="symbol-label @(degreeDoc != null ? "bg-success" : "bg-light-success")">
+                                    <i class="bi @(degreeDoc != null ? "bi-check2-circle text-white" : "bi-patch-check text-success") fs-2"></i>
                                 </div>
                             </div>
                             <div class="ms-1">
                                 <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Bằng cấp & Chứng chỉ</span>
-                                <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
+                                @if (degreeDoc != null)
+                                {
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-light-success fs-9 px-2 py-1">Đã tải lên (@degreeDoc.FileSizeDisplay)</span>
+                                        <a href="@degreeDoc.FileUrl" target="_blank" class="ms-3 text-primary fs-9 fw-bold">Xem lại</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
+                                }
                             </div>
                         </div>
-                        <button class="btn btn-sm btn-light-primary fw-bolder px-5">TẢI LÊN</button>
+                        <label class="btn btn-sm @(degreeDoc != null ? "btn-success" : "btn-light-primary") fw-bolder px-5 mb-0">
+                            @(degreeDoc != null ? "TẢI LẠI" : "TẢI LÊN")
+                            <InputFile OnChange='(e) => UploadDocument(e, "Certification")' accept=".pdf, .jpg, .jpeg, .png" class="d-none" />
+                        </label>
+                    </div>
+                </div>
+                <!-- Document: LABOR CONTRACT -->
+                <div class="col-md-6">
+                    @{
+                        var contractDoc = uploadedDocuments.FirstOrDefault(x => x.DocumentType == "LaborContract");
+                    }
+                    <div class="d-flex flex-stack border border-dashed @(contractDoc != null ? "border-success bg-light-success" : "border-gray-300") rounded p-5">
+                        <div class="d-flex align-items-center">
+                            <div class="symbol symbol-40px me-4">
+                                <div class="symbol-label @(contractDoc != null ? "bg-success" : "bg-light-info")">
+                                    <i class="bi @(contractDoc != null ? "bi-check2-circle text-white" : "bi-file-earmark-text text-info") fs-2"></i>
+                                </div>
+                            </div>
+                            <div class="ms-1">
+                                <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Hợp đồng lao động</span>
+                                @if (contractDoc != null)
+                                {
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-light-success fs-9 px-2 py-1">Đã tải lên (@contractDoc.FileSizeDisplay)</span>
+                                        <a href="@contractDoc.FileUrl" target="_blank" class="ms-3 text-primary fs-9 fw-bold">Xem lại</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
+                                }
+                            </div>
+                        </div>
+                        <label class="btn btn-sm @(contractDoc != null ? "btn-success" : "btn-light-primary") fw-bolder px-5 mb-0">
+                            @(contractDoc != null ? "TẢI LẠI" : "TẢI LÊN")
+                            <InputFile OnChange='(e) => UploadDocument(e, "LaborContract")' accept=".pdf, .jpg, .jpeg, .png" class="d-none" />
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Document: CV -->
+                <div class="col-md-6">
+                    @{
+                        var cvDoc = uploadedDocuments.FirstOrDefault(x => x.DocumentType == "CurriculumVitae");
+                    }
+                    <div class="d-flex flex-stack border border-dashed @(cvDoc != null ? "border-success bg-light-success" : "border-gray-300") rounded p-5">
+                        <div class="d-flex align-items-center">
+                            <div class="symbol symbol-40px me-4">
+                                <div class="symbol-label @(cvDoc != null ? "bg-success" : "bg-light-warning")">
+                                    <i class="bi @(cvDoc != null ? "bi-check2-circle text-white" : "bi-person-badge text-warning") fs-2"></i>
+                                </div>
+                            </div>
+                            <div class="ms-1">
+                                <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Sơ yếu lý lịch</span>
+                                @if (cvDoc != null)
+                                {
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-light-success fs-9 px-2 py-1">Đã tải lên (@cvDoc.FileSizeDisplay)</span>
+                                        <a href="@cvDoc.FileUrl" target="_blank" class="ms-3 text-primary fs-9 fw-bold">Xem lại</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
+                                }
+                            </div>
+                        </div>
+                        <label class="btn btn-sm @(cvDoc != null ? "btn-success" : "btn-light-primary") fw-bolder px-5 mb-0">
+                            @(cvDoc != null ? "TẢI LẠI" : "TẢI LÊN")
+                            <InputFile OnChange='(e) => UploadDocument(e, "CurriculumVitae")' accept=".pdf, .jpg, .jpeg, .png" class="d-none" />
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Document: HEALTH CERTIFICATE -->
+                <div class="col-md-6">
+                    @{
+                        var healthDoc = uploadedDocuments.FirstOrDefault(x => x.DocumentType == "HealthCertificate");
+                    }
+                    <div class="d-flex flex-stack border border-dashed @(healthDoc != null ? "border-success bg-light-success" : "border-gray-300") rounded p-5">
+                        <div class="d-flex align-items-center">
+                            <div class="symbol symbol-40px me-4">
+                                <div class="symbol-label @(healthDoc != null ? "bg-success" : "bg-light-primary")">
+                                    <i class="bi @(healthDoc != null ? "bi-check2-circle text-white" : "bi-heart-pulse text-primary") fs-2"></i>
+                                </div>
+                            </div>
+                            <div class="ms-1">
+                                <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Giấy khám sức khỏe</span>
+                                @if (healthDoc != null)
+                                {
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-light-success fs-9 px-2 py-1">Đã tải lên (@healthDoc.FileSizeDisplay)</span>
+                                        <a href="@healthDoc.FileUrl" target="_blank" class="ms-3 text-primary fs-9 fw-bold">Xem lại</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
+                                }
+                            </div>
+                        </div>
+                        <label class="btn btn-sm @(healthDoc != null ? "btn-success" : "btn-light-primary") fw-bolder px-5 mb-0">
+                            @(healthDoc != null ? "TẢI LẠI" : "TẢI LÊN")
+                            <InputFile OnChange='(e) => UploadDocument(e, "HealthCertificate")' accept=".pdf, .jpg, .jpeg, .png" class="d-none" />
+                        </label>
                     </div>
                 </div>
             </div>
@@ -343,7 +563,17 @@
         </div>
         <div class="d-flex gap-4">
             <button type="button" class="btn btn-light fw-bold px-10 btn-sm" @onclick='() => Navigation.NavigateTo("/employees")'>HUỶ BỎ</button>
-            <button type="button" class="btn btn-primary fw-bold px-10 btn-sm" @onclick="Submit">LƯU HỒ SƠ NHÂN VIÊN</button>
+            <button type="button" class="btn btn-primary fw-bold px-10 btn-sm" @onclick="Submit" disabled="@_isProcessing">
+                @if (_isProcessing)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>ĐANG LƯU...</span>
+                }
+                else
+                {
+                    <span>@(IsEditMode ? "CẬP NHẬT HỒ SƠ" : "LƯU HỒ SƠ NHÂN VIÊN")</span>
+                }
+            </button>
         </div>
     </div>
 </div>

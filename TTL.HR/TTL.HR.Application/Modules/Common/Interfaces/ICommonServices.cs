@@ -52,6 +52,15 @@ namespace TTL.HR.Application.Modules.Common.Interfaces
 
         string FormatPercent(double value);
         DateTime? ToLocalTime(DateTime? utcDate);
+
+        // Advanced String Resource Formatting
+        string FormatFullName(string? name);
+        string FormatIdCard(string? idCard);
+        string FormatEmail(string? email);
+        string FormatPhone(string? phone);
+        string FormatAddress(string? address);
+        bool IsValidEmail(string? email);
+        string CleanDigits(string? input);
     }
 
     public interface IAuditService

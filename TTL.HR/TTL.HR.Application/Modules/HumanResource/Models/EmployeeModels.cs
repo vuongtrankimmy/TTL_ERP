@@ -18,8 +18,14 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public List<EmployeeAuditLog>? AuditLogs { get; set; } = new();
         public List<EmployeeModulePermission>? ModulePermissions { get; set; } = new();
 
+        // Display properties from Backend API
+        public string DepartmentName { get; set; } = string.Empty;
+        public string PositionName { get; set; } = string.Empty;
+        public string ReportToName { get; set; } = string.Empty;
+
         // Compatibility properties or existing ones
         public string Id { get; set; } = string.Empty;
+        public string TimekeepingCode { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string CompanyEmail { get; set; } = string.Empty;
@@ -62,6 +68,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string EmergencyContactName { get; set; } = string.Empty;
         public string EmergencyContactRelation { get; set; } = string.Empty;
         public string EmergencyContactPhone { get; set; } = string.Empty;
+        public double Latitude { get; set; } = 0;
+        public double Longitude { get; set; } = 0;
     }
 
     public class EmployeePersonalDetails
@@ -84,6 +92,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string SocialInsuranceId { get; set; } = string.Empty;
         public DateTime? IdCardIssueDate { get; set; }
         public string IdCardPlace { get; set; } = string.Empty;
+        public double Latitude { get; set; } = 0;
+        public double Longitude { get; set; } = 0;
     }
 
     public class EmployeeEmergencyContact
@@ -150,5 +160,53 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string ContractTypeId { get; set; } = string.Empty;
         public string ContractTypeName { get; set; } = string.Empty;
         public DateTime? JoinDate { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string Workplace { get; set; } = string.Empty;
+    }
+
+    public class EmployeeDocumentModel
+    {
+        public string Id { get; set; } = string.Empty;
+        public string DocumentType { get; set; } = string.Empty;
+        public string DocumentName { get; set; } = string.Empty;
+        public string FileUrl { get; set; } = string.Empty;
+        public string FileType { get; set; } = string.Empty;
+        public long FileSize { get; set; }
+        public DateTime? ExpiryDate { get; set; }
+        public string Status { get; set; } = "Pending";
+        public string? Note { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        public string StatusColor => Status switch
+        {
+            "Pending" => "warning",
+            "Verified" => "success",
+            "Rejected" => "danger",
+            _ => "secondary"
+        };
+
+        public string StatusLabel => Status switch
+        {
+            "Pending" => "Chờ duyệt",
+            "Verified" => "Đã xác thực",
+            "Rejected" => "Từ chối",
+            _ => Status
+        };
+
+        public string FileSizeDisplay => FileSize switch
+        {
+            > 1048576 => $"{FileSize / 1048576.0:F1} MB",
+            > 1024 => $"{FileSize / 1024.0:F1} KB",
+            _ => $"{FileSize} B"
+        };
+    }
+
+    public class DigitalProfileModel
+    {
+        public string EmployeeId { get; set; } = string.Empty;
+        public string EmployeeName { get; set; } = string.Empty;
+        public string EmployeeCode { get; set; } = string.Empty;
+        public List<EmployeeDocumentModel> Documents { get; set; } = new();
+        public double CompletionPercentage { get; set; }
     }
 }

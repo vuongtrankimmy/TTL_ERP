@@ -29,8 +29,16 @@ namespace TTL.HR.Application.Modules.Leave.Services
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<LeaveStateSummaryModel>>($"{ApiEndpoints.Leave.Base}/summary");
             return response?.Data ?? new LeaveStateSummaryModel();
         }
+
+        public async Task<LeaveBalanceModel?> GetLeaveBalanceAsync(string employeeId, int year)
+        {
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<LeaveBalanceModel>>($"{ApiEndpoints.Leave.Base}/balance/{employeeId}?year={year}");
+            return response?.Data;
+        }
+
         public async Task<bool> SubmitLeaveRequestAsync(LeaveRequestModel request)
         {
+            // Map to Backend Command structure if needed, or send directly if structure matches
             var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Leave.Base, request);
             return response.IsSuccessStatusCode;
         }

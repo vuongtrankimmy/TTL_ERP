@@ -12,13 +12,14 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
         public string CompanyEmail { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string AvatarUrl { get; set; } = string.Empty;
+        public string TimekeepingCode { get; set; } = string.Empty;
         
-        public string DepartmentId { get; set; } = string.Empty;
-        public string PositionId { get; set; } = string.Empty;
-        public string ReportToId { get; set; } = string.Empty;
+        public string? DepartmentId { get; set; }
+        public string? PositionId { get; set; }
+        public string? ReportToId { get; set; }
 
-        public string StatusId { get; set; } = string.Empty;
-        public string ContractTypeId { get; set; } = string.Empty;
+        public string? StatusId { get; set; }
+        public string? ContractTypeId { get; set; }
         public DateTime? JoinDate { get; set; }
         public DateTime? TerminationDate { get; set; }
 
@@ -54,6 +55,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
         public string PlaceOfOrigin { get; set; } = string.Empty;
         public string Residence { get; set; } = string.Empty;
         public string SocialInsuranceId { get; set; } = string.Empty;
+        public double Latitude { get; set; } = 0;
+        public double Longitude { get; set; }= 0;
     }
 
     public class EmergencyContact

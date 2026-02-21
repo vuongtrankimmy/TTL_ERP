@@ -19,5 +19,7 @@ namespace TTL.HR.Application.Modules.Attendance.Interfaces
         Task<IEnumerable<WorkShiftModel>> GetWorkShiftsAsync();
         Task<bool> AssignScheduleAsync(AssignWorkScheduleModel model);
         Task<ApiResponse<object>> CloseMonthlyAsync(int month, int year);
+        Task<PagedResult<AttendanceModel>> GetAttendanceListAsync(int page = 1, int pageSize = 10, string? searchTerm = null, DateTime? date = null, string? status = null);
+        Task<ApiResponse<ImportAttendanceResultModel>> ImportAttendanceAsync(string? rawData, byte[]? fileBytes, string? fileName, string source, int codeCol = 1, int timeCol = 2, bool isPreview = false);
     }
 }

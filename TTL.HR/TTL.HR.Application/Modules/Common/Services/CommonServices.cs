@@ -115,6 +115,11 @@ namespace TTL.HR.Application.Modules.Common.Services
                     return apiResponse;
                 }
                 
+                if (apiResponse != null && !apiResponse.Success && apiResponse.Errors != null && apiResponse.Errors.Any())
+                {
+                    apiResponse.Message = string.Join(". ", apiResponse.Errors);
+                }
+                
                 return apiResponse ?? new ApiResponse<AuthResponse> { Success = false, Message = "Đăng nhập thất bại" };
             }
             catch (Exception ex)
@@ -150,17 +155,20 @@ namespace TTL.HR.Application.Modules.Common.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Auth.ChangePassword, new { currentPassword, newPassword });
+                var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Auth.ChangePassword, new { CurrentPassword = currentPassword, NewPassword = newPassword });
                 ApiResponse<bool>? apiResponse = null;
+                try { apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>(); } catch { }
 
-                try
+                if (!response.IsSuccessStatusCode)
                 {
-                    apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>();
+                    string combinedMessage = apiResponse?.Message ?? response.ReasonPhrase ?? "Lỗi không xác định";
+                    if (apiResponse?.Errors != null && apiResponse.Errors.Any())
+                    {
+                        combinedMessage = string.Join(". ", apiResponse.Errors);
+                    }
+                    return new ApiResponse<bool> { Success = false, Message = combinedMessage };
                 }
-                catch (System.Text.Json.JsonException)
-                {
-                    return new ApiResponse<bool> { Success = false, Message = $"Lỗi máy chủ: {response.StatusCode} ({response.ReasonPhrase})" };
-                }
+
                 return apiResponse ?? new ApiResponse<bool> { Success = response.IsSuccessStatusCode, Message = "Kết quả đổi mật khẩu không xác định" };
             }
             catch (Exception ex)

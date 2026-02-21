@@ -1,0 +1,89 @@
+@using TTL.HR.Application.Modules.HumanResource.Models
+@using TTL.HR.Application.Modules.Common.Models
+
+<div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+    <div class="card-header border-0 pt-5">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bold fs-3 mb-1">Lịch sử Lương & Thưởng</span>
+            <span class="text-muted mt-1 fw-semibold fs-7">Danh sách các kỳ thanh toán gần nhất</span>
+        </h3>
+    </div>
+    <div class="card-body py-3">
+        <div class="table-responsive">
+            <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                <thead>
+                    <tr class="fw-bold text-muted">
+                        <th class="min-w-150px">Kỳ lương</th>
+                        <th class="min-w-140px">Lương cơ bản</th>
+                        <th class="min-w-120px">Phụ cấp & Thưởng</th>
+                        <th class="min-w-110px">Thực nhận</th>
+                        <th class="min-w-100px text-end">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (_salaries == null || !_salaries.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-10">
+                                <span class="text-muted">Chưa có dữ liệu thanh toán lương.</span>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in _salaries)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-45px me-5">
+                                            <span class="symbol-label bg-light-primary">
+                                                <i class="ki-outline ki-wallet fs-2x text-primary"></i>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <a href="javascript:void(0)" class="text-gray-900 fw-bold text-hover-primary fs-6">@item.PeriodName</a>
+                                            <span class="text-muted fw-semibold d-block fs-7">Ngày nhận: @item.PaymentDate.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-gray-900 fw-bold d-block fs-6">@item.BaseSalary.ToString("N0") VNĐ</span>
+                                </td>
+                                <td>
+                                    <span class="text-success fw-bold d-block fs-6">+@item.BonusAmount.ToString("N0") VNĐ</span>
+                                </td>
+                                <td>
+                                    <span class="text-primary fw-bold d-block fs-6">@item.TotalNet.ToString("N0") VNĐ</span>
+                                </td>
+                                <td class="text-end">
+                                    <span class="badge badge-light-success fs-7 fw-bold">Đã thanh toán</span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? EmployeeId { get; set; }
+    
+    // Mock data for display, will connect to API later
+    private List<SalaryModel> _salaries = new()
+    {
+        new SalaryModel { PeriodName = "Kỳ lương Tháng 01/2026", PaymentDate = new DateTime(2026, 2, 5), BaseSalary = 15000000, BonusAmount = 2500000, TotalNet = 17500000 },
+        new SalaryModel { PeriodName = "Kỳ lương Tháng 12/2025", PaymentDate = new DateTime(2026, 1, 5), BaseSalary = 15000000, BonusAmount = 10000000, TotalNet = 25000000 }
+    };
+
+    public class SalaryModel
+    {
+        public string PeriodName { get; set; } = "";
+        public DateTime PaymentDate { get; set; }
+        public decimal BaseSalary { get; set; }
+        public decimal BonusAmount { get; set; }
+        public decimal TotalNet { get; set; }
+    }
+}

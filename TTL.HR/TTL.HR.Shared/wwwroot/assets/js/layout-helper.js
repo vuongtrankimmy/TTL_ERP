@@ -18,5 +18,38 @@ window.LayoutHelper = {
         if (savedState) {
             document.body.setAttribute('data-kt-app-sidebar-minimize', savedState);
         }
+    },
+    getCoordinatesFromAddress: async function (address) {
+        if (!address) return null;
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`, {
+                headers: {
+                    'Accept-Language': 'vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7'
+                }
+            });
+            const data = await response.json();
+            if (data && data.length > 0) {
+                return {
+                    lat: parseFloat(data[0].lat),
+                    lon: parseFloat(data[0].lon)
+                };
+            }
+        } catch (error) {
+            console.error("Geocoding error:", error);
+        }
+        return null;
+    },
+    downloadFile: function (fileName, contentType, content) {
+        const blazorStream = new Uint8Array(content);
+        const file = new File([blazorStream], fileName, { type: contentType });
+        const exportUrl = URL.createObjectURL(file);
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.href = exportUrl;
+        a.download = fileName;
+        a.target = "_self";
+        a.click();
+        URL.revokeObjectURL(exportUrl);
+        document.body.removeChild(a);
     }
 };

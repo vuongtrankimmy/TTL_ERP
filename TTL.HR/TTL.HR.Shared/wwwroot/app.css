@@ -121,3 +121,47 @@ h1:focus {
     pointer-events: none;
     border-radius: inherit;
 }
+
+.lowercase {
+    text-transform: lowercase !important;
+}
+
+.uppercase {
+    text-transform: uppercase !important;
+}
+
+.italic {
+    font-style: italic !important;
+}
+
+/* Phone Input & Country Dropdown */
+.phone-dropdown-container {
+    max-height: 250px;
+    overflow-y: auto;
+    width: 280px;
+    z-index: 1060;
+}
+
+.phone-country-code-btn {
+    border-right: 1px solid #eff2f5 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    min-width: 85px;
+}
+
+.phone-input-control {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.country-item {
+    transition: all 0.2s;
+}
+
+.country-item:hover {
+    background-color: #f1faff;
+}
+
+.country-item.active {
+    background-color: #e1f0ff;
+}

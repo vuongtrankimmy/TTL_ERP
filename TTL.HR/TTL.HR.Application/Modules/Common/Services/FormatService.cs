@@ -75,5 +75,39 @@ namespace TTL.HR.Application.Modules.Common.Services
                 return utcDate;
             }
         }
+
+        public string FormatFullName(string? name) => name?.Trim().ToUpper() ?? string.Empty;
+
+        public string FormatIdCard(string? idCard) => CleanDigits(idCard);
+
+        public string FormatEmail(string? email) => email?.Replace(" ", "").ToLower() ?? string.Empty;
+
+        public string FormatPhone(string? phone)
+        {
+            var digits = CleanDigits(phone);
+            if (digits.Length == 10)
+            {
+                return string.Format("{0:0### ### ###}", long.Parse(digits));
+            }
+            return digits;
+        }
+
+        public string FormatAddress(string? address)
+        {
+            if (string.IsNullOrWhiteSpace(address)) return string.Empty;
+            return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(address.ToLower());
+        }
+
+        public bool IsValidEmail(string? email)
+        {
+            if (string.IsNullOrWhiteSpace(email)) return false;
+            return System.Text.RegularExpressions.Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        }
+
+        public string CleanDigits(string? input)
+        {
+            if (string.IsNullOrEmpty(input)) return string.Empty;
+            return new string(input.Where(char.IsDigit).ToArray());
+        }
     }
 }

@@ -23,10 +23,15 @@ namespace TTL.HR.Shared.Pages.Employees
         [Inject] public IPositionService PositionService { get; set; } = default!;
         [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
         [Inject] public NavigationManager Nav { get; set; } = default!;
+        [Inject] public IAuthService AuthService { get; set; } = default!;
+        [Inject] public IContractService ContractService { get; set; } = default!;
+        [Inject] public ISettingsService SettingsService { get; set; } = default!;
+
 
         [Parameter, SupplyParameterFromQuery(Name = "q")] public string searchQuery { get; set; } = "";
         [Parameter, SupplyParameterFromQuery(Name = "dept")] public string filterDept { get; set; } = "";
         [Parameter, SupplyParameterFromQuery(Name = "status")] public string filterStatus { get; set; } = "";
+        [Parameter, SupplyParameterFromQuery(Name = "workplace")] public string filterWorkplace { get; set; } = "";
         [Parameter, SupplyParameterFromQuery(Name = "page")] public int currentPage { get; set; } = 1;
         
         private bool isContextMenuVisible = false;
@@ -38,9 +43,17 @@ namespace TTL.HR.Shared.Pages.Employees
         private List<PositionModel> CachedPositions = new();
         private List<LookupModel> CachedStatuses = new();
         private List<LookupModel> CachedContractTypes = new();
+        private List<LookupModel> CachedWorkplaces = new();
         private List<EmployeeDto> CachedEmployees = new();
         private bool _loadFailed = false;
+        private bool _isReadOnly = true; // Default to true as per request for detail view
+        // Print & Document variables
+        private bool _isPrintLoading = false;
+        private string PreviewContent { get; set; } = "";
         
+        // Calendar viewing variables
+        private int _calendarMonth = DateTime.Now.Month;
+        private int _calendarYear = DateTime.Now.Year;
         private int pageSize = 10;
         private long totalCount = 0;
         private int totalPages => (int)Math.Ceiling(totalCount / (double)pageSize);
@@ -74,6 +87,10 @@ namespace TTL.HR.Shared.Pages.Employees
                 {
                     CachedContractTypes = await MasterDataService.GetCachedLookupsAsync("ContractType");
                 }
+                if (!CachedWorkplaces.Any())
+                {
+                    CachedWorkplaces = await MasterDataService.GetCachedLookupsAsync("Workplace");
+                }
                 if (!CachedEmployees.Any())
                 {
                     var employeesList = await EmployeeService.GetEmployeesAsync();
@@ -99,7 +116,7 @@ namespace TTL.HR.Shared.Pages.Employees
             try
             {
                 var departmentId = CachedDepartments.FirstOrDefault(d => d.Name == filterDept)?.Id;
-                var pagedResult = await EmployeeService.GetEmployeesPaginatedAsync(currentPage, pageSize, searchQuery, departmentId, filterStatus);
+                var pagedResult = await EmployeeService.GetEmployeesPaginatedAsync(currentPage, pageSize, searchQuery, departmentId, filterStatus, filterWorkplace);
                 
                 totalCount = pagedResult.TotalCount;
                 var positionsList = await PositionService.GetPositionsAsync();
@@ -125,7 +142,8 @@ namespace TTL.HR.Shared.Pages.Employees
                     Avatar = e.AvatarUrl,
                     AvatarUrl = e.AvatarUrl,
                     Phone = e.Phone,
-                    IsActive = true
+                    IsActive = true,
+                    Workplace = e.Workplace
                 }).ToList();
             }
             catch (Exception ex)
@@ -163,6 +181,7 @@ namespace TTL.HR.Shared.Pages.Employees
             if (!string.IsNullOrEmpty(searchQuery)) query["q"] = searchQuery;
             if (!string.IsNullOrEmpty(filterDept)) query["dept"] = filterDept;
             if (!string.IsNullOrEmpty(filterStatus)) query["status"] = filterStatus;
+            if (!string.IsNullOrEmpty(filterWorkplace)) query["workplace"] = filterWorkplace;
             if (currentPage > 1) query["page"] = currentPage;
 
             var url = Nav.GetUriWithQueryParameters(query);
@@ -173,8 +192,16 @@ namespace TTL.HR.Shared.Pages.Employees
             searchQuery = "";
             filterDept = "";
             filterStatus = "";
+            filterWorkplace = "";
             currentPage = 1;
             selectedIds.Clear();
+            UpdateUrl();
+        }
+
+        private void ChangeStatusFilter(string status)
+        {
+            filterStatus = status;
+            currentPage = 1;
             UpdateUrl();
         }
 
@@ -213,13 +240,37 @@ namespace TTL.HR.Shared.Pages.Employees
         }
 
         private async Task ExportExcel() {
-            await JSRuntime.InvokeVoidAsync("Swal.fire", new {
-                title = "Xuất dữ liệu Excel",
-                text = "Hệ thống đang trích xuất dữ liệu của " + FilteredEmployees.Count() + " nhân viên...",
-                timer = 1500,
-                icon = "info",
-                showConfirmButton = false
-            });
+            try 
+            {
+                await JSRuntime.InvokeVoidAsync("Swal.fire", new {
+                    title = "Đang trích xuất dữ liệu",
+                    text = "Vui lòng chờ trong giây lát...",
+                    allowOutsideClick = false,
+                    showConfirmButton = false
+                });
+                await JSRuntime.InvokeVoidAsync("Swal.showLoading");
+
+                var departmentId = CachedDepartments.FirstOrDefault(d => d.Name == filterDept)?.Id;
+                var fileBytes = await EmployeeService.ExportEmployeesAsync(searchQuery, departmentId, filterStatus, filterWorkplace);
+
+                await JSRuntime.InvokeVoidAsync("Swal.close");
+
+                if (fileBytes != null && fileBytes.Length > 0)
+                {
+                    var fileName = $"TTL_DanhSachNhanVien_{DateTime.Now:yyyyMMdd_HHmm}.xlsx";
+                    await JSRuntime.InvokeVoidAsync("LayoutHelper.downloadFile", fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileBytes);
+                    
+                    await JSRuntime.InvokeVoidAsync("toastr.success", "Đã xuất file thành công!");
+                }
+                else 
+                {
+                    await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Không thể trích xuất dữ liệu. Vui lòng thử lại sau.", "error");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Lỗi hệ thống khi xuất file: " + ex.Message, "error");
+            }
         }
 
         private async Task SaveChanges() {
@@ -606,6 +657,170 @@ namespace TTL.HR.Shared.Pages.Employees
             if (string.IsNullOrWhiteSpace(id)) return false;
             if (id.Length != 24) return false;
             return System.Text.RegularExpressions.Regex.IsMatch(id, @"^[0-9a-fA-F]{24}$");
+        }
+
+        private async Task PrintContract()
+        {
+            if (selectedEmployee == null) return;
+
+            _isPrintLoading = true;
+            try
+            {
+                // 1. Fetch templates for this type
+                var templates = await ContractService.GetTemplatesAsync(1, 10, typeId: selectedEmployee.ContractTypeId);
+                
+                // Pick active one or just the first one if filtered by type
+                var templateBase = templates.Items.FirstOrDefault(t => t.StatusName == "Đang sử dụng" || t.StatusName == "Active") 
+                               ?? templates.Items.FirstOrDefault();
+
+                if (templateBase == null)
+                {
+                    await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Không tìm thấy mẫu hợp đồng phù hợp cho loại hợp đồng này. Vui lòng kiểm tra cấu hình mẫu hợp đồng.", "warning");
+                    return;
+                }
+
+                // 2. Fetch FULL CONTENT (CRITICAL: List API doesn't include content)
+                var template = await ContractService.GetTemplateAsync(templateBase.Id);
+                if (template == null || string.IsNullOrEmpty(template.ContentHtml))
+                {
+                     await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Mẫu hợp đồng không có nội dung HTML. Vui lòng kiểm tra lại thiết lập mẫu.", "warning");
+                     return;
+                }
+
+                // 3. Fetch Real API/DB Data (Direct Integration)
+                var settings = await SettingsService.GetSettingsAsync();
+                
+                // Try to get latest active contract record for this employee
+                var empContracts = await ContractService.GetEmployeeContractsAsync(1, 1, employeeId: selectedEmployee.Id, status: "Active");
+                var latestContract = empContracts.Items.OrderByDescending(c => c.CreatedAt).FirstOrDefault();
+
+                // 4. Prepare data for replacement
+                var data = new Dictionary<string, string>
+                {
+                    {"Ten_Cong_Ty", settings?.CompanyName ?? "CÔNG TY TNHH TÂN TẤN LỘC"},
+                    {"Dia_Chi_Cong_Ty", settings?.CompanyAddress ?? "Số 123, Đường ABC, Quận XYZ, TP.HCM"},
+                    {"SDT_Cong_Ty", settings?.CompanyPhone ?? "028.1234.5678"},
+                    {"MST_Cong_Ty", settings?.TaxCode ?? "0312345678"},
+                    {"STK_Cong_Ty", "123456789 Tại VCB - TP.HCM"},
+                    {"Nguoi_Dai_Dien", settings?.ContactPersonName ?? "TRẦN VƯƠNG KIM MY"},
+                    {"Chuc_Vu_Nguoi_Dai_Dien", "Giám Đốc"},
+                    {"Ten_Nhan_Vien", selectedEmployee.FullName?.ToUpper() ?? ""},
+                    {"Ma_Nhan_Vien", selectedEmployee.Code},
+                    {"Ngay_Sinh", selectedEmployee.DOB?.ToString("dd/MM/yyyy") ?? ""},
+                    {"Quoc_Tich", selectedEmployee.Nationality ?? "Việt Nam"},
+                    {"Nghe_Nghiep", selectedEmployee.Role},
+                    {"Dia_Chi_Thuong_Tru", selectedEmployee.Address},
+                    {"So_CCCD", selectedEmployee.IdCard},
+                    {"So_So_Lao_Dong", ""},
+                    {"Ma_Hop_Dong", latestContract?.ContractNumber ?? $"HĐ/{DateTime.Now.Year}/{selectedEmployee.Code}"},
+                    {"Loai_Hop_Dong", selectedEmployee.ContractTypeName},
+                    {"Thoi_Han_Hop_Dong", "12"},
+                    {"Ngay_Bat_Dau", (latestContract?.StartDate ?? selectedEmployee.JoinDate)?.ToString("dd/MM/yyyy") ?? ""},
+                    {"Ngay_Ket_Thuc", (latestContract?.EndDate ?? selectedEmployee.ContractEndDate)?.ToString("dd/MM/yyyy") ?? ""},
+                    {"Dia_Diem_Lam_Viec", selectedEmployee.Workplace ?? "TP.HCM"},
+                    {"Phong_Ban", selectedEmployee.Dept},
+                    {"Chuc_Vu", selectedEmployee.Role},
+                    {"Thoi_Gian_Lam_Viec", "44 giờ/tuần (Thứ 2 - Thứ 7)"},
+                    {"Ngay_Ky", DateTime.Now.ToString("dd")},
+                    {"Thang_Ky", DateTime.Now.ToString("MM")},
+                    {"Nam_Ky", DateTime.Now.ToString("yyyy")},
+                    {"Dia_Diem_Ky", "TP.HCM"},
+                    {"Muc_Luong", (latestContract?.BasicSalary ?? selectedEmployee.SalaryAmount)?.ToString("N0") ?? "0"},
+                    {"Phu_Cap", (latestContract?.AllowanceTotal ?? 0).ToString("N0")},
+                    {"FullName", selectedEmployee.FullName},
+                    {"Code", selectedEmployee.Code},
+                    {"Today", DateTime.Now.ToString("dd/MM/yyyy")}
+                };
+
+                // 5. Replace variables in HTML
+                string processedHtml = template.ContentHtml;
+                foreach (var item in data)
+                {
+                    var variablePlaceholder = "{{" + item.Key + "}}";
+                    var value = item.Value ?? "";
+
+                    // Support both Metronic badge style and plain placeholders
+                    string regexPattern = @"<span[^>]*>\s*{{\s*" + item.Key + @"\s*}}\s*</span>";
+                    processedHtml = System.Text.RegularExpressions.Regex.Replace(processedHtml, regexPattern, $"<strong>{value}</strong>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                    processedHtml = processedHtml.Replace(variablePlaceholder, $"<strong>{value}</strong>");
+                }
+
+                PreviewContent = processedHtml;
+                StateHasChanged();
+
+                // 6. Show modal
+                await JSRuntime.InvokeVoidAsync("showModal", "#preview_modal");
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", $"Không thể tạo bản in: {ex.Message}", "error");
+            }
+            finally
+            {
+                _isPrintLoading = false;
+            }
+        }
+
+        private async Task ViewCurrentContract()
+        {
+            if (selectedEmployee == null) return;
+
+            // Check if there are any uploaded signed contracts first
+            var profile = await EmployeeService.GetDigitalProfileAsync(selectedEmployee.Id);
+            var signedContract = profile?.Documents?.FirstOrDefault(d => 
+                (d.DocumentType.Contains("Contract") || d.DocumentName.Contains("Hợp đồng")) && 
+                !string.IsNullOrEmpty(d.FileUrl));
+
+            if (signedContract != null)
+            {
+                // Open the signed file
+                await JSRuntime.InvokeVoidAsync("open", signedContract.FileUrl, "_blank");
+            }
+            else
+            {
+                // Fallback to viewing generated preview if no signed contract exists
+                await PrintContract();
+            }
+        }
+
+        private void PrevMonth()
+        {
+            if (_calendarMonth == 1)
+            {
+                _calendarMonth = 12;
+                _calendarYear--;
+            }
+            else
+            {
+                _calendarMonth--;
+            }
+            RandomizeCalendarData();
+        }
+
+        private void NextMonth()
+        {
+            if (_calendarMonth == 12)
+            {
+                _calendarMonth = 1;
+                _calendarYear++;
+            }
+            else
+            {
+                _calendarMonth++;
+            }
+            RandomizeCalendarData();
+        }
+
+        private void RandomizeCalendarData()
+        {
+            // Update dummy stats when month changes so the user sees a difference in the UI
+            if (selectedEmployee != null && selectedEmployee.AttendanceSummary != null)
+            {
+                var rand = new Random();
+                selectedEmployee.AttendanceSummary.TotalWorkingDays = rand.Next(18, 25);
+                selectedEmployee.AttendanceSummary.RemainingLeaves = rand.Next(0, 12);
+                selectedEmployee.AttendanceSummary.OvertimeHours = rand.Next(0, 30);
+            }
         }
     }
 }

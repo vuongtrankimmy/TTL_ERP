@@ -20,6 +20,8 @@ namespace TTL.HR.Shared.Pages.Settings
 
         private string activeTab = "company_profile";
         private SystemSettingsModel Model = new();
+        private List<CodeGeneratorConfigDto> CodeConfigs = new();
+        private CodeGeneratorConfigDto? SelectedConfig;
         private bool _isLoading = true;
         private bool _isSaving = false;
 
@@ -39,19 +41,108 @@ namespace TTL.HR.Shared.Pages.Settings
         private async Task LoadData()
         {
             _isLoading = true;
-            var data = await SettingsService.GetSettingsAsync();
-            if (data != null)
+            StateHasChanged();
+
+            var dataTask = SettingsService.GetSettingsAsync();
+            var codeConfigsTask = SettingsService.GetCodeGeneratorConfigsAsync();
+
+            await Task.WhenAll(dataTask, codeConfigsTask);
+
+            if (dataTask.Result != null)
             {
-                Model = data;
+                Model = dataTask.Result;
             }
+            if (codeConfigsTask.Result != null)
+            {
+                CodeConfigs = codeConfigsTask.Result;
+                if(CodeConfigs.Any() && SelectedConfig == null) {
+                    SelectedConfig = CodeConfigs.First();
+                }
+            }
+
             _isLoading = false;
+        }
+
+        private void SelectConfig(CodeGeneratorConfigDto config)
+        {
+            SelectedConfig = config;
+        }
+
+        private void AddNewConfig()
+        {
+            var newConfig = new CodeGeneratorConfigDto
+            {
+                Name = "Cấu hình mới",
+                EntityType = "NewEntity",
+                Prefix = "NEW",
+                Length = 6,
+                IsActive = true
+            };
+            CodeConfigs.Add(newConfig);
+            SelectedConfig = newConfig;
+        }
+
+        private async Task DeleteConfig(CodeGeneratorConfigDto config)
+        {
+            // Simple remove from local list. 
+            // The actual delete on DB will happen when we update the handler or we can call a specific delete API.
+            // For now, let's remove from list and user must "Save" to persist (or we can add a Delete API).
+            // To be safe, I will implement a confirmation later or just remove for now.
+            CodeConfigs.Remove(config);
+            if (SelectedConfig == config)
+            {
+                SelectedConfig = CodeConfigs.FirstOrDefault();
+            }
+        }
+
+        private string GeneratePreview(CodeGeneratorConfigDto? config, int offset = 0)
+        {
+            if (config == null) return "---";
+
+            var sb = new System.Text.StringBuilder();
+            
+            // Prefix
+            sb.Append(config.Prefix);
+            
+            // Separator
+            if (!string.IsNullOrEmpty(config.Separator))
+                sb.Append(config.Separator);
+
+            // Date
+            if (config.IncludeDate && !string.IsNullOrEmpty(config.DateFormat))
+            {
+                sb.Append(DateTime.Now.ToString(config.DateFormat));
+                if (!string.IsNullOrEmpty(config.Separator))
+                    sb.Append(config.Separator);
+            }
+
+            // Sequence
+            long seq = config.CurrentSequence + 1 + offset;
+            sb.Append(seq.ToString().PadLeft(config.Length, '0'));
+
+            // Suffix
+            sb.Append(config.Suffix);
+
+            return sb.ToString();
         }
 
         private async Task SaveSettings()
         {
             _isSaving = true;
-            var success = await SettingsService.UpdateSettingsAsync(Model);
+            StateHasChanged();
+
+            bool success = false;
+            if (activeTab == "code_generator")
+            {
+                success = await SettingsService.UpdateCodeGeneratorConfigsAsync(CodeConfigs);
+            }
+            else
+            {
+                success = await SettingsService.UpdateSettingsAsync(Model);
+            }
+
             _isSaving = false;
+            StateHasChanged();
 
             if (success)
             {

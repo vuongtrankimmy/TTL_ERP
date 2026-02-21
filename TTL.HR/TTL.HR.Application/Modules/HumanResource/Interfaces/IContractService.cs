@@ -16,7 +16,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Interfaces
         Task<bool> DeleteTemplateAsync(string id);
 
         // Employee Contracts
-        Task<PagedResult<EmployeeContractModel>> GetEmployeeContractsAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null);
+        Task<PagedResult<EmployeeContractModel>> GetEmployeeContractsAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null, string? employeeId = null);
         Task<EmployeeContractModel?> GetEmployeeContractAsync(string id);
         Task<EmployeeContract?> CreateEmployeeContractAsync(EmployeeContract contract);
         Task<EmployeeContract?> UpdateEmployeeContractAsync(string id, EmployeeContract contract);

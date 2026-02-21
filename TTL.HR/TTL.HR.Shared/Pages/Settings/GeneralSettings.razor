@@ -69,6 +69,12 @@
                                     <span class="menu-title fw-bold">Thông báo & Email</span>
                                 </a>
                             </div>
+                            <div class="menu-item">
+                                <a class="menu-link py-4 @(activeTab == "code_generator" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("code_generator")'>
+                                    <span class="menu-icon"><i class="bi bi-upc-scan fs-3"></i></span>
+                                    <span class="menu-title fw-bold">Cấu hình sinh mã định danh</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -76,6 +82,7 @@
                 <div class="card bg-light-info border-0 shadow-none">
                     <div class="card-body p-6">
                         <h4 class="text-info fw-bolder mb-3">Lưu ý bảo mật</h4>
+                        
                         <p class="text-gray-600 fs-7 mb-0">Các thay đổi tại đây sẽ áp dụng ngay lập tức cho toàn bộ nhân viên. Vui lòng kiểm tra kỹ trước khi lưu.</p>
                     </div>
                 </div>
@@ -538,6 +545,226 @@
                                 </table>
                             </div>
                         </div>
+                    </div>
+                }
+                else if (activeTab == "code_generator")
+                {
+                    <div class="d-flex flex-column gap-5">
+                        <!-- Entity Selector -->
+                        <div class="card card-flush shadow-sm border-0">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-3 overflow-auto flex-nowrap pb-2">
+                                        <span class="fw-bolder text-gray-800 me-2 flex-shrink-0">Chọn đối tượng:</span>
+                                        @foreach (var cfg in CodeConfigs)
+                                        {
+                                            <button type="button" class="btn btn-sm @(SelectedConfig?.Id == cfg.Id ? "btn-primary" : "btn-light-primary") fw-bold px-6 flex-shrink-0" @onclick="() => SelectConfig(cfg)">
+                                                @cfg.Name
+                                            </button>
+                                        }
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-icon btn-light-success ms-4 flex-shrink-0" @onclick="AddNewConfig" title="Thêm đối tượng mới">
+                                        <i class="bi bi-plus-lg fs-3"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (SelectedConfig != null)
+                        {
+                            <!-- Top Preview Bar -->
+                            <div class="card card-flush shadow-sm border-0 bg-light-primary" style="border: 2px dashed #009ef7 !important;">
+                                <div class="card-body p-8">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-6">
+                                            <div class="symbol symbol-70px">
+                                                <div class="symbol-label bg-primary shadow-sm">
+                                                    <i class="bi bi-eye-fill fs-1 text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="d-flex align-items-center gap-2 mb-1">
+                                                    <span class="text-muted fw-bold d-block fs-7 text-uppercase ls-1">Generated Preview</span>
+                                                    @if (string.IsNullOrEmpty(SelectedConfig.Id))
+                                                    {
+                                                        <span class="badge badge-light-warning fw-bold fs-9">MỚI</span>
+                                                    }
+                                                </div>
+                                                <h1 class="text-primary fw-bolder fs-2tx mb-0" style="letter-spacing: 2px;">@GeneratePreview(SelectedConfig)</h1>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-4">
+                                            <div class="bg-white rounded-3 p-6 shadow-sm border text-end min-w-150px">
+                                                <span class="text-muted fw-bold d-block fs-8 mb-1">Current Sequence</span>
+                                                <span class="text-dark fw-bolder fs-3">#@SelectedConfig.CurrentSequence.ToString().PadLeft(SelectedConfig.Length, '0')</span>
+                                                <div class="text-muted fs-9 mt-1">OF 9999...</div>
+                                            </div>
+                                            <button type="button" class="btn btn-icon btn-light-danger btn-sm" @onclick="() => DeleteConfig(SelectedConfig)" title="Xóa cấu hình này">
+                                                <i class="bi bi-trash fs-3"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-5">
+                                <!-- Structure Definition -->
+                                <div class="col-xl-6">
+                                    <div class="card card-flush shadow-sm border-0 h-100">
+                                        <div class="card-header pt-7">
+                                            <h3 class="card-title align-items-start flex-column">
+                                                <span class="card-label fw-bolder text-gray-800 fs-4"><i class="bi bi-diagram-3 me-2 text-primary"></i>Cấu trúc định danh (Structure)</span>
+                                            </h3>
+                                        </div>
+                                        <div class="card-body pt-5">
+                                            <div class="row g-6">
+                                                <div class="col-md-12">
+                                                    <label class="form-label fw-bold text-gray-700 fs-8 text-uppercase">Tên hiển thị & Mã đối tượng</label>
+                                                    <div class="d-flex gap-3">
+                                                        <input type="text" class="form-control form-control-solid bg-light" @bind="SelectedConfig.Name" placeholder="Tên đối tượng (VD: Nhân viên)" />
+                                                        <input type="text" class="form-control form-control-solid bg-light w-150px" @bind="SelectedConfig.EntityType" placeholder="Code (VD: Employee)" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold text-gray-700 fs-8 text-uppercase">Tiền tố (Prefix)</label>
+                                                    <input type="text" class="form-control form-control-solid bg-light" @bind="SelectedConfig.Prefix" placeholder="STAFF" />
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold text-gray-700 fs-8 text-uppercase">Ký tự phân cách</label>
+                                                    <select class="form-select form-select-solid bg-light" @bind="SelectedConfig.Separator">
+                                                        <option value="">Không có</option>
+                                                        <option value="-">Gạch ngang (-)</option>
+                                                        <option value="/">Gạch chéo (/)</option>
+                                                        <option value=".">Dấu chấm (.)</option>
+                                                        <option value="_">Gạch dưới (_)</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold text-gray-700 fs-8 text-uppercase">Định dạng Ngày</label>
+                                                    <div class="d-flex align-items-center gap-3 mt-1">
+                                                        <div class="form-check form-check-custom form-check-solid">
+                                                            <input class="form-check-input w-20px h-20px" type="checkbox" @bind="SelectedConfig.IncludeDate" />
+                                                        </div>
+                                                        <select class="form-select form-select-solid bg-light" @bind="SelectedConfig.DateFormat" disabled="@(!SelectedConfig.IncludeDate)">
+                                                            <option value="yyyy">Năm (2026)</option>
+                                                            <option value="yy">Năm rút gọn (26)</option>
+                                                            <option value="yyyyMM">Năm Tháng (202602)</option>
+                                                            <option value="yyMM">Năm Tháng rút gọn (2602)</option>
+                                                            <option value="yyyyMMdd">Ngày Tháng Năm (20260221)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold text-gray-700 fs-8 text-uppercase">Hậu tố (Suffix)</label>
+                                                    <input type="text" class="form-control form-control-solid bg-light" @bind="SelectedConfig.Suffix" placeholder="HCM" />
+                                                </div>
+                                            </div>
+                                            <div class="p-4 bg-light-warning rounded-3 mt-8 d-flex align-items-start border border-dashed border-warning">
+                                                <i class="bi bi-info-circle text-warning fs-3 me-3 mt-1"></i>
+                                                <div class="fs-8 text-warning-emphasis fw-bold">
+                                                    Lưu ý: Bạn có thể kết hợp Tiền tố và Định dạng ngày để tạo ra mã chuẩn nhất. Ví dụ: NV/26/0001
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Logic Rules -->
+                                <div class="col-xl-6">
+                                    <div class="card card-flush shadow-sm border-0 h-100">
+                                        <div class="card-header pt-7">
+                                            <h3 class="card-title align-items-start flex-column">
+                                                <span class="card-label fw-bolder text-gray-800 fs-4"><i class="bi bi-gear-fill me-2 text-info"></i>Quy tắc hệ thống (Logic)</span>
+                                            </h3>
+                                            <div class="card-toolbar">
+                                                <div class="nav-group nav-group-outline bg-light p-1">
+                                                    <button type="button" class="btn btn-sm px-4 fw-bold @(SelectedConfig.GenerationType == "AutoIncrement" ? "btn-info" : "")" @onclick='() => SelectedConfig.GenerationType = "AutoIncrement"'>Auto</button>
+                                                    <button type="button" class="btn btn-sm px-4 fw-bold @(SelectedConfig.GenerationType == "Random" ? "btn-info" : "")" @onclick='() => SelectedConfig.GenerationType = "Random"'>Random</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-5">
+                                            <div class="row g-6">
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold text-gray-700 fs-8 text-uppercase">Bắt đầu từ (Start Value)</label>
+                                                    <input type="number" class="form-control form-control-solid bg-light" @bind="SelectedConfig.CurrentSequence" />
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold text-gray-700 fs-8 text-uppercase">Độ dài số (Padding)</label>
+                                                    <input type="number" class="form-control form-control-solid bg-light" @bind="SelectedConfig.Length" min="2" max="10" />
+                                                </div>
+                                                <div class="col-12 mt-6">
+                                                    <label class="form-label fw-bold text-gray-700 fs-8 text-uppercase d-block mb-3">Tần suất làm mới (Reset Frequency)</label>
+                                                    <div class="d-flex flex-stack gap-3">
+                                                        @foreach (var res in new[] { "None", "Daily", "Monthly", "Yearly" })
+                                                        {
+                                                            <button type="button" class="btn btn-outline btn-outline-dashed btn-active-light-info flex-grow-1 @(SelectedConfig.ResetCondition == res ? "active btn-light-info" : "")" @onclick='() => SelectedConfig.ResetCondition = res'>
+                                                                <span class="fw-bold fs-7">@(res == "None" ? "Không" : (res == "Daily" ? "Ngày" : (res == "Monthly" ? "Tháng" : "Năm")))</span>
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 mt-8">
+                                                    <div class="form-check form-switch form-check-custom form-check-solid">
+                                                        <input class="form-check-input h-25px w-45px" type="checkbox" @bind="SelectedConfig.IsActive" id="configActive" />
+                                                        <label class="form-check-label fw-bolder text-gray-800 fs-7 ms-3" for="configActive">Kích hoạt bộ sinh mã này</label>
+                                                    </div>
+                                                    <p class="text-muted fs-8 mt-2 ms-12">Tự động điền mã định danh vào các form nhập liệu khi thêm mới đối tượng.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sample Preview List -->
+                                <div class="col-12 mt-5">
+                                    <div class="card card-flush shadow-sm border-0">
+                                        <div class="card-header border-0 pt-7">
+                                            <h3 class="card-title align-items-start flex-column">
+                                                <span class="card-label fw-bolder text-gray-800 fs-5"><i class="bi bi-list-ul me-2 text-primary"></i>Danh sách mã dự kiến (Preview List)</span>
+                                                <span class="text-muted mt-1 fw-bold fs-8">Hiển thị 5 mã định danh tiếp theo sẽ được sinh ra</span>
+                                            </h3>
+                                        </div>
+                                        <div class="card-body py-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                                                    <thead>
+                                                        <tr class="fw-bolder text-muted bg-light">
+                                                            <th class="ps-4 min-w-100px rounded-start">Thứ tự (#)</th>
+                                                            <th class="min-w-200px">Mã định danh (Generated Code)</th>
+                                                            <th class="min-w-150px">Trạng thái</th>
+                                                            <th class="min-w-100px text-end pe-4 rounded-end">Hành động</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @for (int i = 0; i < 5; i++)
+                                                        {
+                                                            int idx = i;
+                                                            <tr>
+                                                                <td class="ps-4">
+                                                                    <span class="text-muted fw-bold">#@((SelectedConfig.CurrentSequence + 1 + idx).ToString().PadLeft(SelectedConfig.Length, '0'))</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="text-dark fw-bolder fs-6">@GeneratePreview(SelectedConfig, idx)</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="badge badge-light-success fw-bold">DỰ KIẾN</span>
+                                                                </td>
+                                                                <td class="text-end pe-4">
+                                                                    <button type="button" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
+                                                                        <i class="bi bi-files fs-4"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
                 }
             </div>

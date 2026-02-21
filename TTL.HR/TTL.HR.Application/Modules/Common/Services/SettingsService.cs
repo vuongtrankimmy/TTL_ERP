@@ -64,6 +64,33 @@ namespace TTL.HR.Application.Modules.Common.Services
                 return false;
             }
         }
+
+        public async Task<List<CodeGeneratorConfigDto>> GetCodeGeneratorConfigsAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<CodeGeneratorConfigDto>>>(ApiEndpoints.System.CodeGeneratorConfigs);
+                return response?.Data ?? new List<CodeGeneratorConfigDto>();
+            }
+            catch
+            {
+                return new List<CodeGeneratorConfigDto>();
+            }
+        }
+
+        public async Task<bool> UpdateCodeGeneratorConfigsAsync(List<CodeGeneratorConfigDto> configs)
+        {
+            try
+            {
+                var wrapper = new { Configs = configs };
+                var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.System.CodeGeneratorConfigs, wrapper);
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 
 }

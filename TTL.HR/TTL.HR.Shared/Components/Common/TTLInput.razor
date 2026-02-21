@@ -1,0 +1,259 @@
+@using TTL.HR.Application.Modules.Common.Interfaces
+@inject IFormatService FormatService
+
+<div class="fv-row mb-0">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <label class="form-label @(IsRequired ? "required" : "") fs-7 fw-bolder text-gray-700 text-uppercase">@Label</label>
+    }
+    
+    <div class="position-relative d-flex align-items-center">
+        @if (Type == InputDataType.Phone)
+        {
+            <div class="dropdown me-0">
+                <button class="btn btn-flex btn-light-primary px-3 phone-country-code-btn dropdown-toggle" 
+                        type="button" 
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false"
+                        @onclick="ToggleDropdown">
+                    <span class="fs-7 fw-bold">@selectedCountry.Flag @selectedCountry.DialCode</span>
+                </button>
+                <div class="dropdown-menu phone-dropdown-container @(showDropdown ? "show" : "")" 
+                     style="@(showDropdown ? "position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 40px);" : "")">
+                    <div class="px-3 py-2 border-bottom">
+                        <input type="text" class="form-control form-control-sm" placeholder="Tìm kiếm quốc gia..." @oninput="FilterCountries" />
+                    </div>
+                    @foreach (var country in filteredCountries)
+                    {
+                        <button class="dropdown-item d-flex align-items-center country-item @(country.Code == selectedCountry.Code ? "active" : "")" 
+                                type="button" 
+                                @onclick="() => SelectCountry(country)">
+                            <span class="me-3 fs-3">@country.Flag</span>
+                            <span class="flex-grow-1 fs-7">@country.Name</span>
+                            <span class="text-muted fs-8 fw-bold">@country.DialCode</span>
+                        </button>
+                    }
+                </div>
+            </div>
+            <input type="text" 
+                   class="form-control form-control-solid phone-input-control @CssClass" 
+                   placeholder="@Placeholder" 
+                   value="@displayPhoneValue" 
+                   @onchange="HandleChange"
+                   @oninput="HandleInput"
+                   maxlength="@GetMaxLength()"
+                   inputmode="numeric"
+                   onkeypress="if(event.keyCode === 32) return false; return event.charCode >= 48 && event.charCode <= 57" />
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(Icon))
+            {
+                <i class="@Icon position-absolute ms-4 text-gray-500"></i>
+            }
+            
+            <input type="@InputType" 
+                   class="form-control form-control-solid @CssClass @GetFormatClass() @(Icon != null ? "ps-12" : "")" 
+                   placeholder="@Placeholder" 
+                   value="@Value" 
+                   @onchange="HandleChange"
+                   @oninput="HandleInput"
+                   maxlength="@GetMaxLength()"
+                   inputmode="@(IsNumericType ? "numeric" : "text")"
+                   onkeypress="if(event.keyCode === 32 && @((!IsSpaceAllowed).ToString().ToLower())) return false; @(IsNumericType ? "return event.charCode >= 48 && event.charCode <= 57" : "")" />
+        }
+    </div>
+    
+    @if (!string.IsNullOrEmpty(Hint))
+    {
+        <div class="text-muted fs-9 mt-1 @(Hint.Contains("Hệ thống") ? "italic" : "")">@Hint</div>
+    }
+</div>
+
+@code {
+    public enum InputDataType { Text, Name, Email, Phone, CCCD, Password, Number, Address }
+
+    [Parameter] public InputDataType Type { get; set; } = InputDataType.Text;
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public string? Placeholder { get; set; }
+    [Parameter] public string? Icon { get; set; }
+    [Parameter] public bool IsRequired { get; set; }
+    [Parameter] public string? Hint { get; set; }
+    [Parameter] public string? CssClass { get; set; }
+    [Parameter] public int? MaxLength { get; set; }
+
+    private string InputType => Type switch
+    {
+        InputDataType.Password => "password",
+        InputDataType.Email => "email",
+        InputDataType.Phone => "tel",
+        InputDataType.Number => "number",
+        _ => "text"
+    };
+
+    private string GetFormatClass() => Type switch
+    {
+        InputDataType.Name => "text-uppercase fw-bold",
+        InputDataType.Email => "lowercase",
+        _ => ""
+    };
+
+    private bool IsNumericType => Type == InputDataType.CCCD || Type == InputDataType.Phone || Type == InputDataType.Number;
+    private bool IsSpaceAllowed => Type == InputDataType.Text || Type == InputDataType.Name || Type == InputDataType.Address;
+
+    private int? GetMaxLength()
+    {
+        if (MaxLength.HasValue) return MaxLength;
+        return Type switch
+        {
+            InputDataType.CCCD => 12,
+            InputDataType.Phone => selectedCountry.MaxLength,
+            _ => null
+        };
+    }
+
+    #region Phone Logic
+    private class CountryInfo
+    {
+        public string Code { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string DialCode { get; set; } = "";
+        public string Flag { get; set; } = "";
+        public int MaxLength { get; set; } = 15;
+    }
+
+    private static readonly List<CountryInfo> Countries = new()
+    {
+        new CountryInfo { Code = "VN", Name = "Việt Nam", DialCode = "+84", Flag = "🇻🇳", MaxLength = 10 },
+        new CountryInfo { Code = "US", Name = "Hoa Kỳ", DialCode = "+1", Flag = "🇺🇸", MaxLength = 10 },
+        new CountryInfo { Code = "JP", Name = "Nhật Bản", DialCode = "+81", Flag = "🇯🇵", MaxLength = 11 },
+        new CountryInfo { Code = "KR", Name = "Hàn Quốc", DialCode = "+82", Flag = "🇰🇷", MaxLength = 11 },
+        new CountryInfo { Code = "CN", Name = "Trung Quốc", DialCode = "+86", Flag = "🇨🇳", MaxLength = 11 },
+        new CountryInfo { Code = "SG", Name = "Singapore", DialCode = "+65", Flag = "🇸🇬", MaxLength = 8 },
+        new CountryInfo { Code = "GB", Name = "Vương quốc Anh", DialCode = "+44", Flag = "🇬🇧", MaxLength = 10 },
+        new CountryInfo { Code = "DE", Name = "Đức", DialCode = "+49", Flag = "🇩🇪", MaxLength = 11 },
+        new CountryInfo { Code = "FR", Name = "Pháp", DialCode = "+33", Flag = "🇫🇷", MaxLength = 9 },
+        new CountryInfo { Code = "AU", Name = "Úc", DialCode = "+61", Flag = "🇦🇺", MaxLength = 9 }
+    };
+
+    private CountryInfo selectedCountry = Countries[0];
+    private List<CountryInfo> filteredCountries = Countries;
+    private bool showDropdown = false;
+    private string displayPhoneValue = "";
+
+    private void ToggleDropdown() => showDropdown = !showDropdown;
+
+    private void FilterCountries(ChangeEventArgs e)
+    {
+        var term = e.Value?.ToString()?.ToLower() ?? "";
+        filteredCountries = Countries.Where(c => c.Name.ToLower().Contains(term) || c.DialCode.Contains(term)).ToList();
+    }
+
+    private async Task SelectCountry(CountryInfo country)
+    {
+        selectedCountry = country;
+        showDropdown = false;
+        await UpdateFullPhoneValue(displayPhoneValue);
+    }
+
+    private async Task UpdateFullPhoneValue(string localValue)
+    {
+        displayPhoneValue = localValue;
+        var fullPhone = selectedCountry.DialCode + localValue;
+        Value = fullPhone;
+        await ValueChanged.InvokeAsync(fullPhone);
+    }
+    #endregion
+
+    protected override void OnParametersSet()
+    {
+        if (Type == InputDataType.Phone && !string.IsNullOrEmpty(Value))
+        {
+            // Try to detect country from existing value
+            var country = Countries.OrderByDescending(c => c.DialCode.Length)
+                                   .FirstOrDefault(c => Value.StartsWith(c.DialCode));
+            
+            if (country != null)
+            {
+                selectedCountry = country;
+                displayPhoneValue = Value.Substring(country.DialCode.Length);
+            }
+            else
+            {
+                displayPhoneValue = Value;
+            }
+        }
+        else if (Type != InputDataType.Phone)
+        {
+            // Do nothing, standard value binding
+        }
+    }
+
+    private async Task HandleChange(ChangeEventArgs e)
+    {
+        var rawValue = e.Value?.ToString() ?? string.Empty;
+        var formattedValue = rawValue;
+
+        if (Type == InputDataType.Phone)
+        {
+            formattedValue = FormatService.FormatPhone(rawValue);
+            await UpdateFullPhoneValue(formattedValue);
+            return;
+        }
+
+        switch (Type)
+        {
+            case InputDataType.Name:
+                formattedValue = FormatService.FormatFullName(rawValue);
+                break;
+            case InputDataType.CCCD:
+                formattedValue = FormatService.FormatIdCard(rawValue);
+                break;
+            case InputDataType.Email:
+                formattedValue = FormatService.FormatEmail(rawValue);
+                break;
+            case InputDataType.Address:
+                formattedValue = FormatService.FormatAddress(rawValue);
+                break;
+        }
+
+        Value = formattedValue;
+        await ValueChanged.InvokeAsync(formattedValue);
+    }
+
+    private async Task HandleInput(ChangeEventArgs e)
+    {
+        var val = e.Value?.ToString() ?? "";
+        
+        switch (Type)
+        {
+            case InputDataType.Name:
+                val = val.ToUpper();
+                break;
+            case InputDataType.Email:
+                val = val.Replace(" ", "").ToLower();
+                break;
+            case InputDataType.Password:
+                val = val.Replace(" ", "");
+                break;
+            case InputDataType.CCCD:
+                val = FormatService.CleanDigits(val);
+                break;
+            case InputDataType.Phone:
+                val = FormatService.CleanDigits(val);
+                displayPhoneValue = val;
+                await UpdateFullPhoneValue(val);
+                return;
+        }
+
+        if (!IsSpaceAllowed && Type != InputDataType.CCCD && Type != InputDataType.Phone && Type != InputDataType.Email && Type != InputDataType.Password)
+        {
+            val = val.Replace(" ", "");
+        }
+
+        Value = val;
+        await ValueChanged.InvokeAsync(val);
+    }
+}

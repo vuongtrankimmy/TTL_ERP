@@ -10,6 +10,7 @@ namespace TTL.HR.Shared.Pages.User.Components
 {
     public partial class UserAuditLog
     {
+        [Parameter] public string? EmployeeId { get; set; }
         [Inject]
         private IAuditService AuditService { get; set; } = default!;
 

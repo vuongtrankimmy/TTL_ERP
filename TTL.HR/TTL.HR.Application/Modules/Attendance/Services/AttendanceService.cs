@@ -139,6 +139,45 @@ namespace TTL.HR.Application.Modules.Attendance.Services
             return await response.Content.ReadFromJsonAsync<ApiResponse<object>>() ?? new ApiResponse<object> { Success = false, Message = "Lỗi xử lý yêu cầu" };
         }
 
+        public async Task<PagedResult<AttendanceModel>> GetAttendanceListAsync(int page = 1, int pageSize = 10, string? searchTerm = null, DateTime? date = null, string? status = null)
+        {
+            var url = $"{ApiEndpoints.Attendance.Base}?page={page}&pageSize={pageSize}";
+            if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={searchTerm}";
+            if (date.HasValue) url += $"&date={date.Value:yyyy-MM-dd}";
+            if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
+
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<AttendanceModel>>>(url);
+            return response?.Data ?? new PagedResult<AttendanceModel>();
+        }
+
+        public async Task<ApiResponse<ImportAttendanceResultModel>> ImportAttendanceAsync(string? rawData, byte[]? fileBytes, string? fileName, string source, int codeCol = 1, int timeCol = 2, bool isPreview = false)
+        {
+            try
+            {
+                var content = new MultipartFormDataContent();
+                if (!string.IsNullOrEmpty(rawData)) content.Add(new StringContent(rawData), "RawData");
+                content.Add(new StringContent(source), "Source");
+                content.Add(new StringContent(codeCol.ToString()), "EmployeeCodeColumnIndex");
+                content.Add(new StringContent(timeCol.ToString()), "TimestampColumnIndex");
+                content.Add(new StringContent(isPreview.ToString()), "IsPreviewOnly");
+
+                if (fileBytes != null && !string.IsNullOrEmpty(fileName))
+                {
+                    var fileContent = new ByteArrayContent(fileBytes);
+                    fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                    content.Add(fileContent, "File", fileName);
+                }
+
+                var response = await _httpClient.PostAsync($"{ApiEndpoints.Attendance.Base}/import", content);
+                var result = await response.Content.ReadFromJsonAsync<ApiResponse<ImportAttendanceResultModel>>();
+                return result ?? new ApiResponse<ImportAttendanceResultModel> { Success = false, Message = "Lỗi phản hồi từ server" };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<ImportAttendanceResultModel> { Success = false, Message = $"Lỗi kết nối: {ex.Message}" };
+            }
+        }
+
         public async Task<IEnumerable<WorkShiftModel>> GetWorkShiftsAsync()
         {
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<IEnumerable<WorkShiftModel>>>($"{ApiEndpoints.Attendance.Base}/shifts");
