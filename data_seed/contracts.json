@@ -4,8 +4,8 @@
             "$oid": "65dae2f30000000000000101"
         },
         "ContractNumber": "001/2024/HDLD-TTL",
-        "EmployeeId": "65dae2f30000000000000001",
-        "EmployeeName": "Nguyễn Văn A",
+        "EmployeeId": "65bf0c300000000000000001",
+        "EmployeeName": "Phạm Minh Hùng",
         "ContractTemplateId": "65dae2f30000000000000004",
         "TypeId": "65dae2f30000000000000205",
         "StartDate": {
@@ -28,8 +28,8 @@
             "$oid": "65dae2f30000000000000102"
         },
         "ContractNumber": "NDA-001/2024",
-        "EmployeeId": "65dae2f30000000000000001",
-        "EmployeeName": "Nguyễn Văn A",
+        "EmployeeId": "65bf0c300000000000000001",
+        "EmployeeName": "Phạm Minh Hùng",
         "ContractTemplateId": "65dae2f30000000000000006",
         "TypeId": "65dae2f30000000000000207",
         "StartDate": {
@@ -52,8 +52,8 @@
             "$oid": "65dae2f30000000000000103"
         },
         "ContractNumber": "002/2024/HDTV-TTL",
-        "EmployeeId": "65dae2f30000000000000002",
-        "EmployeeName": "Trần Thị B",
+        "EmployeeId": "65bf0c300000000000000002",
+        "EmployeeName": "Nguyễn Thị Mai",
         "ContractTemplateId": "65dae2f30000000000000001",
         "TypeId": "65dae2f30000000000000201",
         "StartDate": {

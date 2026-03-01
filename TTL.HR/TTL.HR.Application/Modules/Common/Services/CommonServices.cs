@@ -193,6 +193,51 @@ namespace TTL.HR.Application.Modules.Common.Services
             }
         }
 
+        public async Task<ApiResponse<bool>> ConfirmEmailAsync(string token)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"{ApiEndpoints.Auth.ConfirmEmail}?token={token}");
+                ApiResponse<bool>? apiResponse = null;
+                try { apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>(); } catch { }
+                return apiResponse ?? new ApiResponse<bool> { Success = response.IsSuccessStatusCode, Message = "Xác thực email thất bại" };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<bool> { Success = false, Message = $"Lỗi kết nối: {ex.Message}" };
+            }
+        }
+
+        public async Task<ApiResponse<bool>> RequestPasswordResetAsync(string email)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Auth.RequestPasswordReset, new { Email = email });
+                ApiResponse<bool>? apiResponse = null;
+                try { apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>(); } catch { }
+                return apiResponse ?? new ApiResponse<bool> { Success = response.IsSuccessStatusCode, Message = "Yêu cầu đặt lại mật khẩu thất bại" };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<bool> { Success = false, Message = $"Lỗi kết nối: {ex.Message}" };
+            }
+        }
+
+        public async Task<ApiResponse<bool>> ResetPasswordAsync(string token, string newPassword)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Auth.ResetPassword, new { Token = token, NewPassword = newPassword });
+                ApiResponse<bool>? apiResponse = null;
+                try { apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>(); } catch { }
+                return apiResponse ?? new ApiResponse<bool> { Success = response.IsSuccessStatusCode, Message = "Đặt lại mật khẩu thất bại" };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<bool> { Success = false, Message = $"Lỗi kết nối: {ex.Message}" };
+            }
+        }
+
         public async Task<UserDto?> GetCurrentUserAsync()
         {
             return _currentUser;

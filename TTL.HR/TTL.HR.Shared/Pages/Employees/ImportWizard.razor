@@ -1,0 +1,230 @@
+@using TTL.HR.Application.Modules.HumanResource.Interfaces
+@using TTL.HR.Application.Modules.HumanResource.Models
+@inject IEmployeeImportService ImportService
+@inject IJSRuntime JSRuntime
+
+<div class="modal fade" id="import_wizard_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="fw-bolder">Nhập dữ liệu nhân viên từ Excel</h2>
+                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
+                    <i class="ki-outline ki-cross fs-1"></i>
+                </div>
+            </div>
+
+            <div class="modal-body py-10 px-lg-17">
+                <!-- Stepper -->
+                <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid" id="kt_import_stepper">
+                    <!-- Aside -->
+                    <div class="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px mb-10">
+                        <div class="stepper-nav ps-lg-10">
+                            <div class="stepper-item @(step == 1 ? "current" : "")">
+                                <div class="stepper-line w-40px"></div>
+                                <div class="stepper-icon w-40px h-40px">
+                                    <i class="stepper-check fas fa-check"></i>
+                                    <span class="stepper-number">1</span>
+                                </div>
+                                <div class="stepper-label">
+                                    <h3 class="stepper-title">Tải mẫu</h3>
+                                    <div class="stepper-desc">Download file Excel mẫu</div>
+                                </div>
+                            </div>
+                            <div class="stepper-item @(step == 2 ? "current" : "")">
+                                <div class="stepper-line w-40px"></div>
+                                <div class="stepper-icon w-40px h-40px">
+                                    <i class="stepper-check fas fa-check"></i>
+                                    <span class="stepper-number">2</span>
+                                </div>
+                                <div class="stepper-label">
+                                    <h3 class="stepper-title">Tải lên</h3>
+                                    <div class="stepper-desc">Chọn file dữ liệu của bạn</div>
+                                </div>
+                            </div>
+                            <div class="stepper-item @(step == 3 ? "current" : "")">
+                                <div class="stepper-line w-40px"></div>
+                                <div class="stepper-icon w-40px h-40px">
+                                    <i class="stepper-check fas fa-check"></i>
+                                    <span class="stepper-number">3</span>
+                                </div>
+                                <div class="stepper-label">
+                                    <h3 class="stepper-title">Kết quả</h3>
+                                    <div class="stepper-desc">Xem báo cáo sau khi nhập</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="flex-row-fluid py-lg-5 px-lg-15">
+                        @if (step == 1)
+                        {
+                            <div class="flex-column current">
+                                <div class="fv-row mb-10 text-center">
+                                    <i class="ki-outline ki-file-down fs-5x text-primary mb-5"></i>
+                                    <h2 class="fw-bolder mb-3">Tải file Excel mẫu</h2>
+                                    <div class="text-muted fw-bold fs-6 mb-7">
+                                        Để đảm bảo dữ liệu được nhập chính xác, vui lòng sử dụng file mẫu chuẩn của hệ thống.
+                                    </div>
+                                    <button type="button" class="btn btn-primary" @onclick="DownloadTemplate">
+                                        <i class="ki-outline ki-download fs-2"></i> Tải file mẫu (.xlsx)
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        else if (step == 2)
+                        {
+                            <div class="flex-column current">
+                                <div class="fv-row mb-10">
+                                    <label class="d-flex align-items-center fs-5 fw-bold mb-4">
+                                        <span class="required">Chọn file Excel để nhập</span>
+                                    </label>
+                                    
+                                    <div class="dropzone p-10 text-center border-dashed border-primary rounded" style="background: #f8f9fa;">
+                                        <InputFile OnChange="HandleFileSelected" class="d-none" id="fileImport" accept=".xlsx" />
+                                        <label for="fileImport" class="cursor-pointer">
+                                            <i class="ki-outline ki-upload-file fs-3x text-primary mb-3"></i>
+                                            @if (selectedFile == null)
+                                            {
+                                                <div class="fs-6 fw-bold text-gray-700">Kéo thả hoặc click để chọn file</div>
+                                                <div class="text-muted fs-7">Hỗ trợ file .xlsx tối đa 5MB</div>
+                                            }
+                                            else
+                                            {
+                                                <div class="fs-6 fw-bolder text-primary">@selectedFile.Name</div>
+                                                <div class="text-muted fs-7">@(Math.Round(selectedFile.Size / 1024.0, 2)) KB</div>
+                                            }
+                                        </label>
+                                    </div>
+                                </div>
+
+                                @if (isImporting)
+                                {
+                                    <div class="text-center py-5">
+                                        <div class="spinner-border text-primary mb-3" role="status"></div>
+                                        <div class="fs-6 fw-bold">Đang xử lý dữ liệu...</div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else if (step == 3)
+                        {
+                            <div class="flex-column current">
+                                <div class="text-center mb-10">
+                                    @if (importResult?.FailureCount == 0)
+                                    {
+                                        <i class="ki-outline ki-check-circle fs-5x text-success mb-5"></i>
+                                        <h2 class="fw-bolder">Hoàn tất!</h2>
+                                    }
+                                    else
+                                    {
+                                        <i class="ki-outline ki-information-2 fs-5x text-warning mb-5"></i>
+                                        <h2 class="fw-bolder">Hoàn tất với cảnh báo</h2>
+                                    }
+                                </div>
+
+                                <div class="d-flex flex-stack bg-light-success rounded p-5 mb-5 border border-dashed border-success">
+                                    <div class="fw-bolder fs-6 text-gray-800">Thành công:</div>
+                                    <div class="fw-bolder fs-5 text-success">@importResult?.SuccessCount nhân viên</div>
+                                </div>
+
+                                <div class="d-flex flex-stack bg-light-danger rounded p-5 mb-5 border border-dashed border-danger">
+                                    <div class="fw-bolder fs-6 text-gray-800">Lỗi / Bỏ qua:</div>
+                                    <div class="fw-bolder fs-5 text-danger">@importResult?.FailureCount bản ghi</div>
+                                </div>
+
+                                @if (importResult?.Errors.Any() == true)
+                                {
+                                    <div class="mb-5">
+                                        <label class="fs-6 fw-bold mb-2">Chi tiết lỗi:</label>
+                                        <div class="bg-light p-4 rounded overflow-auto" style="max-height: 200px;">
+                                            @foreach (var error in importResult.Errors)
+                                            {
+                                                <div class="text-danger fs-8 mb-1">• @error</div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                @if (step > 1 && step < 3)
+                {
+                    <button type="button" class="btn btn-light me-3" @onclick="() => step--">Quay lại</button>
+                }
+                
+                @if (step == 1)
+                {
+                    <button type="button" class="btn btn-primary" @onclick="() => step = 2">Tiếp theo</button>
+                }
+                else if (step == 2)
+                {
+                    <button type="button" class="btn btn-success" disabled="@(selectedFile == null || isImporting)" @onclick="ProcessImport">
+                        <i class="ki-outline ki-file-up fs-2"></i> Bắt đầu nhập
+                    </button>
+                }
+                else if (step == 3)
+                {
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="Finish">Đóng & Reload</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback OnImportCompleted { get; set; }
+    
+    private int step = 1;
+    private IBrowserFile? selectedFile;
+    private bool isImporting = false;
+    private ImportResultModel? importResult;
+
+    private async Task DownloadTemplate()
+    {
+        var content = await ImportService.ExportEmployeeTemplateAsync();
+        var fileName = "Employee_Import_Template.xlsx";
+        await JSRuntime.InvokeVoidAsync("downloadFile", content, fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    }
+
+    private void HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+    }
+
+    private async Task ProcessImport()
+    {
+        if (selectedFile == null) return;
+        
+        isImporting = true;
+        try
+        {
+            using var stream = selectedFile.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            
+            importResult = await ImportService.ImportEmployeesFromExcelAsync(ms.ToArray());
+            step = 3;
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Không thể xử lý file: " + ex.Message, "error");
+        }
+        finally
+        {
+            isImporting = false;
+        }
+    }
+
+    private async Task Finish()
+    {
+        await OnImportCompleted.InvokeAsync();
+        step = 1;
+        selectedFile = null;
+        importResult = null;
+    }
+}

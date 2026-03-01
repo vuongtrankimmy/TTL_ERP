@@ -1,0 +1,150 @@
+@using TTL.HR.Application.Modules.HumanResource.Models
+
+@if (IsVisible)
+{
+    <div class="drawer-overlay" style="z-index: 105; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);" @onclick="CloseDrawer"></div>
+}
+
+<div class="bg-white drawer drawer-end @(IsVisible ? "drawer-on" : "")" style="width: 500px !important; z-index: 110; position: fixed; top: 0; right: 0; height: 100vh; overflow-y: auto; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: transform 0.3s ease-in-out; transform: translateX(@(IsVisible ? "0" : "100%"))">
+    <div class="card w-100 rounded-0 border-0 h-100">
+        <div class="card-header pe-5">
+            <div class="card-title">
+                <div class="d-flex justify-content-center flex-column me-3">
+                    <h3 class="fs-4 fw-bold text-gray-900 me-1 mb-0 line-clamp-1">
+                        @Title
+                    </h3>
+                </div>
+            </div>
+            <div class="card-toolbar">
+                <div class="btn btn-sm btn-icon btn-active-light-danger" @onclick="CloseDrawer">
+                    <i class="ki-outline ki-cross fs-2"></i>
+                </div>
+            </div>
+        </div>
+        <div class="card-body hover-scroll-overlay-y">
+            @if (ChildContent != null)
+            {
+                <div class="mb-8 p-5 bg-light-primary rounded border border-primary border-dashed">
+                    @ChildContent
+                </div>
+            }
+            <div class="mb-5 position-relative">
+                <i class="ki-outline ki-magnifier fs-2 text-gray-500 position-absolute top-50 translate-middle-y ms-4"></i>
+                <input type="text" class="form-control form-control-solid ps-12" placeholder="Tìm kiếm nhân viên..." value="@_searchTerm" @oninput="OnSearchChanged" />
+            </div>
+            
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="form-label fw-semibold m-0">Danh sách nhân viên:</label>
+                    <span class="text-muted fs-7">Đã chọn: @(SelectedEmployeeIds.Count)</span>
+                </div>
+                <div class="table-responsive border rounded mb-3">
+                    <table class="table align-middle table-row-dashed fs-6 gy-3 mb-0">
+                        <thead>
+                            <tr class="fw-bold text-muted bg-light">
+                                <th class="w-10px pe-2 ps-3"></th>
+                                <th class="min-w-150px">Họ và tên</th>
+                                <th class="min-w-100px">Phòng ban</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (PaginatedEmployees != null && PaginatedEmployees.Any())
+                            {
+                                @foreach (var emp in PaginatedEmployees)
+                                {
+                                    <tr>
+                                        <td class="ps-3">
+                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input class="form-check-input" type="checkbox" 
+                                                       value="@emp.Id" 
+                                                       checked="@SelectedEmployeeIds.Contains(emp.Id)"
+                                                       @onchange="(e) => ToggleSelection(emp.Id, e.Value)" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-30px me-3">
+                                                    @if (!string.IsNullOrEmpty(emp.AvatarUrl))
+                                                    {
+                                                        <img src="@emp.AvatarUrl" alt="" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="symbol-label @(GetRandomColor(emp.FullName)) fs-7 fw-bold">@GetInitials(emp.FullName)</div>
+                                                    }
+                                                </div>
+                                                <div class="ms-2">
+                                                    <span class="text-gray-800 fw-bold">@emp.FullName</span>
+                                                    <div class="text-muted fs-8">@emp.Code</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted fs-7">@(string.IsNullOrEmpty(emp.DepartmentName) ? "Chưa có" : emp.DepartmentName)</span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-center py-5 text-muted">
+                                        Không có dữ liệu
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                @if (TotalPages > 1)
+                {
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="fs-7 text-muted">
+                            Hiển thị <b>@((_currentPage - 1) * _pageSize + (FilteredEmployees.Any() ? 1 : 0))</b> đến <b>@(Math.Min(_currentPage * _pageSize, FilteredEmployees.Count()))</b> trong <b>@(FilteredEmployees.Count())</b> nhân viên
+                        </div>
+                        <ul class="pagination pagination-outline">
+                            <li class="page-item previous @(_currentPage == 1 ? "disabled" : "")">
+                                <button class="page-link" @onclick="() => ChangePage(_currentPage - 1)"><i class="previous"></i></button>
+                            </li>
+                            
+                            @for (int i = 1; i <= TotalPages; i++)
+                            {
+                                var pageNum = i; // local capture
+                                if (i == 1 || i == TotalPages || Math.Abs(i - _currentPage) <= 1)
+                                {
+                                    <li class="page-item @(pageNum == _currentPage ? "active" : "")">
+                                        <button class="page-link" @onclick="() => ChangePage(pageNum)">@pageNum</button>
+                                    </li>
+                                }
+                                else if (Math.Abs(i - _currentPage) == 2)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                }
+                            }
+
+                            <li class="page-item next @(_currentPage == TotalPages ? "disabled" : "")">
+                                <button class="page-link" @onclick="() => ChangePage(_currentPage + 1)"><i class="next"></i></button>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end py-6 px-9">
+            <button type="button" class="btn btn-light me-2" @onclick="CloseDrawer">Hủy</button>
+            <button type="button" class="btn btn-primary" @onclick="SaveSelection" disabled="@IsLoading">
+                @if (IsLoading)
+                {
+                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                }
+                else
+                {
+                    <i class="ki-outline ki-check fs-2 me-1"></i>
+                }
+                Lưu
+            </button>
+        </div>
+    </div>
+</div>

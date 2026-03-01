@@ -1,4 +1,7 @@
-﻿
+﻿@inject IStringLocalizer<SharedResource> L
+
+
+
 <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
 	<!--begin::Logo-->
 	<div class="app-sidebar-logo px-6 position-relative d-flex align-items-center" id="kt_app_sidebar_logo">
@@ -32,319 +35,69 @@
 		<div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper hover-scroll-overlay-y my-5" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer" data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
 			<!--begin::Menu-->
 			<div class="menu menu-column menu-rounded menu-sub-indention px-3" id="kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false">
-				<!--begin:Menu item-->
-				<div class="menu-item">
-					<!--begin:Menu link-->
-					<NavLink class="menu-link py-3" href="/dashboard" Match="NavLinkMatch.All" title="Dashboards" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon">
-							<i class="ki-outline ki-element-11 fs-2"></i>
-						</span>
-						<span class="menu-title">Dashboards</span>
-					</NavLink>
-					<!--end:Menu link-->
-				</div>
-				<!--end:Menu item-->
-				<!--begin:Menu item-->
-				<div class="menu-item pt-5">
-					<!--begin:Menu content-->
-					<div class="menu-content">
-						<span class="menu-heading fw-bold text-uppercase fs-7">Tổ chức & Nhân sự</span>
-					</div>
-					<!--end:Menu content-->
-				</div>
-				<!--end:Menu item-->
-				<!--begin:Menu item-->
-				<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-					<!--begin:Menu link-->
-					<span class="menu-link text-active-primary py-3" title="Cấu trúc công ty" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon">
-							<i class="ki-outline ki-address-book fs-2"></i>
-						</span>
-						<span class="menu-title">Cấu trúc công ty</span>
-						<span class="menu-arrow"></span>
-					</span>
-					<!--end:Menu link-->
-					<!--begin:Menu sub-->
-					<div class="menu-sub menu-sub-accordion">
-						<!--begin:Menu item-->
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/organization/structure" Match="NavLinkMatch.Prefix" title="Sơ đồ tổ chức" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Sơ đồ tổ chức</span>
-							</NavLink>
-						</div>
-						<!--begin:Menu item-->
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/organization/departments" Match="NavLinkMatch.Prefix" title="Phòng ban" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Phòng ban</span>
-							</NavLink>
-						</div>
-						<!--begin:Menu item-->
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/organization/positions" Match="NavLinkMatch.Prefix" title="Chức vụ & Cấp bậc" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Chức vụ & Cấp bậc</span>
-							</NavLink>
-						</div>
-					</div>
-				</div>
-				<!--begin:Menu item-->
-				<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-					<span class="menu-link text-active-primary py-3" title="Quản lý nhân viên" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon">
-							<i class="ki-outline ki-people fs-2"></i>
-						</span>
-						<span class="menu-title">Quản lý nhân viên</span>
-						<span class="menu-arrow"></span>
-					</span>
-					<div class="menu-sub menu-sub-accordion">
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/employees" Match="NavLinkMatch.All" title="Danh sách nhân viên" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Danh sách nhân viên</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/employees/add" Match="NavLinkMatch.Prefix" title="Thêm nhân viên mới" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Tiếp nhận hồ sơ</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/contracts" Match="NavLinkMatch.Prefix" title="Hợp đồng lao động" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Hợp đồng lao động</span>
-							</NavLink>
-						</div>
-					</div>
-				</div>
-				<!--begin:Menu item-->
-				<div class="menu-item pt-5">
-					<div class="menu-content">
-						<span class="menu-heading fw-bold text-uppercase fs-7">Vận hành HR</span>
-					</div>
-				</div>
-				<!--begin:Menu item-->
-				<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-					<span class="menu-link text-active-primary py-3" title="Chấm công & Ca làm" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon">
-							<i class="ki-outline ki-timer fs-2"></i>
-						</span>
-						<span class="menu-title">Chấm công & Ca làm</span>
-						<span class="menu-arrow"></span>
-					</span>
-					<div class="menu-sub menu-sub-accordion">
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/attendance" Match="NavLinkMatch.All" title="Dữ liệu chấm công" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Dữ liệu chấm công</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/attendance/timesheet" Match="NavLinkMatch.Prefix" title="Bảng công tháng" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Bảng công tháng</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/attendance/import" Match="NavLinkMatch.Prefix" title="Import dữ liệu" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Import dữ liệu</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/attendance/schedule" Match="NavLinkMatch.Prefix" title="Lịch làm việc" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Lịch làm việc</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/attendance/shift-approval" Match="NavLinkMatch.Prefix" title="Duyệt đổi ca" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Duyệt đổi ca</span>
-							</NavLink>
-						</div>
-					</div>
-				</div>
-				<!--begin:Menu item-->
-				<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-					<span class="menu-link text-active-primary py-3" title="Quản lý nghỉ phép" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon">
-							<i class="ki-outline ki-calendar-8 fs-2"></i>
-						</span>
-						<span class="menu-title">Quản lý nghỉ phép</span>
-						<span class="menu-arrow"></span>
-					</span>
-					<div class="menu-sub menu-sub-accordion">
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/leave/requests" Match="NavLinkMatch.Prefix" title="Danh sách đơn" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Danh sách đơn</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/leave/approvals" Match="NavLinkMatch.Prefix" title="Duyệt phép" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Duyệt phép</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/attendance/leave-trip" Match="NavLinkMatch.Prefix" title="Quản lý công tác" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Quản lý công tác</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-
-						</div>
-					</div>
-				</div>
-				<!--begin:Menu item-->
-				<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-					<span class="menu-link text-active-primary py-3" title="Tiền lương & Phúc lợi" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon">
-							<i class="ki-outline ki-wallet fs-2"></i>
-						</span>
-						<span class="menu-title">Tiền lương & Phúc lợi</span>
-						<span class="menu-arrow"></span>
-					</span>
-					<div class="menu-sub menu-sub-accordion">
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/payroll/periods" Match="NavLinkMatch.Prefix" title="Bảng tính lương" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Bảng tính lương</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/benefits" Match="NavLinkMatch.Prefix" title="Chế độ phúc lợi" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Chế độ phúc lợi</span>
-							</NavLink>
-						</div>
-					</div>
-				</div>
-				<!--begin:Menu item-->
-				<div class="menu-item pt-5">
-					<div class="menu-content">
-						<span class="menu-heading fw-bold text-uppercase fs-7">Tuyển dụng & Đào tạo</span>
-					</div>
-				</div>
-				<div class="menu-item">
-					<NavLink class="menu-link py-3" href="/recruitment" title="Tuyển dụng" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon"><i class="ki-outline ki-user-tick fs-2"></i></span>
-						<span class="menu-title">Tuyển dụng</span>
-					</NavLink>
-				</div>
-				<div class="menu-item">
-					<NavLink class="menu-link py-3" href="/training" title="Đào tạo nội bộ" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon"><i class="ki-outline ki-book-open fs-2"></i></span>
-						<span class="menu-title">Đào tạo nội bộ</span>
-					</NavLink>
-				</div>
-				<div class="menu-item pt-5">
-					<div class="menu-content">
-						<span class="menu-heading fw-bold text-uppercase fs-7">Tài sản & Thiết bị</span>
-					</div>
-				</div>
-				<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-					<span class="menu-link text-active-primary py-3" title="Quản lý tài sản" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon">
-							<i class="ki-outline ki-monitor-mobile fs-2"></i>
-						</span>
-						<span class="menu-title">Quản lý tài sản</span>
-						<span class="menu-arrow"></span>
-					</span>
-					<div class="menu-sub menu-sub-accordion">
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/assets/inventory" Match="NavLinkMatch.Prefix" title="Danh sách tài sản" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Danh sách tài sản</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/assets/allocation" Match="NavLinkMatch.Prefix" title="Cấp phát & Thu hồi" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Cấp phát & Thu hồi</span>
-							</NavLink>
-						</div>
-					</div>
-				</div>
-				<!--begin:Menu item-->
-				<div class="menu-item pt-5">
-					<div class="menu-content">
-						<span class="menu-heading fw-bold text-uppercase fs-7">Hệ thống</span>
-					</div>
-				</div>
-				<!--begin:Menu item-->
-				<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-					<span class="menu-link text-active-primary py-3" title="Quản trị & Cấu hình" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon">
-							<i class="ki-outline ki-setting-2 fs-2"></i>
-						</span>
-						<span class="menu-title">Quản trị & Cấu hình</span>
-						<span class="menu-arrow"></span>
-					</span>
-					<div class="menu-sub menu-sub-accordion">
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/administration/roles" Match="NavLinkMatch.Prefix" title="Vai trò & Nhóm" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Vai trò & Nhóm</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/permissions" Match="NavLinkMatch.Prefix" title="Phân quyền & CSDL" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Phân quyền chi tiết</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/settings/general" Match="NavLinkMatch.Prefix">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Cài đặt chung</span>
-							</NavLink>
-						</div>
-						<div class="menu-item">
-							<NavLink class="menu-link" href="/settings/payroll-config" Match="NavLinkMatch.Prefix">
-								<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-								<span class="menu-title">Cấu hình lương</span>
-							</NavLink>
-						</div>
-					</div>
-				</div>
-				<!--begin:Menu item-->
-				<div class="menu-item pt-5">
-					<div class="menu-content">
-						<span class="menu-heading fw-bold text-uppercase fs-7">Hỗ trợ & Tiện ích</span>
-					</div>
-				</div>
-				<div class="menu-item">
-					<NavLink class="menu-link py-3" href="/tools/hr-toolkit" title="Công cụ HR" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon"><i class="ki-outline ki-calculator fs-2"></i></span>
-						<span class="menu-title">HR Toolkit</span>
-					</NavLink>
-				</div>
-				<div class="menu-item">
-					<NavLink class="menu-link py-3" href="/system/guide" title="Hướng dẫn sử dụng" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-icon"><i class="ki-outline ki-book-open fs-2"></i></span>
-						<span class="menu-title">Hướng dẫn sử dụng</span>
-					</NavLink>
-				</div>
 				
-				<div class="menu-item pt-10">
-					<div class="menu-content text-center">
-						<span class="badge badge-light-primary fw-bold fs-9 px-3 py-2">v2.5.0 STABLE</span>
-					</div>
-				</div>
+                @foreach (var item in _menuItems)
+                {
+                    @if (!string.IsNullOrEmpty(item.Permission))
+                    {
+                        <!-- Dynamic Permission Check -->
+                        @* Note: In a real server-side Blazor app, we can't use await directly in a loop easily without performance hit, 
+                           but for sidebar it's acceptable or should be pre-filtered in the service. *@
+                    }
+
+                    if (item.IsSection)
+                    {
+                        <div class="menu-item pt-5">
+                            <div class="menu-content">
+                                <span class="menu-heading fw-bold text-uppercase fs-7">@L[item.Title]</span>
+                            </div>
+                        </div>
+                    }
+                    else if (item.HasSubItems)
+                    {
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                            <span class="menu-link text-active-primary py-3" title="@L[item.Title]">
+                                <span class="menu-icon">
+                                    <i class="@item.Icon fs-2"></i>
+                                </span>
+                                <span class="menu-title">@L[item.Title]</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <div class="menu-sub menu-sub-accordion">
+                                @foreach (var subItem in item.SubItems)
+                                {
+                                    <div class="menu-item">
+                                        <NavLink class="menu-link" href="@subItem.Href" Match="NavLinkMatch.Prefix" title="@L[subItem.Title]">
+                                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                            <span class="menu-title">@L[subItem.Title]</span>
+                                        </NavLink>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="menu-item">
+                            <NavLink class="menu-link py-3" href="@item.Href" Match="NavLinkMatch.All" title="@L[item.Title]">
+                                <span class="menu-icon">
+                                    <i class="@item.Icon fs-2"></i>
+                                </span>
+                                <span class="menu-title">@L[item.Title]</span>
+                            </NavLink>
+                        </div>
+                    }
+                }
+
 			</div>
 			<!--end::Menu-->
 		</div>
 		<!--end::Menu wrapper-->
 	</div>
 	<!--end::sidebar menu-->
+
 	<!--begin::Footer-->
 	<div class="app-sidebar-footer d-flex align-items-center px-8 pb-10" id="kt_app_sidebar_footer">
-		<!--begin::User-->
 		<div class="d-flex flex-stack w-100">
 			<!--begin::User info-->
 			<div class="d-flex align-items-center cursor-pointer me-3" 
@@ -352,86 +105,54 @@
 				 data-kt-menu-trigger="{default: 'click', lg: 'hover'}" 
 				 data-kt-menu-overflow="true" 
 				 data-kt-menu-placement="top-start">
-				<!--begin::Avatar-->
 				<div class="symbol symbol-circle symbol-40px">
-					<img src="assets/media/avatars/300-1.jpg" alt="user" />
+					<img src="https://ui-avatars.com/api/?name=@(System.Uri.EscapeDataString(_currentUser?.FullName ?? "User"))&background=random" alt="user" />
 					<div class="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-white border-2 h-10px w-10px"></div>
 				</div>
-				<!--end::Avatar-->
-				<!--begin::Info-->
 				<div class="d-flex flex-column ms-3 app-sidebar-user-info">
-					<span class="text-gray-900 fw-bold fs-7 mb-1">Phan Thanh Tùng</span>
-					<span class="text-gray-600 fw-semibold fs-8">Quản trị hệ thống</span>
+					<span class="text-gray-900 fw-bold fs-7 mb-1">@(_currentUser?.FullName ?? "N/A")</span>
+					<span class="text-gray-600 fw-semibold fs-8">@(_currentUser?.Role ?? "User")</span>
 				</div>
-				<!--end::Info-->
 			</div>
 			<!--end::User info-->
 
 			<style>
-				[data-kt-app-sidebar-minimize="on"] .app-sidebar-user-info {
-					display: none !important;
-				}
+				[data-kt-app-sidebar-minimize="on"] .app-sidebar-user-info { display: none !important; }
 			</style>
 			
-			<!--begin::User menu (Quick view popup)-->
+			<!--begin::User menu-->
 			<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px" data-kt-menu="true">
-				<!--begin::Menu item-->
 				<div class="menu-item px-3">
 					<div class="menu-content d-flex align-items-center px-3">
-						<!--begin::Avatar-->
 						<div class="symbol symbol-50px me-5">
-							<img alt="Logo" src="assets/media/avatars/300-1.jpg" />
+							<img alt="Logo" src="https://ui-avatars.com/api/?name=@(System.Uri.EscapeDataString(_currentUser?.FullName ?? "User"))&background=random" />
 						</div>
-						<!--end::Avatar-->
-						<!--begin::Username-->
 						<div class="d-flex flex-column">
-							<div class="fw-bold d-flex align-items-center fs-5">Phan Thanh Tùng
-							<span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span></div>
-							<a href="/user/profile" class="fw-semibold text-muted text-hover-primary fs-7">tung.pt@tantanloc.com.vn</a>
+							<div class="fw-bold d-flex align-items-center fs-5">@(_currentUser?.FullName ?? "N/A")
+							<span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">@L["Status_Active"]</span></div>
+							<a href="/user/profile" class="fw-semibold text-muted text-hover-primary fs-7">@(_currentUser?.Email ?? _currentUser?.Username ?? "N/A")</a>
+
+
 						</div>
-						<!--end::Username-->
 					</div>
 				</div>
-				<!--end::Menu item-->
-				<!--begin::Menu separator-->
 				<div class="separator my-2"></div>
-				<!--end::Menu separator-->
-				<!--begin::Menu item-->
 				<div class="menu-item px-5">
-					<a href="/user/profile" class="menu-link px-5" title="Hồ sơ của tôi" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">Hồ sơ của tôi</a>
+					<a href="/user/profile" class="menu-link px-5">@L["Label_MyProfile"]</a>
 				</div>
-				<!--end::Menu item-->
-				<!--begin::Menu item-->
 				<div class="menu-item px-5">
-					<a href="/attendance" class="menu-link px-5" title="Lịch sử chấm công" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-						<span class="menu-text">Lịch sử chấm công</span>
-						<span class="menu-badge">
-							<span class="badge badge-light-danger badge-circle fw-bold fs-7">3</span>
-						</span>
-					</a>
+					<a href="/user/profile" class="menu-link px-5">@L["Label_ActivityLog"]</a>
 				</div>
-				<!--end::Menu item-->
-				<!--begin::Menu separator-->
 				<div class="separator my-2"></div>
-				<!--end::Menu separator-->
-				<!--begin::Menu item-->
 				<div class="menu-item px-5">
-					<a href="/auth/logout" class="menu-link px-5">Đăng xuất</a>
+					<a href="/auth/logout" class="menu-link px-5">@L["Label_Logout"]</a>
 				</div>
-				<!--end::Menu item-->
+
 			</div>
 			<!--end::User menu-->
-
-			<!--begin::Action-->
-			<!--div class="d-flex">
-				<a href="/auth/logout" class="btn btn-icon btn-sm btn-active-color-primary mt-n2">
-					<i class="ki-outline ki-exit-right fs-2"></i>
-				</a>
-			</div-->
-			<!--end::Action-->
 		</div>
-		<!--end::User-->
 	</div>
 	<!--end::Footer-->
 </div>
+
 

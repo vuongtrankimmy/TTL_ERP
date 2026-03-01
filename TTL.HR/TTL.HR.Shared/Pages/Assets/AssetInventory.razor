@@ -1,4 +1,4 @@
-@page "/assets/inventory"
+﻿@page "/assets/inventory"
 @using TTL.HR.Shared.Components.Common
 
 <PageTitle>Kho tài sản - TTL.HR</PageTitle>
@@ -30,7 +30,7 @@
                     <thead class="bg-light">
                         <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
                             <th class="min-w-250px ps-4">TÊN TÀI SẢN</th>
-                            <th class="min-w-120px">MÃ TSCĐ</th>
+                            <th class="min-w-120px">MàTSCĐ</th>
                             <th class="min-w-150px">NGƯỜI SỬ DỤNG</th>
                             <th class="min-w-120px text-center">TRẠNG THÁI</th>
                             <th class="min-w-120px">NGÀY MUA</th>
@@ -75,6 +75,9 @@
                                     <td class="text-end pe-4">
                                         <button class="btn btn-sm btn-icon btn-light-primary btn-active-primary me-2 hover-scale" title="Xem chi tiết" @onclick="() => ViewDetail(asset.Id)">
                                             <i class="ki-outline ki-eye fs-2"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-icon btn-light-warning btn-active-warning me-2 hover-scale" title="Chỉnh sửa" @onclick="() => EditAsset(asset.Id)">
+                                            <i class="ki-outline ki-pencil fs-2"></i>
                                         </button>
                                         <button class="btn btn-sm btn-icon btn-light-danger btn-active-danger hover-scale" title="Xóa" @onclick="() => PromptDeleteAsset(asset)">
                                             <i class="ki-outline ki-trash fs-2"></i>

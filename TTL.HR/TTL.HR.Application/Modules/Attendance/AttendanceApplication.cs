@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TTL.HR.Application.Modules.Attendance.Interfaces;
 using TTL.HR.Application.Modules.Attendance.Models;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Application.Modules.Attendance
 {
@@ -11,7 +12,7 @@ namespace TTL.HR.Application.Modules.Attendance
     {
         Task<IEnumerable<AttendanceModel>> GetCurrentTimesheetsAsync();
         Task<bool> PerformCheckInAsync(AttendanceModel attendance);
-        Task<bool> PerformCheckOutAsync(string id, AttendanceModel attendance);
+        Task<bool> PerformCheckOutAsync(AttendanceModel attendance);
         Task<AttendanceOverview> GetAttendanceOverviewAsync();
     }
 
@@ -26,7 +27,8 @@ namespace TTL.HR.Application.Modules.Attendance
 
         public async Task<IEnumerable<AttendanceModel>> GetCurrentTimesheetsAsync()
         {
-            return await _attendanceService.GetTimesheetsAsync();
+            var pagedResult = await _attendanceService.GetTimesheetsAsync();
+            return pagedResult?.Items ?? new List<AttendanceModel>();
         }
 
         public async Task<bool> PerformCheckInAsync(AttendanceModel attendance)
@@ -43,15 +45,15 @@ namespace TTL.HR.Application.Modules.Attendance
             return await _attendanceService.CheckInAsync(attendance);
         }
 
-        public async Task<bool> PerformCheckOutAsync(string id, AttendanceModel attendance)
+        public async Task<bool> PerformCheckOutAsync(AttendanceModel attendance)
         {
-            return await _attendanceService.CheckOutAsync(id, attendance);
+            return await _attendanceService.CheckOutAsync(attendance);
         }
 
         public async Task<AttendanceOverview> GetAttendanceOverviewAsync()
         {
-            var data = await _attendanceService.GetTimesheetsAsync();
-            var list = data.ToList();
+            var pagedResult = await _attendanceService.GetTimesheetsAsync(pageSize: 100);
+            var list = pagedResult?.Items ?? new List<AttendanceModel>();
             
             return new AttendanceOverview
             {

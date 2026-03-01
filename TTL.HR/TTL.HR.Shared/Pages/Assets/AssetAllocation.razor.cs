@@ -83,38 +83,44 @@ namespace TTL.HR.Shared.Pages.Assets
 
                 // Fetch Active Allocations
                 var activeResult = await AssetService.GetAllocationsAsync(1, 100, "Active", SearchTerm);
-                ActiveAllocations = activeResult.Items.Select(a => new AllocationViewModel
+                if (activeResult?.Items != null)
                 {
-                    Id = a.Id,
-                    AssetName = a.AssetName,
-                    AssetCode = a.AssetCode,
-                    AssetType = "Thiết bị", // Can be refined if DTO has it
-                    EmployeeName = a.EmployeeName,
-                    Department = "Công ty",
-                    AssignedDate = a.AllocatedDate,
-                    Condition = "Tốt",
-                    Status = a.Status,
-                    AssetId = a.AssetId
-                }).ToList();
+                    ActiveAllocations = activeResult.Items.Select(a => new AllocationViewModel
+                    {
+                        Id = a.Id,
+                        AssetName = a.AssetName,
+                        AssetCode = a.AssetCode,
+                        AssetType = "Thiết bị", 
+                        EmployeeName = a.EmployeeName,
+                        Department = "Công ty",
+                        AssignedDate = a.AllocatedDate,
+                        Condition = "Tốt",
+                        Status = a.Status,
+                        AssetId = a.AssetId
+                    }).ToList();
+                }
 
                 // Fetch Return History
                 var returnResult = await AssetService.GetAllocationsAsync(1, 100, "Returned", SearchTerm);
-                HistoryAllocations = returnResult.Items.Select(a => new AllocationViewModel
+                if (returnResult?.Items != null)
                 {
-                    Id = a.Id,
-                    AssetName = a.AssetName,
-                    AssetCode = a.AssetCode,
-                    AssetType = "Thiết bị",
-                    EmployeeName = a.EmployeeName,
-                    Department = "Đã thu hồi",
-                    AssignedDate = a.AllocatedDate,
-                    ReturnedDate = a.ReturnedDate,
-                    ReturnCondition = "Bình thường",
-                    Condition = "Cũ",
-                    Status = "Returned",
-                    ActorName = a.ActorName,
-                    AssetId = a.AssetId
-                }).ToList();
+                    HistoryAllocations = returnResult.Items.Select(a => new AllocationViewModel
+                    {
+                        Id = a.Id,
+                        AssetName = a.AssetName,
+                        AssetCode = a.AssetCode,
+                        AssetType = "Thiết bị",
+                        EmployeeName = a.EmployeeName,
+                        Department = "Đã thu hồi",
+                        AssignedDate = a.AllocatedDate,
+                        ReturnedDate = a.ReturnedDate,
+                        ReturnCondition = "Bình thường",
+                        Condition = "Cũ",
+                        Status = "Returned",
+                        ActorName = a.ActorName,
+                        AssetId = a.AssetId
+                    }).ToList();
+                }
             }
             catch (Exception)
             {

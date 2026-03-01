@@ -66,6 +66,8 @@ namespace TTL.HR.Application.Modules.Organization.Models
         public string DepartmentId { get; set; } = string.Empty;
         public string? DepartmentName { get; set; }
         public string Level { get; set; } = string.Empty;
+        public int EmployeeCount { get; set; }
+        public string Status { get; set; } = "Active";
         public List<string>? Responsibilities { get; set; }
         public List<string>? Requirements { get; set; }
         public List<string>? Benefits { get; set; }
@@ -81,6 +83,7 @@ namespace TTL.HR.Application.Modules.Organization.Models
         public decimal BaseSalaryRangeMax { get; set; }
         public string DepartmentId { get; set; } = string.Empty;
         public string Level { get; set; } = string.Empty;
+        public string Status { get; set; } = "Active";
         public List<string>? Responsibilities { get; set; }
         public List<string>? Requirements { get; set; }
         public List<string>? Benefits { get; set; }

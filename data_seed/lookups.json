@@ -268,5 +268,145 @@
         "Name": "Nhà máy Long An",
         "Order": 4,
         "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000701"
+        },
+        "Type": "AttendanceStatus",
+        "Code": "Normal",
+        "Name": "Đi làm bình thường",
+        "Order": 1,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000702"
+        },
+        "Type": "AttendanceStatus",
+        "Code": "Late",
+        "Name": "Đi trễ",
+        "Order": 2,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000703"
+        },
+        "Type": "AttendanceStatus",
+        "Code": "EarlyLeave",
+        "Name": "Về sớm",
+        "Order": 3,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000704"
+        },
+        "Type": "AttendanceStatus",
+        "Code": "LateAndEarly",
+        "Name": "Trễ & Sớm",
+        "Order": 4,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000705"
+        },
+        "Type": "AttendanceStatus",
+        "Code": "Absent",
+        "Name": "Nghỉ không phép",
+        "Order": 5,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000706"
+        },
+        "Type": "AttendanceStatus",
+        "Code": "MissingCheckIn",
+        "Name": "Quên vân tay vào",
+        "Order": 6,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000707"
+        },
+        "Type": "AttendanceStatus",
+        "Code": "MissingCheckOut",
+        "Name": "Quên vân tay ra",
+        "Order": 7,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000708"
+        },
+        "Type": "AttendanceStatus",
+        "Code": "Holiday",
+        "Name": "Nghỉ lễ",
+        "Order": 8,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000709"
+        },
+        "Type": "AttendanceStatus",
+        "Code": "Leave",
+        "Name": "Nghỉ có phép",
+        "Order": 9,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000710"
+        },
+        "Type": "AttendanceStatus",
+        "Code": "Weekend",
+        "Name": "Nghỉ cuối tuần",
+        "Order": 10,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000801"
+        },
+        "Type": "LeaveStatus",
+        "Code": "Pending",
+        "Name": "Chờ duyệt",
+        "Order": 1,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000802"
+        },
+        "Type": "LeaveStatus",
+        "Code": "Approved",
+        "Name": "Đã duyệt",
+        "Order": 2,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000803"
+        },
+        "Type": "LeaveStatus",
+        "Code": "Rejected",
+        "Name": "Từ chối",
+        "Order": 3,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000000804"
+        },
+        "Type": "LeaveStatus",
+        "Code": "Cancelled",
+        "Name": "Đã hủy",
+        "Order": 4,
+        "IsActive": true
     }
 ]

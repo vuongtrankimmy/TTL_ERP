@@ -17,7 +17,8 @@ namespace TTL.HR.Shared.Pages.Payroll
 
         private List<PayrollPeriodViewModel> Periods = new();
         private bool _isLoading = true;
-        private int _selectedYear = 0; // Default to all years
+        private int _selectedYear = DateTime.Now.Year;
+        private int _selectedMonth = 0; // Default to all months
 
         protected override async Task OnInitializedAsync()
         {
@@ -33,15 +34,25 @@ namespace TTL.HR.Shared.Pages.Payroll
             }
         }
 
+        private async Task OnMonthChanged(ChangeEventArgs e)
+        {
+            if (int.TryParse(e.Value?.ToString(), out int month))
+            {
+                _selectedMonth = month;
+                await LoadData();
+            }
+        }
+
         private async Task LoadData()
         {
             _isLoading = true;
             try
             {
                 int? filterYear = _selectedYear == 0 ? null : (int?)_selectedYear;
+                int? filterMonth = _selectedMonth == 0 ? null : (int?)_selectedMonth;
                 
                 // Fetch Periods from DB
-                var periodsFromApi = await PayrollService.GetPeriodsAsync(filterYear);
+                var periodsFromApi = await PayrollService.GetPeriodsAsync(filterYear, filterMonth);
                 
                 var periodsList = new List<PayrollPeriodViewModel>();
                 
@@ -65,8 +76,11 @@ namespace TTL.HR.Shared.Pages.Payroll
 
                 foreach (var year in yearsToShow)
                 {
-                    // For each year, we generate all 12 months as requested
-                    for (int month = 12; month >= 1; month--)
+                    // If a month is selected, only show that month
+                    int startMonth = _selectedMonth != 0 ? _selectedMonth : 12;
+                    int endMonth = _selectedMonth != 0 ? _selectedMonth : 1;
+
+                    for (int month = startMonth; month >= endMonth; month--)
                     {
                         var official = periodsFromApi?.FirstOrDefault(p => p.Year == year && p.Month == month);
                         if (official != null)

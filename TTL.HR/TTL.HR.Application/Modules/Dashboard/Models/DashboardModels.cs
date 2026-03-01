@@ -14,6 +14,22 @@ namespace TTL.HR.Application.Modules.Dashboard.Models
         public List<PendingApproval> PendingApprovals { get; set; } = new();
         public List<ExpiringContract> ExpiringContracts { get; set; } = new();
         public AttendanceToday AttendanceToday { get; set; } = new();
+        public List<PendingAssetClearance> PendingAssetClearances { get; set; } = new();
+        public List<PayrollTrendDto> PayrollTrend { get; set; } = new();
+    }
+
+    public class PayrollTrendDto
+    {
+        public string Month { get; set; } = string.Empty;
+        public decimal Amount { get; set; }
+    }
+
+    public class PendingAssetClearance
+    {
+        public string EmployeeName { get; set; } = string.Empty;
+        public string AssetName { get; set; } = string.Empty;
+        public string AssetCode { get; set; } = string.Empty;
+        public DateTime? DepartureDate { get; set; }
     }
 
     public class PayrollStats

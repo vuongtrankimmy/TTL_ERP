@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Organization.Interfaces;
 using TTL.HR.Application.Modules.Organization.Models;
+using TTL.HR.Application.Modules.HumanResource.Interfaces;
+using TTL.HR.Application.Modules.HumanResource.Models;
 
 namespace TTL.HR.Shared.Pages.Organization
 {
@@ -12,6 +15,7 @@ namespace TTL.HR.Shared.Pages.Organization
     {
         [Inject] private IPositionService PositionService { get; set; } = default!;
         [Inject] private IDepartmentService DepartmentService { get; set; } = default!;
+        [Inject] private IEmployeeService EmployeeService { get; set; } = default!;
         [Inject] private Microsoft.JSInterop.IJSRuntime JS { get; set; } = default!;
 
         private bool _showEditDrawer = false;
@@ -30,6 +34,11 @@ namespace TTL.HR.Shared.Pages.Organization
         private List<PositionItem> _positions = new();
         private PositionItem _editingPos = new();
         private PositionItem? _selectedPos;
+        private List<EmployeeDto> _allEmployees = new();
+        private List<EmployeeDto> _assignableEmployees = new();
+        private List<string> _initialSelectedEmployeeIds = new();
+        private decimal? _assignmentSalary;
+        private bool _showAssignEmployeesDrawer = false;
         private PositionItem? _positionToDelete;
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
@@ -42,26 +51,43 @@ namespace TTL.HR.Shared.Pages.Organization
             _isLoading = true;
             try
             {
-                _departments = await DepartmentService.GetDepartmentsAsync();
-                var positions = await PositionService.GetPositionsAsync();
+                var departmentTask = DepartmentService.GetDepartmentsAsync();
+                var positionTask = PositionService.GetPositionsAsync();
+                var employeeTask = EmployeeService.GetEmployeesPaginatedAsync(1, 10000);
+
+                await Task.WhenAll(departmentTask, positionTask, employeeTask);
+
+                _departments = await departmentTask;
+                var positions = await positionTask;
+                var employeeResult = await employeeTask;
+                _allEmployees = employeeResult?.Items ?? new List<EmployeeDto>();
+
                 _positions = positions.Select(p => new PositionItem
                 {
                     Id = p.Id,
                     NameVN = p.Name ?? "",
-                    NameEN = p.Code ?? "", // Assuming Code as EN name for now or map accordingly
+                    NameEN = p.Code ?? "",
                     Group = p.DepartmentName ?? "",
                     DepartmentId = p.DepartmentId,
-                    LevelName = p.Level ?? "Nhân viên",
+                    LevelName = p.Level ?? "Level 1",
                     LevelBadge = GetLevelBadge(p.Level ?? ""),
-                    ActiveEmployees = 0, // Need API to provide this or fetch separately
-                    SalaryRange = p.BaseSalaryRangeMin > 0 ? $"{p.BaseSalaryRangeMin} - {p.BaseSalaryRangeMax}" : "Thỏa thuận",
+                    ActiveEmployees = p.EmployeeCount,
+                    SalaryMin = p.BaseSalaryRangeMin,
+                    SalaryMax = p.BaseSalaryRangeMax,
+                    SalaryRange = p.BaseSalaryRangeMin > 0 ? $"{p.BaseSalaryRangeMin:N0} - {p.BaseSalaryRangeMax:N0}" : "Thỏa thuận",
                     JobDescription = p.Description ?? "",
                     Requirements = p.Requirements != null ? string.Join("\n", p.Requirements) : "",
                     Benefits = p.Benefits != null ? string.Join("\n", p.Benefits) : "",
+                    IsActive = p.Status == "Active",
                     Icon = "ki-outline ki-briefcase",
                     IconBg = "bg-light-primary",
                     IconColor = "text-primary"
                 }).ToList();
+
+                if (_selectedPos != null)
+                {
+                    _selectedPos = _positions.FirstOrDefault(p => p.Id == _selectedPos.Id) ?? _selectedPos;
+                }
             }
             catch (Exception ex)
             {
@@ -116,9 +142,12 @@ namespace TTL.HR.Shared.Pages.Organization
                 LevelBadge = pos.LevelBadge,
                 ActiveEmployees = pos.ActiveEmployees,
                 SalaryRange = pos.SalaryRange,
+                SalaryMin = pos.SalaryMin,
+                SalaryMax = pos.SalaryMax,
                 JobDescription = pos.JobDescription,
                 Requirements = pos.Requirements,
                 Benefits = pos.Benefits,
+                IsActive = pos.IsActive,
                 Icon = pos.Icon,
                 IconBg = pos.IconBg,
                 IconColor = pos.IconColor
@@ -157,8 +186,9 @@ namespace TTL.HR.Shared.Pages.Organization
                         Requirements = ToList(_editingPos.Requirements),
                         Benefits = ToList(_editingPos.Benefits),
                         Responsibilities = ToList(_editingPos.JobDescription),
-                        BaseSalaryRangeMin = 0,
-                        BaseSalaryRangeMax = 0
+                        BaseSalaryRangeMin = _editingPos.SalaryMin,
+                        BaseSalaryRangeMax = _editingPos.SalaryMax,
+                        Status = _editingPos.IsActive ? "Active" : "Inactive"
                     });
                     success = result != null;
                 }
@@ -175,9 +205,10 @@ namespace TTL.HR.Shared.Pages.Organization
                         Requirements = ToList(_editingPos.Requirements),
                         Benefits = ToList(_editingPos.Benefits),
                         Responsibilities = ToList(_editingPos.JobDescription),
-                        BaseSalaryRangeMin = 0,
-                        BaseSalaryRangeMax = 0,
-                        IsActive = true
+                        BaseSalaryRangeMin = _editingPos.SalaryMin,
+                        BaseSalaryRangeMax = _editingPos.SalaryMax,
+                        IsActive = _editingPos.IsActive,
+                        Status = _editingPos.IsActive ? "Active" : "Inactive"
                     });
                     success = result != null;
                 }
@@ -245,6 +276,54 @@ namespace TTL.HR.Shared.Pages.Organization
             }
         }
 
+        // --- Assign Employees ---
+        private void openAssignModal()
+        {
+             if (_selectedPos == null) return;
+             
+             _assignableEmployees = _allEmployees
+                .Where(e => e.StatusName != "Đã nghỉ việc")
+                .ToList();
+                
+             _initialSelectedEmployeeIds = _assignableEmployees
+                .Where(e => e.PositionId == _selectedPos.Id)
+                .Select(e => e.Id)
+                .ToList();
+                
+             _assignmentSalary = _selectedPos.SalaryMin > 0 ? _selectedPos.SalaryMin : null;
+             _showAssignEmployeesDrawer = true;
+        }
+
+        private async Task saveEmployeeAssignments(List<string> selectedIds)
+        {
+            if (_selectedPos == null) return;
+            
+            _isLoading = true;
+            try
+            {
+                var success = await PositionService.AssignEmployeesAsync(_selectedPos.Id, selectedIds, _assignmentSalary);
+                if (success)
+                {
+                    await JS.InvokeVoidAsync("toastr.success", "Gán nhân sự vào vị trí thành công");
+                    await LoadData();
+                    _showAssignEmployeesDrawer = false;
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi gán nhân sự");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JS.InvokeVoidAsync("toastr.error", $"Lỗi: {ex.Message}");
+            }
+            finally
+            {
+                _isLoading = false;
+                StateHasChanged();
+            }
+        }
+
         public class PositionItem
         {
             public string Id { get; set; } = string.Empty;
@@ -256,9 +335,12 @@ namespace TTL.HR.Shared.Pages.Organization
             public string LevelBadge { get; set; } = "badge-light-primary";
             public int ActiveEmployees { get; set; }
             public string SalaryRange { get; set; } = "Thỏa thuận";
+            public decimal SalaryMin { get; set; }
+            public decimal SalaryMax { get; set; }
             public string JobDescription { get; set; } = "";
             public string Requirements { get; set; } = "";
             public string Benefits { get; set; } = "";
+            public bool IsActive { get; set; } = true;
             public string Icon { get; set; } = "ki-outline ki-briefcase";
             public string IconBg { get; set; } = "bg-light-primary";
             public string IconColor { get; set; } = "text-primary";

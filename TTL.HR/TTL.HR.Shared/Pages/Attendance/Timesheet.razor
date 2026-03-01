@@ -15,25 +15,28 @@
                     <div class="position-relative w-md-250px me-4 my-1">
                         <i class="ki-outline ki-magnifier fs-3 position-absolute top-50 translate-middle-y ms-4 text-gray-500"></i>
                         <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm tên, mã nhân viên..." 
-                               @bind="_searchTerm" @bind:event="oninput" />
+                               value="@_searchTerm" @onchange="(e) => OnSearchChange(e.Value?.ToString() ?? string.Empty)" />
                     </div>
 
-                    <!-- Period -->
                     <div class="w-md-175px me-4 my-1">
-                        <select class="form-select form-select-solid fs-7 fw-bold">
-                            <option>Tháng 02/2026</option>
-                            <option>Tháng 01/2026</option>
-                            <option>Tháng 12/2025</option>
+                        <select class="form-select form-select-solid fs-7 fw-bold" @onchange="OnPeriodChange">
+                            @foreach (var period in _periods)
+                            {
+                                <option value="@period.ToString("yyyy-MM-dd")" selected="@(period.Month == _currentMonth && period.Year == _currentYear)">
+                                    Tháng @period.ToString("MM/yyyy")
+                                </option>
+                            }
                         </select>
                     </div>
 
                     <!-- Department -->
-                    <div class="w-md-175px me-4 my-1">
-                        <select class="form-select form-select-solid fs-7 fw-bold">
-                            <option>Phòng ban: Tất cả</option>
-                            <option>Phòng Kỹ thuật</option>
-                            <option>Phòng Nhân sự</option>
-                            <option>Phòng Kinh doanh</option>
+                    <div class="w-md-225px me-4 my-1">
+                        <select class="form-select form-select-solid fs-7 fw-bold" @onchange="OnDepartmentChange">
+                            <option value="">Phòng ban: Tất cả</option>
+                            @foreach (var dept in _departments)
+                            {
+                                <option value="@dept.Id" selected="@(_selectedDepartmentId == dept.Id)">@dept.Name</option>
+                            }
                         </select>
                     </div>
 
@@ -52,7 +55,7 @@
             <div class="d-flex align-items-center">
                 <div class="form-check form-check-sm form-check-custom form-check-solid me-5">
                     <input class="form-check-input" type="checkbox" id="check_all_timesheet" />
-                    <label class="form-check-label fw-bold text-gray-700 fs-7 ms-2 text-nowrap" for="check_all_timesheet">Chọn tất cả (@FilteredTimesheets.Count nhân viên)</label>
+                    <label class="form-check-label fw-bold text-gray-700 fs-7 ms-2 text-nowrap" for="check_all_timesheet">Chọn tất cả (@_totalItems nhân viên)</label>
                 </div>
             </div>
             <div class="d-flex align-items-center gap-3">
@@ -88,23 +91,23 @@
                                 @foreach (var item in FilteredTimesheets)
                                 {
                                     <tr class="hover-elevate cursor-pointer">
-                                        <td class="text-center">@index</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="symbol symbol-40px symbol-circle me-3">
+                                        <td class="text-center">@((_currentPage - 1) * _pageSize + index)</td>
+                                        <td class="d-flex align-items-center">
+                                            <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                                                <a href="javascript:;" class="kt_drawer_employee_detail_toggle" @onclick="() => OpenDetail(item.EmployeeId)">
                                                     @if (!string.IsNullOrEmpty(item.Avatar))
                                                     {
-                                                        <img src="@item.Avatar" alt="user" />
+                                                        <div class="symbol-label"><img src="@item.Avatar" alt="@item.EmployeeName" class="w-100" /></div>
                                                     }
                                                     else
                                                     {
-                                                        <div class="symbol-label bg-light-primary text-primary fw-bold">@item.EmployeeName.Substring(0, 1)</div>
+                                                        <div class="symbol-label bg-light-primary text-primary fw-bolder">@(item.EmployeeName?.Length > 0 ? item.EmployeeName.Substring(0, 1) : "N")</div>
                                                     }
-                                                </div>
-                                                <div class="d-flex justify-content-start flex-column">
-                                                    <a href="javascript:void(0)" @onclick="() => OpenDetail(item.EmployeeId)" class="text-gray-900 fw-bold text-hover-primary fs-6">@item.EmployeeName</a>
-                                                    <span class="text-muted fw-semibold fs-7 text-uppercase">@item.EmployeeId • @item.Role</span>
-                                                </div>
+                                                </a>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="javascript:;" class="kt_drawer_employee_detail_toggle text-gray-900 fw-bold text-hover-primary mb-1 fs-6" @onclick="() => OpenDetail(item.EmployeeId)">@item.EmployeeName</a>
+                                                <span class="text-muted fw-semibold fs-7">@item.EmployeeCode • @item.Role</span>
                                             </div>
                                         </td>
                                         <td><span class="text-gray-600 fw-bold">@item.Department</span></td>
@@ -123,11 +126,14 @@
                                             </span>
                                         </td>
                                         <td class="text-end pe-7">
-                                            <button type="button" class="btn btn-icon btn-sm btn-light-primary btn-active-primary me-2 shadow-sm" title="Chi tiết công" @onclick="() => OpenDetail(item.EmployeeId)">
-                                                <i class="ki-outline ki-eye fs-4"></i>
+                                            <button type="button" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-2 shadow-sm" title="Chi tiết công" @onclick="() => OpenDetail(item.EmployeeId)">
+                                                <i class="ki-outline ki-eye fs-3"></i>
                                             </button>
-                                            <button class="btn btn-icon btn-sm btn-light-success btn-active-success shadow-sm" title="Chốt công" @onclick="() => LockTimesheet(item.Id)">
-                                                <i class="ki-outline ki-check fs-4"></i>
+                                            <button type="button" class="btn btn-icon btn-bg-light btn-active-color-success btn-sm me-2 shadow-sm" title="Cập nhật dữ liệu công" @onclick="() => HandleRecalculate(item.EmployeeId)">
+                                                <i class="ki-outline ki-arrows-loop fs-3"></i>
+                                            </button>
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm shadow-sm" title="Chốt công" @onclick="() => LockTimesheet(item.Id)">
+                                                <i class="ki-outline ki-check fs-3"></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -146,6 +152,16 @@
                     </table>
                 </div>
                 </SkeletonLoading>
+
+                @if (_totalItems > _pageSize)
+                {
+                    <div class="px-7 py-5 border-top">
+                        <Pagination TotalCount="@_totalItems" 
+                                   PageSize="@_pageSize" 
+                                   PageIndex="@_currentPage" 
+                                   OnPageChanged="OnPageChange" />
+                    </div>
+                }
             </div>
         </div>
 

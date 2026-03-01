@@ -57,6 +57,13 @@ namespace TTL.HR.Application.Modules.Organization.Services
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<bool> AssignEmployeesAsync(string departmentId, List<string> employeeIds)
+        {
+            var payload = new { departmentId, employeeIds };
+            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Organization.Departments}/{departmentId}/assign", payload);
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<List<OrgNode>> GetOrganizationStructureAsync()
         {
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<OrganizationNode>>>(ApiEndpoints.Organization.Structure);
@@ -137,6 +144,13 @@ namespace TTL.HR.Application.Modules.Organization.Services
         public async Task<bool> DeletePositionAsync(string id)
         {
             var response = await _httpClient.DeleteAsync($"{ApiEndpoints.Organization.Positions}/{id}");
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> AssignEmployeesAsync(string positionId, List<string> employeeIds, decimal? salary = null)
+        {
+            var payload = new { positionId, employeeIds, salary };
+            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Organization.Positions}/{positionId}/assign", payload);
             return response.IsSuccessStatusCode;
         }
     }

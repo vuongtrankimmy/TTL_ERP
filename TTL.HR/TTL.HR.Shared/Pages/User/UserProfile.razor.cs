@@ -26,6 +26,11 @@ namespace TTL.HR.Shared.Pages.User
         private string? _editFullName;
         private string? _editPhone;
         private string? _editEmail;
+        private string? _editIdCard;
+        private string? _editHometown;
+        private string? _editBankAccount;
+        private string? _editBankName;
+        private int _editDependents;
         
         private string? _currentPassword;
         private string? _newPassword;
@@ -51,6 +56,11 @@ namespace TTL.HR.Shared.Pages.User
                 _editFullName = currentEmployee?.FullName ?? currentUser?.FullName;
                 _editPhone = currentEmployee?.Phone;
                 _editEmail = currentEmployee?.Email ?? currentUser?.Email;
+                _editIdCard = currentEmployee?.IdCard;
+                _editHometown = currentEmployee?.Hometown;
+                _editBankAccount = currentEmployee?.BankAccountNumber;
+                _editBankName = currentEmployee?.BankName;
+                _editDependents = currentEmployee?.NumberOfDependents ?? 0;
 
                 try
                 {
@@ -117,6 +127,11 @@ namespace TTL.HR.Shared.Pages.User
                 _editFullName = currentEmployee?.FullName ?? currentUser?.FullName;
                 _editPhone = currentEmployee?.Phone;
                 _editEmail = currentEmployee?.Email ?? currentUser?.Email;
+                _editIdCard = currentEmployee?.IdCard;
+                _editHometown = currentEmployee?.Hometown;
+                _editBankAccount = currentEmployee?.BankAccountNumber;
+                _editBankName = currentEmployee?.BankName;
+                _editDependents = currentEmployee?.NumberOfDependents ?? 0;
                 SetActiveTab("overview");
                 _linkMessage = null;
                 StateHasChanged();
@@ -156,7 +171,28 @@ namespace TTL.HR.Shared.Pages.User
         private async Task HandleSaveProfile()
         {
             if (currentEmployee == null) return;
-            var request = new UpdateEmployeeRequest { FullName = _editFullName ?? "", Phone = _editPhone ?? "", Email = _editEmail ?? "" };
+            var request = new UpdateEmployeeRequest 
+            { 
+                FullName = _editFullName ?? "", 
+                Phone = _editPhone ?? "", 
+                Email = _editEmail ?? "",
+                PersonalDetails = new PersonalDetailsUpdateDto
+                {
+                    IdCardNumber = _editIdCard ?? "",
+                    Hometown = _editHometown ?? "",
+                    BankAccount = _editBankAccount ?? "",
+                    BankName = _editBankName ?? "",
+                    // Preserve other fields that aren't editable here but might be in the model
+                    Gender = currentEmployee.PersonalDetails?.Gender ?? "",
+                    Address = currentEmployee.PersonalDetails?.Address ?? "",
+                    TaxCode = currentEmployee.PersonalDetails?.TaxCode ?? "",
+                    Nationality = currentEmployee.PersonalDetails?.Nationality ?? "Việt Nam",
+                    Ethnicity = currentEmployee.PersonalDetails?.Ethnicity ?? "Kinh",
+                    Religion = currentEmployee.PersonalDetails?.Religion ?? "Không",
+                    MaritalStatus = currentEmployee.PersonalDetails?.MaritalStatus ?? "Độc thân",
+                    SocialInsuranceId = currentEmployee.PersonalDetails?.SocialInsuranceId ?? ""
+                }
+            };
             var error = await EmployeeService.UpdateEmployeeAsync(currentEmployee.Id, request);
             if (string.IsNullOrEmpty(error))
             {

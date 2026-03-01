@@ -20,6 +20,10 @@ namespace TTL.HR.Shared.Pages.Benefits
         private List<BenefitModel> _benefits = new();
         private string _searchTerm = "";
 
+        private BenefitEditModal _editModal = default!;
+        private bool IsDeleteModalOpen = false;
+        private BenefitModel? BenefitToDelete;
+
         protected override async Task OnInitializedAsync()
         {
             await LoadData();
@@ -40,6 +44,41 @@ namespace TTL.HR.Shared.Pages.Benefits
             finally
             {
                 _isLoading = false;
+                StateHasChanged();
+            }
+        }
+
+        private void CreateNewBenefit() => _editModal.OpenAsync();
+
+        private void EditBenefit(BenefitModel item) => _editModal.OpenAsync(item.Id);
+
+        private void PromptDeleteBenefit(BenefitModel item)
+        {
+            BenefitToDelete = item;
+            IsDeleteModalOpen = true;
+        }
+
+        private void CloseDeleteModal()
+        {
+            IsDeleteModalOpen = false;
+            BenefitToDelete = null;
+        }
+
+        private async Task ConfirmDelete()
+        {
+            if (BenefitToDelete != null && !string.IsNullOrEmpty(BenefitToDelete.Id))
+            {
+                var success = await BenefitService.DeleteBenefitAsync(BenefitToDelete.Id);
+                if (success)
+                {
+                    await JS.InvokeVoidAsync("toastr.success", $"Đã xóa phúc lợi {BenefitToDelete.Name}.");
+                    await LoadData();
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Xóa phúc lợi thất bại.");
+                }
+                CloseDeleteModal();
             }
         }
 

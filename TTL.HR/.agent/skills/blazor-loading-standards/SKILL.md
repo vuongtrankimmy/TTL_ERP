@@ -86,7 +86,47 @@ Wrap the detail content card.
 </div>
 ```
 
-## 3. Best Practices
+## 4. SweetAlert (Swal) Deadlock Prevention
+
+When using SweetAlert2 via `JSRuntime` to show loading indicators (modals without a confirm button or with `allowOutsideClick: false`), you **MUST NOT** `await` the call. Doing so will block the C# execution thread until the modal is closed, which often only happens after the backend call completes, leading to a deadlock where the UI freezes and nothing happens.
+
+### Mandatory Pattern for Loading Modals:
+- Use **Fire-and-Forget** pattern by discarding the Task (`_ = ...`).
+- Surround `Swal.showLoading` with an empty try-catch block as it is a non-critical UI refinement.
+- Always call `Swal.close` (awaited) after the background process completes.
+
+```csharp
+// 1. Trigger the loading modal (DO NOT await)
+_ = JSRuntime.InvokeVoidAsync("Swal.fire", new 
+{ 
+    title = "Đang xử lý...", 
+    text = "Vui lòng chờ trong giây lát", 
+    allowOutsideClick = false, 
+    showConfirmButton = false 
+});
+
+// 2. Refine with spinner (DO NOT await)
+try { _ = JSRuntime.InvokeVoidAsync("Swal.showLoading"); } catch { }
+
+try 
+{
+    // 3. Actual background work (Awaited)
+    var result = await _service.ProcessDataAsync(data);
+    
+    // 4. Close loading (Awaited)
+    await JSRuntime.InvokeVoidAsync("Swal.close");
+    
+    // 5. Show Success/Failure Result (Awaited)
+    await JSRuntime.InvokeVoidAsync("Swal.fire", "Thành công", "...", "success");
+}
+catch (Exception ex)
+{
+    await JSRuntime.InvokeVoidAsync("Swal.close");
+    await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", ex.Message, "error");
+}
+```
+
+## 5. Best Practices
 
 - **Simulation**: During frontend development without backend APIs, use `await Task.Delay(1000-1500)` to simulate network latency. This verifies the skeleton UI works correctly.
 - **Consistency**: Apply this pattern to ALL list pages (e.g., Department List, Employee List) and detail pages.

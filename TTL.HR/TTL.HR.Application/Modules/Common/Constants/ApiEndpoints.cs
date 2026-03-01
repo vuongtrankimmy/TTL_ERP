@@ -14,6 +14,9 @@ namespace TTL.HR.Application.Modules.Common.Constants
             public const string Refresh = $"{Base}/refresh";
             public const string Logout = $"{Base}/logout";
             public const string ChangePassword = $"{Base}/change-password";
+            public const string ConfirmEmail = $"{Base}/confirm-email";
+            public const string RequestPasswordReset = $"{Base}/forgot-password";
+            public const string ResetPassword = $"{Base}/reset-password";
         }
 
         public static class Recruitment
@@ -54,6 +57,7 @@ namespace TTL.HR.Application.Modules.Common.Constants
             public const string Timesheets = $"{Base}/timesheets";
             public const string WorkSchedules = $"{Base}/work-schedules";
             public const string ShiftRequests = $"{Base}/shift-requests";
+            public const string Shifts = $"{Base}/shifts";
         }
 
         public static class Leave

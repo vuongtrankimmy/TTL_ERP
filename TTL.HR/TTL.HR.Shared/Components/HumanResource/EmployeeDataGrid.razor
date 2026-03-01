@@ -1,0 +1,72 @@
+@typeparam TItem
+@using TTL.HR.Shared.Components.Common
+
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+    <div class="card-body p-0">
+        <SkeletonLoading IsLoading="IsLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="Rows" Columns="Columns">
+            <div class="table-responsive">
+                <table class="table table-row-dashed table-row-gray-200 align-middle gs-7 gy-5 mb-0">
+                    <thead class="bg-light">
+                        <tr class="fw-bold text-muted text-uppercase fs-8 border-bottom-0">
+                            @HeaderTemplate
+                        </tr>
+                    </thead>
+                    <tbody class="fw-semibold text-gray-700">
+                        @if (Items != null && Items.Any())
+                        {
+                            @foreach (var item in Items)
+                            {
+                                <tr class="hover-elevate cursor-pointer">
+                                    @RowTemplate(item)
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="@Columns" class="text-center py-20">
+                                    <div class="text-muted fs-4">@NoDataMessage @(Items != null ? $"(Báo cáo: {Items.Count()} dòng)" : "(null)")</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (FooterTemplate != null)
+                    {
+                        <tfoot class="bg-light fw-bolder">
+                            @FooterTemplate
+                        </tfoot>
+                    }
+                </table>
+            </div>
+            
+            @if (ShowPagination && TotalCount > PageSize)
+            {
+                <div class="px-7 py-5 border-top">
+                    <Pagination TotalCount="TotalCount" 
+                               PageSize="PageSize" 
+                               PageIndex="CurrentPage" 
+                               OnPageChanged="OnPageChanged" />
+                </div>
+            }
+        </SkeletonLoading>
+    </div>
+</div>
+
+@code {
+    [Parameter] public IEnumerable<TItem>? Items { get; set; }
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public int Rows { get; set; } = 10;
+    [Parameter] public int Columns { get; set; } = 8;
+    [Parameter] public string NoDataMessage { get; set; } = "Không tìm thấy dữ liệu.";
+    
+    [Parameter] public long TotalCount { get; set; }
+    [Parameter] public int PageSize { get; set; } = 10;
+    [Parameter] public int CurrentPage { get; set; } = 1;
+    [Parameter] public bool ShowPagination { get; set; } = true;
+    
+    [Parameter] public RenderFragment? HeaderTemplate { get; set; }
+    [Parameter] public RenderFragment<TItem> RowTemplate { get; set; } = default!;
+    [Parameter] public RenderFragment? FooterTemplate { get; set; }
+    
+    [Parameter] public EventCallback<int> OnPageChanged { get; set; }
+}

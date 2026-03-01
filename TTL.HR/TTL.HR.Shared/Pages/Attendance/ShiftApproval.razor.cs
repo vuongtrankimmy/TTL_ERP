@@ -10,6 +10,9 @@ namespace TTL.HR.Shared.Pages.Attendance
     public partial class ShiftApproval
     {
         [Inject] private IAttendanceService AttendanceService { get; set; } = default!;
+        [Inject] private TTL.HR.Application.Modules.Common.Interfaces.IAuthService AuthService { get; set; } = default!;
+
+        private TTL.HR.Application.Modules.Common.Models.UserDto? _currentUser;
 
         private bool _showDetail = false;
         private bool _isLoading = true;
@@ -24,8 +27,26 @@ namespace TTL.HR.Shared.Pages.Attendance
         private long _totalCount = 0;
         private string? _searchTerm;
 
+        private string GetShiftStyle(string? color, bool isBackground = true)
+        {
+            if (string.IsNullOrEmpty(color)) return "";
+            if (color.StartsWith("#"))
+            {
+                return isBackground ? $"background-color: {color} !important;" : $"color: {color} !important;";
+            }
+            return "";
+        }
+
+        private string GetShiftClass(string? color, string prefix = "badge-")
+        {
+            if (string.IsNullOrEmpty(color)) return $"{prefix}secondary";
+            if (color.StartsWith("#")) return "";
+            return $"{prefix}{color}";
+        }
+
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
+            _currentUser = await AuthService.GetCurrentUserAsync();
             await LoadData();
         }
 
@@ -121,6 +142,15 @@ namespace TTL.HR.Shared.Pages.Attendance
             _modalConfirmLabel = "Đồng ý Duyệt";
             _showReasonInput = false;
             _showActionModal = true;
+        }
+
+        private bool CanApprove(ShiftRequestModel req)
+        {
+            if (_currentUser == null) return false;
+            if (_currentUser.Role == "Admin" || _currentUser.Role == "SuperAdmin") return true;
+            if (!string.IsNullOrEmpty(req.PendingApproverId) && req.PendingApproverId == _currentUser.Id) return true;
+            // Fallback for old records or generic states
+            return string.IsNullOrEmpty(req.PendingApproverId);
         }
 
         private void RejectRequest(ShiftRequestModel req)

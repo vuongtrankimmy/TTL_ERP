@@ -12,6 +12,9 @@ namespace TTL.HR.Application.Modules.Leave.Models
         [System.Text.Json.Serialization.JsonPropertyName("employeeName")]
         public string EmployeeName { get; set; } = "";
         
+        [System.Text.Json.Serialization.JsonPropertyName("employeeCode")]
+        public string EmployeeCode { get; set; } = "";
+        
         [System.Text.Json.Serialization.JsonPropertyName("departmentName")]
         public string Department { get; set; } = "";
         
@@ -44,11 +47,31 @@ namespace TTL.HR.Application.Modules.Leave.Models
         [System.Text.Json.Serialization.JsonPropertyName("comment")]
         public string? ManagerNote { get; set; }
         
-        public bool IsPending => Status == "Pending" || Status == "Chờ phê duyệt" || Status == "Chờ duyệt";
+        // Multi-level Approval
+        [System.Text.Json.Serialization.JsonPropertyName("currentLevel")]
+        public int CurrentLevel { get; set; }
+        
+        [System.Text.Json.Serialization.JsonPropertyName("totalLevelsRequired")]
+        public int TotalLevelsRequired { get; set; }
+        
+        [System.Text.Json.Serialization.JsonPropertyName("pendingApproverId")]
+        public string? PendingApproverId { get; set; }
+        
+        [System.Text.Json.Serialization.JsonPropertyName("nextApproverId")]
+        public string? NextApproverId { get; set; }
+        
+        [System.Text.Json.Serialization.JsonPropertyName("approvalHistory")]
+        public List<LeaveApprovalStepModel> ApprovalHistory { get; set; } = new();
+        
+        [System.Text.Json.Serialization.JsonPropertyName("attachments")]
+        public List<LeaveAttachmentModel> Attachments { get; set; } = new();
+        
+        public bool IsPending => Status == "Pending" || Status == "PartiallyApproved" || Status == "Chờ phê duyệt" || Status == "Chờ duyệt";
         
         public string StatusColor => Status switch
         {
             "Approved" => "success",
+            "PartiallyApproved" => "info",
             "Rejected" => "danger",
             "Pending" => "warning",
             "Cancelled" => "secondary",
@@ -56,6 +79,33 @@ namespace TTL.HR.Application.Modules.Leave.Models
         };
 
         public string StatusBadgeClass => $"badge-light-{StatusColor}";
+    }
+
+    public class LeaveAttachmentModel
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("fileName")]
+        public string FileName { get; set; } = string.Empty;
+        
+        [System.Text.Json.Serialization.JsonPropertyName("fileUrl")]
+        public string FileUrl { get; set; } = string.Empty;
+    }
+
+    public class LeaveApprovalStepModel
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("level")]
+        public int Level { get; set; }
+        
+        [System.Text.Json.Serialization.JsonPropertyName("approverName")]
+        public string ApproverName { get; set; } = string.Empty;
+        
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public string Status { get; set; } = string.Empty;
+        
+        [System.Text.Json.Serialization.JsonPropertyName("comment")]
+        public string? Comment { get; set; }
+        
+        [System.Text.Json.Serialization.JsonPropertyName("actionAt")]
+        public DateTime ActionAt { get; set; }
     }
 
     public class LeaveStateSummaryModel

@@ -1,0 +1,8 @@
+d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\Controllers\v1\HumanResources\Assets\AssetsController.cs(138,5): error CS0106: The modifier 'public' is not valid for this item [d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\Controllers\v1\HumanResources\Assets\AssetsController.cs(149,5): error CS0106: The modifier 'public' is not valid for this item [d:\MONEY\2026\TAN_TAN_LOC\TTL_API\src\Services\CoreService\TTL.CoreService.Api\TTL.CoreService.Api.csproj]
+
+Build FAILED.
+    3 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:01.46

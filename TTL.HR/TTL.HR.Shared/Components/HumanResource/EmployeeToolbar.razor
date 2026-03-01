@@ -1,0 +1,79 @@
+@using TTL.HR.Application.Modules.Organization.Models
+@using TTL.HR.Application.Modules.Common.Models
+
+<div class="card mb-8 shadow-sm border-0">
+    <div class="card-body py-4 px-6">
+        <div class="d-flex flex-wrap align-items-center">
+            <!-- Search -->
+            <div class="position-relative w-md-300px me-4 my-1">
+                <i class="ki-outline ki-magnifier fs-3 position-absolute top-50 translate-middle-y ms-4 text-gray-500"></i>
+                <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="@SearchPlaceholder" 
+                       value="@SearchQuery" @oninput="OnSearchInput" />
+            </div>
+
+            <!-- Department Filter -->
+            @if (ShowDepartmentFilter)
+            {
+                <div class="w-md-200px me-4 my-1">
+                    <select class="form-select form-select-solid fs-7 fw-bold" @onchange="OnDepartmentChange">
+                        <option value="">Phòng ban: Tất cả</option>
+                        @foreach (var dept in Departments)
+                        {
+                            <option value="@dept.Id">@dept.Name</option>
+                        }
+                    </select>
+                </div>
+            }
+
+            <!-- Other Slots -->
+            @if (ExtraFilters != null)
+            {
+                @ExtraFilters
+            }
+
+            <!-- Actions -->
+            <div class="ms-auto my-1 d-flex gap-2">
+                <button class="btn btn-icon btn-light-primary btn-sm" title="Làm mới" @onclick="OnRefresh">
+                    <i class="ki-outline ki-arrows-loop fs-4"></i>
+                </button>
+                @if (ShowExport)
+                {
+                    <button class="btn btn-light-primary fw-bold fs-7 px-6" @onclick="OnExport">
+                        <i class="ki-outline ki-exit-up me-1"></i>Xuất Excel
+                    </button>
+                }
+                @if (CustomActions != null)
+                {
+                    @CustomActions
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string SearchQuery { get; set; } = "";
+    [Parameter] public string SearchPlaceholder { get; set; } = "Tìm tên, mã nhân viên...";
+    [Parameter] public bool ShowDepartmentFilter { get; set; } = true;
+    [Parameter] public List<DepartmentModel> Departments { get; set; } = new();
+    [Parameter] public bool ShowExport { get; set; } = false;
+    
+    [Parameter] public EventCallback<string> OnSearchChanged { get; set; }
+    [Parameter] public EventCallback<string> OnDepartmentChanged { get; set; }
+    [Parameter] public EventCallback OnRefresh { get; set; }
+    [Parameter] public EventCallback OnExport { get; set; }
+    
+    [Parameter] public RenderFragment? ExtraFilters { get; set; }
+    [Parameter] public RenderFragment? CustomActions { get; set; }
+
+    private async Task OnSearchInput(ChangeEventArgs e)
+    {
+        SearchQuery = e.Value?.ToString() ?? "";
+        await OnSearchChanged.InvokeAsync(SearchQuery);
+    }
+
+    private async Task OnDepartmentChange(ChangeEventArgs e)
+    {
+        await OnDepartmentChanged.InvokeAsync(e.Value?.ToString() ?? "");
+    }
+}

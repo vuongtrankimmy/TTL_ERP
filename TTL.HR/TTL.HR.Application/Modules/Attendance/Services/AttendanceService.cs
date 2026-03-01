@@ -16,24 +16,24 @@ namespace TTL.HR.Application.Modules.Attendance.Services
     {
         private readonly HttpClient _httpClient;
         public AttendanceService(HttpClient httpClient) => _httpClient = httpClient;
-        public async Task<IEnumerable<AttendanceModel>> GetTimesheetsAsync(int month = 0, int year = 0, string? departmentId = null, string? searchTerm = null)
+        public async Task<PagedResult<AttendanceModel>> GetTimesheetsAsync(int month = 0, int year = 0, string? departmentId = null, string? searchTerm = null, int page = 1, int pageSize = 10)
         {
             if (month == 0) month = DateTime.Now.Month;
             if (year == 0) year = DateTime.Now.Year;
 
-            var url = $"{ApiEndpoints.Attendance.Timesheets}?month={month}&year={year}";
+            var url = $"{ApiEndpoints.Attendance.Timesheets}?month={month}&year={year}&page={page}&pageSize={pageSize}";
             if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
-            if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={searchTerm}";
+            if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
             
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<AttendanceModel>>>(url);
-            return response?.Data?.Items ?? new List<AttendanceModel>();
+            return response?.Data ?? new PagedResult<AttendanceModel>();
         }
 
-        public async Task<IEnumerable<WorkScheduleModel>> GetWorkSchedulesAsync(DateTime? startDate = null, DateTime? endDate = null)
+        public async Task<IEnumerable<WorkScheduleModel>> GetWorkSchedulesAsync(DateTime? startDate = null, DateTime? endDate = null, int pageSize = 1000)
         {
-            var url = ApiEndpoints.Attendance.WorkSchedules;
-            if (startDate.HasValue) url += $"?startDate={startDate.Value:yyyy-MM-dd}";
-            if (endDate.HasValue) url += $"{(startDate.HasValue ? "&" : "?")}endDate={endDate.Value:yyyy-MM-dd}";
+            var url = $"{ApiEndpoints.Attendance.WorkSchedules}?pageSize={pageSize}";
+            if (startDate.HasValue) url += $"&startDate={startDate.Value:yyyy-MM-dd}";
+            if (endDate.HasValue) url += $"&endDate={endDate.Value:yyyy-MM-dd}";
 
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<EmployeeScheduleDto>>>(url);
             var dtos = response?.Data?.Items ?? new List<EmployeeScheduleDto>();
@@ -42,7 +42,7 @@ namespace TTL.HR.Application.Modules.Attendance.Services
             var tomorrow = today.AddDays(1);
             
             // If the requested range doesn't include today, we use the first day of the range as "Today" for display purposes
-            var displayDate = (startDate.HasValue && (today < startDate.Value || today > endDate.Value)) ? startDate.Value : today;
+            var displayDate = (startDate.HasValue && (today < startDate.Value || (endDate.HasValue && today > endDate.Value))) ? startDate.Value : today;
             var nextDisplayDate = displayDate.AddDays(1);
 
             return dtos.Select(dto => 
@@ -58,14 +58,15 @@ namespace TTL.HR.Application.Modules.Attendance.Services
                 return new WorkScheduleModel
                 {
                     Id = dto.EmployeeId, 
-                    EmployeeId = dto.EmployeeCode,
+                    EmployeeId = dto.EmployeeId,
+                    EmployeeCode = dto.EmployeeCode,
                     EmployeeName = dto.EmployeeName,
                     Department = dto.Department,
                     Avatar = dto.AvatarUrl,
                     CurrentShiftId = currentShift?.ShiftId ?? "",
                     CurrentShift = currentShift?.ShiftName ?? (currentShift?.Status == "Holiday" ? "Nghỉ lễ" : (currentShift?.Status == "Leave" ? "Nghỉ phép" : "Chưa xếp ca")),
-                    ShiftColor = $"badge-light-{currentShift?.ShiftColor ?? "secondary"}",
-                    BulletBg = $"bg-{currentShift?.ShiftColor ?? "secondary"}",
+                    ShiftColor = currentShift?.ShiftColor ?? "secondary",
+                    BulletBg = currentShift?.ShiftColor ?? "secondary",
                     
                     IsNextShiftAssigned = nextShift != null,
                     NextShift = nextShift?.ShiftName ?? "",
@@ -73,6 +74,13 @@ namespace TTL.HR.Application.Modules.Attendance.Services
                     WeeklySchedule = dto.Schedules.OrderBy(s => s.Date).Select(s => s.ShiftCode ?? "-").ToList()
                 };
             }).ToList();
+        }
+
+        public async Task<IEnumerable<EmployeeScheduleDto>> GetMonthlyWorkSchedulesAsync(DateTime startDate, DateTime endDate, int pageSize = 1000)
+        {
+            var url = $"{ApiEndpoints.Attendance.WorkSchedules}?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}&pageSize={pageSize}";
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<EmployeeScheduleDto>>>(url);
+            return response?.Data?.Items ?? new List<EmployeeScheduleDto>();
         }
 
         public async Task<PagedResult<ShiftRequestModel>> GetShiftRequestsAsync(int page = 1, int pageSize = 10, string? status = null, string? searchTerm = null)
@@ -127,9 +135,9 @@ namespace TTL.HR.Application.Modules.Attendance.Services
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> CheckOutAsync(string id, AttendanceModel attendance)
+        public async Task<bool> CheckOutAsync(AttendanceModel attendance)
         {
-            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Attendance.Base}/check-out/{id}", attendance);
+            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Attendance.Base}/check-out", attendance);
             return response.IsSuccessStatusCode;
         }
 
@@ -139,12 +147,13 @@ namespace TTL.HR.Application.Modules.Attendance.Services
             return await response.Content.ReadFromJsonAsync<ApiResponse<object>>() ?? new ApiResponse<object> { Success = false, Message = "Lỗi xử lý yêu cầu" };
         }
 
-        public async Task<PagedResult<AttendanceModel>> GetAttendanceListAsync(int page = 1, int pageSize = 10, string? searchTerm = null, DateTime? date = null, string? status = null)
+        public async Task<PagedResult<AttendanceModel>> GetAttendanceListAsync(int page = 1, int pageSize = 10, string? searchTerm = null, DateTime? date = null, string? status = null, string? orderBy = null)
         {
             var url = $"{ApiEndpoints.Attendance.Base}?page={page}&pageSize={pageSize}";
             if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={searchTerm}";
             if (date.HasValue) url += $"&date={date.Value:yyyy-MM-dd}";
             if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
+            if (!string.IsNullOrEmpty(orderBy)) url += $"&orderBy={orderBy}";
 
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<AttendanceModel>>>(url);
             return response?.Data ?? new PagedResult<AttendanceModel>();
@@ -180,13 +189,82 @@ namespace TTL.HR.Application.Modules.Attendance.Services
 
         public async Task<IEnumerable<WorkShiftModel>> GetWorkShiftsAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<IEnumerable<WorkShiftModel>>>($"{ApiEndpoints.Attendance.Base}/shifts");
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<IEnumerable<WorkShiftModel>>>(ApiEndpoints.Attendance.Shifts);
             return response?.Data ?? new List<WorkShiftModel>();
+        }
+        
+        public async Task<WorkShiftModel?> GetWorkShiftByIdAsync(string id)
+        {
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<WorkShiftModel>>($"{ApiEndpoints.Attendance.Shifts}/{id}");
+            return response?.Data;
+        }
+
+        public async Task<ApiResponse<string>> CreateWorkShiftAsync(WorkShiftModel model)
+        {
+            var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Attendance.Shifts, model);
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+            return new ApiResponse<string> 
+            { 
+                Success = result?.Success ?? false, 
+                Message = result?.Message ?? "Lỗi phản hồi từ server",
+                Data = result?.Data?.ToString()
+            };
+        }
+
+        public async Task<ApiResponse<bool>> UpdateWorkShiftAsync(string id, WorkShiftModel model)
+        {
+            var response = await _httpClient.PutAsJsonAsync(ApiEndpoints.Attendance.Shifts, model);
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+            return new ApiResponse<bool> 
+            { 
+                Success = result?.Success ?? false, 
+                Message = result?.Message ?? "Lỗi phản hồi từ server",
+                Data = result?.Success ?? false
+            };
+        }
+
+        public async Task<ApiResponse<bool>> DeleteWorkShiftAsync(string id)
+        {
+            var response = await _httpClient.DeleteAsync($"{ApiEndpoints.Attendance.Shifts}/{id}");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+            return new ApiResponse<bool> 
+            { 
+                Success = result?.Success ?? false, 
+                Message = result?.Message ?? "Lỗi phản hồi từ server",
+                Data = result?.Success ?? false
+            };
         }
 
         public async Task<bool> AssignScheduleAsync(AssignWorkScheduleModel model)
         {
             var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Attendance.Base}/schedule/assign", model);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> CreateShiftRequestAsync(CreateShiftRequestModel model)
+        {
+            var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Attendance.ShiftRequests, model);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<EmployeeStatsModel> GetEmployeeStatsAsync(string employeeId, int month, int year)
+        {
+            var url = $"{ApiEndpoints.Attendance.Base}/employee/{employeeId}/stats?month={month}&year={year}";
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<EmployeeStatsModel>>(url);
+            return response?.Data ?? new EmployeeStatsModel { EmployeeId = employeeId };
+        }
+
+        public async Task<bool> WithdrawShiftRequestAsync(string id)
+        {
+            var url = $"{ApiEndpoints.Attendance.ShiftRequests}/{id}/withdraw";
+            var response = await _httpClient.PostAsJsonAsync(url, string.Empty);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> RecalculateAttendanceSummaryAsync(string employeeId, int month, int year)
+        {
+            var url = $"{ApiEndpoints.Attendance.Base}/recalculate-summary";
+            var response = await _httpClient.PostAsJsonAsync(url, new { employeeId, month, year });
             return response.IsSuccessStatusCode;
         }
     }

@@ -11,12 +11,20 @@
                 <input type="text" class="form-control form-control-solid w-250px ps-12" placeholder="Tìm kiếm bảng lương...">
             </div>
 
-            <div class="ms-3">
+            <div class="d-flex ms-3">
                 <select class="form-select form-select-solid w-150px" @onchange="OnYearChanged">
                     <option value="0" selected="@(_selectedYear == 0)">Tất cả các năm</option>
                     @for (int year = DateTime.Now.Year; year >= 2024; year--)
                     {
                         <option value="@year" selected="@(year == _selectedYear)">Năm @year</option>
+                    }
+                </select>
+
+                <select class="form-select form-select-solid w-150px ms-3" @onchange="OnMonthChanged">
+                    <option value="0" selected="@(_selectedMonth == 0)">Tất cả các tháng</option>
+                    @for (int month = 1; month <= 12; month++)
+                    {
+                        <option value="@month" selected="@(month == _selectedMonth)">Tháng @month.ToString("D2")</option>
                     }
                 </select>
             </div>

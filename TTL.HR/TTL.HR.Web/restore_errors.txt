@@ -1,0 +1,9 @@
+﻿  Determining projects to restore...
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Application\TTL.HR.Application.csproj : warning NU1510: PackageReference System.Net.Http.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary. [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Web\TTL.HR.Web.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Web\TTL.HR.Web.csproj : warning NU1510: PackageReference Microsoft.Extensions.Localization will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Web\TTL.HR.Web.csproj : warning NU1603: TTL.HR.Web depends on Blazor-ApexCharts (>= 4.4.0) but Blazor-ApexCharts 4.4.0 was not found. Blazor-ApexCharts 5.0.0 was resolved instead.
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Web\TTL.HR.Web.csproj : error NU1605: Warning As Error: Detected package downgrade: Blazor-ApexCharts from 6.1.0 to 5.0.0. Reference the package directly from the project to select a different version. 
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Web\TTL.HR.Web.csproj : error NU1605:  TTL.HR.Web -> TTL.HR.Shared -> Blazor-ApexCharts (>= 6.1.0) 
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Web\TTL.HR.Web.csproj : error NU1605:  TTL.HR.Web -> Blazor-ApexCharts (>= 4.4.0)
+  Failed to restore d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Web\TTL.HR.Web.csproj (in 207 ms).
+  2 of 3 projects are up-to-date for restore.

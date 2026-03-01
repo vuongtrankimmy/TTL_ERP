@@ -26,6 +26,7 @@ namespace TTL.HR.Shared.Pages.Employees
         [Inject] public IAuthService AuthService { get; set; } = default!;
         [Inject] public IContractService ContractService { get; set; } = default!;
         [Inject] public ISettingsService SettingsService { get; set; } = default!;
+        [Inject] public IPdfService PdfService { get; set; } = default!;
 
 
         [Parameter, SupplyParameterFromQuery(Name = "q")] public string searchQuery { get; set; } = "";
@@ -33,6 +34,8 @@ namespace TTL.HR.Shared.Pages.Employees
         [Parameter, SupplyParameterFromQuery(Name = "status")] public string filterStatus { get; set; } = "";
         [Parameter, SupplyParameterFromQuery(Name = "workplace")] public string filterWorkplace { get; set; } = "";
         [Parameter, SupplyParameterFromQuery(Name = "page")] public int currentPage { get; set; } = 1;
+        [Parameter, SupplyParameterFromQuery(Name = "sortBy")] public string sortBy { get; set; } = "name";
+        [Parameter, SupplyParameterFromQuery(Name = "sortDesc")] public bool sortDesc { get; set; } = false;
         
         private bool isContextMenuVisible = false;
         private double contextMenuX = 0;
@@ -45,6 +48,7 @@ namespace TTL.HR.Shared.Pages.Employees
         private List<LookupModel> CachedContractTypes = new();
         private List<LookupModel> CachedWorkplaces = new();
         private List<EmployeeDto> CachedEmployees = new();
+        private EmployeeStatusCounts _counts = new();
         private bool _loadFailed = false;
         private bool _isReadOnly = true; // Default to true as per request for detail view
         // Print & Document variables
@@ -93,8 +97,7 @@ namespace TTL.HR.Shared.Pages.Employees
                 }
                 if (!CachedEmployees.Any())
                 {
-                    var employeesList = await EmployeeService.GetEmployeesAsync();
-                    CachedEmployees = employeesList;
+                    CachedEmployees = await EmployeeService.GetEmployeesAsync();
                 }
                 
                 await LoadEmployeesAsync();
@@ -116,7 +119,9 @@ namespace TTL.HR.Shared.Pages.Employees
             try
             {
                 var departmentId = CachedDepartments.FirstOrDefault(d => d.Name == filterDept)?.Id;
-                var pagedResult = await EmployeeService.GetEmployeesPaginatedAsync(currentPage, pageSize, searchQuery, departmentId, filterStatus, filterWorkplace);
+                _counts = await EmployeeService.GetStatusCountsAsync(searchQuery, departmentId, filterWorkplace);
+
+                var pagedResult = await EmployeeService.GetEmployeesPaginatedAsync(currentPage, pageSize, searchQuery, departmentId, filterStatus, filterWorkplace, sortBy, sortDesc);
                 
                 totalCount = pagedResult.TotalCount;
                 var positionsList = await PositionService.GetPositionsAsync();
@@ -142,6 +147,7 @@ namespace TTL.HR.Shared.Pages.Employees
                     Avatar = e.AvatarUrl,
                     AvatarUrl = e.AvatarUrl,
                     Phone = e.Phone,
+                    DisplayInitials = GetInitials(e.FullName),
                     IsActive = true,
                     Workplace = e.Workplace
                 }).ToList();
@@ -181,8 +187,10 @@ namespace TTL.HR.Shared.Pages.Employees
             if (!string.IsNullOrEmpty(searchQuery)) query["q"] = searchQuery;
             if (!string.IsNullOrEmpty(filterDept)) query["dept"] = filterDept;
             if (!string.IsNullOrEmpty(filterStatus)) query["status"] = filterStatus;
-            if (!string.IsNullOrEmpty(filterWorkplace)) query["workplace"] = filterWorkplace;
+            if (filterWorkplace != "") query["workplace"] = filterWorkplace;
             if (currentPage > 1) query["page"] = currentPage;
+            if (sortBy != "name") query["sortBy"] = sortBy;
+            if (sortDesc) query["sortDesc"] = sortDesc;
 
             var url = Nav.GetUriWithQueryParameters(query);
             Nav.NavigateTo(url);
@@ -194,7 +202,24 @@ namespace TTL.HR.Shared.Pages.Employees
             filterStatus = "";
             filterWorkplace = "";
             currentPage = 1;
+            sortBy = "name";
+            sortDesc = false;
             selectedIds.Clear();
+            UpdateUrl();
+        }
+
+        private async Task ToggleSort(string field)
+        {
+            if (sortBy == field)
+            {
+                sortDesc = !sortDesc;
+            }
+            else
+            {
+                sortBy = field;
+                sortDesc = false;
+            }
+            currentPage = 1;
             UpdateUrl();
         }
 
@@ -242,13 +267,13 @@ namespace TTL.HR.Shared.Pages.Employees
         private async Task ExportExcel() {
             try 
             {
-                await JSRuntime.InvokeVoidAsync("Swal.fire", new {
+                _ = JSRuntime.InvokeVoidAsync("Swal.fire", new {
                     title = "Đang trích xuất dữ liệu",
                     text = "Vui lòng chờ trong giây lát...",
                     allowOutsideClick = false,
                     showConfirmButton = false
                 });
-                await JSRuntime.InvokeVoidAsync("Swal.showLoading");
+                try { _ = JSRuntime.InvokeVoidAsync("Swal.showLoading"); } catch { }
 
                 var departmentId = CachedDepartments.FirstOrDefault(d => d.Name == filterDept)?.Id;
                 var fileBytes = await EmployeeService.ExportEmployeesAsync(searchQuery, departmentId, filterStatus, filterWorkplace);
@@ -329,7 +354,7 @@ namespace TTL.HR.Shared.Pages.Employees
                     StatusId = IsValidObjectId(selectedEmployee.StatusId) ? selectedEmployee.StatusId : (CachedStatuses.FirstOrDefault()?.Id),
                     ContractTypeId = IsValidObjectId(selectedEmployee.ContractTypeId) ? selectedEmployee.ContractTypeId : (CachedContractTypes.FirstOrDefault()?.Id ?? "65dae2f30000000000000202"),
                     JoinDate = selectedEmployee.JoinDate ?? DateTime.UtcNow,
-                    Salary = ParseSalary(selectedEmployee.Salary),
+                    Salary = ParseSalary(selectedEmployee.SalaryDisplay),
                     ContractEndDate = selectedEmployee.ContractExpiry ?? selectedEmployee.ContractEndDate,
                     Workplace = selectedEmployee.Workplace,
                     IsAccountActive = selectedEmployee.IsActive,
@@ -472,8 +497,8 @@ namespace TTL.HR.Shared.Pages.Employees
                     if (selectedEmployee.ContractEndDate.HasValue)
                         selectedEmployee.ContractExpiry = selectedEmployee.ContractEndDate;
                     
-                    if (selectedEmployee.SalaryAmount.HasValue)
-                        selectedEmployee.Salary = selectedEmployee.SalaryAmount.Value.ToString("N0");
+                    if (selectedEmployee.Salary.HasValue)
+                        selectedEmployee.SalaryDisplay = selectedEmployee.Salary.Value.ToString("N0");
 
                     // Ensure ID fields are consistent for Dropdown binding
                     if (string.IsNullOrEmpty(selectedEmployee.DepartmentId) && !string.IsNullOrEmpty(selectedEmployee.DeptId))
@@ -725,7 +750,7 @@ namespace TTL.HR.Shared.Pages.Employees
                     {"Thang_Ky", DateTime.Now.ToString("MM")},
                     {"Nam_Ky", DateTime.Now.ToString("yyyy")},
                     {"Dia_Diem_Ky", "TP.HCM"},
-                    {"Muc_Luong", (latestContract?.BasicSalary ?? selectedEmployee.SalaryAmount)?.ToString("N0") ?? "0"},
+                    {"Muc_Luong", (latestContract?.BasicSalary ?? selectedEmployee.Salary)?.ToString("N0") ?? "0"},
                     {"Phu_Cap", (latestContract?.AllowanceTotal ?? 0).ToString("N0")},
                     {"FullName", selectedEmployee.FullName},
                     {"Code", selectedEmployee.Code},
@@ -820,6 +845,37 @@ namespace TTL.HR.Shared.Pages.Employees
                 selectedEmployee.AttendanceSummary.TotalWorkingDays = rand.Next(18, 25);
                 selectedEmployee.AttendanceSummary.RemainingLeaves = rand.Next(0, 12);
                 selectedEmployee.AttendanceSummary.OvertimeHours = rand.Next(0, 30);
+            }
+        }
+        private string GetInitials(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return "??";
+            var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length >= 2)
+            {
+                return (parts[0][0].ToString() + parts[parts.Length - 1][0].ToString()).ToUpper();
+            }
+            return name.Length >= 2 ? name.Substring(0, 2).ToUpper() : name.ToUpper();
+        }
+
+        private long FromRecord() => totalCount == 0 ? 0 : (currentPage - 1) * pageSize + 1;
+        private long ToRecord() => Math.Min(currentPage * (long)pageSize, totalCount);
+
+        private async Task DownloadProfile(EmployeeModel emp)
+        {
+            if (emp == null) return;
+            
+            try
+            {
+                var pdfBytes = await PdfService.GenerateEmployeeProfilePdfAsync(emp);
+                var fileName = $"Profile_{emp.Code}_{emp.FullName}.pdf";
+                
+                await JSRuntime.InvokeVoidAsync("LayoutHelper.downloadFile", fileName, "application/pdf", Convert.ToBase64String(pdfBytes));
+                await JSRuntime.InvokeVoidAsync("toastr.success", "Đã khởi tạo file PDF hồ sơ nhân viên.");
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync("toastr.error", $"Lỗi tạo PDF: {ex.Message}");
             }
         }
     }

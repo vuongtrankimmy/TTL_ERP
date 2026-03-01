@@ -1,0 +1,222 @@
+@page "/attendance/approval"
+@using TTL.HR.Application.Modules.Attendance.Models
+@using TTL.HR.Shared.Components.Common
+@using TTL.HR.Shared.Components.Attendance
+@using TTL.HR.Shared.Components.HumanResource
+
+<PageTitle>Yêu cầu phê duyệt ca - TTL.HR</PageTitle>
+
+<div class="post d-flex flex-column-fluid pt-8" id="kt_post">
+    <div id="kt_content_container" class="container-fluid">
+        <!-- Header & Tabs -->
+        <div class="card mb-8 shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="card-body p-0">
+                <div class="d-flex flex-stack flex-wrap p-8">
+                    <div class="d-flex flex-column">
+                        <h1 class="text-gray-900 fw-bolder fs-2 mb-1">Yêu cầu phê duyệt ca</h1>
+                        <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 pt-1">
+                            <li class="breadcrumb-item text-muted">Chấm công</li>
+                            <li class="breadcrumb-item"><span class="bullet bg-gray-300 w-5px h-2px"></span></li>
+                            <li class="breadcrumb-item text-gray-900">Danh sách yêu cầu</li>
+                        </ul>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mt-4 mt-md-0">
+                        <button class="btn btn-light-success fw-bold px-6 py-3 shadow-sm hover-elevate-up" @onclick="HandleRecalculate" disabled="@_isRecalculating">
+                            @if (_isRecalculating)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            else
+                            {
+                                <i class="ki-outline ki-arrows-loop fs-3 me-2"></i>
+                            }
+                            Cập nhật dữ liệu
+                        </button>
+                        <button class="btn btn-primary fw-bold px-6 py-3 shadow-sm hover-elevate-up" @onclick="OpenCreateModal">
+                            <i class="ki-outline ki-plus-square fs-3 me-2"></i>Gửi yêu cầu mới
+                        </button>
+                    </div>
+                </div>
+
+                <div class="px-8 border-top bg-light-light bg-opacity-50">
+                    <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
+                        <li class="nav-item">
+                            <a class="nav-link text-active-primary py-5 me-10 @(_activeTab == "All" ? "active" : "")" href="javascript:;" @onclick='() => SetTab("All")'>
+                                Tất cả <span class="badge badge-light-dark ms-2">@_summary.TotalCount</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-active-primary py-5 me-10 @(_activeTab == "Approved" ? "active" : "")" href="javascript:;" @onclick='() => SetTab("Approved")'>
+                                Đã duyệt <span class="badge badge-light-success ms-2">@_summary.ApprovedCount</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-active-primary py-5 me-10 @(_activeTab == "Rejected" ? "active" : "")" href="javascript:;" @onclick='() => SetTab("Rejected")'>
+                                Đã hủy <span class="badge badge-light-danger ms-2">@_summary.RejectedCount</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="card mb-6 shadow-xs border-0 rounded-3">
+            <div class="card-body py-4 px-8">
+                <div class="d-flex flex-wrap align-items-center">
+                    <div class="position-relative w-md-300px me-auto my-1">
+                        <i class="ki-outline ki-magnifier fs-2 position-absolute top-50 translate-middle-y ms-4 text-gray-500"></i>
+                        <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm theo tên NV, mã ca, lý do..." @bind="_searchTerm" @bind:event="oninput" @onkeyup="HandleSearch" />
+                    </div>
+                    <div class="d-flex align-items-center gap-3 my-1">
+                        <button class="btn btn-icon btn-light-primary btn-sm rounded-circle shadow-sm" title="Làm mới" @onclick="LoadData">
+                            <i class="ki-outline ki-arrows-loop fs-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Request List -->
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-10">
+            <div class="card-body p-0">
+                <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="8">
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-200 align-middle gs-8 gy-5 mb-0">
+                            <thead class="bg-light-light">
+                                <tr class="fw-bold text-muted text-uppercase fs-8 border-bottom-0">
+                                    <th class="min-w-200px">Nhân viên / Ngày yêu cầu</th>
+                                    <th class="min-w-150px">Ca hiện tại ➜ Mục tiêu</th>
+                                    <th class="min-w-250px">Lý do đổi ca</th>
+                                    <th class="min-w-120px text-center">Trạng thái</th>
+                                    <th class="min-w-180px">Người duyệt / Ngày duyệt</th>
+                                    <th class="min-w-100px text-end pe-8">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody class="fw-semibold text-gray-700">
+                                @if (_requests.Any())
+                                {
+                                    @foreach (var item in _requests)
+                                    {
+                                        <tr class="hover-elevate cursor-pointer">
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-40px symbol-circle overflow-hidden me-3 shadow-sm" @onclick="() => OpenStats(item.EmployeeId)">
+                                                        @if (!string.IsNullOrEmpty(item.Avatar))
+                                                        {
+                                                            <div class="symbol-label"><img src="@item.Avatar" alt="" class="w-100" /></div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="symbol-label @GetRandomColor(item.EmployeeName)">@GetInitials(item.EmployeeName)</div>
+                                                        }
+                                                    </div>
+                                                    <div class="d-flex flex-column">
+                                                        <a href="javascript:;" class="text-gray-900 fw-bold text-hover-primary mb-1 fs-6" @onclick="() => OpenStats(item.EmployeeId)">@item.EmployeeName</a>
+                                                        <span class="text-muted fw-bold fs-7">@item.RequestedDate.ToString("dd/MM/yyyy") (@item.RequestedDate.ToString("ddd", new System.Globalization.CultureInfo("vi-VN")))</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="badge badge-light-@item.FromShiftColor fw-bold shadow-xs">@item.CurrentShift</span>
+                                                    <i class="ki-outline ki-arrow-right fs-4 text-gray-400"></i>
+                                                    <span class="badge badge-light-@item.ToShiftColor fw-bold shadow-xs">@item.TargetShift</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="text-gray-800 fs-7 line-clamp-2" title="@item.Reason">@item.Reason</div>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge badge-light-@item.StatusColor fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                                    <span class="bullet bullet-dot bg-@item.StatusColor w-6px h-6px me-2"></span> @TranslateStatus(item.Status)
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.ManagerNote) || item.Status != "Pending")
+                                                {
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-gray-900 fw-bold fs-7">Quản lý hệ thống</span> <!-- Mock -->
+                                                        <span class="text-muted fs-8">@(item.RequestedDate.AddHours(2).ToString("dd/MM HH:mm"))</span> <!-- Mock -->
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted fs-8 italic opacity-50">Đang chờ xử lý...</span>
+                                                }
+                                            </td>
+                                            <td class="text-end pe-8">
+                                                @if (item.IsPending)
+                                                {
+                                                    <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm shadow-sm hover-scale" title="Hủy yêu cầu" @onclick="() => ConfirmWithdraw(item.Id)">
+                                                        <i class="ki-outline ki-trash fs-3"></i>
+                                                    </button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center py-20">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <i class="ki-outline ki-file-deleted fs-3tx text-muted mb-4"></i>
+                                                <div class="text-muted fs-4">Không tìm thấy yêu cầu nào trong danh sách.</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </SkeletonLoading>
+
+                @if (_totalItems > _pageSize)
+                {
+                    <div class="px-8 py-5 border-top">
+                        <Pagination TotalCount="@_totalItems" PageSize="@_pageSize" PageIndex="@_currentPage" OnPageChanged="OnPageChange" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<CreateShiftRequestModal @ref="_createModal" EmployeeId="@_myEmployeeId" EmployeeName="@_myEmployeeName" EmployeeCode="@_myEmployeeCode" AvatarUrl="@_myAvatar" OnSuccess="LoadData" />
+
+<!-- Stats Drawer -->
+<div class="bg-body drawer drawer-end @(_showStats ? "drawer-on" : "")" style="width: 450px; z-index: 1100; position: fixed; top: 0; right: 0; bottom: 0; transform: translateX(@(_showStats ? "0" : "100%")); transition: transform 0.3s ease; box-shadow: -10px 0 30px rgba(0,0,0,0.1); overflow-y: auto;">
+    <div class="card w-100 rounded-0 border-0 h-100">
+        <div class="card-header border-0 pt-7 ms-3">
+            <h3 class="card-title fw-bolder text-gray-900 fs-2">Chi tiết nhân sự</h3>
+            <div class="card-toolbar">
+                <button class="btn btn-sm btn-icon btn-active-light-primary bg-light" @onclick="CloseStats"><i class="ki-outline ki-cross fs-1"></i></button>
+            </div>
+        </div>
+        <div class="card-body px-8">
+            <EmployeeStatsPanel EmployeeId="@_selectedEmployeeId" />
+            <div class="separator separator-dashed border-gray-300 my-8"></div>
+            <h4 class="fw-bold text-gray-800 mb-5 ms-1">Lịch sử đổi ca gần đây</h4>
+            <div class="timeline-label ms-1">
+                @foreach (var item in _requests.Take(3))
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-label fw-bold text-gray-800 fs-8">@item.RequestedDate.ToString("dd/MM")</div>
+                        <div class="timeline-badge">
+                            <i class="fa fa-genderless text-@item.StatusColor fs-1"></i>
+                        </div>
+                        <div class="timeline-content fw-semibold text-gray-600 ps-3">
+                            @item.TargetShift - @TranslateStatus(item.Status)
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (_showStats)
+{
+    <div class="drawer-overlay" style="z-index: 1099; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(1px);" @onclick="CloseStats"></div>
+}

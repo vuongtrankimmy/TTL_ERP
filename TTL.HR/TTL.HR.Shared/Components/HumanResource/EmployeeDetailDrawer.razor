@@ -1,0 +1,90 @@
+@using TTL.HR.Application.Modules.HumanResource.Models
+@using TTL.HR.Application.Modules.Organization.Models
+@using TTL.HR.Application.Modules.Common.Models
+
+@if (Show)
+{
+    <div id="kt_drawer_employee_detail_shared" class="bg-white drawer drawer-end drawer-on" 
+         style="width: 650px; position: fixed; right: 0; top: 0; bottom: 0; z-index: 1060; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
+        <div class="card shadow-none rounded-0 w-100 h-100 d-flex flex-column">
+            <!-- Header -->
+            <div class="card-header border-0 pt-7 pb-5 flex-shrink-0">
+                <div class="card-title w-100 d-flex justify-content-between align-items-start">
+                    <div class="d-flex">
+                        <div class="symbol symbol-70px symbol-circle me-5">
+                            <img src="@(Employee?.AvatarUrl ?? "assets/media/avatars/300-1.jpg")" alt="@Employee?.FullName" style="object-fit: cover;" />
+                        </div>
+                        <div class="d-flex flex-column">
+                            <h2 class="fs-4 fw-bolder text-gray-900 mb-1">@(Employee?.FullName ?? "N/A")</h2>
+                            <div class="text-primary fw-bold fs-7 mb-2">@(Employee?.PositionName ?? "N/A")</div>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge badge-light-secondary text-gray-600 fw-bold px-2 py-1">Mã NV: @(Employee?.Code ?? "---")</span>
+                                <span class="badge badge-light-secondary text-gray-600 fw-bold px-2 py-1">Phòng: @(Employee?.DepartmentName ?? "---")</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-toolbar ms-3">
+                        <button type="button" class="btn btn-sm btn-icon btn-active-light-primary" @onclick="Close">
+                            <i class="bi bi-x-lg fs-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="card-body p-0 flex-grow-1 hover-scroll-y">
+                <ul class="nav nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold px-5 mb-5 flex-nowrap overflow-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-active-primary @(activeTab == "profile" ? "active" : "") py-4" href="javascript:;" @onclick='() => activeTab = "profile"'>
+                            <i class="bi bi-person-lines-fill me-2"></i>Thông tin hồ sơ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-active-primary @(activeTab == "account" ? "active" : "") py-4" href="javascript:;" @onclick='() => activeTab = "account"'>
+                            <i class="bi bi-shield-lock me-2"></i>Tài khoản & Phân quyền
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-active-primary @(activeTab == "calendar" ? "active" : "") py-4" href="javascript:;" @onclick='() => activeTab = "calendar"'>
+                            <i class="bi bi-calendar-check me-2"></i>Lịch & Chấm công
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content px-6">
+                    @if (activeTab == "profile")
+                    {
+                        @* Content from EmployeeList.razor *@
+                        <div class="tab-pane fade show active">
+                            @* (Simplified for now, will add full content later) *@
+                            <div class="py-5">
+                                <h3 class="fw-bolder m-0 fs-5 text-uppercase mb-5">Thông tin cá nhân</h3>
+                                <div class="row g-6 mb-8">
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted fs-7 text-uppercase fw-bold">Họ và tên</label>
+                                        <input type="text" class="form-control form-control-solid" value="@Employee?.FullName" readonly />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted fs-7 text-uppercase fw-bold">Số điện thoại</label>
+                                        <input type="text" class="form-control form-control-solid" value="@Employee?.Phone" readonly />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted fs-7 text-uppercase fw-bold">Email</label>
+                                        <input type="text" class="form-control form-control-solid" value="@Employee?.Email" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="card-footer py-5 d-flex justify-content-end gap-3 flex-shrink-0">
+                <button type="button" class="btn btn-light" @onclick="Close">Đóng</button>
+                <button type="button" class="btn btn-primary" @onclick="OnEdit">Chỉnh sửa hồ sơ</button>
+            </div>
+        </div>
+    </div>
+    <div class="drawer-overlay" style="z-index: 1059; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);" @onclick="Close"></div>
+}

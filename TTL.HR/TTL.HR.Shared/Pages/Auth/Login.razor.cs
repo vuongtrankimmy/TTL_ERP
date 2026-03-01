@@ -14,7 +14,7 @@ namespace TTL.HR.Shared.Pages.Auth
         [Inject] public NavigationManager Navigation { get; set; }
 
         private string _username = "admin";
-        private string _password = "admin";
+        private string _password = "admin123";
         private bool _isLoading = false;
         private bool _showPassword = false;
 

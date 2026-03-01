@@ -6,6 +6,7 @@ using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Attendance.Interfaces;
 using TTL.HR.Application.Modules.Attendance.Models;
 using TTL.HR.Application.Modules.Common.Models;
+using TTL.HR.Application.Modules.Organization.Models;
 using TTL.HR.Application.Modules.Common.Constants;
 using TTL.HR.Application.Modules.Common.Interfaces;
 
@@ -22,12 +23,15 @@ namespace TTL.HR.Shared.Pages.Attendance
         private AttendanceModel? _selectedEmployee;
         private List<AttendanceModel> _employees = new();
         private List<AttendanceDetailModel> _selectedDetails = new();
-        private List<LookupModel> _departments = new();
+        private List<DepartmentModel> _departments = new();
         private List<DateTime> _periods = new();
         private string _searchTerm = "";
         private string _selectedDepartmentId = "";
         private int _currentMonth = DateTime.Now.Month;
         private int _currentYear = DateTime.Now.Year;
+        private int _currentPage = 1;
+        private int _pageSize = 10;
+        private int _totalItems = 0;
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
@@ -38,7 +42,8 @@ namespace TTL.HR.Shared.Pages.Attendance
                 _periods.Add(new DateTime(today.Year, today.Month, 1).AddMonths(-i));
             }
 
-            _departments = await MasterDataService.GetCachedLookupsAsync("Department");
+            var depts = await MasterDataService.GetCachedLookupsAsync("Department");
+            _departments = depts.Select(d => new DepartmentModel { Id = d.Id, Name = d.Name }).ToList();
 
             await LoadData();
         }
@@ -50,8 +55,9 @@ namespace TTL.HR.Shared.Pages.Attendance
             _isLoading = true;
             try
             {
-                var timesheets = await AttendanceService.GetTimesheetsAsync(_currentMonth, _currentYear, _selectedDepartmentId, _searchTerm);
-                _employees = timesheets?.ToList() ?? new List<AttendanceModel>();
+                var result = await AttendanceService.GetTimesheetsAsync(_currentMonth, _currentYear, _selectedDepartmentId, _searchTerm, _currentPage, _pageSize);
+                _employees = result?.Items?.ToList() ?? new List<AttendanceModel>();
+                _totalItems = (int)(result?.TotalCount ?? 0);
             }
             catch (Exception ex)
             {
@@ -70,12 +76,20 @@ namespace TTL.HR.Shared.Pages.Attendance
         private async Task OnSearchChange(string searchTerm)
         {
             _searchTerm = searchTerm;
+            _currentPage = 1;
             await LoadData();
         }
 
         private async Task OnDepartmentChange(ChangeEventArgs e)
         {
             _selectedDepartmentId = e.Value?.ToString() ?? "";
+            _currentPage = 1;
+            await LoadData();
+        }
+
+        private async Task OnPageChange(int page)
+        {
+            _currentPage = page;
             await LoadData();
         }
         
@@ -166,6 +180,20 @@ namespace TTL.HR.Shared.Pages.Attendance
                 "Pending" => "Chờ duyệt",
                 _ => status
             };
+        }
+
+        private string GetShiftClass(string? color, string prefix = "bg-")
+        {
+            if (string.IsNullOrEmpty(color)) return prefix + "secondary";
+            if (color.StartsWith("#")) return ""; // Custom hex doesn't use classes
+            return prefix + color;
+        }
+
+        private string GetShiftStyle(string? color, bool isBackground = true)
+        {
+            if (string.IsNullOrEmpty(color) || !color.StartsWith("#")) return "";
+            return isBackground ? $"background-color: {color} !important; border-color: {color} !important; color: white !important;" 
+                                : $"color: {color} !important;";
         }
     }
 }

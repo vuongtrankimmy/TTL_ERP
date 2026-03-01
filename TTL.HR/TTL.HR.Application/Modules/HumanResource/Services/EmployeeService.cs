@@ -21,13 +21,15 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
             return response?.Data?.Items ?? new List<EmployeeDto>();
         }
 
-        public async Task<PagedResult<EmployeeDto>> GetEmployeesPaginatedAsync(int pageIndex, int pageSize, string? searchTerm = null, string? departmentId = null, string? status = null, string? workplace = null)
+        public async Task<PagedResult<EmployeeDto>> GetEmployeesPaginatedAsync(int pageIndex, int pageSize, string? searchTerm = null, string? departmentId = null, string? status = null, string? workplace = null, string? sortBy = "name", bool sortDesc = false)
         {
             var url = $"{ApiEndpoints.Employees.Base}?pageIndex={pageIndex}&pageSize={pageSize}";
             if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
             if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
             if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
             if (!string.IsNullOrEmpty(workplace)) url += $"&workplace={Uri.EscapeDataString(workplace)}";
+            if (!string.IsNullOrEmpty(sortBy)) url += $"&sortBy={sortBy}";
+            url += $"&sortDesc={sortDesc.ToString().ToLower()}";
 
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<EmployeeDto>>>(url);
             return response?.Data ?? new PagedResult<EmployeeDto>();
@@ -259,7 +261,39 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
                 return null;
             }
         }
+        public async Task<EmployeeStatusCounts> GetStatusCountsAsync(string? searchTerm = null, string? departmentId = null, string? workplace = null)
+        {
+            try
+            {
+                var url = $"{ApiEndpoints.Employees.Base}/counts?1=1";
+                if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
+                if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
+                if (!string.IsNullOrEmpty(workplace)) url += $"&workplace={Uri.EscapeDataString(workplace)}";
 
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<EmployeeStatusCounts>>(url);
+                return response?.Data ?? new EmployeeStatusCounts();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[GetStatusCounts] Error: {ex.Message}");
+                return new EmployeeStatusCounts();
+            }
+        }
+        public async Task<string?> AccrueLeaveAsync(int month, int year)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Employees.Base}/accrue-leave", new { Month = month, Year = year });
+                if (response.IsSuccessStatusCode) return null;
+
+                var result = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+                return result?.Message ?? $"Lỗi {(int)response.StatusCode}";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
         private static string GetMimeType(string fileName)
         {
             var ext = Path.GetExtension(fileName).ToLower();

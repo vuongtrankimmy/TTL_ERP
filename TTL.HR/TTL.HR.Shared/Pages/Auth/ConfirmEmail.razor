@@ -1,0 +1,49 @@
+@page "/confirm"
+@page "/auth/confirm"
+@layout AuthLayout
+
+<PageTitle>Xác nhận tài khoản - TTL ERP</PageTitle>
+
+<div class="text-center mb-11">
+    <h1 class="text-dark fw-bolder mb-3">Xác nhận tài khoản</h1>
+    <div class="text-gray-500 fw-semibold fs-6">Hệ thống Quản trị Nhân sự TTL</div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-10 text-center">
+        @if (_isProcessing)
+        {
+            <div class="py-10">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Đang xử lý...</span>
+                </div>
+                <p class="mt-5 text-gray-600 fw-bold">Đang xác thực tài khoản của bạn, vui lòng đợi trong giây lát...</p>
+            </div>
+        }
+        else
+        {
+            @if (_isSuccess)
+            {
+                <div class="py-5">
+                    <i class="bi bi-check-circle-fill text-success fs-5x mb-5"></i>
+                    <h2 class="fw-bolder mb-3">Thành công!</h2>
+                    <p class="text-gray-600 fs-5">Tài khoản của bạn đã được kích hoạt thành công. Bây giờ bạn có thể đăng nhập vào hệ thống.</p>
+                    <div class="mt-8">
+                        <a href="/auth/login" class="btn btn-primary fw-bold px-10">ĐĂNG NHẬP NGAY</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="py-5">
+                    <i class="bi bi-x-circle-fill text-danger fs-5x mb-5"></i>
+                    <h2 class="fw-bolder mb-3">Thất bại</h2>
+                    <p class="text-gray-600 fs-5">@_errorMessage</p>
+                    <div class="mt-8">
+                        <a href="/auth/login" class="btn btn-light-primary fw-bold">Quay lại trang đăng nhập</a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

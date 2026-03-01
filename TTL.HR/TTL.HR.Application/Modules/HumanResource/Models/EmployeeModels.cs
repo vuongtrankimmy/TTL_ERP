@@ -14,6 +14,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string Password { get; set; } = string.Empty;
         public EmployeePersonalDetails? PersonalDetails { get; set; } = new();
         public EmployeeEmergencyContact? EmergencyContact { get; set; } = new();
+        public List<EducationDetailDto>? Education { get; set; } = new();
+        public List<ExperienceDetailDto>? Experience { get; set; } = new();
         public EmployeeAttendanceSummary? AttendanceSummary { get; set; } = new();
         public List<EmployeeAuditLog>? AuditLogs { get; set; } = new();
         public List<EmployeeModulePermission>? ModulePermissions { get; set; } = new();
@@ -25,6 +27,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
 
         // Compatibility properties or existing ones
         public string Id { get; set; } = string.Empty;
+        public string DisplayInitials { get; set; } = string.Empty;
         public string TimekeepingCode { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
@@ -32,6 +35,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string Dept { get; set; } = string.Empty;
         public string DeptId { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+        public List<string> Roles { get; set; } = new();
         public string PositionId { get; set; } = string.Empty;
         public DateTime? JoinDate { get; set; }
         public string StatusId { get; set; } = string.Empty;
@@ -45,13 +49,14 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string Hometown { get; set; } = string.Empty;
         public string ContractTypeId { get; set; } = string.Empty;
         public string ContractTypeName { get; set; } = string.Empty;
-        public string Salary { get; set; } = string.Empty;
-        public decimal? SalaryAmount { get; set; }
+        public string SalaryDisplay { get; set; } = string.Empty;
+        public decimal? Salary { get; set; }
         public DateTime? ContractExpiry { get; set; }
         public DateTime? ContractEndDate { get; set; }
         public string Username { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public bool IsAccountActive { get; set; }
+        public bool IsCreateAccount { get; set; }
         public string Nationality { get; set; } = "Việt Nam";
         public string Ethnicity { get; set; } = "Kinh";
         public string Religion { get; set; } = "Không";
@@ -61,6 +66,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string CccdIssuePlace { get; set; } = string.Empty;
         public string TaxId { get; set; } = string.Empty;
         public string SocialInsuranceId { get; set; } = string.Empty;
+        public int NumberOfDependents { get; set; }
         public string MaritalStatus { get; set; } = string.Empty;
         public string BankAccountNumber { get; set; } = string.Empty;
         public string BankName { get; set; } = string.Empty;
@@ -70,6 +76,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string EmergencyContactPhone { get; set; } = string.Empty;
         public double Latitude { get; set; } = 0;
         public double Longitude { get; set; } = 0;
+        public DateTime? DepartureDate { get; set; }
+        public string? DepartureReason { get; set; }
     }
 
     public class EmployeePersonalDetails
@@ -90,10 +98,41 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string PlaceOfOrigin { get; set; } = string.Empty;
         public string Residence { get; set; } = string.Empty;
         public string SocialInsuranceId { get; set; } = string.Empty;
+        public int NumberOfDependents => Dependents?.Count ?? 0;
+        public List<DependentDetailDto>? Dependents { get; set; } = new();
         public DateTime? IdCardIssueDate { get; set; }
         public string IdCardPlace { get; set; } = string.Empty;
         public double Latitude { get; set; } = 0;
         public double Longitude { get; set; } = 0;
+    }
+
+    public class DependentDetailDto
+    {
+        public string FullName { get; set; } = string.Empty;
+        public DateTime? DOB { get; set; }
+        public string Relationship { get; set; } = string.Empty;
+        public string IdNumber { get; set; } = string.Empty;
+        public string TaxCode { get; set; } = string.Empty;
+        public bool IsEligibleForDeduction { get; set; } = true;
+    }
+
+    public class EducationDetailDto
+    {
+        public string SchoolName { get; set; } = string.Empty;
+        public string Degree { get; set; } = string.Empty;
+        public string Major { get; set; } = string.Empty;
+        public int StartYear { get; set; }
+        public int EndYear { get; set; }
+        public string GPA { get; set; } = string.Empty;
+    }
+
+    public class ExperienceDetailDto
+    {
+        public string CompanyName { get; set; } = string.Empty;
+        public string Position { get; set; } = string.Empty;
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public string Description { get; set; } = string.Empty;
     }
 
     public class EmployeeEmergencyContact
@@ -208,5 +247,12 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string EmployeeCode { get; set; } = string.Empty;
         public List<EmployeeDocumentModel> Documents { get; set; } = new();
         public double CompletionPercentage { get; set; }
+    }
+    public class EmployeeStatusCounts
+    {
+        public int All { get; set; }
+        public int Active { get; set; }
+        public int Probation { get; set; }
+        public int Resigned { get; set; }
     }
 }

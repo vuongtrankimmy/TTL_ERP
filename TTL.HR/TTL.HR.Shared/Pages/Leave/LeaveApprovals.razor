@@ -86,22 +86,22 @@
                                                 <input class="form-check-input" type="checkbox" @onclick:stopPropagation />
                                             </div>
                                         </td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="symbol symbol-45px me-5">
+                                        <td class="d-flex align-items-center">
+                                            <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                                                <a href="javascript:;" class="kt_drawer_employee_detail_toggle" @onclick="() => ViewDetail(item.Id)">
                                                     @if (!string.IsNullOrEmpty(item.Avatar))
                                                     {
-                                                        <img src="@item.Avatar" alt="avatar" />
+                                                        <div class="symbol-label"><img src="@item.Avatar" alt="@item.Name" class="w-100" /></div>
                                                     }
                                                     else
                                                     {
-                                                        <div class="symbol-label bg-light-info text-info fw-bolder">@item.Name.Substring(0, 1)</div>
+                                                        <div class="symbol-label bg-light-info text-info fw-bolder">@(item.Name?.Length > 0 ? item.Name.Substring(0, 1) : "L")</div>
                                                     }
-                                                </div>
-                                                <div class="d-flex justify-content-start flex-column">
-                                                    <span class="text-dark fw-bolder text-hover-primary fs-6">@item.Name</span>
-                                                    <span class="text-muted fw-bold d-block fs-7">@item.Department</span>
-                                                </div>
+                                                </a>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="javascript:;" class="kt_drawer_employee_detail_toggle text-gray-900 fw-bold text-hover-primary mb-1 fs-6" @onclick="() => ViewDetail(item.Id)">@item.Name</a>
+                                                <span class="text-muted fw-semibold fs-7">@item.EmployeeCode • @item.Department</span>
                                             </div>
                                         </td>
                                         <td class="text-center">
@@ -116,20 +116,23 @@
                                         <td class="text-center"><span class="text-gray-800 fw-bolder fs-6">@item.Duration</span></td>
                                         <td><span class="text-gray-600 fs-7 text-truncate d-inline-block" style="max-width: 200px;">@item.Reason</span></td>
                                         <td class="text-center">
-                                            <span class="badge badge-light-warning fw-bold px-3 py-2">
-                                                <span class="status-dot bg-warning"></span>Chờ duyệt
+                                            <span class="badge badge-light-@item.StatusColor fw-bold px-3 py-2">
+                                                <span class="status-dot bg-@item.StatusColor"></span>@item.StatusText
                                             </span>
                                         </td>
-                                        <td class="text-end">
-                                            <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 hover-scale" @onclick="() => ViewDetail(item.Id)" @onclick:stopPropagation title="Xem chi tiết">
-                                                <i class="ki-outline ki-eye fs-5"></i>
+                                        <td class="text-end pe-7">
+                                            <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-2 shadow-sm" @onclick="() => ViewDetail(item.Id)" @onclick:stopPropagation title="Xem chi tiết">
+                                                <i class="ki-outline ki-eye fs-3"></i>
                                             </button>
-                                            <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1 hover-scale" @onclick="() => RequestReject(item)" @onclick:stopPropagation title="Từ chối">
-                                                <i class="ki-outline ki-cross fs-5"></i>
-                                            </button>
-                                            <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm hover-scale" @onclick="() => RequestApprove(item)" @onclick:stopPropagation title="Phê duyệt">
-                                                <i class="ki-outline ki-check fs-4"></i>
-                                            </button>
+                                            @if (CanApprove(item))
+                                            {
+                                                <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-2 shadow-sm" @onclick="() => RequestReject(item)" @onclick:stopPropagation title="Từ chối">
+                                                    <i class="ki-outline ki-cross fs-3"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm shadow-sm" @onclick="() => RequestApprove(item)" @onclick:stopPropagation title="Phê duyệt">
+                                                    <i class="ki-outline ki-check fs-3"></i>
+                                                </button>
+                                            }
                                         </td>
                                     </tr>
                                 }
@@ -262,7 +265,7 @@
                     </div>
                     <div class="col-6">
                         <div class="fs-7 text-muted fw-bold mb-1">Trạng thái</div>
-                        <span class="badge badge-light-warning fw-bold fs-7 px-3 py-1">Chờ phê duyệt</span>
+                        <span class="badge badge-light-@_selectedRequest.StatusColor fw-bold fs-7 px-3 py-1">@_selectedRequest.StatusText</span>
                     </div>
                 </div>
 
@@ -312,12 +315,15 @@
             </div>
             
             <div class="card-footer border-0 d-flex gap-3 justify-content-end p-5 bg-light-light">
-                 <button type="button" class="btn btn-light btn-active-light-danger fw-bold flex-grow-1" @onclick="() => RequestReject(_selectedRequest)">
-                    <i class="ki-outline ki-cross fs-2 me-1"></i>Từ chối
-                </button>
-                <button type="button" class="btn btn-primary fw-bold flex-grow-1" @onclick="() => RequestApprove(_selectedRequest)">
-                    <i class="ki-outline ki-check fs-2 me-1"></i>Duyệt ngay
-                </button>
+                @if (CanApprove(_selectedRequest))
+                {
+                     <button type="button" class="btn btn-light btn-active-light-danger fw-bold flex-grow-1" @onclick="() => RequestReject(_selectedRequest)">
+                        <i class="ki-outline ki-cross fs-2 me-1"></i>Từ chối
+                    </button>
+                    <button type="button" class="btn btn-primary fw-bold flex-grow-1" @onclick="() => RequestApprove(_selectedRequest)">
+                        <i class="ki-outline ki-check fs-2 me-1"></i>Duyệt ngay
+                    </button>
+                }
             </div>
         </div>
     }

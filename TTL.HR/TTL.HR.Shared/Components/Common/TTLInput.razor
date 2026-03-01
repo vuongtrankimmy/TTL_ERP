@@ -42,6 +42,7 @@
                    @onchange="HandleChange"
                    @oninput="HandleInput"
                    maxlength="@GetMaxLength()"
+                   disabled="@Disabled"
                    inputmode="numeric"
                    onkeypress="if(event.keyCode === 32) return false; return event.charCode >= 48 && event.charCode <= 57" />
         }
@@ -59,8 +60,9 @@
                    @onchange="HandleChange"
                    @oninput="HandleInput"
                    maxlength="@GetMaxLength()"
+                   disabled="@Disabled"
                    inputmode="@(IsNumericType ? "numeric" : "text")"
-                   onkeypress="if(event.keyCode === 32 && @((!IsSpaceAllowed).ToString().ToLower())) return false; @(IsNumericType ? "return event.charCode >= 48 && event.charCode <= 57" : "")" />
+                   onkeypress="if(event.keyCode === 32 && @((!IsSpaceAllowed).ToString().ToLower())) return false; @(Type == InputDataType.Password ? "if (event.charCode > 126) return false;" : "") @(IsNumericType ? "return event.charCode >= 48 && event.charCode <= 57" : "")" />
         }
     </div>
     
@@ -83,6 +85,7 @@
     [Parameter] public string? Hint { get; set; }
     [Parameter] public string? CssClass { get; set; }
     [Parameter] public int? MaxLength { get; set; }
+    [Parameter] public bool Disabled { get; set; }
 
     private string InputType => Type switch
     {
@@ -217,6 +220,9 @@
             case InputDataType.Address:
                 formattedValue = FormatService.FormatAddress(rawValue);
                 break;
+            case InputDataType.Password:
+                formattedValue = FormatService.NormalizePassword(rawValue);
+                break;
         }
 
         Value = formattedValue;
@@ -236,7 +242,7 @@
                 val = val.Replace(" ", "").ToLower();
                 break;
             case InputDataType.Password:
-                val = val.Replace(" ", "");
+                val = FormatService.NormalizePassword(val);
                 break;
             case InputDataType.CCCD:
                 val = FormatService.CleanDigits(val);

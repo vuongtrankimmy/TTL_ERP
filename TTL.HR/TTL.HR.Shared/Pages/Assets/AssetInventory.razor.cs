@@ -94,6 +94,11 @@ namespace TTL.HR.Shared.Pages.Assets
             Navigation.NavigateTo($"/assets/detail/{id}");
         }
 
+        private void EditAsset(string id)
+        {
+            Navigation.NavigateTo($"/assets/edit/{id}");
+        }
+
         private void PromptDeleteAsset(AssetViewModel asset)
         {
             AssetToDelete = asset;

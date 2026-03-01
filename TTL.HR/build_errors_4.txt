@@ -1,0 +1,8 @@
+﻿d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Leave\LeaveApprovals.razor.cs(22,71): error CS0234: The type or namespace name 'ICommonServices' does not exist in the namespace 'TTL.HR.Application.Modules.Common.Interfaces' (are you missing an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftApproval.razor.cs(13,71): error CS0234: The type or namespace name 'ICommonServices' does not exist in the namespace 'TTL.HR.Application.Modules.Common.Interfaces' (are you missing an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+
+Build FAILED.
+    4 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:03.93

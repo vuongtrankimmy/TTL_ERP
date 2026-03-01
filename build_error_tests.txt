@@ -1,0 +1,9 @@
+d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\Features\HumanResources\Employees\UpdateEmployeeCommandHandlerTests.cs(35,24): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'UpdateEmployeeCommandHandler.UpdateEmployeeCommandHandler(IRepository<Employee>, IRepository<Role>, IRepository<Position>, IRepository<Department>, IMongoClient, IEmailService, IConfiguration, IAuditService)' [d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\TTL.CoreService.Application.UnitTests.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\Features\HumanResources\Recruitment\HireCandidateCommandHandlerTests.cs(49,24): error CS7036: There is no argument given that corresponds to the required parameter 'localizer' of 'HireCandidateCommandHandler.HireCandidateCommandHandler(IRepository<Candidate>, IRepository<Employee>, IRepository<JobPosting>, IRepository<Contract>, IRepository<OnboardingTask>, IRepository<Lookup>, IEmailService, IStringLocalizer<SharedResource>)' [d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\TTL.CoreService.Application.UnitTests.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\Features\HumanResources\Employees\CreateEmployeeCommandHandlerTests.cs(45,24): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'CreateEmployeeCommandHandler.CreateEmployeeCommandHandler(IRepository<Employee>, IRepository<Role>, IRepository<Position>, IRepository<Department>, ICodeGeneratorService, IMongoClient, IEmailService, IConfiguration, IAuditService)' [d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\TTL.CoreService.Application.UnitTests.csproj]
+
+Build FAILED.
+    4 Warning(s)
+    3 Error(s)
+
+Time Elapsed 00:00:01.59

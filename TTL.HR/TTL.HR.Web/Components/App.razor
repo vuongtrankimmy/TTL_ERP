@@ -42,6 +42,13 @@
     <script src="assets/plugins/global/plugins.bundle.js"></script>
     <script src="assets/js/scripts.bundle.js"></script>
     <script src="_content/TTL.HR.Shared/assets/js/layout-helper.js"></script>
+    <script>
+        // Resolve conflict between Metronic's internal svg.js and ApexCharts v3+
+        // Force ApexCharts to use its own bundled svg.js by clearing global SVG if present
+        if (window.SVG) { window._MetronicSVG = window.SVG; window.SVG = undefined; }
+    </script>
+    <script src="_content/Blazor-ApexCharts/js/apexcharts.esm.js" type="module"></script>
+    <script src="_content/Blazor-ApexCharts/js/blazor-apexcharts.js" type="module"></script>
     <script src="@Assets["_framework/blazor.web.js"]"></script>
     <script>
         window.openEmployeeDetail = () => {
@@ -56,6 +63,16 @@
                     newHandle.show();
                 }
             }
+        };
+        window.downloadFile = (content, fileName, contentType) => {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const anchorElement = document.createElement('a');
+            anchorElement.href = url;
+            anchorElement.download = fileName ?? '';
+            anchorElement.click();
+            anchorElement.remove();
+            URL.revokeObjectURL(url);
         };
         window.showModal = (selector) => {
             const el = document.querySelector(selector);

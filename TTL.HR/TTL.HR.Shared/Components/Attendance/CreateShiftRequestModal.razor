@@ -1,0 +1,162 @@
+@using TTL.HR.Application.Modules.Attendance.Models
+@using TTL.HR.Shared.Components.HumanResource
+
+<div class="modal fade @(_show ? "show d-block" : "")" tabindex="-1" role="dialog" style="z-index: 1050; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 bg-primary py-5 px-8">
+                <h3 class="modal-title text-white fs-2 fw-bolder">Gửi yêu cầu đổi ca</h3>
+                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="Close">
+                    <i class="ki-outline ki-cross fs-1 text-white"></i>
+                </button>
+            </div>
+
+            <div class="modal-body p-8">
+                <EditForm Model="@Model" OnValidSubmit="HandleSubmit">
+                    <DataAnnotationsValidator />
+                    
+                    <div class="row g-7">
+                        @if (IsHR)
+                        {
+                            <div class="col-12">
+                                <label class="fs-6 fw-bold mb-2">Nhân viên được yêu cầu</label>
+                                <div class="d-flex align-items-center bg-light-info rounded p-4 border border-info border-dashed cursor-pointer" @onclick="OpenEmployeeSelection">
+                                    <div class="symbol symbol-45px me-3">
+                                        @if (!string.IsNullOrEmpty(SelectedEmployee?.AvatarUrl))
+                                        {
+                                            <img src="@SelectedEmployee.AvatarUrl" alt="" />
+                                        }
+                                        else
+                                        {
+                                            <div class="symbol-label @(GetRandomColor(SelectedEmployee?.FullName ?? "")) fs-5 fw-bold">@(GetInitials(SelectedEmployee?.FullName ?? "?"))</div>
+                                        }
+                                    </div>
+                                    <div class="d-flex flex-column flex-grow-1">
+                                        <span class="fs-6 fw-bold @(SelectedEmployee == null ? "text-muted opacity-50" : "text-gray-800")">@(SelectedEmployee?.FullName ?? "Bấm để chọn nhân viên từ danh sách...")</span>
+                                        <span class="fs-8 text-muted fw-semibold">@(SelectedEmployee?.Code ?? "Danh sách nhân viên đang hoạt động")</span>
+                                    </div>
+                                    <i class="ki-outline ki-down fs-4 text-gray-400"></i>
+                                </div>
+                                @if (string.IsNullOrEmpty(Model.EmployeeId))
+                                {
+                                    <div class="text-danger mt-1 fs-8">Vui lòng chọn nhân viên</div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-12">
+                                <div class="d-flex align-items-center bg-light-info rounded p-4 border border-info border-dashed">
+                                    <div class="symbol symbol-45px me-3">
+                                        @if (!string.IsNullOrEmpty(AvatarUrl))
+                                        {
+                                            <img src="@AvatarUrl" alt="" />
+                                        }
+                                        else
+                                        {
+                                            <div class="symbol-label bg-info bg-opacity-10 text-info fw-bold fs-5">@(!string.IsNullOrWhiteSpace(EmployeeName) ? EmployeeName.Substring(0, 1) : "N")</div>
+                                        }
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <span class="fs-6 fw-bold text-gray-800">@EmployeeName</span>
+                                        <span class="fs-8 text-muted fw-semibold">@EmployeeCode</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-bold mb-2">Ngày đổi ca</label>
+                            <div class="position-relative">
+                                <InputDate @bind-Value="Model.Date" class="form-control form-control-solid fw-bold" />
+                                <div class="position-absolute end-0 top-50 translate-middle-y me-3">
+                                    @if (IsHoliday(Model.Date))
+                                    {
+                                        <span class="badge badge-light-danger fw-bold fs-8">Lễ (300%)</span>
+                                    }
+                                    else if (IsWeekend(Model.Date))
+                                    {
+                                        <span class="badge badge-light-warning fw-bold fs-8">Cuối tuần (200%)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-light-primary fw-bold fs-8">Thường (150%)</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-bold mb-2">Chọn ca mới</label>
+                            <InputSelect @bind-Value="Model.ToShiftId" class="form-select form-select-solid fw-bold">
+                                <option value="">-- Chọn ca mục tiêu --</option>
+                                @foreach (var shift in Shifts)
+                                {
+                                    <option value="@shift.Id">@shift.Name (@shift.StartTime - @shift.EndTime)</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Model.ToShiftId)" class="text-danger mt-1 fs-8" />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="required fs-6 fw-bold mb-2">Lý do</label>
+                            <InputTextArea @bind-Value="Model.Reason" class="form-control form-control-solid" rows="3" placeholder="Nhập lý do đổi ca..." />
+                            <ValidationMessage For="@(() => Model.Reason)" class="text-danger mt-1 fs-8" />
+                        </div>
+
+                        @if (IsHR)
+                        {
+                            <div class="col-12 mt-2">
+                                <div class="separator separator-dashed border-gray-300 mb-6"></div>
+                                <div class="d-flex flex-stack mb-5">
+                                    <div class="me-5">
+                                        <label class="fs-6 fw-bold m-0">Tự động phê duyệt</label>
+                                        <div class="fs-7 text-muted fw-semibold">Đơn sẽ có hiệu lực ngay lập tức sau khi lưu</div>
+                                    </div>
+                                    <div class="form-check form-check-custom form-check-solid form-check-success form-switch">
+                                        <InputCheckbox @bind-Value="Model.AutoApprove" class="form-check-input w-45px h-25px" id="hr_auto_approve" />
+                                    </div>
+                                </div>
+                                <div class="fv-row">
+                                    <label class="fs-6 fw-bold mb-2">Chỉ định người duyệt (Tùy chọn)</label>
+                                    <InputSelect @bind-Value="Model.ApproverId" class="form-select form-select-solid fw-bold">
+                                        <option value="">-- Mặc định (Quản lý trực tiếp) --</option>
+                                        @foreach (var manager in Managers)
+                                        {
+                                            <option value="@manager.Id">@manager.FullName (@manager.Code)</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="text-center mt-10">
+                        <button type="button" class="btn btn-light me-3 px-10 fw-bold shadow-sm" @onclick="Close">Hủy</button>
+                        <button type="submit" class="btn btn-primary px-12 fw-bold shadow-sm" disabled="@_isSubmitting">
+                            @if (_isSubmitting)
+                            {
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            }
+                            else
+                            {
+                                <span>Gửi yêu cầu</span>
+                            }
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<EmployeeSelectionDrawer 
+    @bind-IsVisible="_showEmployeeSelection" 
+    Employees="AllEmployees" 
+    OnSave="OnEmployeeSelected" 
+    Title="Chọn nhân viên lập đơn" />
+
+@if (_show)
+{
+    <div class="modal-backdrop fade show" style="z-index: 1040;"></div>
+}

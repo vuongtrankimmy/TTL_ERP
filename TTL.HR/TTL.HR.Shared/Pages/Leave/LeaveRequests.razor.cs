@@ -153,8 +153,9 @@ namespace TTL.HR.Shared.Pages.Leave
         {
             if (_requestToProcess == null) return;
 
-            string status = _actionType == "APPROVE" ? "Approved" : "Rejected";
-            var success = await LeaveService.ApproveLeaveRequestAsync(_requestToProcess.Id, status);
+            bool isApprove = _actionType == "APPROVE";
+            string status = isApprove ? "Approved" : "Rejected";
+            var success = await LeaveService.ProcessLeaveRequestAsync(_requestToProcess.Id, isApprove, reason);
 
             if (success)
             {

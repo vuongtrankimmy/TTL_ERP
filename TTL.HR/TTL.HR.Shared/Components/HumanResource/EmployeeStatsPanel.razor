@@ -1,0 +1,128 @@
+@using TTL.HR.Application.Modules.Attendance.Interfaces
+@using TTL.HR.Application.Modules.Attendance.Models
+@inject IAttendanceService AttendanceService
+
+<div class="card border-0 shadow-none bg-transparent">
+    <div class="card-body p-0">
+        @if (_isLoading)
+        {
+            <div class="d-flex flex-column gap-5">
+                <div class="skeleton-block h-100px bg-secondary rounded opacity-25"></div>
+                <div class="skeleton-block h-80px bg-secondary rounded opacity-25"></div>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex flex-column gap-5">
+                <!-- Leave Balance -->
+                <div class="bg-light-primary rounded-4 p-5 border border-primary border-opacity-10 border-dashed">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="symbol symbol-40px me-3">
+                            <div class="symbol-label bg-primary bg-opacity-10">
+                                <i class="ki-outline ki-calendar-tick fs-1 text-primary"></i>
+                            </div>
+                        </div>
+                        <span class="fs-5 fw-bold text-gray-800">Thông tin Nghỉ phép</span>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <div class="text-center">
+                                <div class="fs-3 fw-bolder text-gray-900">@Stats.TotalEntitledLeave</div>
+                                <div class="fs-9 text-muted text-uppercase fw-bold">Tổng phép</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-center border-start border-end border-gray-300">
+                                <div class="fs-3 fw-bolder text-danger">@Stats.UsedLeaveYear</div>
+                                <div class="fs-9 text-muted text-uppercase fw-bold">Đã nghỉ</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-center">
+                                <div class="fs-3 fw-bolder text-success">@Stats.RemainingLeave</div>
+                                <div class="fs-9 text-muted text-uppercase fw-bold">Còn lại</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="separator separator-dashed border-gray-300 my-4"></div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fs-7 text-gray-600 fw-semibold">Phép đã dùng trong tháng @Month:</span>
+                        <span class="badge badge-light-danger fw-bold fs-7">@Stats.UsedLeaveMonth ngày</span>
+                    </div>
+                </div>
+
+                <!-- Working Hours -->
+                <div class="bg-light-success rounded-4 p-5 border border-success border-opacity-10 border-dashed">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="symbol symbol-40px me-3">
+                            <div class="symbol-label bg-success bg-opacity-10">
+                                <i class="ki-outline ki-time fs-1 text-success"></i>
+                            </div>
+                        </div>
+                        <span class="fs-5 fw-bold text-gray-800">Hiệu suất làm việc</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex flex-column">
+                            <span class="fs-7 text-gray-600 fw-semibold">Tổng giờ làm thực tế (Thì @Month/@Year)</span>
+                            <div class="fs-1 fw-bolder text-gray-900 mt-1 d-flex align-items-end">
+                                @Stats.TotalWorkingHoursMonth.ToString("F1")
+                                <span class="fs-4 text-gray-500 ms-1 mb-1 fw-bold">H</span>
+                            </div>
+                        </div>
+                        <div class="symbol symbol-50px">
+                            <div class="symbol-label bg-success bg-opacity-20 pulsate-icon">
+                                <i class="ki-outline ki-chart-line-up fs-1 text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .pulsate-icon i {
+        animation: pulse 2s infinite;
+    }
+    @@keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+</style>
+
+@code {
+    [Parameter] public string EmployeeId { get; set; } = "";
+    [Parameter] public int Month { get; set; } = DateTime.Now.Month;
+    [Parameter] public int Year { get; set; } = DateTime.Now.Year;
+
+    private EmployeeStatsModel Stats { get; set; } = new();
+    private bool _isLoading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(EmployeeId))
+        {
+            await LoadStats();
+        }
+    }
+
+    private async Task LoadStats()
+    {
+        _isLoading = true;
+        try 
+        {
+            Stats = await AttendanceService.GetEmployeeStatsAsync(EmployeeId, Month, Year);
+        }
+        catch (Exception)
+        {
+            // Error handling
+            Stats = new EmployeeStatsModel { EmployeeId = EmployeeId };
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+}

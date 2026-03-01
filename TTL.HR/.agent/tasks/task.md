@@ -27,6 +27,7 @@
 - [x] **ID-302**: Milestone 12: Payroll Configuration - PIT (Personal Income Tax) and insurance parameter settings.
 - [x] **ID-303**: Milestone 13: Benefits Management - Detailed allowance and employee benefits configuration.
 - [x] **ID-304**: Milestone 14: Contract Management - Rich text template management with PDF-style preview.
+- [x] **ID-305**: Task 5: Assets & Benefits - Independent Management API & UI.
 
 ### Phase 4: Recruitment & System Control
 - [x] **ID-401**: Milestone 15: Employee Onboarding - Smart onboarding with **OCR Identification Scanning** (CCCD).

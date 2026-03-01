@@ -54,6 +54,14 @@
 				<i class="ki-outline ki-exit-up fs-2"></i> Xuất Excel
 			</button>
 
+			<button type="button" class="btn btn-light-info me-3" @onclick="OpenImportWizard">
+				<i class="ki-outline ki-file-up fs-2"></i> Nhập Excel
+			</button>
+
+			<a href="/employees/add" class="btn btn-primary">
+				<i class="ki-outline ki-plus fs-2"></i> Thêm nhân viên
+			</a>
+
 			<a href="/employees/add" class="btn btn-primary">
 				<i class="ki-outline ki-plus fs-2"></i> Thêm nhân viên
 			</a>
@@ -65,22 +73,22 @@
 		<ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder px-5 mb-5">
 			<li class="nav-item">
 				<a class="nav-link text-active-primary py-4 @(string.IsNullOrEmpty(filterStatus) ? "active" : "")" href="javascript:;" @onclick='() => ChangeStatusFilter("")'>
-					Tất cả
+					Tất cả <span class="badge badge-light-primary ms-2">@_counts.All</span>
 				</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link text-active-primary py-4 @(filterStatus == "Active" ? "active" : "")" href="javascript:;" @onclick='() => ChangeStatusFilter("Active")'>
-					Chính thức
+					Chính thức <span class="badge badge-light-success ms-2">@_counts.Active</span>
 				</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link text-active-primary py-4 @(filterStatus == "Probation" ? "active" : "")" href="javascript:;" @onclick='() => ChangeStatusFilter("Probation")'>
-					Thử việc
+					Thử việc <span class="badge badge-light-warning ms-2">@_counts.Probation</span>
 				</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link text-active-primary py-4 @(filterStatus == "Resigned" ? "active" : "")" href="javascript:;" @onclick='() => ChangeStatusFilter("Resigned")'>
-					Đã thôi việc
+					Đã thôi việc <span class="badge badge-light-danger ms-2">@_counts.Resigned</span>
 				</a>
 			</li>
 		</ul>
@@ -93,13 +101,13 @@
 								<input class="form-check-input" type="checkbox" @onchange="ToggleSelectAll" checked="@isAllSelected" />
 							</div>
 						</th>
-						<th class="min-w-200px">Nhân viên</th>
-						<th class="min-w-100px">Mã NV</th>
-						<th class="min-w-150px">Phòng ban</th>
-						<th class="min-w-150px">Vị trí</th>
-						<th class="min-w-125px">Ngày vào làm</th>
-						<th class="min-w-150px">Nơi làm việc</th>
-						<th class="min-w-125px text-center">Trạng thái</th>
+						<th class="min-w-200px cursor-pointer" @onclick='() => ToggleSort("name")'>Nhân viên <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(sortBy == "name" ? "text-primary" : "text-muted")"></i></th>
+						<th class="min-w-100px cursor-pointer" @onclick='() => ToggleSort("code")'>Mã NV <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(sortBy == "code" ? "text-primary" : "text-muted")"></i></th>
+						<th class="min-w-150px cursor-pointer" @onclick='() => ToggleSort("dept")'>Phòng ban <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(sortBy == "dept" ? "text-primary" : "text-muted")"></i></th>
+						<th class="min-w-150px cursor-pointer" @onclick='() => ToggleSort("role")'>Vị trí <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(sortBy == "role" ? "text-primary" : "text-muted")"></i></th>
+						<th class="min-w-125px cursor-pointer" @onclick='() => ToggleSort("joindate")'>Ngày vào làm <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(sortBy == "joindate" ? "text-primary" : "text-muted")"></i></th>
+						<th class="min-w-150px cursor-pointer" @onclick='() => ToggleSort("workplace")'>Nơi làm việc <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(sortBy == "workplace" ? "text-primary" : "text-muted")"></i></th>
+						<th class="min-w-125px text-center cursor-pointer" @onclick='() => ToggleSort("status")'>Trạng thái <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(sortBy == "status" ? "text-primary" : "text-muted")"></i></th>
 						<th class="text-end min-w-100px">Thao tác</th>
 					</tr>
 				</thead>
@@ -117,13 +125,13 @@
 										}
 										else
 										{
-											<div class="symbol-label bg-light-primary text-primary fw-bolder">@emp.Name.Substring(0, 2).ToUpper()</div>
+											<div class="symbol-label bg-light-primary text-primary fw-bolder">@emp.DisplayInitials</div>
 										}
 									</a>
 								</div>
 								<div class="d-flex flex-column">
-									<a href="javascript:;" class="kt_drawer_employee_detail_toggle text-gray-800 text-hover-primary mb-1" @onclick="() => SelectEmployeeByObj(emp)">@emp.Name</a>
-									<span>@emp.CompanyEmail</span>
+									<a href="javascript:;" class="kt_drawer_employee_detail_toggle text-gray-900 fw-bold text-hover-primary mb-1 fs-6" @onclick="() => SelectEmployeeByObj(emp)">@emp.Name</a>
+									<span class="text-muted fw-semibold fs-7">@emp.Code • @emp.Role</span>
 								</div>
 							</td>
 							<td>@emp.Code</td>
@@ -155,7 +163,7 @@
 				</tbody>
 			</table>
 			<div class="d-flex flex-stack flex-wrap pt-10">
-				<div class="fs-6 fw-bold text-gray-700">Hiển thị @FilteredEmployees.Count() trong tổng số @totalCount bản ghi</div>
+				<div class="fs-6 fw-bold text-gray-700">Hiển thị @FromRecord() đến @ToRecord() trong tổng số @totalCount bản ghi</div>
 				<Pagination PageIndex="@currentPage" PageSize="@pageSize" TotalCount="@totalCount" OnPageChanged="GoToPage" />
 			</div>
 		</SkeletonLoading>
@@ -198,6 +206,23 @@
 		</div>
 	</div>
 </div>
+
+<ImportWizard @ref="importWizard" OnImportCompleted="ReloadData" />
+
+@code {
+    private ImportWizard importWizard;
+    
+    private async Task OpenImportWizard()
+    {
+        await JSRuntime.InvokeVoidAsync("showModal", "#import_wizard_modal");
+    }
+
+    private async Task ReloadData()
+    {
+        await LoadEmployeesAsync();
+        StateHasChanged();
+    }
+}
 
 <!-- DRAWER: EMPLOYEE DETAIL -->
 <div id="kt_drawer_employee_detail" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="employee-detail" data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '650px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle=".kt_drawer_employee_detail_toggle" data-kt-drawer-close="#kt_drawer_employee_detail_close">
@@ -378,7 +403,7 @@
 								</div>
 								<div class="col-md-4">
 									<label class="form-label text-muted fs-7 text-uppercase fw-bold">Mức lương</label>
-									<input type="text" class="form-control form-control-solid" @bind="selectedEmployee.Salary" readonly="@_isReadOnly" />
+									<input type="text" class="form-control form-control-solid" @bind="selectedEmployee.SalaryDisplay" readonly="@_isReadOnly" />
 								</div>
 								<div class="col-md-4">
 									<label class="form-label text-muted fs-7 text-uppercase fw-bold">Ngày hết hạn HĐ</label>
@@ -419,7 +444,7 @@
 										<div class="col-4">
 											<div class="bg-white rounded p-4 border border-dashed text-center">
 												<div class="fs-8 text-muted fw-bold mb-1">MỨC LƯƠNG ĐÓNG BH</div>
-												<div class="fs-7 fw-bolder text-gray-900">@(isSalaryVisible? selectedEmployee?.Salary : "********** VNĐ")</div>
+												<div class="fs-7 fw-bolder text-gray-900">@(isSalaryVisible? selectedEmployee?.SalaryDisplay : "********** VNĐ")</div>
 												<button type="button" class="btn btn-link btn-xs p-0 fs-10 text-primary" @onclick="() => isSalaryVisible = !isSalaryVisible">@(isSalaryVisible ? "Ẩn" : "Hiển thị")</button>
 											</div>
 										</div>
@@ -670,6 +695,9 @@
 		<div class="card-footer border-0 d-flex gap-3 justify-content-between p-10 flex-shrink-0">
 			@if (_isReadOnly)
 			{
+				<button type="button" class="btn btn-light-success flex-grow-1" @onclick="() => DownloadProfile(selectedEmployee)">
+					<i class="bi bi-file-earmark-pdf me-2"></i>In hồ sơ PDF
+				</button>
 				<button type="button" class="btn btn-light flex-grow-1" id="kt_drawer_employee_detail_close">Đóng</button>
 			}
 			else
@@ -688,8 +716,8 @@
 				}
 				else if (activeTab == "calendar")
 				{
-					<button type="button" class="btn btn-primary flex-grow-1" @onclick='() => JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Hệ thống đang xuất file báo cáo PDF...", "info")'>
-						<i class="bi bi-file-earmark-pdf me-2"></i>Xuất báo cáo cá nhân
+					<button type="button" class="btn btn-light-success flex-grow-1" @onclick="() => DownloadProfile(selectedEmployee)">
+						<i class="bi bi-file-earmark-pdf me-2"></i>In hồ sơ PDF
 					</button>
 				}
 				<button type="button" class="btn btn-light flex-grow-1" id="kt_drawer_employee_detail_close">@(activeTab == "account" ? "Hủy" : "Đóng")</button>

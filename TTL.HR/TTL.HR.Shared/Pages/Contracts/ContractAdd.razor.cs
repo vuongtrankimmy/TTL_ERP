@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -117,7 +117,7 @@ namespace TTL.HR.Shared.Pages.Contracts
         // Main HTML Content of the Template
         private string TemplateContent = @"
             <div style='text-align:center'>
-                <p><strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong></p>
+                <p><strong>CỘNG HÒA XàHỘI CHỦ NGHĨA VIỆT NAM</strong></p>
                 <p>Độc lập – Tự do – Hạnh phúc</p>
                 <p style='text-align:right'><span class='badge badge-light-primary fs-7 fw-bold px-2 py-1 align-middle'>{{Dia_Diem_Ky}}</span>, ngày <span class='badge badge-light-primary fs-7 fw-bold px-2 py-1 align-middle'>{{Ngay_Ky}}</span> tháng <span class='badge badge-light-primary fs-7 fw-bold px-2 py-1 align-middle'>{{Thang_Ky}}</span> năm <span class='badge badge-light-primary fs-7 fw-bold px-2 py-1 align-middle'>{{Nam_Ky}}</span></p>
                 

@@ -1,0 +1,20 @@
+﻿D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(154,58): error RZ1010: Unexpected "{" after "@" character. Once inside the body of a code block (@if {}, @{}, etc.) you do not need to use "@{" to switch to code. [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(222,54): error RZ1010: Unexpected "{" after "@" character. Once inside the body of a code block (@if {}, @{}, etc.) you do not need to use "@{" to switch to code. [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(279,50): error RZ1010: Unexpected "{" after "@" character. Once inside the body of a code block (@if {}, @{}, etc.) you do not need to use "@{" to switch to code. [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(110,30): error CS1525: Invalid expression term 'else' [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(110,30): error CS1026: ) expected [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(110,30): error CS1002: ; expected [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(110,30): error CS8641: 'else' cannot start a statement. [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(110,30): error CS1003: Syntax error, '(' expected [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(110,34): error CS1525: Invalid expression term ')' [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(110,34): error CS1002: ; expected [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(110,34): error CS1513: } expected [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(186,42): error CS0103: The name 'unassignedEmployees' does not exist in the current context [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(193,121): error CS0103: The name 'unassignedEmployees' does not exist in the current context [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\Pages\Attendance\ShiftScheduler.razor(197,62): error CS0103: The name 'unassignedEmployees' does not exist in the current context [D:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\TTL.HR\TTL.HR.Shared\TTL.HR.Shared.csproj]
+
+Build FAILED.
+    44 Warning(s)
+    14 Error(s)
+
+Time Elapsed 00:00:04.33

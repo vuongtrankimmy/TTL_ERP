@@ -289,7 +289,7 @@
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Mức lương cơ bản (VNĐ)</label>
                     <div class="position-relative d-flex align-items-center">
                         <span class="position-absolute ms-4 fw-bold text-gray-400">₫</span>
-                        <input type="text" class="form-control form-control-solid ps-12 text-end fw-bold text-primary" placeholder="10.000.000" @bind="newEmployee.Salary" />
+                        <input type="text" class="form-control form-control-solid ps-12 text-end fw-bold text-primary" placeholder="10.000.000" @bind="newEmployee.SalaryDisplay" />
                     </div>
                 </div>
             </div>
@@ -365,6 +365,358 @@
                             <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">SĐT Khẩn cấp</label>
                             <input type="text" class="form-control form-control-solid" @bind="newEmployee.EmergencyContactPhone" />
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: TÀI KHOẢN HỆ THỐNG (Chỉ hiển thị khi có Email) -->
+    @if (IsEmailValid)
+    {
+        <div class="card card-flush py-4 border-primary border-dashed border-1">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-shield-lock text-primary fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Tài khoản đăng nhập hệ thống</h2>
+            </div>
+            <div class="card-toolbar">
+                <div class="form-check form-switch form-check-custom form-check-solid">
+                    <input class="form-check-input h-30px w-50px" type="checkbox" @bind="newEmployee.IsCreateAccount" id="createAccountToggle" />
+                    <label class="form-check-label fw-bolder text-gray-700 ms-3" for="createAccountToggle">
+                        TỰ ĐỘNG KHỞI TẠO TÀI KHOẢN
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="card-body pt-0 @(newEmployee.IsCreateAccount || !string.IsNullOrEmpty(newEmployee.Username) ? "" : "opacity-50")">
+            <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6 mb-8">
+                <i class="ki-outline ki-information-5 fs-2tx text-primary me-4"></i>
+                <div class="d-flex flex-stack flex-grow-1">
+                    <div class="fw-semibold">
+                        <div class="fs-6 text-gray-700">Khi kích hoạt, hệ thống sẽ tự động tạo tài khoản đăng nhập vào cơ sở dữ liệu Identity (TTL_Identity_DB).</div>
+                        <div class="fs-7 text-muted">Mặc định mật khẩu sẽ được tạo giống với Tên đăng nhập nếu không được nhập.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-9">
+                <div class="col-md-3">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tên đăng nhập (Username)</label>
+                    <div class="position-relative d-flex align-items-center">
+                        <i class="bi bi-person-fill position-absolute ms-4 text-gray-400"></i>
+                        <input type="text" class="form-control form-control-solid ps-12 pe-12" 
+                               placeholder="VD: tantanloc" 
+                               @bind="newEmployee.Username" 
+                               disabled="@(!newEmployee.IsCreateAccount)" />
+                        
+                        @if (newEmployee.IsCreateAccount)
+                        {
+                            <button type="button" 
+                                    class="btn btn-icon btn-sm btn-active-color-primary position-absolute end-0 me-1" 
+                                    @onclick="GenerateUsername"
+                                    title="Tự động tạo tên đăng nhập">
+                                <i class="bi bi-magic fs-6 text-primary"></i>
+                            </button>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mật khẩu (Password)</label>
+                    <div class="d-flex flex-column">
+                        @if (IsEditMode && newEmployee.IsCreateAccount && !string.IsNullOrEmpty(newEmployee.Username))
+                        {
+                            <button type="button" class="btn btn-light-primary btn-sm fw-bold h-45px" 
+                                    @onclick="RequestPasswordReset" 
+                                    disabled="@(_isProcessing || !IsEmailValid)">
+                                <i class="bi bi-envelope-at fs-4 me-2"></i>Gửi link đặt lại mật khẩu
+                            </button>
+                            <span class="fs-9 text-muted mt-1 italic text-center">Hệ thống sẽ gửi link qua Email cá nhân</span>
+                        }
+                        else
+                        {
+                            <div class="form-control form-control-solid bg-light-info border-info border-dashed d-flex align-items-center h-45px">
+                                <i class="bi bi-info-circle-fill text-info me-2"></i>
+                                <span class="fs-8 text-info fw-bold">Thiết Lập Qua Email (Link mời)</span>
+                            </div>
+                            <span class="fs-9 text-muted mt-1 italic text-center">Người dùng tự đặt mật khẩu khi nhận email</span>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Phân quyền & Vai trò</label>
+                    <div class="d-flex flex-column gap-2" style="max-height: 150px; overflow-y: auto; padding: 10px; border: 1px dashed #e1e1e1; border-radius: 5px;">
+                        @if (availableRoles != null && availableRoles.Any())
+                        {
+                            @foreach (var role in availableRoles)
+                            {
+                                <div class="form-check form-check-custom form-check-solid form-check-sm">
+                                    <input class="form-check-input" type="checkbox" value="@role.Id" 
+                                           checked="@(newEmployee.Roles?.Contains(role.Id) ?? false)"
+                                           @onchange='(e) => { 
+                                               var isChecked = (bool)e.Value; 
+                                               if (isChecked) { 
+                                                   if (!newEmployee.Roles.Contains(role.Id)) newEmployee.Roles.Add(role.Id); 
+                                               } else { 
+                                                   newEmployee.Roles.Remove(role.Id); 
+                                               }
+                                           }' 
+                                           id="role_@role.Id"
+                                           disabled="@(!newEmployee.IsCreateAccount)" />
+                                    <label class="form-check-label fs-8 fw-bold text-gray-700 ms-2" for="role_@role.Id">
+                                        @role.Name
+                                    </label>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <span class="fs-9 text-muted italic">Đang tải danh sách vai trò...</span>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Trạng thái tài khoản</label>
+                    <div class="form-check form-switch form-check-custom form-check-solid mt-2">
+                        <input class="form-check-input h-25px w-45px" type="checkbox" @bind="newEmployee.IsActive" id="accountActiveToggle" disabled="@(!newEmployee.IsCreateAccount)" />
+                        <label class="form-check-label fw-bold text-gray-600 ms-2" for="accountActiveToggle">
+                            @(newEmployee.IsActive ? "Đang hoạt động" : "Bị khóa")
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+    else
+    {
+        <!-- Thông báo khi chưa có email -->
+        <div class="card card-flush py-4 bg-light-warning border-warning border border-dashed">
+            <div class="card-body text-center py-10">
+                <div class="mb-5">
+                    <i class="bi bi-envelope-exclamation fs-3x text-warning"></i>
+                </div>
+                <h3 class="fw-bolder text-warning mb-1">Yêu cầu Email để khởi tạo tài khoản</h3>
+                <p class="text-gray-600 fs-7 mb-0">Hệ thống cần Email cá nhân hợp lệ để gửi thông tin xác thực và hướng dẫn kích hoạt tài khoản.</p>
+                <div class="mt-4">
+                    <span class="badge badge-light-danger fw-bold">CHỨC NĂNG TỰ ĐỘNG KHÓA</span>
+                </div>
+            </div>
+        </div>
+        @if (newEmployee.IsCreateAccount) { newEmployee.IsCreateAccount = false; }
+    }
+
+    <!-- SECTION: HỒ SƠ NĂNG LỰC & NGƯỜI PHỤ THUỘC -->
+    <div class="card card-flush py-4">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-mortarboard text-primary fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Trình độ, Kinh nghiệm & Người phụ thuộc</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0">
+            <!-- TABS FOR SUB-SECTIONS -->
+            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold mb-8">
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary active" data-bs-toggle="tab" href="#kt_tab_education">Bằng cấp & Học vấn</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary" data-bs-toggle="tab" href="#kt_tab_experience">Kinh nghiệm làm việc</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary" data-bs-toggle="tab" href="#kt_tab_dependents">Người phụ thuộc</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Education Tab -->
+                <div class="tab-pane fade show active" id="kt_tab_education" role="tabpanel">
+                    <div class="d-flex flex-stack mb-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bold text-gray-800 fs-6">Danh sách Bằng cấp</span>
+                        </h3>
+                        <button type="button" class="btn btn-sm btn-light-primary" @onclick="AddEducation">
+                            <i class="bi bi-plus-lg me-2"></i>Thêm bằng cấp
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                            <thead>
+                                <tr class="fw-bold text-muted bg-light">
+                                    <th class="ps-4 min-w-150px rounded-start">Trường / Tổ chức</th>
+                                    <th class="min-w-125px">Bằng cấp</th>
+                                    <th class="min-w-125px">Chuyên ngành</th>
+                                    <th class="min-w-100px">Năm học</th>
+                                    <th class="min-w-50px text-end rounded-end"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (newEmployee.Education != null && newEmployee.Education.Any())
+                                {
+                                    @foreach (var edu in newEmployee.Education)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="edu.SchoolName" placeholder="ĐH Bách Khoa..." />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="edu.Degree" placeholder="Cử nhân / Kỹ sư..." />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="edu.Major" placeholder="CNTT..." />
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <input type="number" class="form-control form-control-solid form-control-sm w-70px" @bind="edu.StartYear" />
+                                                    <span>-</span>
+                                                    <input type="number" class="form-control form-control-solid form-control-sm w-70px" @bind="edu.EndYear" />
+                                                </div>
+                                            </td>
+                                            <td class="text-end">
+                                                <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" @onclick="() => RemoveEducation(edu)">
+                                                    <i class="bi bi-trash fs-5"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted fs-7 py-10">Chưa có thông tin học vấn.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Experience Tab -->
+                <div class="tab-pane fade" id="kt_tab_experience" role="tabpanel">
+                    <div class="d-flex flex-stack mb-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bold text-gray-800 fs-6">Kinh nghiệm làm việc</span>
+                        </h3>
+                        <button type="button" class="btn btn-sm btn-light-primary" @onclick="AddExperience">
+                            <i class="bi bi-plus-lg me-2"></i>Thêm kinh nghiệm
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                            <thead>
+                                <tr class="fw-bold text-muted bg-light">
+                                    <th class="ps-4 min-w-150px rounded-start">Công ty</th>
+                                    <th class="min-w-125px">Vị trí</th>
+                                    <th class="min-w-200px">Thời gian</th>
+                                    <th class="min-w-50px text-end rounded-end"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (newEmployee.Experience != null && newEmployee.Experience.Any())
+                                {
+                                    @foreach (var exp in newEmployee.Experience)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="exp.CompanyName" placeholder="Tên công ty cũ..." />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="exp.Position" placeholder="Chức vụ..." />
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <input type="date" class="form-control form-control-solid form-control-sm" @bind="exp.StartDate" />
+                                                    <span>đến</span>
+                                                    <input type="date" class="form-control form-control-solid form-control-sm" @bind="exp.EndDate" />
+                                                </div>
+                                            </td>
+                                            <td class="text-end">
+                                                <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" @onclick="() => RemoveExperience(exp)">
+                                                    <i class="bi bi-trash fs-5"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted fs-7 py-10">Chưa có thông tin kinh nghiệm.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Dependents Tab -->
+                <div class="tab-pane fade" id="kt_tab_dependents" role="tabpanel">
+                    <div class="d-flex flex-stack mb-5">
+                        <div class="d-flex flex-column">
+                            <h3 class="card-title align-items-start flex-column mb-1">
+                                <span class="card-label fw-bold text-gray-800 fs-6">Người phụ thuộc (Dùng cho Giảm trừ gia cảnh)</span>
+                            </h3>
+                            <span class="text-muted fw-semibold fs-7">Số người phụ thuộc hiện tại: <span class="text-primary fw-bold">@(newEmployee.PersonalDetails?.Dependents?.Count ?? 0)</span></span>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-light-primary" @onclick="AddDependent">
+                            <i class="bi bi-plus-lg me-2"></i>Thêm người phụ thuộc
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                            <thead>
+                                <tr class="fw-bold text-muted bg-light">
+                                    <th class="ps-4 min-w-150px rounded-start">Họ tên</th>
+                                    <th class="min-w-125px">Ngày sinh</th>
+                                    <th class="min-w-100px">Quan hệ</th>
+                                    <th class="min-w-125px">CCCD/MST</th>
+                                    <th class="min-w-100px text-center">Giảm trừ</th>
+                                    <th class="min-w-50px text-end rounded-end"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (newEmployee.PersonalDetails?.Dependents != null && newEmployee.PersonalDetails.Dependents.Any())
+                                {
+                                    @foreach (var dep in newEmployee.PersonalDetails.Dependents)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="dep.FullName" placeholder="Họ tên..." />
+                                            </td>
+                                            <td>
+                                                <input type="date" class="form-control form-control-solid form-control-sm" @bind="dep.DOB" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="dep.Relationship" placeholder="Con/Vợ/Chồng..." />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="dep.TaxCode" placeholder="CCCD hoặc MST..." />
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-check form-check-custom form-check-solid form-check-sm justify-content-center">
+                                                    <input class="form-check-input" type="checkbox" @bind="dep.IsEligibleForDeduction" />
+                                                </div>
+                                            </td>
+                                            <td class="text-end">
+                                                <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" @onclick="() => RemoveDependent(dep)">
+                                                    <i class="bi bi-trash fs-5"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted fs-7 py-10">Chưa có thông tin người phụ thuộc.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

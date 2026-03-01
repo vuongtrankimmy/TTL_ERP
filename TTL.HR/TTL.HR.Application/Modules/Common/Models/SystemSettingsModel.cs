@@ -1,5 +1,24 @@
+using System;
+using System.Collections.Generic;
+
 namespace TTL.HR.Application.Modules.Common.Models
 {
+    public class HolidayConfigModel
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public DateTime StartDate { get; set; } = DateTime.Today;
+        public DateTime EndDate { get; set; } = DateTime.Today;
+        public bool IsRecurring { get; set; } = false; // Có lặp lại hàng năm hay không
+    }
+
+    public class TaxStepModel
+    {
+        public decimal Threshold { get; set; }
+        public double Rate { get; set; }
+        public decimal Deduction { get; set; }
+    }
+
     public class SystemSettingsModel
     {
         // Company Information
@@ -24,6 +43,7 @@ namespace TTL.HR.Application.Modules.Common.Models
         public string SmtpServer { get; set; } = string.Empty;
         public int SmtpPort { get; set; } = 587;
         public string SmtpUser { get; set; } = string.Empty;
+        public string SmtpPassword { get; set; } = string.Empty;
         
         // Notification Preferences
         public bool NotifyOnLeaveRequest { get; set; } = true;
@@ -41,13 +61,16 @@ namespace TTL.HR.Application.Modules.Common.Models
         public string ContactPersonEmail { get; set; } = string.Empty;
 
         // Working Policy
-        public TimeOnly? WorkStartTime { get; set; } = new TimeOnly(8, 0);
-        public TimeOnly? WorkEndTime { get; set; } = new TimeOnly(17, 30);
-        public TimeOnly? BreakStartTime { get; set; } = new TimeOnly(12, 0);
-        public TimeOnly? BreakEndTime { get; set; } = new TimeOnly(13, 30);
+        public string WorkStartTime { get; set; } = "08:00";
+        public string WorkEndTime { get; set; } = "17:30";
+        public string BreakStartTime { get; set; } = "12:00";
+        public string BreakEndTime { get; set; } = "13:30";
         public int LateGracePeriodMinutes { get; set; } = 15;
-        public string WorkDays { get; set; } = "Mon;Tue;Wed;Thu;Fri";
+        public List<string> WorkDays { get; set; } = new();
         public bool AllowFlexibleHours { get; set; } = false;
+
+        // Holidays and Off-days
+        public List<HolidayConfigModel> Holidays { get; set; } = new();
 
         // Recruitment Config
         public bool AutoSendThankYouEmail { get; set; } = true;
@@ -79,6 +102,7 @@ namespace TTL.HR.Application.Modules.Common.Models
         
         public decimal DefaultPersonalDeduction { get; set; } = 11000000;
         public decimal DefaultDependentDeduction { get; set; } = 4400000;
+        public List<TaxStepModel> PitSteps { get; set; } = new();
         
         // Statutory Pay Rate (Lương cơ sở)
         public decimal StatutoryPayRate { get; set; } = 2340000;

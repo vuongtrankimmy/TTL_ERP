@@ -52,6 +52,12 @@
                                 </a>
                             </div>
                             <div class="menu-item">
+                                <a class="menu-link py-4 @(activeTab == "holidays" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("holidays")'>
+                                    <span class="menu-icon"><i class="bi bi-calendar2-heart fs-3"></i></span>
+                                    <span class="menu-title fw-bold">Ngày nghỉ lễ & Phép</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
                                 <a class="menu-link py-4 @(activeTab == "recruitment_config" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("recruitment_config")'>
                                     <span class="menu-icon"><i class="bi bi-person-plus fs-3"></i></span>
                                     <span class="menu-title fw-bold">Cấu hình Tuyển dụng</span>
@@ -61,6 +67,12 @@
                                 <a class="menu-link py-4 @(activeTab == "training_config" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("training_config")'>
                                     <span class="menu-icon"><i class="bi bi-journal-check fs-3"></i></span>
                                     <span class="menu-title fw-bold">Cấu hình Đào tạo</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link py-4 @(activeTab == "payroll" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("payroll")'>
+                                    <span class="menu-icon"><i class="bi bi-cash-stack fs-3"></i></span>
+                                    <span class="menu-title fw-bold">Cấu hình Lương & Thuế</span>
                                 </a>
                             </div>
                             <div class="menu-item">
@@ -294,13 +306,13 @@
                                 <div class="col-lg-4">
                                     <div class="input-group input-group-solid">
                                         <span class="input-group-text fs-8">Bắt đầu</span>
-                                        <input type="time" class="form-control fs-7" @bind="Model.WorkStartTime" />
+                                        <input type="time" class="form-control fs-7" value="@Model.WorkStartTime" @onchange="@(e => Model.WorkStartTime = e.Value?.ToString())" />
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-group input-group-solid">
                                         <span class="input-group-text fs-8">Kết thúc</span>
-                                        <input type="time" class="form-control fs-7" @bind="Model.WorkEndTime" />
+                                        <input type="time" class="form-control fs-7" value="@Model.WorkEndTime" @onchange="@(e => Model.WorkEndTime = e.Value?.ToString())" />
                                     </div>
                                 </div>
                             </div>
@@ -309,13 +321,13 @@
                                 <div class="col-lg-4">
                                     <div class="input-group input-group-solid">
                                         <span class="input-group-text fs-8">Bắt đầu</span>
-                                        <input type="time" class="form-control fs-7" @bind="Model.BreakStartTime" />
+                                        <input type="time" class="form-control fs-7" value="@Model.BreakStartTime" @onchange="@(e => Model.BreakStartTime = e.Value?.ToString())" />
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-group input-group-solid">
                                         <span class="input-group-text fs-8">Kết thúc</span>
-                                        <input type="time" class="form-control fs-7" @bind="Model.BreakEndTime" />
+                                        <input type="time" class="form-control fs-7" value="@Model.BreakEndTime" @onchange="@(e => Model.BreakEndTime = e.Value?.ToString())" />
                                     </div>
                                 </div>
                             </div>
@@ -332,14 +344,13 @@
                                 <label class="col-lg-3 col-form-label fw-bold fs-7">Các ngày làm việc</label>
                                 <div class="col-lg-9 d-flex flex-wrap gap-3">
                                     @{
-                                        var days = new[] { ("Mon", "Thứ 2"), ("Tue", "Thứ 3"), ("Wed", "Thứ 4"), ("Thu", "Thứ 5"), ("Fri", "Thứ 6"), ("Sat", "Thứ 7"), ("Sun", "Chủ nhật") };
-                                        var selectedDays = Model.WorkDays?.Split(';', StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>();
+                                        var daysAr = new[] { ("Mon", "Thứ 2"), ("Tue", "Thứ 3"), ("Wed", "Thứ 4"), ("Thu", "Thứ 5"), ("Fri", "Thứ 6"), ("Sat", "Thứ 7"), ("Sun", "Chủ nhật") };
                                     }
-                                    @foreach (var (key, label) in days)
+                                    @foreach (var (key, label) in daysAr)
                                     {
-                                        var isSelected = selectedDays.Contains(key);
+                                        var isSelected = Model.WorkDays?.Contains(key) ?? false;
                                         <button type="button" class="btn btn-sm @(isSelected ? "btn-light-primary" : "btn-light") fw-bolder" 
-                                                @onclick='() => { if(isSelected) selectedDays.Remove(key); else selectedDays.Add(key); Model.WorkDays = string.Join(";", selectedDays); }'>
+                                                @onclick='() => { if(isSelected) Model.WorkDays.Remove(key); else Model.WorkDays.Add(key); }'>
                                             @label
                                         </button>
                                     }
@@ -352,6 +363,258 @@
                                         <input class="form-check-input w-45px h-25px" type="checkbox" @bind="Model.AllowFlexibleHours" />
                                         <span class="form-check-label fs-7 fw-bold text-gray-600">Cho phép nhân viên tự sắp xếp thời gian làm việc (Flexible)</span>
                                     </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (activeTab == "holidays")
+                {
+                    <!-- Holidays Configuration -->
+                    <div class="card card-flush shadow-sm border-0 mb-8" id="holidays">
+                        <div class="card-header pt-7">
+                            <div class="d-flex align-items-center gap-4">
+                                <h3 class="card-title fw-bolder text-gray-800 mb-0">Cấu hình Ngày nghỉ lễ</h3>
+                                <select class="form-select form-select-solid form-select-sm fw-bold w-125px" @bind="SelectedYear">
+                                    @for (int yy = DateTime.Now.Year - 1; yy <= DateTime.Now.Year + 2; yy++)
+                                    {
+                                        <option value="@yy">Năm @yy</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="card-toolbar d-flex gap-3">
+                                <button type="button" class="btn btn-sm btn-light-info fw-bolder" @onclick="HandleAccrueLeave" disabled="@_isAccruing">
+                                    @if (_isAccruing)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-plus-circle-dotted me-2"></i>
+                                    }
+                                    Cộng phép tháng @DateTime.Now.Month
+                                </button>
+                                <button type="button" class="btn btn-sm btn-primary fw-bolder" @onclick="AddHoliday">
+                                    <i class="bi bi-plus-lg me-2"></i>Thêm ngày nghỉ
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body pt-5">
+                            @{
+                                var filteredHolidays = Model.Holidays?.Where(h => h.IsRecurring || h.StartDate.Year == SelectedYear || h.EndDate.Year == SelectedYear).ToList(); 
+                            }
+                            @if (filteredHolidays == null || !filteredHolidays.Any())
+                            {
+                                <div class="text-center py-10">
+                                    <i class="ki-outline ki-calendar-remove fs-4x text-muted mb-4"></i>
+                                    <div class="fs-5 fw-bold text-gray-600">Chưa có ngày nghỉ lễ nào được cấu hình</div>
+                                    <div class="fs-7 text-muted mt-2">Bấm vào nút "Thêm ngày nghỉ" để bắt đầu cấu hình. Các ngày nghỉ lễ này sẽ được áp dụng trong tính toán chấm công, làm thêm giờ và xếp ca.</div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4">
+                                        <thead>
+                                            <tr class="fw-bolder text-muted bg-light text-uppercase fs-9">
+                                                <th class="ps-4 min-w-200px rounded-start">Tên ngày lễ</th>
+                                                <th class="min-w-150px">Từ ngày</th>
+                                                <th class="min-w-150px">Đến ngày</th>
+                                                <th class="min-w-100px text-center">Lặp lại hàng năm</th>
+                                                <th class="min-w-50px text-end pe-4 rounded-end">Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var holiday in filteredHolidays)
+                                            {
+                                                <tr>
+                                                    <td class="ps-4">
+                                                        <input type="text" class="form-control form-control-solid fs-7" @bind="holiday.Name" placeholder="Tết Nguyên Đán" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="date" class="form-control form-control-solid fs-7" @bind="holiday.StartDate" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="date" class="form-control form-control-solid fs-7" @bind="holiday.EndDate" />
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="form-check form-check-custom form-check-solid justify-content-center">
+                                                            <input class="form-check-input w-20px h-20px" type="checkbox" @bind="holiday.IsRecurring" />
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-end pe-4">
+                                                        <button type="button" class="btn btn-icon btn-light-danger btn-sm" @onclick="() => RemoveHoliday(holiday)" title="Xóa">
+                                                            <i class="bi bi-trash fs-5"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            
+                            <div class="p-4 bg-light-info rounded-3 mt-8 d-flex align-items-start border border-dashed border-info">
+                                <i class="bi bi-info-circle text-info fs-3 me-3 mt-1"></i>
+                                <div class="fs-8 text-info-emphasis fw-bold">
+                                    Lưu ý: Đối với các ngày lễ có đánh dấu "Lặp lại hàng năm" (như Tết Dương, Quốc Khánh, v.v.), hệ thống sẽ tự động trừ đi số năm và áp dụng ngày / tháng đó cho tất cả các năm tiếp theo trong lịch làm việc, chấm công. Giúp bạn không cần phải thêm lại hàng năm đối với các ngày lễ cố định theo dương lịch.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (activeTab == "payroll")
+                {
+                    <!-- Payroll & Tax Configuration -->
+                    <div class="card card-flush shadow-sm border-0 mb-8" id="payroll">
+                        <div class="card-header pt-7">
+                            <h3 class="card-title fw-bolder text-gray-800">Cấu hình Lương, Bảo hiểm & Thuế</h3>
+                        </div>
+                        <div class="card-body pt-5">
+                            <div class="row mb-10">
+                                <div class="col-lg-6">
+                                    <h5 class="fw-bolder mb-5">Tham số lương & Bảo hiểm</h5>
+                                    <div class="row mb-5">
+                                        <label class="col-6 col-form-label fw-bold fs-7">Số ngày công chuẩn / tháng</label>
+                                        <div class="col-6">
+                                            <div class="input-group input-group-solid input-group-sm">
+                                                <input type="number" class="form-control" @bind="Model.StandardWorkDaysPerMonth" />
+                                                <span class="input-group-text">Ngày</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-5">
+                                        <label class="col-6 col-form-label fw-bold fs-7">Mức lương cơ sở (NN)</label>
+                                        <div class="col-6">
+                                            <div class="input-group input-group-solid input-group-sm">
+                                                <input type="number" class="form-control" @bind="Model.StatutoryPayRate" />
+                                                <span class="input-group-text">VND</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-5">
+                                        <label class="col-6 col-form-label fw-bold fs-7">Giảm trừ gia cảnh bản thân</label>
+                                        <div class="col-6">
+                                            <div class="input-group input-group-solid input-group-sm">
+                                                <input type="number" class="form-control" @bind="Model.DefaultPersonalDeduction" />
+                                                <span class="input-group-text">VND</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-5">
+                                        <label class="col-6 col-form-label fw-bold fs-7">Giảm trừ người phụ thuộc</label>
+                                        <div class="col-6">
+                                            <div class="input-group input-group-solid input-group-sm">
+                                                <input type="number" class="form-control" @bind="Model.DefaultDependentDeduction" />
+                                                <span class="input-group-text">VND</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h5 class="fw-bolder mb-5">Tỷ lệ đóng bảo hiểm (Nhân viên)</h5>
+                                    <div class="row mb-3">
+                                        <label class="col-6 col-form-label fs-7">BHXH (%)</label>
+                                        <div class="col-4">
+                                            <div class="input-group input-group-solid input-group-sm">
+                                                <input type="number" class="form-control" @bind="Model.SocialInsurancePercentEmployee" step="0.1" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-6 col-form-label fs-7">BHYT (%)</label>
+                                        <div class="col-4">
+                                            <div class="input-group input-group-solid input-group-sm">
+                                                <input type="number" class="form-control" @bind="Model.HealthInsurancePercentEmployee" step="0.1" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-6 col-form-label fs-7">BHTN (%)</label>
+                                        <div class="col-4">
+                                            <div class="input-group input-group-solid input-group-sm">
+                                                <input type="number" class="form-control" @bind="Model.UnemploymentInsurancePercentEmployee" step="0.1" />
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="separator separator-dashed my-8"></div>
+
+                            <div class="d-flex flex-stack mb-5">
+                                <h5 class="fw-bolder mb-0">Biểu thuế lũy tiến Thuế TNCN</h5>
+                                <button type="button" class="btn btn-sm btn-light-primary fw-bolder" @onclick="AddTaxStep">
+                                    <i class="bi bi-plus-lg me-2"></i>Thêm bậc thuế
+                                </button>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-3">
+                                    <thead>
+                                        <tr class="fw-bolder text-muted bg-light text-uppercase fs-9">
+                                            <th class="ps-4 min-w-150px rounded-start">Mức TN tính thuế trên (>)</th>
+                                            <th class="min-w-100px">Thuế suất (%)</th>
+                                            <th class="min-w-150px">Số trừ cố định</th>
+                                            <th class="min-w-50px text-end pe-4 rounded-end"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.PitSteps == null || !Model.PitSteps.Any())
+                                        {
+                                            <tr>
+                                                <td colspan="4" class="text-center py-10 text-muted fs-7">
+                                                    Chưa cấu hình biểu thuế. Hệ thống sẽ sử dụng biểu thuế mặc định.
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var step in Model.PitSteps.OrderBy(s => s.Threshold))
+                                            {
+                                                <tr>
+                                                    <td class="ps-4">
+                                                        <div class="input-group input-group-solid input-group-sm">
+                                                            <input type="number" class="form-control" @bind="step.Threshold" />
+                                                            <span class="input-group-text fs-9">VNĐ</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-solid input-group-sm">
+                                                            <input type="number" class="form-control" @bind="step.Rate" step="0.01" />
+                                                            <span class="input-group-text fs-9">%</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-solid input-group-sm">
+                                                            <input type="number" class="form-control" @bind="step.Deduction" />
+                                                            <span class="input-group-text fs-9">VNĐ</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-end pe-4">
+                                                        <button type="button" class="btn btn-icon btn-light-danger btn-sm w-30px h-30px" @onclick="() => RemoveTaxStep(step)">
+                                                            <i class="bi bi-trash fs-6"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="p-4 bg-light-warning rounded-3 mt-8 d-flex align-items-start border border-dashed border-warning">
+                                <i class="bi bi-info-circle text-warning fs-3 me-3 mt-1"></i>
+                                <div class="fs-8 text-warning-emphasis fw-bold">
+                                    Giải thích: Thuế TNCN được tính theo công thức lũy tiến từng phần. <br/>
+                                    Công thức: Thuế = (Thu nhập tính thuế * Thuế suất) - Số trừ cố định. <br/>
+                                    Ví dụ Bậc 2: Thu nhập từ 5.000.000 đến 10.000.000, Thuế suất 10%, Số trừ 250.000. <br/>
+                                    Cấu hình: Ngưỡng > 5.000.000, Thuế suất 0.1, Số trừ 250.000.
                                 </div>
                             </div>
                         </div>
@@ -476,6 +739,12 @@
                                 <label class="col-lg-3 col-form-label fw-bold fs-7">Tài khoản gửi tin</label>
                                 <div class="col-lg-9">
                                     <input type="text" class="form-control form-control-solid fs-7" @bind="Model.SmtpUser" placeholder="noreply@tantanloc.com" />
+                                </div>
+                            </div>
+                            <div class="row mb-7">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Mật khẩu ứng dụng (SMTP Password)</label>
+                                <div class="col-lg-9">
+                                    <input type="password" class="form-control form-control-solid fs-7" @bind="Model.SmtpPassword" placeholder="Sẽ không hiển thị nếu đã cài đặt" />
                                 </div>
                             </div>
                             <div class="row mb-7">

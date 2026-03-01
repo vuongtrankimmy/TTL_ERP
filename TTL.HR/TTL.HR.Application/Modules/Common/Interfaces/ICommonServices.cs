@@ -37,6 +37,9 @@ namespace TTL.HR.Application.Modules.Common.Interfaces
         Task<TTL.HR.Application.Modules.Common.Models.ApiResponse<bool>> ChangePasswordAsync(string currentPassword, string newPassword);
         Task LogoutAsync();
         Task<TTL.HR.Application.Modules.Common.Models.UserDto?> GetCurrentUserAsync();
+        Task<TTL.HR.Application.Modules.Common.Models.ApiResponse<bool>> ConfirmEmailAsync(string token);
+        Task<TTL.HR.Application.Modules.Common.Models.ApiResponse<bool>> RequestPasswordResetAsync(string email);
+        Task<TTL.HR.Application.Modules.Common.Models.ApiResponse<bool>> ResetPasswordAsync(string token, string newPassword);
         Task InitializeAsync();
     }
 
@@ -44,6 +47,7 @@ namespace TTL.HR.Application.Modules.Common.Interfaces
     {
         string FormatCurrency(decimal amount);
         string FormatDate(DateTime? date);
+        string FormatTime(DateTime? date);
         string FormatDateTime(DateTime? date);
         string FormatNumber(decimal value, int decimals = 0);
         string FormatNumber(double value, int decimals = 0);
@@ -61,6 +65,9 @@ namespace TTL.HR.Application.Modules.Common.Interfaces
         string FormatAddress(string? address);
         bool IsValidEmail(string? email);
         string CleanDigits(string? input);
+        string NormalizeUsername(string? input);
+        string NormalizePassword(string? input);
+        string GenerateDefaultUsername(string? phone, string? email, string? idCard);
     }
 
     public interface IAuditService

@@ -11,12 +11,17 @@ namespace TTL.HR.Shared.Pages.User.Components
     public partial class UserAttendanceHistory
     {
         [Parameter] public string? EmployeeId { get; set; }
+        [Parameter] public string? EmployeeName { get; set; }
+        [Parameter] public string? EmployeeCode { get; set; }
+        [Parameter] public string? AvatarUrl { get; set; }
+        
         [Inject] public IAttendanceService AttendanceService { get; set; } = default!;
 
         private bool _showExplanationDrawer = false;
         private AttendanceDetailModel? _selectedRecordForExplanation;
         private List<AttendanceDetailModel> _attendanceRecords = new();
         private bool _isLoading = true;
+        private TTL.HR.Shared.Components.Attendance.CreateShiftRequestModal? _createRequestModal;
 
         // Tháng đang xem, mặc định là tháng hiện tại
         private DateTime _currentMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -78,6 +83,8 @@ namespace TTL.HR.Shared.Pages.User.Components
             _showExplanationDrawer = false;
             _selectedRecordForExplanation = null;
         }
+
+        private void OpenCreateRequestModal() => _createRequestModal?.Open();
 
         private string GetStatusClass(string status) => status switch
         {

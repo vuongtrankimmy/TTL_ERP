@@ -19,6 +19,9 @@
                     @onclick="NextMonth" title="Tháng sau">
                 <i class="ki-outline ki-arrow-right fs-3"></i>
             </button>
+            <button type="button" class="btn btn-sm btn-light btn-active-light-primary fw-bold shadow-sm" @onclick="OpenCreateRequestModal">
+                <i class="ki-outline ki-plus-square fs-3 me-1"></i>Đổi ca
+            </button>
             <button type="button" class="btn btn-sm btn-light btn-active-light-primary fw-bold shadow-sm">
                 <i class="ki-outline ki-calendar-tick fs-3 me-1"></i>Xuất Excel
             </button>
@@ -197,3 +200,10 @@
 {
     <div class="drawer-overlay" style="z-index: 119; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(1px);" @onclick="CloseExplanation"></div>
 }
+
+<TTL.HR.Shared.Components.Attendance.CreateShiftRequestModal @ref="_createRequestModal" 
+    EmployeeId="@EmployeeId" 
+    EmployeeName="@EmployeeName" 
+    EmployeeCode="@EmployeeCode" 
+    AvatarUrl="@AvatarUrl" 
+    OnSuccess="LoadData" />

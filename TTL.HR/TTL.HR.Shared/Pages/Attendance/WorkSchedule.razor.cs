@@ -21,6 +21,30 @@ namespace TTL.HR.Shared.Pages.Attendance
         private bool _isLoading = true;
         private bool _isProcessing = false;
         private WorkScheduleModel? _selectedSchedule;
+
+        private List<string> _predefinedColors = new() { 
+            "primary", "success", "info", "warning", "danger", "dark",
+            "#F1416C", "#7239EA", "#50CD89", "#FFC700", "#009EF7", "#3F4254",
+            "#FF5733", "#C70039", "#900C3F", "#581845", "#FFC300", "#DAF7A6",
+            "#1ABC9C", "#2ECC71", "#3498DB", "#9B59B6", "#34495E", "#E67E22"
+        };
+
+        private string GetShiftStyle(string? color, bool isBackground = true)
+        {
+            if (string.IsNullOrEmpty(color)) return "";
+            if (color.StartsWith("#"))
+            {
+                return isBackground ? $"background-color: {color} !important;" : $"color: {color} !important;";
+            }
+            return "";
+        }
+
+        private string GetShiftClass(string? color, string prefix = "badge-")
+        {
+            if (string.IsNullOrEmpty(color)) return $"{prefix}secondary";
+            if (color.StartsWith("#")) return "";
+            return $"{prefix}{color}";
+        }
         private List<WorkScheduleModel> _schedules = new();
         private List<WorkScheduleModel> _filteredSchedules = new();
         
@@ -40,6 +64,9 @@ namespace TTL.HR.Shared.Pages.Attendance
         private int _pageSize = 10;
         private int _totalPages = 1;
         private List<WorkScheduleModel> _pagedSchedules = new();
+
+        private string _sortBy = "Shift"; 
+        private bool _isAsc = true;
 
         private DateTime _startDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1);
         private DateTime _endDate => _startDate.AddDays(6);
@@ -110,8 +137,18 @@ namespace TTL.HR.Shared.Pages.Attendance
 
             if (!string.IsNullOrEmpty(_selectedShiftType))
             {
-                _filteredSchedules = _filteredSchedules.Where(s => s.CurrentShift.Contains(_selectedShiftType)).ToList();
+                _filteredSchedules = _filteredSchedules.Where(s => s.CurrentShiftId == _selectedShiftType).ToList();
             }
+
+            // Apply Sorting
+            _filteredSchedules = _sortBy switch
+            {
+                "Name" => _isAsc ? _filteredSchedules.OrderBy(s => s.EmployeeName).ToList() : _filteredSchedules.OrderByDescending(s => s.EmployeeName).ToList(),
+                "Dept" => _isAsc ? _filteredSchedules.OrderBy(s => s.Department).ToList() : _filteredSchedules.OrderByDescending(s => s.Department).ToList(),
+                "Shift" => _isAsc ? _filteredSchedules.OrderBy(s => s.CurrentShift == "Chưa xếp ca" ? "Z" : s.CurrentShift).ThenBy(s => s.EmployeeCode).ToList() 
+                                  : _filteredSchedules.OrderByDescending(s => s.CurrentShift == "Chưa xếp ca" ? "Z" : s.CurrentShift).ThenBy(s => s.EmployeeCode).ToList(),
+                _ => _filteredSchedules
+            };
 
             // Calculate Pagination
             _totalPages = (int)Math.Ceiling(_filteredSchedules.Count / (double)_pageSize);
@@ -159,6 +196,17 @@ namespace TTL.HR.Shared.Pages.Attendance
             ApplyFilters();
         }
 
+        private void SortBy(string field)
+        {
+            if (_sortBy == field) _isAsc = !_isAsc;
+            else
+            {
+                _sortBy = field;
+                _isAsc = true;
+            }
+            ApplyFilters(resetPage: false);
+        }
+
         // Selection Logic
         private void ToggleSelectAll(ChangeEventArgs e)
         {
@@ -180,6 +228,30 @@ namespace TTL.HR.Shared.Pages.Attendance
             else _selectedEmpIds.Remove(empId);
             
             _isAllSelected = _filteredSchedules.Any() && _selectedEmpIds.IsSupersetOf(_filteredSchedules.Select(s => s.Id));
+        }
+
+        private void ToggleDayOfWeek(DayOfWeek day, ChangeEventArgs e)
+        {
+            var isChecked = (bool)(e.Value ?? false);
+            if (isChecked && !_assignModel.DaysOfWeek.Contains(day))
+                _assignModel.DaysOfWeek.Add(day);
+            else if (!isChecked)
+                _assignModel.DaysOfWeek.Remove(day);
+        }
+
+        private string GetDayName(DayOfWeek day)
+        {
+            return day switch
+            {
+                DayOfWeek.Monday => "T2",
+                DayOfWeek.Tuesday => "T3",
+                DayOfWeek.Wednesday => "T4",
+                DayOfWeek.Thursday => "T5",
+                DayOfWeek.Friday => "T6",
+                DayOfWeek.Saturday => "T7",
+                DayOfWeek.Sunday => "CN",
+                _ => ""
+            };
         }
 
         private void openDetail(WorkScheduleModel item)

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  
+  <data name="Status_Active" xml:space="preserve">
+    <value>Đang hoạt động</value>
+  </data>
+  <data name="Label_MyProfile" xml:space="preserve">
+    <value>Hồ sơ của tôi</value>
+  </data>
+  <data name="Label_Logout" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="Menu_Dashboards" xml:space="preserve">
+    <value>Bảng điều khiển</value>
+  </data>
+  <data name="Menu_EmployeeManagement" xml:space="preserve">
+    <value>Quản lý nhân viên</value>
+  </data>
+  <data name="Menu_EmployeeList" xml:space="preserve">
+    <value>Danh sách nhân viên</value>
+  </data>
+  <data name="Menu_Recruitment" xml:space="preserve">
+    <value>Tuyển dụng</value>
+  </data>
+  <data name="Menu_Attendance" xml:space="preserve">
+    <value>Chấm công</value>
+  </data>
+  <data name="Menu_Leave" xml:space="preserve">
+    <value>Nghỉ phép</value>
+  </data>
+  <data name="Menu_Payroll" xml:space="preserve">
+    <value>Bảng lương</value>
+  </data>
+  <data name="Menu_Training" xml:space="preserve">
+    <value>Đào tạo</value>
+  </data>
+  <data name="Menu_Assets" xml:space="preserve">
+    <value>Tài sản</value>
+  </data>
+  <data name="Menu_Configuration" xml:space="preserve">
+    <value>Cấu hình</value>
+  </data>
+  <data name="Section_OrgAndPersonnel" xml:space="preserve">
+    <value>Tổ chức &amp; Nhân sự</value>
+  </data>
+  <data name="Menu_CompanyStructure" xml:space="preserve">
+    <value>Cấu trúc công ty</value>
+  </data>
+  <data name="Menu_OrgChart" xml:space="preserve">
+    <value>Sơ đồ tổ chức</value>
+  </data>
+  <data name="Menu_Departments" xml:space="preserve">
+    <value>Phòng ban</value>
+  </data>
+  <data name="Menu_Positions" xml:space="preserve">
+    <value>Chức vụ &amp; Cấp bậc</value>
+  </data>
+  <data name="Menu_Onboarding" xml:space="preserve">
+    <value>Tiếp nhận hồ sơ</value>
+  </data>
+  <data name="Menu_Contracts" xml:space="preserve">
+    <value>Hợp đồng lao động</value>
+  </data>
+  <data name="Section_HROperations" xml:space="preserve">
+    <value>Vận hành HR</value>
+  </data>
+  <data name="Menu_AttendanceAndShifts" xml:space="preserve">
+    <value>Chấm công &amp; Ca làm</value>
+  </data>
+  <data name="Menu_AttendanceData" xml:space="preserve">
+    <value>Dữ liệu chấm công</value>
+  </data>
+  <data name="Menu_MonthlyTimesheet" xml:space="preserve">
+    <value>Bảng công tháng</value>
+  </data>
+  <data name="Menu_ImportData" xml:space="preserve">
+    <value>Import dữ liệu</value>
+  </data>
+  <data name="Menu_WorkSchedule" xml:space="preserve">
+    <value>Lịch làm việc</value>
+  </data>
+  <data name="Menu_ShiftManagement" xml:space="preserve">
+    <value>Quản lý phân ca</value>
+  </data>
+  <data name="Menu_ShiftCatalog" xml:space="preserve">
+    <value>Danh mục ca làm việc</value>
+  </data>
+  <data name="Menu_ShiftScheduler" xml:space="preserve">
+    <value>Sơ đồ phân ca</value>
+  </data>
+  <data name="Menu_ShiftAllocation" xml:space="preserve">
+    <value>Gán ca nhanh</value>
+  </data>
+  <data name="Menu_ShiftApproval" xml:space="preserve">
+    <value>Duyệt đổi ca</value>
+  </data>
+  <data name="Menu_LeaveManagement" xml:space="preserve">
+    <value>Quản lý nghỉ phép</value>
+  </data>
+  <data name="Menu_LeaveRequests" xml:space="preserve">
+    <value>Danh sách đơn</value>
+  </data>
+  <data name="Menu_LeaveApprovals" xml:space="preserve">
+    <value>Duyệt phép</value>
+  </data>
+  <data name="Menu_BusinessTrip" xml:space="preserve">
+    <value>Quản lý công tác</value>
+  </data>
+  <data name="Menu_PayrollAndBenefits" xml:space="preserve">
+    <value>Tiền lương &amp; Phúc lợi</value>
+  </data>
+  <data name="Menu_PayrollPeriods" xml:space="preserve">
+    <value>Bảng tính lương</value>
+  </data>
+  <data name="Menu_Benefits" xml:space="preserve">
+    <value>Chế độ phúc lợi</value>
+  </data>
+  <data name="Section_RecruitmentAndTraining" xml:space="preserve">
+    <value>Tuyển dụng &amp; Đào tạo</value>
+  </data>
+  <data name="Section_AssetsAndEquipment" xml:space="preserve">
+    <value>Tài sản &amp; Thiết bị</value>
+  </data>
+  <data name="Menu_AssetManagement" xml:space="preserve">
+    <value>Quản lý tài sản</value>
+  </data>
+  <data name="Menu_AssetInventory" xml:space="preserve">
+    <value>Danh sách tài sản</value>
+  </data>
+  <data name="Menu_AssetAllocation" xml:space="preserve">
+    <value>Cấp phát &amp; Thu hồi</value>
+  </data>
+  <data name="Section_System" xml:space="preserve">
+    <value>Hệ thống</value>
+  </data>
+  <data name="Menu_AdminAndConfig" xml:space="preserve">
+    <value>Quản trị &amp; Cấu hình</value>
+  </data>
+  <data name="Menu_RolesAndGroups" xml:space="preserve">
+    <value>Vai trò &amp; Nhóm</value>
+  </data>
+  <data name="Menu_Permissions" xml:space="preserve">
+    <value>Phân quyền chi tiết</value>
+  </data>
+  <data name="Menu_GeneralSettings" xml:space="preserve">
+    <value>Cài đặt chung</value>
+  </data>
+  <data name="Menu_PayrollConfig" xml:space="preserve">
+    <value>Cấu hình lương</value>
+  </data>
+  <data name="Section_Support" xml:space="preserve">
+    <value>Hỗ trợ &amp; Tiện ích</value>
+  </data>
+  <data name="Menu_HRToolkit" xml:space="preserve">
+    <value>HR Toolkit</value>
+  </data>
+  <data name="Menu_UserGuide" xml:space="preserve">
+    <value>Hướng dẫn sử dụng</value>
+  </data>
+  <data name="Error_ApiConnection" xml:space="preserve">
+    <value>Có lỗi xảy ra khi tải dữ liệu. Vui lòng kiểm tra kết nối API.</value>
+  </data>
+</root>

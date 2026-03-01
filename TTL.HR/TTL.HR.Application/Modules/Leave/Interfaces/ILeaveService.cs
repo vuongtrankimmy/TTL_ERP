@@ -12,7 +12,7 @@ namespace TTL.HR.Application.Modules.Leave.Interfaces
         Task<LeaveStateSummaryModel> GetLeaveSummaryAsync();
         Task<LeaveBalanceModel?> GetLeaveBalanceAsync(string employeeId, int year);
         Task<bool> SubmitLeaveRequestAsync(LeaveRequestModel request);
-        Task<bool> ApproveLeaveRequestAsync(string id, string status);
+
         Task<bool> ProcessLeaveRequestAsync(string id, bool approved, string? note);
     }
 }

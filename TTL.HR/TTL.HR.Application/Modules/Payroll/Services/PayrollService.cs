@@ -7,6 +7,8 @@ using TTL.HR.Application.Modules.Payroll.Interfaces;
 using TTL.HR.Application.Modules.Payroll.Models;
 using TTL.HR.Application.Modules.Common.Models;
 using TTL.HR.Application.Modules.Common.Constants;
+using System.Text.Json;
+using System.Linq;
 
 namespace TTL.HR.Application.Modules.Payroll.Services
 {
@@ -20,24 +22,52 @@ namespace TTL.HR.Application.Modules.Payroll.Services
             var url = ApiEndpoints.Payroll.Base;
             if (month.HasValue && year.HasValue) url += $"?month={month}&year={year}";
             
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<PayrollModel>>>(url);
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<PayrollModel>>>(url, options);
             return response?.Data ?? new List<PayrollModel>();
         }
 
         public Task<IEnumerable<PayrollModel>> GetPayrollsAsync(int? month = null, int? year = null) => GetPayrollAsync(month, year);
 
-        public async Task<IEnumerable<PayrollPeriodModel>> GetPeriodsAsync(int? year = null)
+        public async Task<IEnumerable<PayrollPeriodModel>> GetPeriodsAsync(int? year = null, int? month = null)
         {
             var url = ApiEndpoints.Payroll.Periods;
-            if (year.HasValue) url += $"?year={year}";
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<PayrollPeriodModel>>>(url);
+            var queryParams = new List<string>();
+            if (year.HasValue) queryParams.Add($"year={year}");
+            if (month.HasValue) queryParams.Add($"month={month}");
+            
+            if (queryParams.Any()) url += "?" + string.Join("&", queryParams);
+            
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<PayrollPeriodModel>>>(url, options);
             return response?.Data ?? new List<PayrollPeriodModel>();
         }
 
-        public async Task<PayrollPeriodDetailModel?> GetPeriodDetailAsync(string id, string? searchTerm = null, string? departmentId = null, int page = 1, int pageSize = 10)
+        public async Task<PayrollPeriodDetailModel?> GetPeriodDetailAsync(string id, string? searchTerm = null, string? departmentId = null, int page = 1, int pageSize = 10, int? year = null, int? month = null)
         {
-            var url = $"{ApiEndpoints.Payroll.Periods}/{id}?searchTerm={searchTerm}&departmentId={departmentId}&page={page}&pageSize={pageSize}";
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PayrollPeriodDetailModel>>(url);
+            var queryParams = new List<string>();
+            if (!string.IsNullOrWhiteSpace(searchTerm)) queryParams.Add($"searchTerm={Uri.EscapeDataString(searchTerm)}");
+            if (!string.IsNullOrWhiteSpace(departmentId) && departmentId != "all") queryParams.Add($"departmentId={Uri.EscapeDataString(departmentId)}");
+            queryParams.Add($"page={page}");
+            queryParams.Add($"pageSize={pageSize}");
+
+            var queryString = string.Join("&", queryParams);
+            string url;
+            
+            if (!string.IsNullOrEmpty(id))
+            {
+                url = $"{ApiEndpoints.Payroll.Periods}/{id}/detail?{queryString}";
+            }
+            else
+            {
+                url = $"{ApiEndpoints.Payroll.Periods}/{year}/{month}/detail?{queryString}";
+            }
+            
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var responseStr = await _httpClient.GetStringAsync(url);
+            Console.WriteLine($"[PayrollService] Raw JSON Response: {(responseStr.Length > 500 ? responseStr.Substring(0, 500) + "..." : responseStr)}");
+            
+            var response = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<PayrollPeriodDetailModel>>(responseStr, options);
             return response?.Data;
         }
 

@@ -1,0 +1,9 @@
+d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\Features\HumanResources\Recruitment\HireCandidateCommandHandlerTests.cs(26,39): error CS0305: Using the generic type 'Lookup<TKey, TElement>' requires 2 type arguments [d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\TTL.CoreService.Application.UnitTests.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\Features\HumanResources\Employees\UpdateEmployeeCommandHandlerTests.cs(24,39): error CS0246: The type or namespace name 'Department' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\TTL.CoreService.Application.UnitTests.csproj]
+d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\Features\HumanResources\Employees\CreateEmployeeCommandHandlerTests.cs(26,39): error CS0246: The type or namespace name 'Department' could not be found (are you missing a using directive or an assembly reference?) [d:\MONEY\2026\TAN_TAN_LOC\TTL_API\tests\TTL.CoreService.Application.UnitTests\TTL.CoreService.Application.UnitTests.csproj]
+
+Build FAILED.
+    0 Warning(s)
+    3 Error(s)
+
+Time Elapsed 00:00:01.65

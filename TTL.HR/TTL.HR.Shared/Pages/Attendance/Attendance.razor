@@ -1,4 +1,4 @@
-@page "/attendance"
+﻿@page "/attendance"
 @namespace TTL.HR.Shared.Pages.Attendance
 
 @inject IFormatService FormatService
@@ -10,7 +10,7 @@
 
         <!-- Summary Stats Dashboard -->
         <div class="row g-5 mb-8">
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
                 <div class="card border-0 border-start border-primary border-2 shadow-xs h-100 bg-light-primary">
                     <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
                         <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng nhân sự</span>
@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
                 <div class="card border-0 border-start border-success border-2 shadow-xs h-100 bg-light-success">
                     <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
                         <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng công thực tế</span>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
                 <div class="card border-0 border-start border-info border-2 shadow-xs h-100 bg-light-info">
                     <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
                         <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng giờ tăng ca</span>
@@ -48,7 +48,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
                 <div class="card border-0 border-start border-danger border-2 shadow-xs h-100 bg-light-danger">
                     <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
                         <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng vi phạm (Phút)</span>
@@ -62,50 +62,28 @@
             </div>
         </div>
 
-        <!-- Filters Bar -->
-        <div class="card mb-8 shadow-xs card-flush">
-            <div class="card-body py-4 px-6">
-                <div class="d-flex flex-wrap align-items-center">
-                    <!-- Search -->
-                    <div class="position-relative w-md-250px me-4 my-1">
-                        <span class="svg-icon svg-icon-3 position-absolute top-50 translate-middle-y ms-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
-                            </svg>
-                        </span>
-                        <input type="text" class="form-control form-control-solid ps-12 fs-7" placeholder="Tìm tên, mã nhân viên..." 
-                               value="@_searchTerm" @oninput="(e) => OnSearchChange(e.Value?.ToString() ?? string.Empty)" />
-                    </div>
-
-                    <!-- Period -->
-                    <div class="w-md-175px me-4 my-1">
-                        <select class="form-select form-select-solid fs-7 fw-bold" @onchange="OnPeriodChange">
-                            @foreach (var p in _periods)
-                            {
-                                <option value="@p.ToString("yyyy-MM-dd")" selected="@(p.Month == _currentMonth && p.Year == _currentYear)">Tháng @p.ToString("MM/yyyy")</option>
-                            }
-                        </select>
-                    </div>
-
-                    <!-- Department -->
-                    <div class="w-md-175px me-4 my-1">
-                        <select class="form-select form-select-solid fs-7 fw-bold" @onchange="OnDepartmentChange">
-                            <option value="">Phòng ban: Tất cả</option>
-                            @foreach (var d in _departments)
-                            {
-                                <option value="@d.Id">@d.Name</option>
-                            }
-                        </select>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="ms-auto my-1 d-flex gap-2">
-                        <button class="btn btn-icon btn-light-primary btn-sm" title="Làm mới dữ liệu" @onclick="RefreshData"><i class="bi bi-arrow-repeat fs-5"></i></button>
-                        <button class="btn btn-light-primary fw-bold fs-7 px-6 ms-2"><i class="bi bi-funnel me-1"></i>Lọc thêm</button>
-                    </div>
+        <!-- Unified Filters Bar -->
+        <EmployeeToolbar 
+            SearchQuery="@_searchTerm"
+            Departments="@_departments"
+            OnSearchChanged="OnSearchChange"
+            OnDepartmentChanged="(id) => { _selectedDepartmentId = id; _currentPage = 1; LoadData(); }"
+            ShowExport="true">
+            <ExtraFilters>
+                <!-- Period Selector (Specific to Attendance) -->
+                <div class="w-md-175px me-4 my-1">
+                    <select class="form-select form-select-solid fs-7 fw-bold" @onchange="OnPeriodChange">
+                        @foreach (var p in _periods)
+                        {
+                            <option value="@p.ToString("yyyy-MM-dd")" selected="@(p.Month == _currentMonth && p.Year == _currentYear)">Tháng @p.ToString("MM/yyyy")</option>
+                        }
+                    </select>
                 </div>
-            </div>
-        </div>
+            </ExtraFilters>
+            <CustomActions>
+                <button class="btn btn-light-primary fw-bold fs-7 px-6 ms-2"><i class="bi bi-funnel me-1"></i>Lọc thêm</button>
+            </CustomActions>
+        </EmployeeToolbar>
 
         <!-- Selection Bar -->
         <div class="d-flex flex-stack mb-6">
@@ -128,135 +106,119 @@
             </div>
         </div>
 
-        <!-- Table -->
-        <div class="card shadow-xs card-flush">
-            <div class="card-body p-0">
-                <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="10" Columns="10">
-                    <div class="table-responsive">
-                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-7 gy-5">
-                            <thead>
-                                <tr class="fw-bold text-muted text-uppercase fs-8 border-bottom-0">
-                                    <th class="w-10px pe-2"></th>
-                                    <th class="min-w-180px">NHÂN VIÊN</th>
-                                    <th class="min-w-120px">PHÒNG BAN</th>
-                                    <th class="min-w-60px text-center">CHUẨN</th>
-                                    <th class="min-w-60px text-center">THỰC</th>
-                                    <th class="min-w-80px text-center">GIỜ CÔNG</th>
-                                    <th class="min-w-60px text-center">MUỘN (P)</th>
-                                    <th class="min-w-60px text-center">SỚM (P)</th>
-                                    <th class="min-w-60px text-center">PHÉP</th>
-                                    <th class="min-w-60px text-center">LỄ</th>
-                                    <th class="min-w-70px text-center">TĂNG CA</th>
-                                    <th class="min-w-100px text-center">TRẠNG THÁI</th>
-                                    <th class="min-w-100px text-end pe-7">THAO TÁC</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (FilteredEmployees.Any())
-                                {
-                                    @foreach (var emp in FilteredEmployees)
-                                    {
-                                        <tr class="hover-bg-light cursor-pointer" @onclick="() => openDetail(emp)">
-                                            <td><div class="form-check form-check-sm form-check-custom form-check-solid"><input class="form-check-input timesheet-checkbox" type="checkbox" value="1" @onclick:stopPropagation /></div></td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="symbol symbol-40px symbol-circle me-3">
-                                                        @if (!string.IsNullOrEmpty(emp.Avatar))
-                                                        {
-                                                            <img src="@emp.Avatar" alt="user" />
-                                                         }
-                                                         else
-                                                         {
-                                                            <div class="symbol-label bg-light-danger text-danger fw-bolder">@(emp.EmployeeName?.Length > 0 ? emp.EmployeeName.Substring(0, 1) : "N")</div>
-                                                         }
-                                                    </div>
-                                                    <div class="d-flex justify-content-start flex-column"><span class="text-dark fw-bolder fs-6">@emp.EmployeeName</span><span class="text-muted fw-bold fs-7">@emp.EmployeeId • @emp.Role</span></div>
-                                                </div>
-                                            </td>
-                                            <td><span class="text-gray-700 fw-bold">@emp.Department</span></td>
-                                            <td class="text-center fw-bolder text-gray-800">@emp.StandardWork</td>
-                                            <td class="text-center fw-bolder text-primary">@emp.ActualWork</td>
-                                            <td class="text-center fw-bold text-dark">@FormatService.FormatNumber(emp.TotalWorkingHours, 1) h</td>
 
-                                            <td class="text-center"><span class="text-danger fw-bold">@emp.LateMinutes</span></td>
-                                            <td class="text-center"><span class="text-gray-600 fw-bold">@emp.EarlyLeaveMinutes</span></td>
-                                            <td class="text-center"><span class="text-warning fw-bold">@emp.LeaveDays</span></td>
-                                            <td class="text-center"><span class="text-gray-600 fw-bold">@emp.HolidayDays</span></td>
-                                            <td class="text-center fw-bold text-success">@emp.OvertimeHours h</td>
-                                            <td class="text-center">
-                                                <span class="badge @GetStatusColor(emp.Status) fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
-                                                    <span class="bullet bullet-dot @GetStatusBulletClass(emp.Status) w-6px h-6px me-2"></span>@TranslateStatus(emp.Status)
-                                                </span>
-                                            </td>
-                                            <td class="text-end">
-                                                <button class="btn btn-icon btn-sm btn-light-primary border border-primary border-opacity-10 me-2" title="Chi tiết công" @onclick="() => openDetail(emp)" @onclick:stopPropagation><i class="bi bi-eye-fill fs-6"></i></button>
-                                                @if (emp.Status == "Locked" || emp.Status == "Đã chốt")
-                                                {
-                                                    <button class="btn btn-icon btn-sm btn-success border border-success border-opacity-10" title="Đã chốt" disabled @onclick:stopPropagation><i class="bi bi-check-all fs-5"></i></button>
-                                                }
-                                                else
-                                                {
-                                                    <button class="btn btn-icon btn-sm btn-light-success border border-success border-opacity-10" title="Chốt công" @onclick:stopPropagation><i class="bi bi-check-lg fs-5"></i></button>
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                    <!-- Totals Row -->
-                                    <tr class="fw-bolder bg-light">
-                                        <td></td>
-                                        <td colspan="2" class="text-end ps-0">TỔNG CỘNG (@FilteredEmployees.Count NS):</td>
-                                        <td class="text-center">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.StandardWork))</td>
-                                        <td class="text-center text-primary">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.ActualWork), 1)</td>
-                                        <td class="text-center text-dark">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.TotalWorkingHours), 1) h</td>
-                                        <td class="text-center text-danger">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.LateMinutes))</td>
-                                        <td class="text-center text-gray-600">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.EarlyLeaveMinutes))</td>
-                                        <td class="text-center text-warning">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.LeaveDays))</td>
-                                        <td class="text-center text-gray-600">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.HolidayDays))</td>
-                                        <td class="text-center text-success">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.OvertimeHours), 1) h</td>
-
-
-                                        <td colspan="2"></td>
-                                    </tr>
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="10" class="text-center py-20">
-                                            <div class="text-muted fs-4">Không tìm thấy dữ liệu chấm công.</div>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+        <!-- Unified Table -->
+        <EmployeeDataGrid 
+            TItem="AttendanceModel"
+            Items="FilteredEmployees"
+            IsLoading="_isLoading"
+            CurrentPage="@_currentPage"
+            TotalCount="@_totalItems"
+            PageSize="@_pageSize"
+            Rows="@_pageSize"
+            OnPageChanged="OnPageChange"
+            Columns="13">
+            <HeaderTemplate>
+                <th class="w-10px pe-2"></th>
+                <th class="min-w-180px">NHÂN VIÊN</th>
+                <th class="min-w-120px">PHÒNG BAN</th>
+                <th class="min-w-60px text-center">CHUẨN</th>
+                <th class="min-w-60px text-center">THỰC</th>
+                <th class="min-w-80px text-center">GIỜ CÔNG</th>
+                <th class="min-w-60px text-center">MUỘN (P)</th>
+                <th class="min-w-60px text-center">SỚM (P)</th>
+                <th class="min-w-60px text-center">PHÉP</th>
+                <th class="min-w-60px text-center">LỄ</th>
+                <th class="min-w-70px text-center">TĂNG CA</th>
+                <th class="min-w-100px text-center">TRẠNG THÁI</th>
+                <th class="min-w-100px text-end pe-7">THAO TÁC</th>
+            </HeaderTemplate>
+            <RowTemplate Context="item">
+                <td><div class="form-check form-check-sm form-check-custom form-check-solid"><input class="form-check-input timesheet-checkbox" type="checkbox" value="1" @onclick:stopPropagation /></div></td>
+                <td class="d-flex align-items-center">
+                    <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                        <a href="javascript:;" class="kt_drawer_employee_detail_toggle" @onclick="() => openDetail(item)">
+                            @if (!string.IsNullOrEmpty(item.Avatar))
+                            {
+                                <div class="symbol-label"><img src="@item.Avatar" alt="@item.EmployeeName" class="w-100" /></div>
+                            }
+                            else
+                            {
+                                <div class="symbol-label bg-light-primary text-primary fw-bolder">@(item.EmployeeName?.Length > 0 ? item.EmployeeName.Substring(0, 1) : "N")</div>
+                            }
+                        </a>
                     </div>
-                    <!-- Pagination -->
-                    <div class="px-7 py-5">
-                        <div class="d-flex flex-stack flex-wrap">
-                            <div class="fs-7 fw-bold text-gray-700">Hiển thị @FilteredEmployees.Count nhân viên</div>
-                            <ul class="pagination">
-                                <li class="page-item previous disabled"><a href="#" class="page-link"><i class="next"></i></a></li>
-                                <li class="page-item active"><a href="#" class="page-link">1</a></li>
-                                <li class="page-item next"><a href="#" class="page-link"><i class="next"></i></a></li>
-                            </ul>
+                    <div class="d-flex flex-column">
+                        <a href="javascript:;" class="kt_drawer_employee_detail_toggle text-gray-900 fw-bold text-hover-primary mb-1 fs-6" @onclick="() => openDetail(item)">@item.EmployeeName</a>
+                        <span class="text-muted fw-semibold fs-7 mb-1">@item.EmployeeCode • @item.Role</span>
+                        <div class="d-flex align-items-center">
+                            <span class="badge @(GetShiftClass(item.ShiftColor, "badge-light-")) fw-bold fs-9 px-2 py-0" style="@(GetShiftStyle(item.ShiftColor))">@item.ShiftName</span>
                         </div>
                     </div>
-                </SkeletonLoading>
-            </div>
-        </div>
+                </td>
+                <td><span class="text-gray-700 fw-bold">@item.Department</span></td>
+                <td class="text-center fw-bolder text-gray-800">@item.StandardWork</td>
+                <td class="text-center fw-bolder text-primary">@item.ActualWork</td>
+                <td class="text-center fw-bold text-dark">@FormatService.FormatNumber(item.TotalWorkingHours, 1) h</td>
+
+                <td class="text-center"><span class="text-danger fw-bold">@item.LateMinutes</span></td>
+                <td class="text-center"><span class="text-gray-600 fw-bold">@item.EarlyLeaveMinutes</span></td>
+                <td class="text-center"><span class="text-warning fw-bold">@item.LeaveDays</span></td>
+                <td class="text-center"><span class="text-gray-600 fw-bold">@item.HolidayDays</span></td>
+                <td class="text-center fw-bold text-success">@item.OvertimeHours h</td>
+                <td class="text-center">
+                    <span class="badge @GetStatusColor(item.Status) fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                        <span class="bullet bullet-dot @GetStatusBulletClass(item.Status) w-6px h-6px me-2"></span>@TranslateStatus(item.Status)
+                    </span>
+                </td>
+                <td class="text-end pe-7">
+                    <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-2 shadow-sm" title="Chi tiết công" @onclick="() => openDetail(item)" @onclick:stopPropagation>
+                        <i class="ki-outline ki-eye fs-3"></i>
+                    </button>
+                    @if (item.Status == "Locked" || item.Status == "Đã chốt")
+                    {
+                        <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm shadow-sm" title="Đã chốt" disabled @onclick:stopPropagation>
+                            <i class="ki-outline ki-check-all fs-3"></i>
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm shadow-sm" title="Chốt công" @onclick:stopPropagation>
+                            <i class="ki-outline ki-check fs-3"></i>
+                        </button>
+                    }
+                </td>
+            </RowTemplate>
+            <FooterTemplate>
+                <tr>
+                    <td></td>
+                    <td colspan="2" class="text-end ps-0">TỔNG CỘNG (@FilteredEmployees.Count NS):</td>
+                    <td class="text-center">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.StandardWork))</td>
+                    <td class="text-center text-primary">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.ActualWork), 1)</td>
+                    <td class="text-center text-dark">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.TotalWorkingHours), 1) h</td>
+                    <td class="text-center text-danger">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.LateMinutes))</td>
+                    <td class="text-center text-gray-600">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.EarlyLeaveMinutes))</td>
+                    <td class="text-center text-warning">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.LeaveDays))</td>
+                    <td class="text-center text-gray-600">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.HolidayDays))</td>
+                    <td class="text-center text-success">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.OvertimeHours), 1) h</td>
+                    <td colspan="2"></td>
+                </tr>
+            </FooterTemplate>
+        </EmployeeDataGrid>
 
     </div>
 </div>
 
 <!-- ATTENDANCE DETAIL DRAWER (Ported from leave-management.html) -->
 <div class="bg-white drawer drawer-end @(_showDetail ? "drawer-on" : "")" 
-     style="width: 500px; position: fixed; right: 0; top: 0; bottom: 0; z-index: 106; box-shadow: -10px 0 30px rgba(0,0,0,0.1); border-left: 1px solid #eff2f5; transition: transform 0.3s ease; transform: @(_showDetail ? "translateX(0)" : "translateX(100%)"); display: block;">
+     style="width: 500px; max-width: 100vw; position: fixed; right: 0; top: 0; bottom: 0; z-index: 106; box-shadow: -10px 0 30px rgba(0,0,0,0.1); border-left: 1px solid #eff2f5; transition: transform 0.3s ease; transform: @(_showDetail ? "translateX(0)" : "translateX(100%)"); display: block;">
     <div class="card w-100 rounded-0 border-0 h-100 overflow-hidden">
         <!-- Header -->
         <div class="card-header pe-5">
             <div class="card-title">
                 <div class="d-flex justify-content-center flex-column me-3">
                     <span class="fs-4 fw-bolder text-gray-900 lh-1">Chi tiết công tháng @_currentMonth/@_currentYear</span>
-                    <span class="fs-7 fw-bold text-muted mt-2">MÃ NV: @(_selectedEmployee?.Id ?? "---")</span>
+                    <span class="fs-7 fw-bold text-muted mt-2">MàNV: @(_selectedEmployee?.Id ?? "---")</span>
                 </div>
             </div>
             <div class="card-toolbar">
@@ -272,14 +234,14 @@
             {
                 <div class="d-flex flex-stack bg-light rounded p-5 mb-8 border border-gray-100">
                     <div class="d-flex align-items-center">
-                        <div class="symbol symbol-60px symbol-circle me-5 shadow-xs">
+                        <div class="symbol symbol-70px symbol-circle me-5 shadow-xs">
                             @if (!string.IsNullOrEmpty(_selectedEmployee.Avatar))
                             {
                                 <img src="@_selectedEmployee.Avatar" alt="" />
                             }
                             else
                             {
-                                <div class="symbol-label fs-2 fw-bold bg-primary text-inverse-primary">@_selectedEmployee.EmployeeName.Substring(0, 1)</div>
+                                <div class="symbol-label fs-2 fw-bold bg-primary text-inverse-primary">@(_selectedEmployee.EmployeeName?.Length > 0 ? _selectedEmployee.EmployeeName.Substring(0, 1) : "A")</div>
                             }
                         </div>
                         <div class="d-flex flex-column">
@@ -288,6 +250,9 @@
                                 <span class="badge @GetStatusColor(_selectedEmployee.Status) fw-bold fs-9 px-2 py-1">@_selectedEmployee.Status</span>
                             </div>
                             <span class="text-muted fw-bold fs-7">@_selectedEmployee.Department - @_selectedEmployee.Role</span>
+                            <div class="d-flex align-items-center mt-1">
+                                <span class="badge @(GetShiftClass(_selectedEmployee.ShiftColor, "badge-light-")) fw-bold fs-9 px-2 py-0" style="@(GetShiftStyle(_selectedEmployee.ShiftColor))">@_selectedEmployee.ShiftName</span>
+                            </div>
                         </div>
                     </div>
                     <div class="text-end">
@@ -319,7 +284,7 @@
                     </div>
                     <div class="col-6">
                         <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 mb-3">
-                            <div class="fs-6 fw-bolder text-gray-700">@((_selectedEmployee.ActualWork / _selectedEmployee.StandardWork * 100).ToString("0"))%</div>
+                            <div class="fs-6 fw-bolder text-gray-700">@(_selectedEmployee.StandardWork > 0 ? FormatService.FormatNumber(_selectedEmployee.ActualWork / _selectedEmployee.StandardWork * 100, 0) : "0")%</div>
                             <div class="fw-bold text-muted fs-8">Tỷ lệ chuyên cần</div>
                         </div>
                     </div>
@@ -348,13 +313,13 @@
                                     <td class="text-center">
                                         @if (detail.CheckIn.HasValue)
                                         {
-                                            <span class="text-gray-800 fs-8">@detail.CheckIn.Value.ToString("HH:mm")</span>
+                                            <span class="text-gray-800 fs-8">@FormatService.FormatTime(detail.CheckIn)</span>
                                         }
                                     </td>
                                     <td class="text-center">
                                         @if (detail.CheckOut.HasValue)
                                         {
-                                            <span class="text-gray-800 fs-8">@detail.CheckOut.Value.ToString("HH:mm")</span>
+                                            <span class="text-gray-800 fs-8">@FormatService.FormatTime(detail.CheckOut)</span>
                                         }
                                     </td>
                                     <td class="text-center">

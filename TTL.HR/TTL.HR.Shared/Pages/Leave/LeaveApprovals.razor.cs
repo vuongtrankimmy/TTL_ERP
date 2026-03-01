@@ -19,9 +19,13 @@ namespace TTL.HR.Shared.Pages.Leave
         private ApprovalItem? _requestToProcess;
 
         [Inject] private ILeaveService LeaveService { get; set; } = default!;
+        [Inject] private TTL.HR.Application.Modules.Common.Interfaces.IAuthService AuthService { get; set; } = default!;
+
+        private TTL.HR.Application.Modules.Common.Models.UserDto? _currentUser;
 
         protected override async Task OnInitializedAsync()
         {
+            _currentUser = await AuthService.GetCurrentUserAsync();
             await LoadData();
         }
 
@@ -37,13 +41,16 @@ namespace TTL.HR.Shared.Pages.Leave
                     {
                         Id = int.TryParse(r.Id, out var id) ? id : 0,
                         Name = r.EmployeeName,
-                        Department = "General",
-                        Avatar = "",
+                        EmployeeId = r.EmployeeId,
+                        EmployeeCode = r.EmployeeCode,
+                        Department = r.Department,
+                        Avatar = r.Avatar,
                         Type = r.Type,
                         DateRange = $"{r.StartDate:dd/MM} - {r.EndDate:dd/MM}",
                         Duration = r.TotalDays.ToString("F1"),
                         Reason = r.Reason,
-                        Status = r.Status
+                        Status = r.Status,
+                        PendingApproverId = r.PendingApproverId
                     }).ToList();
                 }
             }
@@ -106,8 +113,9 @@ namespace TTL.HR.Shared.Pages.Leave
         {
             if (_requestToProcess == null) return;
 
-            string status = _actionType == "APPROVE" ? "Approved" : "Rejected";
-            var success = await LeaveService.ApproveLeaveRequestAsync(_requestToProcess.Id.ToString(), status);
+            bool isApprove = _actionType == "APPROVE";
+            string status = isApprove ? "Approved" : "Rejected";
+            var success = await LeaveService.ProcessLeaveRequestAsync(_requestToProcess.Id.ToString(), isApprove, reason);
 
             if (success)
             {
@@ -130,6 +138,15 @@ namespace TTL.HR.Shared.Pages.Leave
             _requestToProcess = null;
         }
 
+        private bool CanApprove(ApprovalItem item) 
+        {
+            if (_currentUser == null) return false;
+            if (_currentUser.Role == "Admin" || _currentUser.Role == "SuperAdmin") return true;
+            if (!string.IsNullOrEmpty(item.PendingApproverId) && item.PendingApproverId == _currentUser.Id) return true;
+            // Fallback for old records or generic states
+            return string.IsNullOrEmpty(item.PendingApproverId);
+        }
+
         private List<ApprovalItem> _approvals = new()
         {
         };
@@ -138,6 +155,8 @@ namespace TTL.HR.Shared.Pages.Leave
         {
             public int Id { get; set; }
             public string Name { get; set; } = "";
+            public string EmployeeId { get; set; } = "";
+            public string EmployeeCode { get; set; } = "";
             public string Department { get; set; } = "";
             public string Avatar { get; set; } = "";
             public string Type { get; set; } = "";
@@ -146,6 +165,27 @@ namespace TTL.HR.Shared.Pages.Leave
             public string Reason { get; set; } = "";
             public string Status { get; set; } = "Pending";
             public string? ManagerNote { get; set; }
+            public string? PendingApproverId { get; set; }
+            
+            public string StatusColor => Status switch
+            {
+                "Approved" => "success",
+                "PartiallyApproved" => "info",
+                "Rejected" => "danger",
+                "Pending" => "warning",
+                "Cancelled" => "secondary",
+                _ => "secondary"
+            };
+            
+            public string StatusText => Status switch
+            {
+                "Approved" => "Đã duyệt",
+                "PartiallyApproved" => "Duyệt cấp 1",
+                "Rejected" => "Từ chối",
+                "Pending" => "Chờ duyệt",
+                "Cancelled" => "Đã hủy",
+                _ => Status
+            };
         }
     }
 }

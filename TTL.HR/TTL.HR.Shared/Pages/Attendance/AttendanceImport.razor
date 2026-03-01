@@ -114,26 +114,83 @@
                                 <div class="mb-10">
                                     <label class="form-label fw-bold">Tải tệp dữ liệu:</label>
                                     <div class="fv-row">
-                                        <div class="dropzone d-flex align-items-center justify-content-center p-10 border-dashed rounded" style="background: #f8f9fa; position: relative;">
-                                            <div class="text-center">
-                                                <i class="ki-outline ki-file-up fs-3x text-primary mb-3"></i>
-                                                <div class="fs-6 fw-bold text-gray-700">Kéo thả tệp hoặc click để chọn</div>
-                                                <span class="text-muted fs-7">Hỗ trợ .xlsx, .xls, .csv, .txt, .json (Max 10MB)</span>
-                                                <InputFile OnChange="@OnInputFileChange" class="position-absolute opacity-0 w-100 h-100 top-0 start-0 cursor-pointer" accept=".xlsx,.xls,.csv,.txt,.json" />
-                                            </div>
-                                        </div>
+                                    <div class="dropzone d-flex align-items-center justify-content-center p-10 border-dashed rounded overflow-hidden transition-3ms @(_isDragging ? "dropzone-active border-primary bg-light-primary" : "bg-light")" 
+                                         style="position: relative; min-height: 200px;"
+                                         @ondragenter="HandleDragEnter" 
+                                         @ondragleave="HandleDragLeave"
+                                         @ondragover:prevent>
+                                         
+                                         @if (_isProcessing)
+                                         {
+                                             <div class="position-absolute w-100 h-100 top-0 start-0 d-flex flex-column align-items-center justify-content-center z-index-2 bg-white bg-opacity-75">
+                                                 <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+                                                 <span class="text-gray-800 fw-bold">Đang xử lý tệp...</span>
+                                             </div>
+                                         }
+
+                                         <div class="text-center @(selectedFile != null ? "d-none" : "")">
+                                             <i class="ki-outline ki-file-up fs-3x text-primary mb-3"></i>
+                                             <div class="fs-6 fw-bold text-gray-700">Kéo thả tệp hoặc click để chọn</div>
+                                             <span class="text-muted fs-7">Hỗ trợ .xlsx, .xls, .csv, .txt, .json (Max 10MB)</span>
+                                             <InputFile OnChange="@OnInputFileChange" class="position-absolute opacity-0 w-100 h-100 top-0 start-0 cursor-pointer" accept=".xlsx,.xls,.csv,.txt,.json" disabled="@_isProcessing" />
+                                         </div>
+
+                                         @if (selectedFile != null)
+                                         {
+                                             <div class="text-center position-relative z-index-1 animate__animated animate__zoomIn">
+                                                 <i class="ki-outline ki-document fs-3x text-success mb-3"></i>
+                                                 <div class="fs-6 fw-bold text-gray-700">@selectedFile.Name</div>
+                                                 <span class="text-muted fs-7">@((selectedFile.Size / 1024).ToString("N0")) KB</span>
+                                                 <div class="mt-4">
+                                                     <button type="button" class="btn btn-sm btn-light-danger" @onclick="RemoveFile" disabled="@_isProcessing">
+                                                         <i class="ki-outline ki-cross fs-4"></i>Xóa tệp
+                                                     </button>
+                                                 </div>
+                                             </div>
+                                         }
+                                     </div>
                                     </div>
                                 </div>
 
                                 <div class="separator separator-dashed my-8"></div>
 
                                 <div class="mb-5">
-                                    <label class="form-label fw-bold">Hoặc dán văn bản thô:</label>
-                                    <textarea class="form-control form-control-solid" rows="6" placeholder="NV001, 2024-02-21 08:00&#10;NV002, 2024-02-21 08:05" @bind="rawData"></textarea>
+                                    <label class="form-label fw-bold">Xem trước nội dung / Hoặc dán văn bản thô (Hiển thị tối đa 10 dòng):</label>
+                                    @if (rawDataTable.Any())
+                                    {
+                                        <div class="table-responsive border rounded mb-3 custom-scrollbar overflow-auto animate__animated animate__fadeIn" style="max-height: 350px;">
+                                            <table class="table table-bordered table-sm table-striped fs-8 mb-0 align-middle">
+                                                <thead class="position-sticky top-0 bg-light z-index-1">
+                                                    <tr class="fw-bold text-gray-800 bg-light">
+                                                        @for (int i = 0; i < rawDataTable.First().Count; i++)
+                                                        {
+                                                            <th class="px-3 py-2 text-nowrap">Cột @(i + 1)</th>
+                                                        }
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var row in rawDataTable.Skip(1))
+                                                    {
+                                                        <tr>
+                                                            @foreach (var cell in row)
+                                                            {
+                                                                <td class="px-3 py-1 text-nowrap text-muted">@cell</td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                    <textarea class="form-control form-control-solid @(rawDataTable.Any() ? "d-none" : "")" rows="6" placeholder="Nhập văn bản thô tại đây (cách nhau bởi dấu phẩy)..." @bind="rawData" @oninput="OnRawDataChanged"></textarea>
                                 </div>
                                 <div class="d-flex justify-content-end">
-                                    <button class="btn btn-primary px-10 py-3" @onclick="GoToPreview" disabled="@(string.IsNullOrEmpty(rawData))">
-                                        Tiếp tục với dữ liệu thô <i class="ki-outline ki-arrow-right fs-3 ms-2"></i>
+                                    <button class="btn btn-primary px-10 py-3" @onclick="ProcessNextStep" disabled="@(!CanProceed() || _isProcessing)">
+                                        @if (_isProcessing)
+                                        {
+                                            <span class="spinner-border spinner-border-sm me-2"></span>
+                                        }
+                                        Tiếp tục <i class="ki-outline ki-arrow-right fs-3 ms-2"></i>
                                     </button>
                                 </div>
                             </div>
@@ -144,21 +201,41 @@
                                     <div class="text-dark fw-semibold">Hệ thống tự động lọc bản ghi sớm nhất làm Check-in và muộn nhất làm Check-out trong cùng một ngày làm việc.</div>
                                 </div>
                                 <div class="mb-5">
-                                    <h4 class="fs-6 fw-bold mb-3 text-gray-700">Mẫu định dạng chuẩn (Excel/CSV):</h4>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped text-center">
-                                            <thead>
-                                                <tr class="fw-bold fs-7 bg-light">
-                                                    <th>Cột A (Mã NV)</th>
-                                                    <th>Cột B (Thời gian)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="fs-7">
-                                                <tr><td>GD-001</td><td>2026-02-21 08:00:15</td></tr>
-                                                <tr><td>GD-001</td><td>2026-02-21 17:05:40</td></tr>
-                                                <tr><td>NV-102</td><td>2026-02-21 07:55:00</td></tr>
-                                            </tbody>
-                                        </table>
+                                    <h4 class="fs-6 fw-bold mb-4 text-gray-700">Minh họa nguyên tắc lọc dữ liệu:</h4>
+                                    <div class="row align-items-center g-0 mb-3">
+                                        <div class="col-5">
+                                            <div class="table-responsive border rounded text-center">
+                                                <div class="bg-light py-2 fw-bold fs-8 border-bottom">Dữ liệu thô tải lên</div>
+                                                <table class="table table-row-bordered table-striped mb-0">
+                                                    <tbody class="fs-8">
+                                                        <tr><td>GD-001</td><td class="text-success fw-bold">08:00</td></tr>
+                                                        <tr><td>GD-001</td><td class="text-muted">12:15</td></tr>
+                                                        <tr><td class="border-bottom-0">GD-001</td><td class="text-info fw-bold border-bottom-0">17:05</td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <i class="ki-outline ki-arrow-right fs-2x text-primary animate-pulse"></i>
+                                            <div class="fs-9 fw-bold mt-1 text-primary">Xử lý</div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="table-responsive border rounded text-center h-100">
+                                                <div class="bg-light py-2 fw-bold fs-8 border-bottom">Kết quả Bảng công</div>
+                                                <table class="table mb-0 h-100">
+                                                    <tbody class="fs-8">
+                                                        <tr>
+                                                            <td class="border-bottom-0 align-middle py-6">GD-001</td>
+                                                            <td class="border-bottom-0 align-middle py-6"><span class="badge badge-light-success fs-9 px-2">IN: 08:00</span></td>
+                                                            <td class="border-bottom-0 align-middle py-6"><span class="badge badge-light-info fs-9 px-2">OUT: 17:05</span></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-muted fs-8 fst-italic text-center">
+                                        (Các bản ghi ở giữa như 12:15 sẽ được bỏ qua)
                                     </div>
                                 </div>
                                 <div class="mb-5">
@@ -201,7 +278,7 @@
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <button class="btn btn-light px-10 py-3" @onclick="Reset">Hủy bỏ</button>
+                                <button class="btn btn-light px-10 py-3" @onclick="GoBack"><i class="ki-outline ki-arrow-left fs-3 me-2"></i> Quay lại</button>
                                 <button class="btn btn-primary px-10 py-3" @onclick="GoToPreview" disabled="@_isProcessing">
                                     @if (_isProcessing)
                                     {
@@ -217,11 +294,11 @@
                         <!-- Step 3: Preview -->
                         <div class="d-flex flex-stack mb-7">
                             <div class="d-flex flex-column">
-                                <h3 class="fw-bold text-dark">Xem trước dữ liệu (@importResult.SuccessCount bản ghi)</h3>
+                                <h3 class="fw-bold text-dark">Xem trước dữ liệu (@(importResult.PreviewItems.Count) bản ghi)</h3>
                                 <p class="text-gray-500 pb-0 mb-0">Hệ thống đã phân tích dữ liệu, vui lòng kiểm tra trước khi nhấn Lưu.</p>
                             </div>
                             <div class="d-flex">
-                                <button class="btn btn-light me-3" @onclick="() => currentStep = 2"><i class="ki-outline ki-setting-3 fs-3 me-1"></i>Sửa mapping</button>
+                                <button class="btn btn-light me-3" @onclick="GoBack"><i class="ki-outline ki-arrow-left fs-3 me-1"></i>Quay lại</button>
                                 <button class="btn btn-success" @onclick="ConfirmImport" disabled="@_isProcessing">
                                     @if (_isProcessing)
                                     {
@@ -232,70 +309,246 @@
                             </div>
                         </div>
 
-                        <div class="table-responsive border rounded">
-                            <table class="table table-hover table-row-dashed align-middle gs-4 gy-4">
-                                <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800 bg-light">
-                                        <th>Nhân viên</th>
-                                        <th>Ngày</th>
-                                        <th>Check-In</th>
-                                        <th>Check-Out</th>
-                                        <th>Ca làm</th>
-                                        <th>Trạng thái</th>
-                                        <th class="text-center">Số phút</th>
+                        @if (importResult.DuplicateCount > 0)
+                        {
+                            <div class="alert alert-dismissible bg-light-warning d-flex flex-column flex-sm-row p-5 mb-5 border border-warning border-dashed">
+                                <i class="ki-outline ki-notification-on fs-2hx text-warning me-4 mb-5 mb-sm-0"></i>
+                                <div class="d-flex flex-column pe-0 pe-sm-10">
+                                    <h5 class="fw-bold text-warning mb-1">Dữ liệu trùng lặp (@importResult.DuplicateCount bản ghi)</h5>
+                                    <span class="fs-7 text-gray-700">Hệ thống đã tự động loại bỏ các bản ghi có cùng nhân viên và thời gian quét thẻ để đảm bảo tính chính xác.</span>
+                                </div>
+                            </div>
+                        }
+
+                        @if (importResult.Errors.Any())
+                        {
+                            <div class="alert alert-dismissible bg-light-danger d-flex flex-column flex-sm-row p-5 mb-10 border border-danger border-dashed">
+                                <i class="ki-outline ki-information-5 fs-2hx text-danger me-4 mb-5 mb-sm-0"></i>
+                                <div class="d-flex flex-column pe-0 pe-sm-10">
+                                    <h4 class="fw-bold text-danger">Có vấn đề với dữ liệu:</h4>
+                                    <ul class="mb-0 fs-7 text-danger mt-2">
+                                        @foreach (var err in importResult.Errors.Take(10))
+                                        {
+                                            <li>@err</li>
+                                        }
+                                        @if (importResult.Errors.Count > 10)
+                                        {
+                                            <li class="fw-bold">... và @(importResult.Errors.Count - 10) lỗi khác</li>
+                                        }
+                                    </ul>
+                                </div>
+                                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                                    <i class="ki-outline ki-cross fs-1 text-danger"></i>
+                                </button>
+                            </div>
+                        }
+
+                        <div class="table-responsive border rounded custom-scrollbar bg-white" style="max-height: 550px; overflow-y: auto;">
+                            <table class="table table-hover table-row-dashed align-middle gs-6 gy-5 mb-0">
+                                <thead class="position-sticky top-0 bg-light z-index-2 shadow-sm">
+                                    <tr class="fw-bold fs-7 text-gray-800 border-bottom-2 border-gray-200 bg-light">
+                                        <th class="ps-4 min-w-150px">Nhân viên</th>
+                                        <th class="min-w-100px text-center">Ngày</th>
+                                        <th class="min-w-100px text-center">Giờ vào</th>
+                                        <th class="min-w-100px text-center">Giờ ra</th>
+                                        <th class="min-w-150px">Ca làm việc</th>
+                                        <th class="min-w-100px text-center">Tổng công</th>
+                                        <th class="min-w-120px text-center">Trạng thái</th>
+                                        <th class="text-end pe-4 min-w-100px">Ghi chú</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in importResult.PreviewItems)
+                                    @foreach (var empGroup in importResult.PreviewItems.GroupBy(r => r.EmployeeCode).OrderBy(g => g.Key))
                                     {
-                                        <tr>
-                                            <td>
+                                        <tr class="bg-light-primary">
+                                            <td colspan="8" class="fw-bold py-3 ps-4">
                                                 <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-35px symbol-circle me-3">
+                                                        <div class="symbol-label bg-primary text-inverse-primary fw-bold">
+                                                            @(empGroup.First().EmployeeName?.Length > 0 ? empGroup.First().EmployeeName.Substring(0, 1).ToUpper() : "U")
+                                                        </div>
+                                                    </div>
                                                     <div class="d-flex flex-column">
-                                                        <span class="text-dark fw-bold text-hover-primary mb-1 fs-6">@item.EmployeeName</span>
-                                                        <span class="text-muted fw-semibold fs-7">#@item.EmployeeCode</span>
+                                                        <span class="text-primary fs-6 fw-bold">@empGroup.First().EmployeeName</span>
+                                                        <span class="text-muted fs-8 fw-semibold">Mã NV: @empGroup.Key • @empGroup.Count() ngày công</span>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>@item.Date.ToString("dd/MM/yyyy")</td>
-                                            <td>
-                                                <span class="badge badge-light-success fs-7 fw-bold">@(item.CheckIn?.ToString("HH:mm") ?? "-")</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-light-info fs-7 fw-bold">@(item.CheckOut?.ToString("HH:mm") ?? "-")</span>
-                                            </td>
-                                            <td>
-                                                <span class="text-gray-700 fw-semibold fs-7">@item.ShiftName</span>
-                                            </td>
-                                            <td>
-                                                @{
-                                                    var statusClass = item.Status switch {
-                                                        "Normal" => "success",
-                                                        "Late" => "warning",
-                                                        "EarlyLeave" => "warning",
-                                                        "Absent" => "danger",
-                                                        _ => "primary"
-                                                    };
-                                                    var statusText = item.Status switch {
-                                                        "Normal" => "Bình thường",
-                                                        "Late" => "Đi trễ",
-                                                        "EarlyLeave" => "Về sớm",
-                                                        "Absent" => "Vắng mặt",
-                                                        _ => item.Status
-                                                    };
-                                                }
-                                                <span class="badge badge-light-@statusClass fs-8 fw-bold">@statusText</span>
-                                            </td>
-                                            <td class="text-center">
-                                                @if (item.LateMinutes > 0) { <span class="text-warning fs-8 fw-bold">Trễ: @item.LateMinutes ph</span> }
-                                                @if (item.EarlyLeaveMinutes > 0) { <div class="text-danger fs-8 fw-bold">Sớm: @item.EarlyLeaveMinutes ph</div> }
-                                                @if (item.LateMinutes == 0 && item.EarlyLeaveMinutes == 0) { <i class="ki-outline ki-check text-success fs-3"></i> }
-                                            </td>
                                         </tr>
+                                        @foreach (var item in empGroup.OrderBy(x => x.Date))
+                                        {
+                                            <tr class="hover-elevate-up transition-3ms">
+                                                <td class="ps-4">
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-gray-800 fw-bold fs-7">@item.EmployeeName</span>
+                                                        <span class="text-muted fs-8">@item.EmployeeCode</span>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="text-gray-700 fw-semibold fs-7">@FormatService.FormatDate(item.Date)</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    @if (item.CheckIn.HasValue)
+                                                    {
+                                                        <span class="badge badge-light-success fs-7 fw-bold px-3 py-2 border border-success border-dashed">@FormatService.FormatTime(FormatService.ToLocalTime(item.CheckIn))</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-light-secondary fs-8 fw-bold">--:--</span>
+                                                    }
+                                                </td>
+                                                <td class="text-center">
+                                                    @if (item.CheckOut.HasValue)
+                                                    {
+                                                        <span class="badge badge-light-info fs-7 fw-bold px-3 py-2 border border-info border-dashed">@FormatService.FormatTime(FormatService.ToLocalTime(item.CheckOut))</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-light-secondary fs-8 fw-bold">--:--</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-gray-800 fw-bold fs-7">@item.ShiftName</span>
+                                                        <span class="text-muted fs-8 fw-semibold text-uppercase">@item.ShiftCode</span>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <span class="text-dark fw-bolder fs-7">@FormatService.FormatNumber(item.WorkingHours, 1) h</span>
+                                                        @if (item.OvertimeHours > 0)
+                                                        {
+                                                            <span class="badge badge-light-primary fs-9 fw-bold mt-1">+@FormatService.FormatNumber(item.OvertimeHours, 1) OT</span>
+                                                        }
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    @{
+                                                        var statusClass = item.Status switch {
+                                                            "Normal" => "success",
+                                                            "Late" => "warning",
+                                                            "EarlyLeave" => "warning",
+                                                            "Late & Early" => "danger",
+                                                            "Absent" => "danger",
+                                                            "Missing Check-in" => "danger",
+                                                            "Mã NV không hợp lệ" => "danger",
+                                                            _ => "secondary"
+                                                        };
+                                                        var statusText = item.Status switch {
+                                                            "Normal" => "Bình thường",
+                                                            "Late" => "Đi trễ",
+                                                            "EarlyLeave" => "Về sớm",
+                                                            "Late & Early" => "Trễ & Sớm",
+                                                            "Absent" => "Vắng mặt",
+                                                            "Missing Check-in" => "Thiếu Check-in",
+                                                            "Mã NV không hợp lệ" => "Mã NV lỗi",
+                                                            _ => item.Status
+                                                        };
+                                                    }
+                                                    <span class="badge badge-light-@statusClass fs-8 fw-bold px-3 py-2 rounded-pill">@statusText</span>
+                                                </td>
+                                                <td class="text-end pe-4">
+                                                    @if (item.LateMinutes > 0) { <div class="text-warning fs-8 fw-bold"><i class="ki-outline ki-time text-warning fs-9 me-1"></i>Trễ: @item.LateMinutes ph</div> }
+                                                    @if (item.EarlyLeaveMinutes > 0) { <div class="text-danger fs-8 fw-bold mt-1"><i class="ki-outline ki-time text-danger fs-9 me-1"></i>Sớm: @item.EarlyLeaveMinutes ph</div> }
+                                                    @if (item.LateMinutes == 0 && item.EarlyLeaveMinutes == 0 && item.Status == "Normal") { <span class="badge badge-circle badge-light-success w-20px h-20px"><i class="ki-outline ki-check fs-9 text-success"></i></span> }
+                                                </td>
+                                            </tr>
+                                        }
                                     }
                                 </tbody>
                             </table>
                         </div>
+
+                        @if (importResult.RawItems.Any())
+                        {
+                            <div class="mt-10">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <h3 class="fw-bold text-dark mb-0">Dữ liệu thô gốc (@importResult.RawItems.Count bản ghi)</h3>
+                                    <button type="button" class="btn btn-sm btn-light-primary" @onclick="ToggleRawData">
+                                        <i class="ki-outline ki-@(showRawData ? "minus" : "plus") fs-3 me-1"></i>
+                                        @(showRawData ? "Thu gọn dữ liệu thô" : "Xem chi tiết dữ liệu thô")
+                                    </button>
+                                </div>
+                                <p class="text-gray-500 mb-5">Hiển thị lịch sử tất cả các lần quét thẻ, được nhóm theo Mã nhân viên và Ngày để dễ dàng đối soát.</p>
+                                
+                                @if (showRawData)
+                                {
+                                    @if (importResult.FileHeaders != null && importResult.FileHeaders.Any() && importResult.RawItems.Any(r => r.RowData != null && r.RowData.Any()))
+                                    {
+                                        <div class="table-responsive border rounded animate__animated animate__fadeIn" style="max-height: 500px; overflow-y: auto;">
+                                            <table class="table table-hover table-bordered table-striped table-row-dashed align-middle gs-4 gy-3 mb-0 fs-8">
+                                                <thead class="position-sticky top-0 bg-light z-index-1">
+                                                    <tr class="fw-bold fs-7 text-gray-800 text-uppercase">
+                                                        @foreach (var header in importResult.FileHeaders)
+                                                        {
+                                                            <th class="px-2">@header</th>
+                                                        }
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var empGroup in importResult.RawItems.GroupBy(r => r.EmployeeCode))
+                                                    {
+                                                        <!-- Header Line for Employee -->
+                                                        <tr class="bg-light-primary text-primary">
+                                                            <td colspan="@(importResult.FileHeaders.Count + 1)" class="fw-bold py-2">
+                                                                <i class="ki-outline ki-user text-primary me-2"></i> NV: @empGroup.Key (@empGroup.Count() bản ghi thô)
+                                                            </td>
+                                                        </tr>
+                                                        <!-- Detailed Raw Scan Lines -->
+                                                        @foreach (var raw in empGroup.OrderBy(x => x.Timestamp))
+                                                        {
+                                                            <tr>
+                                                                @foreach (var header in importResult.FileHeaders)
+                                                                {
+                                                                    <td class="px-2">
+                                                                        @(raw.RowData != null && raw.RowData.ContainsKey(header) ? raw.RowData[header] : string.Empty)
+                                                                    </td>
+                                                                }
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <!-- Fallback when no headers exist -->
+                                        <div class="table-responsive border rounded animate__animated animate__fadeIn" style="max-height: 500px; overflow-y: auto;">
+                                            <table class="table table-hover table-striped table-row-dashed align-middle gs-4 gy-3 mb-0">
+                                                <thead class="position-sticky top-0 bg-light z-index-1">
+                                                    <tr class="fw-bold fs-7 text-gray-800 text-uppercase">
+                                                        <th class="w-200px">Mã Nhân Viên</th>
+                                                        <th>Thời Gian Quét (Giờ hệ thống)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var group in importResult.RawItems.GroupBy(r => r.EmployeeCode))
+                                                    {
+                                                        <tr class="bg-light-primary text-primary">
+                                                            <td colspan="2" class="fw-bold py-2">
+                                                                <i class="ki-outline ki-user text-primary me-2"></i> NV: @group.Key (@group.Count() bản ghi)
+                                                            </td>
+                                                        </tr>
+                                                        @foreach (var raw in group.OrderBy(x => x.Timestamp))
+                                                        {
+                                                            <tr>
+                                                                <td class="ps-5">
+                                                                    <span class="badge badge-light fs-7 fw-bold">@raw.EmployeeCode</span>
+                                                                </td>
+                                                                <td>
+                                                                     <span class="text-gray-800 fw-semibold">@FormatService.FormatDateTime(FormatService.ToLocalTime(raw.Timestamp))</span>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
                     }
                     else if (currentStep == 4 && importResult != null)
                     {
@@ -307,17 +560,23 @@
                                 <p class="text-gray-500 fs-5">Hệ thống đã xử lý xong @importResult.SuccessCount bản ghi dữ liệu chấm công.</p>
                             </div>
 
-                            <div class="row g-5 max-w-600px mx-auto mb-10">
-                                <div class="col-6">
-                                    <div class="bg-light-success px-6 py-8 rounded-2 border border-success border-dashed">
-                                        <div class="fs-2hx fw-bold text-success mb-2">@importResult.SuccessCount</div>
-                                        <div class="text-success fw-bold fs-6">Thành công</div>
+                            <div class="row g-5 max-w-800px mx-auto mb-10">
+                                <div class="col-4">
+                                    <div class="bg-light-success px-4 py-8 rounded-2 border border-success border-dashed text-center h-100">
+                                        <div class="fs-2hx fw-bold text-success mb-2">@FormatService.FormatNumber(importResult.SuccessCount)</div>
+                                        <div class="text-success fw-bold fs-7">Thành công</div>
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="bg-light-danger px-6 py-8 rounded-2 border border-danger border-dashed">
-                                        <div class="fs-2hx fw-bold text-danger mb-2">@importResult.FailureCount</div>
-                                        <div class="text-danger fw-bold fs-6">Thất bại</div>
+                                <div class="col-4">
+                                    <div class="bg-light-danger px-4 py-8 rounded-2 border border-danger border-dashed text-center h-100">
+                                        <div class="fs-2hx fw-bold text-danger mb-2">@FormatService.FormatNumber(importResult.FailureCount)</div>
+                                        <div class="text-danger fw-bold fs-7">Lỗi dữ liệu</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="bg-light-warning px-4 py-8 rounded-2 border border-warning border-dashed text-center h-100">
+                                        <div class="fs-2hx fw-bold text-warning mb-2">@FormatService.FormatNumber(importResult.DuplicateCount)</div>
+                                        <div class="text-warning fw-bold fs-7">Đã trùng / Bỏ qua</div>
                                     </div>
                                 </div>
                             </div>
@@ -347,13 +606,15 @@
                 </div>
             </div>
             <!-- Recently Imported List -->
-            <div class="card card-flush shadow-sm mt-8 mt-lg-10">
-                <div class="card-header pt-7">
-                    <h3 class="card-title align-items-start flex-column">
-                        <span class="card-label fw-bold text-gray-800">Dữ liệu đã import hôm nay</span>
-                        <span class="text-muted mt-1 fw-semibold fs-7">Hiển thị các bản ghi chấm công được cập nhật trong ngày</span>
-                    </h3>
-                    <div class="card-toolbar">
+            @if (recentlyImported != null)
+            {
+                <div class="card card-flush shadow-sm mt-8 mt-lg-10">
+                    <div class="card-header pt-7">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bold text-gray-800">Dữ liệu chấm công gần đây</span>
+                            <span class="text-muted mt-1 fw-semibold fs-7">Hiển thị các bản ghi chấm công mới cập nhật trên hệ thống</span>
+                        </h3>
+                        <div class="card-toolbar">
                         <button class="btn btn-sm btn-light-primary fw-bold" @onclick="LoadHistory" disabled="@_isLoadingHistory">
                             @if (_isLoadingHistory) { <span class="spinner-border spinner-border-sm me-2"></span> }
                             <i class="ki-outline ki-arrows-circle fs-4 me-1"></i> Làm mới
@@ -361,16 +622,17 @@
                     </div>
                 </div>
                 <div class="card-body pt-3">
-                    <div class="table-responsive">
+                    <div class="table-responsive border-bottom custom-scrollbar" style="max-height: 600px; overflow-y: auto;">
                         <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
                             <thead>
                                 <tr class="fw-bold text-muted fs-7 text-uppercase border-bottom-0 bg-light">
                                     <th class="ps-4 min-w-150px rounded-start">Nhân viên</th>
-                                    <th class="min-w-125px">Thời gian</th>
-                                    <th class="min-w-125px text-center">Check-In</th>
-                                    <th class="min-w-125px text-center">Check-Out</th>
-                                    <th class="min-w-125px text-center">Ca làm</th>
-                                    <th class="min-w-100px text-end pe-4 rounded-end">Trạng thái</th>
+                                    <th class="min-w-100px">Ngày</th>
+                                    <th class="min-w-80px text-center">Check-In</th>
+                                    <th class="min-w-80px text-center">Check-Out</th>
+                                    <th class="min-w-80px text-center">Công/OT</th>
+                                    <th class="min-w-100px text-center">Trạng thái</th>
+                                    <th class="min-w-100px text-end pe-4 rounded-end">Số phút trễ/sớm</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -402,7 +664,7 @@
                                                         }
                                                         else
                                                         {
-                                                            <div class="symbol-label bg-light-primary text-primary fw-bold">@item.EmployeeName.Substring(0, 1)</div>
+                                                            <div class="symbol-label bg-light-primary text-primary fw-bold">@(item.EmployeeName?.Length > 0 ? item.EmployeeName.Substring(0, 1) : "A")</div>
                                                         }
                                                     </div>
                                                     <div class="d-flex justify-content-start flex-column">
@@ -412,12 +674,12 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <span class="text-gray-800 fw-bold fs-7">@item.Date.ToString("dd/MM/yyyy")</span>
+                                                <span class="text-gray-800 fw-bold fs-7">@FormatService.FormatDate(item.Date)</span>
                                             </td>
                                             <td class="text-center">
                                                 @if (item.CheckIn.HasValue)
                                                 {
-                                                    <span class="badge badge-light-success fw-bold">@item.CheckIn.Value.ToString("HH:mm")</span>
+                                                    <span class="badge badge-light-success fw-bold">@FormatService.FormatTime(FormatService.ToLocalTime(item.CheckIn))</span>
                                                 }
                                                 else
                                                 {
@@ -427,7 +689,7 @@
                                             <td class="text-center">
                                                 @if (item.CheckOut.HasValue)
                                                 {
-                                                    <span class="badge badge-light-info fw-bold">@item.CheckOut.Value.ToString("HH:mm")</span>
+                                                    <span class="badge badge-light-info fw-bold">@FormatService.FormatTime(FormatService.ToLocalTime(item.CheckOut))</span>
                                                 }
                                                 else
                                                 {
@@ -435,26 +697,50 @@
                                                 }
                                             </td>
                                             <td class="text-center">
+                                                <div class="d-flex flex-column">
+                                                     <span class="text-gray-800 fw-bold fs-7">@FormatService.FormatNumber(item.TotalWorkingHours, 1) h</span>
+                                                     @if (item.OvertimeHours > 0)
+                                                     {
+                                                         <span class="text-primary fw-bold fs-8">+@FormatService.FormatNumber(item.OvertimeHours, 1) OT</span>
+                                                     }
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
                                                 @{
                                                     var histStatusClass = item.Status switch {
                                                         "Normal" or "Bình thường" => "success",
                                                         "Late" or "Đi trễ" => "warning",
                                                         "EarlyLeave" or "Về sớm" => "warning",
+                                                        "Late & Early" or "Trễ & Sớm" => "danger",
                                                         "Absent" or "Vắng mặt" => "danger",
+                                                        "Missing Check-in" or "Thiếu Check-in" => "danger",
                                                         _ => "primary"
                                                     };
                                                     var histStatusText = item.Status switch {
                                                         "Normal" => "Bình thường",
                                                         "Late" => "Đi trễ",
                                                         "EarlyLeave" => "Về sớm",
+                                                        "Late & Early" => "Trễ & Sớm",
                                                         "Absent" => "Vắng mặt",
+                                                        "Missing Check-in" => "Thiếu Check-in",
                                                         _ => item.Status
                                                     };
                                                 }
                                                 <span class="badge badge-light-@histStatusClass fs-8 fw-bold">@histStatusText</span>
                                             </td>
                                             <td class="text-end pe-4">
-                                                <span class="badge badge-light-primary fs-8 fw-bold">Máy vân tay</span>
+                                                @if (item.LateMinutes > 0)
+                                                {
+                                                    <div class="text-warning fs-8 fw-bold">Trễ: @item.LateMinutes ph</div>
+                                                }
+                                                @if (item.EarlyLeaveMinutes > 0)
+                                                {
+                                                    <div class="text-danger fs-8 fw-bold mt-1">Sớm: @item.EarlyLeaveMinutes ph</div>
+                                                }
+                                                @if (item.LateMinutes == 0 && item.EarlyLeaveMinutes == 0)
+                                                {
+                                                    <i class="ki-outline ki-check text-success fs-3"></i>
+                                                }
                                             </td>
                                         </tr>
                                     }
@@ -462,8 +748,8 @@
                                 else
                                 {
                                     <tr>
-                                        <td colspan="6" class="text-center py-10">
-                                            <div class="text-muted fs-6">Chưa có dữ liệu nào được import trong ngày hôm nay.</div>
+                                        <td colspan="7" class="text-center py-10">
+                                            <div class="text-muted fs-6">Chưa có dữ liệu chấm công nào được hiển thị. Vui lòng thực hiện Import hoặc nhấn Làm mới.</div>
                                         </td>
                                     </tr>
                                 }
@@ -472,7 +758,41 @@
                     </div>
                 </div>
             </div>
+            }
         </div>
     </div>
 </div>
+
+<style>
+    .transition-3ms {
+        transition: all 0.3s ease;
+    }
+    .hover-elevate-up:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+        z-index: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #bbb;
+    }
+    .dropzone-active {
+        border-style: solid !important;
+        border-width: 2px !important;
+        background-color: var(--bs-light-primary) !important;
+        box-shadow: inset 0 0 10px rgba(var(--bs-primary-rgb), 0.1);
+        transform: scale(1.02);
+    }
+</style>
 

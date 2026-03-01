@@ -1,0 +1,110 @@
+[
+  {
+    "Name": "Tết Dương Lịch 2025",
+    "StartDate": "2025-01-01T00:00:00",
+    "EndDate": "2025-01-01T23:59:59",
+    "IsRecurring": true,
+    "_id": {
+      "$oid": "699fcd3659b9e449474f8c69"
+    }
+  },
+  {
+    "Name": "Tết Nguyên Đán (AL) 2025",
+    "StartDate": "2025-01-25T00:00:00",
+    "EndDate": "2025-02-02T23:59:59",
+    "IsRecurring": false,
+    "_id": {
+      "$oid": "699fcd36a26ddef64fc45dd9"
+    }
+  },
+  {
+    "Name": "Giỗ Tổ Hùng Vương 2025",
+    "StartDate": "2025-04-07T00:00:00",
+    "EndDate": "2025-04-07T23:59:59",
+    "IsRecurring": false,
+    "_id": {
+      "$oid": "699fcd36a098da2fa774212d"
+    }
+  },
+  {
+    "Name": "Giải Phóng Miền Nam 2025",
+    "StartDate": "2025-04-30T00:00:00",
+    "EndDate": "2025-04-30T23:59:59",
+    "IsRecurring": true,
+    "_id": {
+      "$oid": "699fcd368ebc485f3e777d14"
+    }
+  },
+  {
+    "Name": "Quốc Tế Lao Động 2025",
+    "StartDate": "2025-05-01T00:00:00",
+    "EndDate": "2025-05-01T23:59:59",
+    "IsRecurring": true,
+    "_id": {
+      "$oid": "699fcd36240f53a5ce181dd3"
+    }
+  },
+  {
+    "Name": "Quốc Khánh 2025",
+    "StartDate": "2025-09-01T00:00:00",
+    "EndDate": "2025-09-02T23:59:59",
+    "IsRecurring": true,
+    "_id": {
+      "$oid": "699fcd36a218cbe54f12c5af"
+    }
+  },
+  {
+    "Name": "Tết Dương Lịch 2026",
+    "StartDate": "2026-01-01T00:00:00",
+    "EndDate": "2026-01-01T23:59:59",
+    "IsRecurring": true,
+    "_id": {
+      "$oid": "699fcd36fd084927a81a5eae"
+    }
+  },
+  {
+    "Name": "Tết Nguyên Đán (AL) 2026",
+    "StartDate": "2026-02-14T00:00:00",
+    "EndDate": "2026-02-22T23:59:59",
+    "IsRecurring": false,
+    "_id": {
+      "$oid": "699fcd369a5b35bd7de29e86"
+    }
+  },
+  {
+    "Name": "Giỗ Tổ Hùng Vương 2026",
+    "StartDate": "2026-04-26T00:00:00",
+    "EndDate": "2026-04-26T23:59:59",
+    "IsRecurring": false,
+    "_id": {
+      "$oid": "699fcd367b1fbe73f027c546"
+    }
+  },
+  {
+    "Name": "Giải Phóng Miền Nam 2026",
+    "StartDate": "2026-04-30T00:00:00",
+    "EndDate": "2026-04-30T23:59:59",
+    "IsRecurring": true,
+    "_id": {
+      "$oid": "699fcd364ac7f1f7a630d0fb"
+    }
+  },
+  {
+    "Name": "Quốc Tế Lao Động 2026",
+    "StartDate": "2026-05-01T00:00:00",
+    "EndDate": "2026-05-01T23:59:59",
+    "IsRecurring": true,
+    "_id": {
+      "$oid": "699fcd36a39645105afc3faa"
+    }
+  },
+  {
+    "Name": "Quốc Khánh 2026",
+    "StartDate": "2026-09-01T00:00:00",
+    "EndDate": "2026-09-02T23:59:59",
+    "IsRecurring": true,
+    "_id": {
+      "$oid": "699fcd36362938df9ab4c664"
+    }
+  }
+]

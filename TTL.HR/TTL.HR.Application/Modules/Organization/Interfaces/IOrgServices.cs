@@ -12,6 +12,7 @@ namespace TTL.HR.Application.Modules.Organization.Interfaces
         Task<DepartmentModel?> CreateDepartmentAsync(CreateDepartmentRequest request);
         Task<DepartmentModel?> UpdateDepartmentAsync(string id, UpdateDepartmentRequest request);
         Task<bool> DeleteDepartmentAsync(string id);
+        Task<bool> AssignEmployeesAsync(string departmentId, List<string> employeeIds);
         Task<List<OrgNode>> GetOrganizationStructureAsync();
     }
 
@@ -22,5 +23,6 @@ namespace TTL.HR.Application.Modules.Organization.Interfaces
         Task<PositionModel?> CreatePositionAsync(CreatePositionRequest request);
         Task<PositionModel?> UpdatePositionAsync(string id, UpdatePositionRequest request);
         Task<bool> DeletePositionAsync(string id);
+        Task<bool> AssignEmployeesAsync(string positionId, List<string> employeeIds, decimal? salary = null);
     }
 }

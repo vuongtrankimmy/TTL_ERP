@@ -68,6 +68,10 @@ else
                     <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Phòng ban</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.DepartmentName ?? "N/A")</div></div>
                     <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Chức vụ</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.PositionName ?? "N/A")</div></div>
                     <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số điện thoại</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.Phone ?? "N/A")</div></div>
+                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số CMND/CCCD</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.IdCard ?? "N/A")</div></div>
+                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Quê quán</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.Hometown ?? "N/A")</div></div>
+                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Tài khoản ngân hàng</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.BankAccountNumber ?? "N/A") (@(currentEmployee?.BankName ?? "N/A"))</div></div>
+                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số người phụ thuộc</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.NumberOfDependents ?? 0)</div></div>
                 </div>
             </div>
         }
@@ -115,8 +119,40 @@ else
                     @if (!string.IsNullOrEmpty(_modalError)) { <div class="alert alert-danger">@_modalError</div> }
                     @if (!string.IsNullOrEmpty(_modalSuccess)) { <div class="alert alert-success">@_modalSuccess</div> }
                     <div class="mb-5"><label class="form-label fw-bold">Họ và tên</label><input type="text" class="form-control" @bind="_editFullName" /></div>
-                    <div class="mb-5"><label class="form-label fw-bold">Số điện thoại</label><input type="text" class="form-control" @bind="_editPhone" /></div>
-                    <div class="mb-5"><label class="form-label fw-bold">Email</label><input type="email" class="form-control" @bind="_editEmail" /></div>
+                    <div class="row mb-5">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Số điện thoại</label>
+                            <input type="text" class="form-control" @bind="_editPhone" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" @bind="_editEmail" />
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Số CMND/CCCD</label>
+                            <input type="text" class="form-control" @bind="_editIdCard" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Quê quán</label>
+                            <input type="text" class="form-control" @bind="_editHometown" />
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Số tài khoản</label>
+                            <input type="text" class="form-control" @bind="_editBankAccount" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Ngân hàng</label>
+                            <input type="text" class="form-control" @bind="_editBankName" />
+                        </div>
+                    </div>
+                    <div class="mb-5">
+                        <label class="form-label fw-bold">Số người phụ thuộc (Giảm trừ gia cảnh)</label>
+                        <input type="number" class="form-control" @bind="_editDependents" />
+                    </div>
                 </div>
                 <div class="modal-footer"><button class="btn btn-light" @onclick="CloseModals">Hủy</button><button class="btn btn-primary" @onclick="HandleSaveProfile">Lưu thay đổi</button></div>
             </div>

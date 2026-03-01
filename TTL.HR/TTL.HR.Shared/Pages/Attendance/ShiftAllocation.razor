@@ -1,0 +1,637 @@
+@page "/attendance/allocation"
+@using TTL.HR.Application.Modules.Attendance.Models
+@using TTL.HR.Application.Modules.HumanResource.Models
+@using TTL.HR.Application.Modules.Organization.Models
+@using TTL.HR.Application.Modules.Common.Models
+@inject IStringLocalizer<SharedResource> L
+
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-xxl">
+        
+        <div class="card shadow-sm border-0">
+            <!-- Header -->
+            <div class="card shadow-sm border-0 mb-8 @(Mode == "clone" ? "border-primary border-dashed" : "")" style="background: white; border-radius: 12px;">
+                    <div class="card-header border-0 pt-6">
+                        <div class="d-flex flex-column">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-boldest text-gray-900 fs-3">
+                                    @(Mode == "clone" ? "Chi tiết Phân bổ Ca" : "Gán ca nhanh")
+                                </span>
+                                <span class="text-muted mt-1 fw-bold fs-7">
+                                    @(Mode == "clone" ? "Xem và điều chỉnh danh sách nhân viên đang được gán cho ca này" : "Thiết lập và gán lịch làm việc cho nhân viên nhanh chóng")
+                                </span>
+                            </h3>
+                            @if (Mode == "clone")
+                            {
+                                <div class="mt-2 text-primary fw-bold fs-9 italic">
+                                    <i class="ki-outline ki-information-2 text-primary fs-8 me-1"></i>
+                                    Hệ thống đã tải danh sách nhân sự hiện tại của ca này để bạn gán thêm/điều chỉnh.
+                                </div>
+                            }
+                        </div>
+                        <div class="card-toolbar d-flex align-items-center gap-2">
+                            <button type="button" class="btn btn-sm btn-light fw-bold" title="Quay lại" @onclick="GoBack">
+                                <i class="ki-outline ki-arrow-left fs-4 me-1"></i>Trở về
+                            </button>
+                            <button type="button" class="btn btn-sm btn-icon btn-light-warning" @onclick='() => NavigationManager.NavigateTo("/attendance/scheduler")'>
+                                <i class="ki-outline ki-cross fs-2"></i>
+                            </button>
+                        </div>
+                    </div>
+            </div>
+
+            <div class="card-body py-8 px-10">
+                @if (_isLoading)
+                {
+                    <div class="d-flex flex-column flex-center min-h-300px">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <span class="text-muted fs-6 fw-semibold mt-5">Đang tải dữ liệu...</span>
+                    </div>
+                }
+                else if (_showPreview)
+                {
+                    <div class="d-flex flex-column flex-center py-15">
+                        <div class="symbol symbol-100px mb-8">
+                            <div class="symbol-label bg-light-success shadow-sm">
+                                <i class="ki-outline ki-check-circle fs-5x text-success"></i>
+                            </div>
+                        </div>
+
+                        <h1 class="fw-boldest text-gray-900 mb-2 fs-1">PHÂN BỔ CA THÀNH CÔNG!</h1>
+                        <p class="text-muted fw-bold fs-6 mb-10 text-center max-w-500px">
+                            Hệ thống đã cập nhật lịch làm việc cho <b>@(_readyToAssign.Count + (_overwriteConflicts ? _conflictToUpdate.Count : 0))</b> nhân sự.<br/>
+                            Vui lòng kiểm tra lại trên biểu đồ tổng quát.
+                        </p>
+
+                        <div class="row g-5 w-100 max-w-800px mb-10">
+                            <div class="col-md-4">
+                                <div class="bg-light-primary rounded-4 p-6 text-center border border-primary border-dashed h-100">
+                                    <div class="fs-9 fw-boldest text-primary text-uppercase mb-2">Ca làm việc</div>
+                                    <div class="fs-4 fw-boldest text-gray-800">@(_shifts.FirstOrDefault(s => s.Id == _assignModel.ShiftId)?.Name ?? "N/A")</div>
+                                    <div class="fs-8 text-muted fw-bold mt-1">@(_shifts.FirstOrDefault(s => s.Id == _assignModel.ShiftId)?.StartTime) - @(_shifts.FirstOrDefault(s => s.Id == _assignModel.ShiftId)?.EndTime)</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-light-success rounded-4 p-6 text-center border border-success border-dashed h-100">
+                                    <div class="fs-9 fw-boldest text-success text-uppercase mb-2">Số lượng nhân sự</div>
+                                    <div class="fs-4 fw-boldest text-gray-800">@(_readyToAssign.Count + (_overwriteConflicts ? _conflictToUpdate.Count : 0))</div>
+                                    <div class="fs-8 text-muted fw-bold mt-1">Người được gán</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-light-warning rounded-4 p-6 text-center border border-warning border-dashed h-100">
+                                    <div class="fs-9 fw-boldest text-warning text-uppercase mb-2">Thời gian áp dụng</div>
+                                    <div class="fs-4 fw-boldest text-gray-800">@(_assignModel.StartDate.ToString("dd/MM")) - @(_assignModel.EndDate.ToString("dd/MM"))</div>
+                                    <div class="fs-8 text-muted fw-bold mt-1">Tháng @(_assignModel.StartDate.Month)/@(_assignModel.StartDate.Year)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-4">
+                            <button class="btn btn-light-warning fw-boldest px-10 py-4 ripple" 
+                                    @onclick='() => { _showPreview = false; _currentStep = 1; }'>
+                                <i class="ki-outline ki-arrows-loop fs-3 me-2"></i>TIẾP TỤC GÁN CA
+                            </button>
+                            <button class="btn btn-primary fw-boldest px-10 py-4 shadow-lg ripple" 
+                                    @onclick='() => NavigationManager.NavigateTo($"/attendance/scheduler?month={_assignModel.StartDate.Month}&year={_assignModel.StartDate.Year}")'>
+                                <i class="ki-outline ki-calendar-8 fs-3 me-2"></i>XEM TRÊN LỊCH PHÂN BỔ
+                            </button>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <!-- Left Column: Section 1 & 2 -->
+                        <div class="col-lg-5 border-end pe-lg-10">
+                            <!-- Section 1: Chọn ca làm việc -->
+                            <div class="mb-10">
+                                <div class="d-flex align-items-center justify-content-between mb-5">
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-circle badge-warning fw-bold fs-6 me-3" style="background-color: #f64e1f !important; color: white !important;">1</span>
+                                        <h4 class="fw-bolder text-gray-800 mb-0">@(string.IsNullOrEmpty(ShiftId) ? "Chọn ca làm việc" : "Ca làm việc đã chọn")</h4>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    @foreach (var shift in _shifts)
+                                    {
+                                        <div class="@(_isFilteredByShift ? "col-12" : "col-md-6")">
+                                            <div class="border rounded p-4 cursor-pointer transition-all position-relative @(_assignModel.ShiftId == shift.Id ? (_isFilteredByShift ? "border-primary border-dashed bg-light-primary" : "border-warning bg-light-warning shadow-sm pulse-active") : "border-gray-300 hover-border-warning")" 
+                                                 @onclick="() => SelectShift(shift.Id)">
+                                                <div class="d-flex flex-column">
+                                                    <div class="d-flex align-items-center mb-1">
+                                                        <span class="badge w-8px h-8px badge-circle me-2 @(GetShiftClass(shift.Color))" style="@(GetShiftStyle(shift.Color))"></span>
+                                                        <span class="fw-bolder text-gray-800 fs-7">@shift.Name</span>
+                                                        @if (_assignModel.ShiftId == shift.Id)
+                                                        {
+                                                            <span class="badge badge-success fs-10 fw-boldest ms-2 py-0 px-1">ACTIVE</span>
+                                                        }
+                                                    </div>
+                                                    <span class="text-muted fs-9">@shift.StartTime - @shift.EndTime</span>
+                                                </div>
+                                                @if (_assignModel.ShiftId == shift.Id)
+                                                {
+                                                    <div class="position-absolute top-0 end-0 m-2">
+                                                        <i class="ki-solid ki-check-circle text-warning fs-5"></i>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Section 2: Chọn Khoảng thời gian -->
+                            <div class="mb-10">
+                                <div class="d-flex align-items-center mb-5">
+                                    <span class="badge badge-circle badge-warning fw-bold fs-6 me-3" style="background-color: #f64e1f !important; color: white !important;">2</span>
+                                    <h4 class="fw-bolder text-gray-800 mb-0">Chọn Khoảng thời gian</h4>
+                                </div>
+                                
+                                <div class="bg-light rounded p-5">
+                                    <div class="row g-5 mb-5">
+                                        <div class="col-md-6">
+                                            <label class="form-label fs-8 fw-bold text-gray-600">Từ ngày</label>
+                                            <div class="input-group input-group-solid">
+                                                <input type="date" class="form-control form-control-sm" @bind="_assignModel.StartDate" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fs-8 fw-bold text-gray-600">Đến ngày</label>
+                                            <div class="input-group input-group-solid">
+                                                <input type="date" class="form-control form-control-sm" @bind="_assignModel.EndDate" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-check form-check-custom form-check-solid form-check-sm mb-4">
+                                        <input class="form-check-input" type="checkbox" value="" id="repeatWeekly" checked disabled />
+                                        <label class="form-check-label fs-7 fw-bold text-gray-700" for="repeatWeekly">
+                                            Lặp lại hàng tuần (Mặc định theo khoảng thời gian)
+                                        </label>
+                                    </div>
+
+                                    <div class="d-flex flex-wrap gap-1">
+                                        @{
+                                            var dayMap = new Dictionary<DayOfWeek, string> {
+                                                { DayOfWeek.Monday, "T2" }, { DayOfWeek.Tuesday, "T3" }, { DayOfWeek.Wednesday, "T4" },
+                                                { DayOfWeek.Thursday, "T5" }, { DayOfWeek.Friday, "T6" }, { DayOfWeek.Saturday, "T7" }, { DayOfWeek.Sunday, "CN" }
+                                            };
+                                            foreach (var day in dayMap)
+                                            {
+                                                <button type="button" class="btn btn-icon btn-sm rounded-1 w-40px h-40px fw-bold @(_assignModel.DaysOfWeek.Contains(day.Key) ? "btn-warning" : "btn-light text-gray-600 border")" 
+                                                        style='@(_assignModel.DaysOfWeek.Contains(day.Key) ? "background-color: #f64e1f !important; border-color: #f64e1f !important;" : "")'
+                                                        @onclick="() => ToggleDay(day.Key)">
+                                                    @day.Value
+                                                </button>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Section 3 -->
+                        <div class="col-lg-7 ps-lg-10">
+                            <!-- Section 3: Đối tượng áp dụng -->
+                            <div class="mb-10">
+                                <div class="d-flex align-items-center justify-content-between mb-5 text-uppercase">
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-circle badge-warning fw-bold fs-6 me-3" style="background-color: #f64e1f !important; color: white !important;">3</span>
+                                        <h4 class="fw-bolder text-gray-800 mb-0">Đối tượng áp dụng</h4>
+                                    </div>
+
+                                    <!-- Selection Mode Toggle -->
+                                    <div class="nav nav-pills nav-pills-custom">
+                                        <div class="nav-item">
+                                            <button type="button" class="btn btn-sm btn-icon-gray-600 btn-active-light-warning fw-bold px-4 me-1 @(_selectionMode == "Department" ? "active btn-light-warning text-warning" : "")" 
+                                                    @onclick='() => _selectionMode = "Department"'>Theo Phòng ban</button>
+                                        </div>
+                                        <div class="nav-item">
+                                            <button type="button" class="btn btn-sm btn-icon-gray-600 btn-active-light-warning fw-bold px-4 @(_selectionMode == "Employee" ? "active btn-light-warning text-warning" : "")" 
+                                                    @onclick='() => _selectionMode = "Employee"'>Theo Nhân viên</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                @if (_selectionMode == "Department")
+                                {
+                                    <div class="border rounded p-5 bg-light-warning border-dashed">
+                                        <div class="fw-bold fs-7 text-gray-700 mb-4">Chọn các phòng ban áp dụng:</div>
+                                        <div class="row g-3 overflow-auto" style="max-height: 350px;">
+                                            @foreach (var dept in _departments)
+                                            {
+                                                <div class="col-md-6">
+                                                    <div class="form-check form-check-custom form-check-solid form-check-sm">
+                                                        <input class="form-check-input" type="checkbox" id="dept_@dept.Id" 
+                                                               checked="@_selectedDeptIds.Contains(dept.Id)"
+                                                               @onchange='(e) => ToggleDepartmentSelection(dept.Id)' />
+                                                        <label class="form-check-label fw-bold text-gray-800 fs-7 cursor-pointer" for="dept_@dept.Id">
+                                                            @dept.Name
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="row g-3 mb-5">
+                                        <div class="col-md-6">
+                                            <select class="form-select form-select-sm form-select-solid" @bind="_selectedDeptIdInner" @bind:after="LoadEmployeesAsync">
+                                                <option value="">Tất cả Phòng ban</option>
+                                                @foreach (var dept in _departments)
+                                                {
+                                                    <option value="@dept.Id">@dept.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select class="form-select form-select-sm form-select-solid" @bind="_selectedStatusId" @bind:after="LoadEmployeesAsync">
+                                                <option value="">Tất cả Nhóm nhân viên</option>
+                                                @foreach (var status in _statuses)
+                                                {
+                                                    <option value="@status.Id">@status.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="position-relative">
+                                                <i class="ki-outline ki-magnifier fs-4 position-absolute top-50 translate-middle-y ms-4 text-gray-500"></i>
+                                                <input type="text" class="form-control form-control-sm form-control-solid ps-12" placeholder="Tìm kiếm nhân viên..." 
+                                                       @bind="_searchTerm" @bind:event="oninput" @onkeyup="LoadEmployeesAsync" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive border rounded" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table table-row-dashed align-middle gs-4 gy-3">
+                                            <thead class="bg-light sticky-top">
+                                                <tr class="fw-bold text-gray-600 fs-8 text-uppercase">
+                                                    <th class="w-25px">
+                                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                            <input class="form-check-input" type="checkbox" checked="@_isAllSelected" @onchange='(e) => ToggleAllEmployees((bool)e.Value!)' />
+                                                        </div>
+                                                    </th>
+                                                    <th class="min-w-150px">Nhân viên</th>
+                                                    <th class="min-w-100px text-center">Mã NV</th>
+                                                    <th class="min-w-100px">Phòng ban</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (!_employeeList.Any())
+                                                {
+                                                    <tr>
+                                                        <td colspan="4" class="text-center py-10">
+                                                            <span class="text-muted fs-7">Không có dữ liệu nhân viên</span>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                @foreach (var emp in _employeeList)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                                <input class="form-check-input" type="checkbox" checked="@(_selectedIds.Contains(emp.Id))" 
+                                                                       @onchange='(e) => ToggleEmployeeSelection(emp.Id)' />
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="symbol symbol-30px me-3">
+                                                                    <div class="symbol-label bg-light-primary text-primary fw-bold fs-9">@(emp.FullName?.Length > 0 ? emp.FullName.Substring(0, 1) : "?")</div>
+                                                                </div>
+                                                                <div class="d-flex flex-column">
+                                                                    <span class="text-gray-800 fw-bold fs-7">@emp.FullName</span>
+                                                                    @if (_initialSelectedIds.Contains(emp.Id))
+                                                                    {
+                                                                        <span class="text-success fs-10 fw-boldest lh-1">ĐÃ GÁN TRƯỚC ĐÓ</span>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span class="badge badge-light fw-bold fs-8">@emp.Code</span>
+                                                        </td>
+                                                        <td class="text-gray-600 fs-8">@emp.DepartmentName</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div class="row mt-10 pt-10 border-top">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center mb-5">
+                                <span class="badge badge-circle badge-warning fw-bold fs-6 me-3" style="background-color: #f64e1f !important; color: white !important;">4</span>
+                                <h4 class="fw-bolder text-gray-800 mb-0">Thông tin tóm tắt & Lịch gán chi tiết</h4>
+                                <span class="badge badge-light-danger fw-bold fs-9 px-2 ms-auto animation-blink">
+                                    <i class="ki-solid ki-record text-danger fs-10 me-1"></i>LIVE SUMMARY
+                                </span>
+                            </div>
+
+                            <div class="row g-5">
+                                <!-- Left: Shift & Time Info -->
+                                <div class="col-md-4">
+                                    <div class="card bg-light shadow-none border-dashed h-100">
+                                        <div class="card-header border-0 pt-5">
+                                            <h3 class="card-title align-items-start flex-column">
+                                                <span class="card-label fw-boldest text-gray-800 fs-7">THÔNG TIN CA & THỜI GIAN</span>
+                                            </h3>
+                                        </div>
+                                        <div class="card-body pt-2">
+                                            @{
+                                                var selectedShift = _shifts.FirstOrDefault(s => s.Id == _assignModel.ShiftId);
+                                            }
+                                            <div class="bg-white rounded p-4 border border-gray-200 mb-4">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <span class="badge h-8px w-8px badge-circle me-2 @(GetShiftClass(selectedShift?.Color))" style="@(GetShiftStyle(selectedShift?.Color))"></span>
+                                                    <span class="text-gray-900 fw-bolder fs-6">@(selectedShift?.Name ?? "Chưa chọn")</span>
+                                                </div>
+                                                <div class="d-flex flex-stack fs-8">
+                                                    <span class="text-muted fw-bold">Trạng thái:</span>
+                                                    <span class="badge badge-light-success fw-boldest">ĐANG HOẠT ĐỘNG</span>
+                                                </div>
+                                                <div class="d-flex flex-stack fs-8 mt-1">
+                                                    <span class="text-muted fw-bold">Khung giờ:</span>
+                                                    <span class="text-gray-800 fw-bold">@(selectedShift?.StartTime) - @(selectedShift?.EndTime)</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="bg-white rounded p-4 border border-gray-200">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <i class="ki-outline ki-calendar-8 fs-5 text-primary me-2"></i>
+                                                    <span class="text-gray-900 fw-bolder fs-7">Danh sách khoảng thời gian</span>
+                                                </div>
+                                                <div class="d-flex flex-column gap-2 mb-3">
+                                                    <div class="fs-8 fw-bold text-gray-700">
+                                                        <i class="ki-solid ki-right-square fs-9 text-primary me-1"></i> 
+                                                        Tổng: @((_assignModel.EndDate.Date - _assignModel.StartDate.Date).Days + 1) ngày
+                                                    </div>
+                                                    <div class="d-flex flex-wrap gap-1">
+                                                        @foreach(var date in GetPreviewDates().Take(4))
+                                                        {
+                                                            <span class="badge badge-light fs-9">@date.ToString("dd/MM")</span>
+                                                        }
+                                                        <span class="badge badge-light fs-9">...</span>
+                                                        <span class="badge badge-light fs-9">@_assignModel.EndDate.ToString("dd/MM")</span>
+                                                    </div>
+                                                </div>
+                                                <div class="separator separator-dashed my-3"></div>
+                                                <div class="fs-9 text-muted italic">Ca sẽ lặp lại vào: @string.Join(", ", _assignModel.DaysOfWeek.Select(d => GetVietnameseDayName(d)))</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Middle: Subjects Info -->
+                                <div class="col-md-5">
+                                    <div class="card bg-light shadow-none border-dashed h-100">
+                                        <div class="card-header border-0 pt-5">
+                                            <h3 class="card-title align-items-start flex-column">
+                                                <span class="card-label fw-boldest text-gray-800 fs-7">DANH SÁCH ĐỐI TƯỢNG ĐƯỢC CHỌN</span>
+                                            </h3>
+                                            <div class="card-toolbar">
+                                                <span class="badge badge-light-primary fw-boldest fs-9 px-2">@SelectedObjectCount @SelectedObjectLabel.ToUpper() TỔNG</span>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-2">
+                                            <div class="d-flex flex-wrap gap-3 mb-5 border-bottom pb-3">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="fs-2hx fw-boldest text-gray-900 me-2">@NewObjectCount</span>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="fs-7 fw-boldest text-primary">Gán mới</span>
+                                                        <span class="fs-9 fw-bold text-muted">@SelectedObjectLabel</span>
+                                                    </div>
+                                                </div>
+                                                <div class="vr mx-2"></div>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="fs-2hx fw-boldest text-gray-400 me-2">@ExistingObjectCount</span>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="fs-7 fw-boldest text-gray-600">Đã gán</span>
+                                                        <span class="fs-9 fw-bold text-muted">@SelectedObjectLabel</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="bg-white rounded p-4 border border-gray-200 overflow-auto" style="max-height: 180px;">
+                                                <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-2 mb-0">
+                                                    <thead>
+                                                        <tr class="fs-9 fw-boldest text-muted text-uppercase">
+                                                            <th class="min-w-100px">@SelectedObjectLabel</th>
+                                                            <th class="min-w-50px text-end">Trạng thái</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="fs-8 fw-bold text-gray-700">
+                                                        @foreach(var name in NewlySelectedNames.Take(15))
+                                                        {
+                                                            <tr>
+                                                                <td>@name</td>
+                                                                <td class="text-end">
+                                                                    <span class="badge badge-light-primary fs-10 px-1 py-0">MỚI</span>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        @foreach(var name in ExistingSelectedNames.Take(5))
+                                                        {
+                                                            <tr>
+                                                                <td class="text-muted">@name</td>
+                                                                <td class="text-end">
+                                                                    <span class="badge badge-light-success fs-10 px-1 py-0">ĐÃ GÁN</span>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right: General Timeline -->
+                                <div class="col-md-3">
+                                    <div class="card bg-light shadow-none border-dashed h-100">
+                                        <div class="card-header border-0 pt-5">
+                                            <h3 class="card-title align-items-start flex-column">
+                                                <span class="card-label fw-boldest text-gray-800 fs-7">LỊCH HIỂN THỊ TỔNG QUÁT</span>
+                                            </h3>
+                                        </div>
+                                        <div class="card-body pt-2 d-flex flex-column h-100">
+                                            <div class="d-flex justify-content-between mb-8">
+                                                @{
+                                                    var days = new[] { 
+                                                        (DayOfWeek.Monday, "T2"), (DayOfWeek.Tuesday, "T3"), (DayOfWeek.Wednesday, "T4"), 
+                                                        (DayOfWeek.Thursday, "T5"), (DayOfWeek.Friday, "T6"), (DayOfWeek.Saturday, "T7"), (DayOfWeek.Sunday, "CN") 
+                                                    };
+                                                    foreach (var day in days)
+                                                    {
+                                                        <div class="d-flex flex-column align-items-center">
+                                                            <span class="fs-10 fw-bold text-gray-500 mb-1">@day.Item2</span>
+                                                            <div class="w-30px h-30px rounded-circle d-flex flex-center @(_assignModel.DaysOfWeek.Contains(day.Item1) ? "bg-primary shadow-sm" : "bg-white border")">
+                                                                @if (_assignModel.DaysOfWeek.Contains(day.Item1))
+                                                                {
+                                                                    <i class="ki-solid ki-check text-white fs-8"></i>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+
+                                            <div class="bg-white rounded p-5 border border-gray-200 mt-auto">
+                                                <div class="d-flex align-items-center mb-4">
+                                                    <div class="symbol symbol-35px me-3">
+                                                        <div class="symbol-label bg-light-warning">
+                                                            <i class="ki-outline ki-shield-search fs-4 text-warning"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="fs-7 fw-boldest text-gray-900 line-height-1">Sẵn sàng áp dụng</div>
+                                                        <div class="fs-9 text-muted fw-bold">Vui lòng kiểm tra lại trước khi gán</div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-warning w-100 fw-boldest py-3 @(_isSaving ? "disabled" : "")" 
+                                                        style="background-color: #f64e1f !important; border-color: #f64e1f !important;"
+                                                        @onclick="GoToStep3">
+                                                    @if (_isSaving)
+                                                    {
+                                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                                    }
+                                                    BẮT ĐẦU GÁN CA NGAY
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+
+        @if (_currentStep == 3)
+        {
+            <!-- Final Confirmation Modal (Step 3) -->
+            <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content border-0 shadow-lg">
+                        <div class="modal-header border-0 pt-7 px-10">
+                            <h3 class="modal-title fw-bolder fs-3">Kiểm tra & Xác nhận</h3>
+                            <button type="button" class="btn btn-sm btn-icon btn-active-light-primary" @onclick="() => _currentStep = 1">
+                                <i class="ki-outline ki-cross fs-1"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body px-10">
+                            <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-8 p-6">
+                                <i class="ki-outline ki-information fs-2tx text-warning me-4"></i>
+                                <div class="d-flex flex-stack flex-grow-1">
+                                    <div class="fw-semibold">
+                                        <h4 class="text-gray-900 fw-bold">Thông tin gán ca</h4>
+                                        <div class="fs-6 text-gray-700">
+                                            Hệ thống sẽ thực hiện gán ca làm việc cho <b>@(_readyToAssign.Count + _conflictToUpdate.Count)</b> nhân viên.
+                                            Vui lòng kiểm tra lại sự xung đột dưới đây.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-light-info rounded p-5 mb-8 border border-info border-dashed">
+                                <div class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input h-25px w-45px" type="checkbox" @bind="_overwriteConflicts" id="confirm_overwrite_modal" />
+                                    <label class="form-check-label fw-bold text-gray-800" for="confirm_overwrite_modal">Ghi đè ca làm việc hiện tại (Nếu có xung đột)</label>
+                                </div>
+                            </div>
+
+                            <div class="row g-5">
+                                <div class="col-md-6">
+                                    <div class="card bg-light-light shadow-none border-dashed border-primary">
+                                        <div class="card-header border-0 pt-5 min-h-auto">
+                                            <h3 class="card-title align-items-start flex-column">
+                                                <span class="card-label fw-bolder text-dark fs-6">Sẵn sàng gán (@_readyToAssign.Count)</span>
+                                            </h3>
+                                        </div>
+                                        <div class="card-body p-4">
+                                            <div class="d-flex flex-column gap-2 overflow-auto" style="max-height: 200px;">
+                                                @foreach (var item in _readyToAssign)
+                                                {
+                                                    <div class="bg-white border rounded p-2 px-3 fs-8 text-gray-700 fw-bold">@item.EmployeeName</div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card bg-light-light shadow-none border-dashed @(_overwriteConflicts ? "border-warning" : "border-gray-300 opacity-50")">
+                                        <div class="card-header border-0 pt-5 min-h-auto">
+                                            <h3 class="card-title align-items-start flex-column">
+                                                <span class="card-label fw-bolder text-dark fs-6">Có xung đột (@_conflictToUpdate.Count)</span>
+                                            </h3>
+                                        </div>
+                                        <div class="card-body p-4">
+                                            <div class="d-flex flex-column gap-2 overflow-auto" style="max-height: 200px;">
+                                                @foreach (var item in _conflictToUpdate)
+                                                {
+                                                    <div class="bg-white border rounded p-2 px-3 fs-8 text-gray-700 fw-bold">@item.EmployeeName</div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0 pb-10 px-10">
+                            <button type="button" class="btn btn-light fw-bold" @onclick="() => _currentStep = 1">Quay lại</button>
+                            <button type="button" class="btn btn-warning fw-bold px-10 shadow-sm ripple" 
+                                    style="background-color: #f64e1f !important; border-color: #f64e1f !important;"
+                                    @onclick="SaveAsync">
+                                @if (_isSaving)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                    <span>Đang xử lý...</span>
+                                }
+                                else
+                                {
+                                    <i class="ki-outline ki-fast-forward fs-4 me-2"></i>
+                                    <span>Bắt đầu gán ca</span>
+                                }
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .transition-all { transition: all 0.2s ease; }
+    .cursor-pointer { cursor: pointer; }
+    .hover-border-warning:hover { border-color: #f64e1f !important; }
+    .border-warning { border-color: #f64e1f !important; }
+    .bg-light-warning { background-color: #fff1ed !important; }
+    .text-warning { color: #f64e1f !important; }
+    .btn-warning { background-color: #f64e1f !important; color: white !important; }
+    .btn-warning:hover { background-color: #e0451a !important; }
+    .badge-warning { background-color: #f64e1f !important; }
+    .sticky-top { position: sticky; top: 0; z-index: 10; }
+    .animation-blink { animation: blinker 2s linear infinite; }
+    @@keyframes blinker { 50% { opacity: 0.5; } }
+    .italic { font-style: italic; }
+    .pulse-active { animation: pulse-border 1.5s infinite; }
+    @@keyframes pulse-border {
+      0% { box-shadow: 0 0 0 0 rgba(246, 78, 31, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(246, 78, 31, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(246, 78, 31, 0); }
+    }
+    .fw-boldest { font-weight: 900 !important; }
+    .line-height-1 { line-height: 1 !important; }
+</style>

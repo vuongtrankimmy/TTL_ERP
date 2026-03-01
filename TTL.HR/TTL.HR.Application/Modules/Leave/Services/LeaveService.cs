@@ -42,11 +42,7 @@ namespace TTL.HR.Application.Modules.Leave.Services
             var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Leave.Base, request);
             return response.IsSuccessStatusCode;
         }
-        public async Task<bool> ApproveLeaveRequestAsync(string id, string status)
-        {
-            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Leave.Base}/{id}/approve", new { Status = status });
-            return response.IsSuccessStatusCode;
-        }
+
 
         public async Task<bool> ProcessLeaveRequestAsync(string id, bool approved, string? note)
         {

@@ -13,8 +13,8 @@
     <TieredPGO>true</TieredPGO>
     <GarbageCollectionAdaptationMode>2</GarbageCollectionAdaptationMode>
 
-    <AssemblyVersion>26.2.21.371</AssemblyVersion>
-    <FileVersion>26.2.21.371</FileVersion>
+    <AssemblyVersion>26.3.1.503</AssemblyVersion>
+    <FileVersion>26.3.1.503</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.0" />
+    <PackageReference Include="Blazor-ApexCharts" Version="6.1.0" />
   </ItemGroup>
+
 
 </Project>

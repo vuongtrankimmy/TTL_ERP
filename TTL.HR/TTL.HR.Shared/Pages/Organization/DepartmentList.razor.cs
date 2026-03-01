@@ -48,7 +48,8 @@ namespace TTL.HR.Shared.Pages.Organization
         {
             try
             {
-                _employees = await EmployeeService.GetEmployeesAsync();
+                var result = await EmployeeService.GetEmployeesPaginatedAsync(1, 10000);
+                _employees = result?.Items ?? new List<EmployeeDto>();
             }
             catch (Exception ex)
             {
@@ -249,6 +250,68 @@ namespace TTL.HR.Shared.Pages.Organization
                 {
                     closeDeleteModal();
                 }
+            }
+        }
+
+        // --- Assign Employees Modal Logic ---
+        private bool _showAssignEmployeesDrawer = false;
+        private List<string> _initialSelectedEmployeeIds = new();
+        private List<EmployeeDto> _assignableEmployees = new();
+
+        private void openAssignEmployeesModal()
+        {
+            if (_selectedDept == null) return;
+            // Get all employees that have not resigned
+            _assignableEmployees = _employees
+                .Where(e => e.StatusName != "Đã nghỉ việc")
+                .ToList();
+            
+            _initialSelectedEmployeeIds = _assignableEmployees
+                .Where(e => e.DepartmentId == _selectedDept.Id)
+                .Select(e => e.Id)
+                .ToList();
+                
+            _showAssignEmployeesDrawer = true;
+        }
+
+        private async System.Threading.Tasks.Task saveEmployeeAssignments(List<string> selectedEmployeeIds)
+        {
+            if (_selectedDept == null) return;
+
+            if (!selectedEmployeeIds.Any())
+            {
+                await JS.InvokeVoidAsync("toastr.warning", "Vui lòng chọn ít nhất 1 nhân viên");
+                return;
+            }
+
+            _isLoading = true;
+            try
+            {
+                // the new EmployeeSelectionDrawer passes the updated list
+                var success = await DepartmentService.AssignEmployeesAsync(_selectedDept.Id, selectedEmployeeIds);
+                if (success)
+                {
+                    await JS.InvokeVoidAsync("toastr.success", "Gán nhân sự vào phòng ban thành công.");
+                    // Refresh current department details
+                    await viewDetails(_selectedDept);
+                    // Refresh tables list entirely
+                    await LoadDepartments(); 
+                    await LoadEmployees(); // because their departments updated
+                    _showAssignEmployeesDrawer = false;
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi gán nhân sự.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error assigning employees: {ex.Message}");
+                await JS.InvokeVoidAsync("toastr.error", "Lỗi mạng hoặc hệ thống.");
+            }
+            finally
+            {
+                _isLoading = false;
             }
         }
 

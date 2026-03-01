@@ -1,0 +1,225 @@
+﻿log_id,employee_code,employee_name,department,method,action,device_id,device_name,check_time,location,gps_lat,gps_lng,confidence
+L1,GD-001,Phß║ím Minh H├╣ng,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:50:12,HCM,10.7626,106.6602,0.99
+L101,GD-001,Phß║ím Minh H├╣ng,Office,Fingerprint,BreakOut,D01,Main Gate,2026-02-22 12:01:05,HCM,10.7626,106.6602,0.98
+L201,GD-001,Phß║ím Minh H├╣ng,Office,Fingerprint,BreakIn,D01,Main Gate,2026-02-22 13:02:44,HCM,10.7626,106.6602,0.99
+L301,GD-001,Phß║ím Minh H├╣ng,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:05:33,HCM,10.7626,106.6602,0.95
+L2,NS-001,Nguyß╗àn Thß╗ï Mai,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:15:00,HCM,10.7626,106.6602,0.92
+L102,NS-001,Nguyß╗àn Thß╗ï Mai,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:25:00,HCM,10.7626,106.6602,0.94
+L202,NS-001,Nguyß╗àn Thß╗ï Mai,Office,FaceID,CheckOut,D02,Lobby,2026-02-22 17:15:00,HCM,10.7626,106.6602,0.91
+L3,IT-001,L├¬ V─ân Tuß║Ñn,Office,App,CheckIn,D03,Mobile,2026-02-22 07:55:00,HCM,10.7626,106.6602,0.99
+L103,IT-001,L├¬ V─ân Tuß║Ñn,Office,App,CheckOut,D03,Mobile,2026-02-22 16:30:00,HCM,10.7626,106.6602,0.99
+L4,IT-002,Trß║ºn Thanh B├¼nh,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:58:00,HCM,10.7626,106.6602,0.99
+L5,IT-003,Ho├áng Thu Ph╞░╞íng,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:10:00,HCM,10.7626,106.6602,0.99
+L6,EMP-2001,Nguyß╗àn V─ân 1,Office,Card,CheckIn,D04,Side Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L106,EMP-2001,Nguyß╗àn V─ân 1,Office,Card,CheckOut,D04,Side Gate,2026-02-22 21:00:00,HCM,10.7626,106.6602,0.99
+L7,EMP-2002,Nguyß╗àn V─ân 2,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L107,EMP-2002,Nguyß╗àn V─ân 2,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L8,EMP-2003,NGUYß╗äN V─éN 3,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L108,EMP-2003,NGUYß╗äN V─éN 3,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L9,EMP-2004,Nguyß╗àn V─ân 4,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L109,EMP-2004,Nguyß╗àn V─ân 4,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L10,EMP-2005,Nguyß╗àn V─ân 5,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L110,EMP-2005,Nguyß╗àn V─ân 5,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L11,EMP-2006,Nguyß╗àn V─ân 6,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:50:12,HCM,10.7626,106.6602,0.99
+L111,EMP-2006,Nguyß╗àn V─ân 6,Office,Fingerprint,BreakOut,D01,Main Gate,2026-02-22 12:01:05,HCM,10.7626,106.6602,0.98
+L211,EMP-2006,Nguyß╗àn V─ân 6,Office,Fingerprint,BreakIn,D01,Main Gate,2026-02-22 13:02:44,HCM,10.7626,106.6602,0.99
+L311,EMP-2006,Nguyß╗àn V─ân 6,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:05:33,HCM,10.7626,106.6602,0.95
+L12,EMP-2007,Nguyß╗àn V─ân 7,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:15:00,HCM,10.7626,106.6602,0.92
+L112,EMP-2007,Nguyß╗àn V─ân 7,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:25:00,HCM,10.7626,106.6602,0.94
+L212,EMP-2007,Nguyß╗àn V─ân 7,Office,FaceID,CheckOut,D02,Lobby,2026-02-22 17:15:00,HCM,10.7626,106.6602,0.91
+L13,EMP-2008,Nguyß╗àn V─ân 8,Office,App,CheckIn,D03,Mobile,2026-02-22 07:55:00,HCM,10.7626,106.6602,0.99
+L113,EMP-2008,Nguyß╗àn V─ân 8,Office,App,CheckOut,D03,Mobile,2026-02-22 16:30:00,HCM,10.7626,106.6602,0.99
+L14,EMP-2009,Nguyß╗àn V─ân 9,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:58:00,HCM,10.7626,106.6602,0.99
+L15,EMP-2010,Nguyß╗àn V─ân 10,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:10:00,HCM,10.7626,106.6602,0.99
+L16,EMP-2011,Nguyß╗àn V─ân 11,Office,Card,CheckIn,D04,Side Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L116,EMP-2011,Nguyß╗àn V─ân 11,Office,Card,CheckOut,D04,Side Gate,2026-02-22 21:00:00,HCM,10.7626,106.6602,0.99
+L17,EMP-2012,Nguyß╗àn V─ân 12,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L117,EMP-2012,Nguyß╗àn V─ân 12,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L18,EMP-2013,Nguyß╗àn V─ân 13,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L118,EMP-2013,Nguyß╗àn V─ân 13,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L19,EMP-2014,Nguyß╗àn V─ân 14,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L119,EMP-2014,Nguyß╗àn V─ân 14,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L20,EMP-2015,Nguyß╗àn V─ân 15,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L120,EMP-2015,Nguyß╗àn V─ân 15,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L21,EMP-2016,Nguyß╗àn V─ân 16,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:50:12,HCM,10.7626,106.6602,0.99
+L121,EMP-2016,Nguyß╗àn V─ân 16,Office,Fingerprint,BreakOut,D01,Main Gate,2026-02-22 12:01:05,HCM,10.7626,106.6602,0.98
+L221,EMP-2016,Nguyß╗àn V─ân 16,Office,Fingerprint,BreakIn,D01,Main Gate,2026-02-22 13:02:44,HCM,10.7626,106.6602,0.99
+L321,EMP-2016,Nguyß╗àn V─ân 16,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:05:33,HCM,10.7626,106.6602,0.95
+L22,EMP-2017,Nguyß╗àn V─ân 17,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:15:00,HCM,10.7626,106.6602,0.92
+L122,EMP-2017,Nguyß╗àn V─ân 17,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:25:00,HCM,10.7626,106.6602,0.94
+L222,EMP-2017,Nguyß╗àn V─ân 17,Office,FaceID,CheckOut,D02,Lobby,2026-02-22 17:15:00,HCM,10.7626,106.6602,0.91
+L23,EMP-2018,Nguyß╗àn V─ân 18,Office,App,CheckIn,D03,Mobile,2026-02-22 07:55:00,HCM,10.7626,106.6602,0.99
+L123,EMP-2018,Nguyß╗àn V─ân 18,Office,App,CheckOut,D03,Mobile,2026-02-22 16:30:00,HCM,10.7626,106.6602,0.99
+L24,EMP-2019,Nguyß╗àn V─ân 19,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:58:00,HCM,10.7626,106.6602,0.99
+L25,EMP-2020,Nguyß╗àn V─ân 20,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:10:00,HCM,10.7626,106.6602,0.99
+L26,EMP-2021,Nguyß╗àn V─ân 21,Office,Card,CheckIn,D04,Side Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L126,EMP-2021,Nguyß╗àn V─ân 21,Office,Card,CheckOut,D04,Side Gate,2026-02-22 21:00:00,HCM,10.7626,106.6602,0.99
+L27,EMP-2022,Nguyß╗àn V─ân 22,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L127,EMP-2022,Nguyß╗àn V─ân 22,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L28,EMP-2023,Nguyß╗àn V─ân 23,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L128,EMP-2023,Nguyß╗àn V─ân 23,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L29,EMP-2024,Nguyß╗àn V─ân 24,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L129,EMP-2024,Nguyß╗àn V─ân 24,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L30,EMP-2025,Nguyß╗àn V─ân 25,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L130,EMP-2025,Nguyß╗àn V─ân 25,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L31,EMP-2026,Nguyß╗àn V─ân 26,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:50:12,HCM,10.7626,106.6602,0.99
+L131,EMP-2026,Nguyß╗àn V─ân 26,Office,Fingerprint,BreakOut,D01,Main Gate,2026-02-22 12:01:05,HCM,10.7626,106.6602,0.98
+L231,EMP-2026,Nguyß╗àn V─ân 26,Office,Fingerprint,BreakIn,D01,Main Gate,2026-02-22 13:02:44,HCM,10.7626,106.6602,0.99
+L331,EMP-2026,Nguyß╗àn V─ân 26,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:05:33,HCM,10.7626,106.6602,0.95
+L32,EMP-2027,Nguyß╗àn V─ân 27,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:15:00,HCM,10.7626,106.6602,0.92
+L132,EMP-2027,Nguyß╗àn V─ân 27,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:25:00,HCM,10.7626,106.6602,0.94
+L232,EMP-2027,Nguyß╗àn V─ân 27,Office,FaceID,CheckOut,D02,Lobby,2026-02-22 17:15:00,HCM,10.7626,106.6602,0.91
+L33,EMP-2028,Nguyß╗àn V─ân 28,Office,App,CheckIn,D03,Mobile,2026-02-22 07:55:00,HCM,10.7626,106.6602,0.99
+L133,EMP-2028,Nguyß╗àn V─ân 28,Office,App,CheckOut,D03,Mobile,2026-02-22 16:30:00,HCM,10.7626,106.6602,0.99
+L34,EMP-2029,Nguyß╗àn V─ân 29,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:58:00,HCM,10.7626,106.6602,0.99
+L35,EMP-2030,Nguyß╗àn V─ân 30,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:10:00,HCM,10.7626,106.6602,0.99
+L36,EMP-2031,Nguyß╗àn V─ân 31,Office,Card,CheckIn,D04,Side Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L136,EMP-2031,Nguyß╗àn V─ân 31,Office,Card,CheckOut,D04,Side Gate,2026-02-22 21:00:00,HCM,10.7626,106.6602,0.99
+L37,EMP-2032,Nguyß╗àn V─ân 32,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L137,EMP-2032,Nguyß╗àn V─ân 32,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L38,EMP-2033,Nguyß╗àn V─ân 33,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L138,EMP-2033,Nguyß╗àn V─ân 33,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L39,EMP-2034,Nguyß╗àn V─ân 34,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L139,EMP-2034,Nguyß╗àn V─ân 34,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L40,EMP-2035,Nguyß╗àn V─ân 35,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L140,EMP-2035,Nguyß╗àn V─ân 35,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L41,EMP-2036,Nguyß╗àn V─ân 36,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:50:12,HCM,10.7626,106.6602,0.99
+L141,EMP-2036,Nguyß╗àn V─ân 36,Office,Fingerprint,BreakOut,D01,Main Gate,2026-02-22 12:01:05,HCM,10.7626,106.6602,0.98
+L241,EMP-2036,Nguyß╗àn V─ân 36,Office,Fingerprint,BreakIn,D01,Main Gate,2026-02-22 13:02:44,HCM,10.7626,106.6602,0.99
+L341,EMP-2036,Nguyß╗àn V─ân 36,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:05:33,HCM,10.7626,106.6602,0.95
+L42,EMP-2037,Nguyß╗àn V─ân 37,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:15:00,HCM,10.7626,106.6602,0.92
+L142,EMP-2037,Nguyß╗àn V─ân 37,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:25:00,HCM,10.7626,106.6602,0.94
+L242,EMP-2037,Nguyß╗àn V─ân 37,Office,FaceID,CheckOut,D02,Lobby,2026-02-22 17:15:00,HCM,10.7626,106.6602,0.91
+L43,EMP-2038,Nguyß╗àn V─ân 38,Office,App,CheckIn,D03,Mobile,2026-02-22 07:55:00,HCM,10.7626,106.6602,0.99
+L143,EMP-2038,Nguyß╗àn V─ân 38,Office,App,CheckOut,D03,Mobile,2026-02-22 16:30:00,HCM,10.7626,106.6602,0.99
+L44,EMP-2039,Nguyß╗àn V─ân 39,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:58:00,HCM,10.7626,106.6602,0.99
+L45,EMP-2040,Nguyß╗àn V─ân 40,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:10:00,HCM,10.7626,106.6602,0.99
+L46,EMP-2041,Nguyß╗àn V─ân 41,Office,Card,CheckIn,D04,Side Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L146,EMP-2041,Nguyß╗àn V─ân 41,Office,Card,CheckOut,D04,Side Gate,2026-02-22 21:00:00,HCM,10.7626,106.6602,0.99
+L47,EMP-2042,Nguyß╗àn V─ân 42,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L147,EMP-2042,Nguyß╗àn V─ân 42,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L48,EMP-2043,Nguyß╗àn V─ân 43,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L148,EMP-2043,Nguyß╗àn V─ân 43,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L49,EMP-2044,Nguyß╗àn V─ân 44,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L149,EMP-2044,Nguyß╗àn V─ân 44,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L50,EMP-2045,Nguyß╗àn V─ân 45,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L150,EMP-2045,Nguyß╗àn V─ân 45,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L51,EMP-2046,Nguyß╗àn V─ân 46,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:50:12,HCM,10.7626,106.6602,0.99
+L151,EMP-2046,Nguyß╗àn V─ân 46,Office,Fingerprint,BreakOut,D01,Main Gate,2026-02-22 12:01:05,HCM,10.7626,106.6602,0.98
+L251,EMP-2046,Nguyß╗àn V─ân 46,Office,Fingerprint,BreakIn,D01,Main Gate,2026-02-22 13:02:44,HCM,10.7626,106.6602,0.99
+L351,EMP-2046,Nguyß╗àn V─ân 46,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:05:33,HCM,10.7626,106.6602,0.95
+L52,EMP-2047,Nguyß╗àn V─ân 47,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:15:00,HCM,10.7626,106.6602,0.92
+L152,EMP-2047,Nguyß╗àn V─ân 47,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:25:00,HCM,10.7626,106.6602,0.94
+L252,EMP-2047,Nguyß╗àn V─ân 47,Office,FaceID,CheckOut,D02,Lobby,2026-02-22 17:15:00,HCM,10.7626,106.6602,0.91
+L53,EMP-2048,Nguyß╗àn V─ân 48,Office,App,CheckIn,D03,Mobile,2026-02-22 07:55:00,HCM,10.7626,106.6602,0.99
+L153,EMP-2048,Nguyß╗àn V─ân 48,Office,App,CheckOut,D03,Mobile,2026-02-22 16:30:00,HCM,10.7626,106.6602,0.99
+L54,EMP-2049,Nguyß╗àn V─ân 49,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:58:00,HCM,10.7626,106.6602,0.99
+L55,EMP-2050,Nguyß╗àn V─ân 50,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:10:00,HCM,10.7626,106.6602,0.99
+L56,EMP-2051,Nguyß╗àn V─ân 51,Office,Card,CheckIn,D04,Side Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L156,EMP-2051,Nguyß╗àn V─ân 51,Office,Card,CheckOut,D04,Side Gate,2026-02-22 21:00:00,HCM,10.7626,106.6602,0.99
+L57,EMP-2052,Nguyß╗àn V─ân 52,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L157,EMP-2052,Nguyß╗àn V─ân 52,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L58,EMP-2053,Nguyß╗àn V─ân 53,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L158,EMP-2053,Nguyß╗àn V─ân 53,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L59,EMP-2054,Nguyß╗àn V─ân 54,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L159,EMP-2054,Nguyß╗àn V─ân 54,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L60,EMP-2055,Nguyß╗àn V─ân 55,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L160,EMP-2055,Nguyß╗àn V─ân 55,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L61,EMP-2056,Nguyß╗àn V─ân 56,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:50:12,HCM,10.7626,106.6602,0.99
+L161,EMP-2056,Nguyß╗àn V─ân 56,Office,Fingerprint,BreakOut,D01,Main Gate,2026-02-22 12:01:05,HCM,10.7626,106.6602,0.98
+L261,EMP-2056,Nguyß╗àn V─ân 56,Office,Fingerprint,BreakIn,D01,Main Gate,2026-02-22 13:02:44,HCM,10.7626,106.6602,0.99
+L361,EMP-2056,Nguyß╗àn V─ân 56,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:05:33,HCM,10.7626,106.6602,0.95
+L62,EMP-2057,Nguyß╗àn V─ân 57,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:15:00,HCM,10.7626,106.6602,0.92
+L162,EMP-2057,Nguyß╗àn V─ân 57,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:25:00,HCM,10.7626,106.6602,0.94
+L262,EMP-2057,Nguyß╗àn V─ân 57,Office,FaceID,CheckOut,D02,Lobby,2026-02-22 17:15:00,HCM,10.7626,106.6602,0.91
+L63,EMP-2058,Nguyß╗àn V─ân 58,Office,App,CheckIn,D03,Mobile,2026-02-22 07:55:00,HCM,10.7626,106.6602,0.99
+L163,EMP-2058,Nguyß╗àn V─ân 58,Office,App,CheckOut,D03,Mobile,2026-02-22 16:30:00,HCM,10.7626,106.6602,0.99
+L64,EMP-2059,Nguyß╗àn V─ân 59,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:58:00,HCM,10.7626,106.6602,0.99
+L65,EMP-2060,Nguyß╗àn V─ân 60,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:10:00,HCM,10.7626,106.6602,0.99
+L66,EMP-2061,Nguyß╗àn V─ân 61,Office,Card,CheckIn,D04,Side Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L166,EMP-2061,Nguyß╗àn V─ân 61,Office,Card,CheckOut,D04,Side Gate,2026-02-22 21:00:00,HCM,10.7626,106.6602,0.99
+L67,EMP-2062,Nguyß╗àn V─ân 62,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L167,EMP-2062,Nguyß╗àn V─ân 62,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L68,EMP-2063,Nguyß╗àn V─ân 63,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L168,EMP-2063,Nguyß╗àn V─ân 63,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L69,EMP-2064,Nguyß╗àn V─ân 64,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L169,EMP-2064,Nguyß╗àn V─ân 64,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L70,EMP-2065,Nguyß╗àn V─ân 65,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L170,EMP-2065,Nguyß╗àn V─ân 65,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L71,EMP-2066,Nguyß╗àn V─ân 66,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:50:12,HCM,10.7626,106.6602,0.99
+L171,EMP-2066,Nguyß╗àn V─ân 66,Office,Fingerprint,BreakOut,D01,Main Gate,2026-02-22 12:01:05,HCM,10.7626,106.6602,0.98
+L271,EMP-2066,Nguyß╗àn V─ân 66,Office,Fingerprint,BreakIn,D01,Main Gate,2026-02-22 13:02:44,HCM,10.7626,106.6602,0.99
+L371,EMP-2066,Nguyß╗àn V─ân 66,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:05:33,HCM,10.7626,106.6602,0.95
+L72,EMP-2067,Nguyß╗àn V─ân 67,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:15:00,HCM,10.7626,106.6602,0.92
+L172,EMP-2067,Nguyß╗àn V─ân 67,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:25:00,HCM,10.7626,106.6602,0.94
+L272,EMP-2067,Nguyß╗àn V─ân 67,Office,FaceID,CheckOut,D02,Lobby,2026-02-22 17:15:00,HCM,10.7626,106.6602,0.91
+L73,EMP-2068,Nguyß╗àn V─ân 68,Office,App,CheckIn,D03,Mobile,2026-02-22 07:55:00,HCM,10.7626,106.6602,0.99
+L173,EMP-2068,Nguyß╗àn V─ân 68,Office,App,CheckOut,D03,Mobile,2026-02-22 16:30:00,HCM,10.7626,106.6602,0.99
+L74,EMP-2069,Nguyß╗àn V─ân 69,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:58:00,HCM,10.7626,106.6602,0.99
+L75,EMP-2070,Nguyß╗àn V─ân 70,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:10:00,HCM,10.7626,106.6602,0.99
+L76,EMP-2071,Nguyß╗àn V─ân 71,Office,Card,CheckIn,D04,Side Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L176,EMP-2071,Nguyß╗àn V─ân 71,Office,Card,CheckOut,D04,Side Gate,2026-02-22 21:00:00,HCM,10.7626,106.6602,0.99
+L77,EMP-2072,Nguyß╗àn V─ân 72,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L177,EMP-2072,Nguyß╗àn V─ân 72,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L78,EMP-2073,Nguyß╗àn V─ân 73,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L178,EMP-2073,Nguyß╗àn V─ân 73,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L79,EMP-2074,Nguyß╗àn V─ân 74,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L179,EMP-2074,Nguyß╗àn V─ân 74,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L80,EMP-2075,Nguyß╗àn V─ân 75,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L180,EMP-2075,Nguyß╗àn V─ân 75,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L81,EMP-2076,Nguyß╗àn V─ân 76,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:50:12,HCM,10.7626,106.6602,0.99
+L181,EMP-2076,Nguyß╗àn V─ân 76,Office,Fingerprint,BreakOut,D01,Main Gate,2026-02-22 12:01:05,HCM,10.7626,106.6602,0.98
+L281,EMP-2076,Nguyß╗àn V─ân 76,Office,Fingerprint,BreakIn,D01,Main Gate,2026-02-22 13:02:44,HCM,10.7626,106.6602,0.99
+L381,EMP-2076,Nguyß╗àn V─ân 76,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:05:33,HCM,10.7626,106.6602,0.95
+L82,EMP-2077,Nguyß╗àn V─ân 77,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:15:00,HCM,10.7626,106.6602,0.92
+L182,EMP-2077,Nguyß╗àn V─ân 77,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:25:00,HCM,10.7626,106.6602,0.94
+L282,EMP-2077,Nguyß╗àn V─ân 77,Office,FaceID,CheckOut,D02,Lobby,2026-02-22 17:15:00,HCM,10.7626,106.6602,0.91
+L83,EMP-2078,Nguyß╗àn V─ân 78,Office,App,CheckIn,D03,Mobile,2026-02-22 07:55:00,HCM,10.7626,106.6602,0.99
+L183,EMP-2078,Nguyß╗àn V─ân 78,Office,App,CheckOut,D03,Mobile,2026-02-22 16:30:00,HCM,10.7626,106.6602,0.99
+L84,EMP-2079,Nguyß╗àn V─ân 79,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:58:00,HCM,10.7626,106.6602,0.99
+L85,EMP-2080,Nguyß╗àn V─ân 80,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:10:00,HCM,10.7626,106.6602,0.99
+L86,EMP-2081,Nguyß╗àn V─ân 81,Office,Card,CheckIn,D04,Side Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L186,EMP-2081,Nguyß╗àn V─ân 81,Office,Card,CheckOut,D04,Side Gate,2026-02-22 21:00:00,HCM,10.7626,106.6602,0.99
+L87,EMP-2082,Nguyß╗àn V─ân 82,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L187,EMP-2082,Nguyß╗àn V─ân 82,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L88,EMP-2083,Nguyß╗àn V─ân 83,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L188,EMP-2083,Nguyß╗àn V─ân 83,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L89,EMP-2084,Nguyß╗àn V─ân 84,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L189,EMP-2084,Nguyß╗àn V─ân 84,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L90,EMP-2085,Nguyß╗àn V─ân 85,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L190,EMP-2085,Nguyß╗àn V─ân 85,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L91,EMP-2086,Nguyß╗àn V─ân 86,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:50:12,HCM,10.7626,106.6602,0.99
+L191,EMP-2086,Nguyß╗àn V─ân 86,Office,Fingerprint,BreakOut,D01,Main Gate,2026-02-22 12:01:05,HCM,10.7626,106.6602,0.98
+L291,EMP-2086,Nguyß╗àn V─ân 86,Office,Fingerprint,BreakIn,D01,Main Gate,2026-02-22 13:02:44,HCM,10.7626,106.6602,0.99
+L391,EMP-2086,Nguyß╗àn V─ân 86,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:05:33,HCM,10.7626,106.6602,0.95
+L92,EMP-2087,Nguyß╗àn V─ân 87,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:15:00,HCM,10.7626,106.6602,0.92
+L192,EMP-2087,Nguyß╗àn V─ân 87,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:25:00,HCM,10.7626,106.6602,0.94
+L292,EMP-2087,Nguyß╗àn V─ân 87,Office,FaceID,CheckOut,D02,Lobby,2026-02-22 17:15:00,HCM,10.7626,106.6602,0.91
+L93,EMP-2088,Nguyß╗àn V─ân 88,Office,App,CheckIn,D03,Mobile,2026-02-22 07:55:00,HCM,10.7626,106.6602,0.99
+L193,EMP-2088,Nguyß╗àn V─ân 88,Office,App,CheckOut,D03,Mobile,2026-02-22 16:30:00,HCM,10.7626,106.6602,0.99
+L94,EMP-2089,Nguyß╗àn V─ân 89,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:58:00,HCM,10.7626,106.6602,0.99
+L95,EMP-2090,Nguyß╗àn V─ân 90,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:10:00,HCM,10.7626,106.6602,0.99
+L96,EMP-2091,Nguyß╗àn V─ân 91,Office,Card,CheckIn,D04,Side Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L196,EMP-2091,Nguyß╗àn V─ân 91,Office,Card,CheckOut,D04,Side Gate,2026-02-22 21:00:00,HCM,10.7626,106.6602,0.99
+L97,EMP-2092,Nguyß╗àn V─ân 92,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L197,EMP-2092,Nguyß╗àn V─ân 92,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L98,EMP-2093,Nguyß╗àn V─ân 93,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L198,EMP-2093,Nguyß╗àn V─ân 93,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L99,EMP-2094,Nguyß╗àn V─ân 94,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L199,EMP-2094,Nguyß╗àn V─ân 94,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L100,EMP-2095,Nguyß╗àn V─ân 95,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L200,EMP-2095,Nguyß╗àn V─ân 95,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:00:00,HCM,10.7626,106.6602,0.99
+L101,EMP-2096,Nguyß╗àn V─ân 96,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:50:12,HCM,10.7626,106.6602,0.99
+L201,EMP-2096,Nguyß╗àn V─ân 96,Office,Fingerprint,BreakOut,D01,Main Gate,2026-02-22 12:01:05,HCM,10.7626,106.6602,0.98
+L301,EMP-2096,Nguyß╗àn V─ân 96,Office,Fingerprint,BreakIn,D01,Main Gate,2026-02-22 13:02:44,HCM,10.7626,106.6602,0.99
+L401,EMP-2096,Nguyß╗àn V─ân 96,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:05:33,HCM,10.7626,106.6602,0.95
+L102,EMP-2097,Nguyß╗àn V─ân 97,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:15:00,HCM,10.7626,106.6602,0.92
+L202,EMP-2097,Nguyß╗àn V─ân 97,Office,FaceID,CheckIn,D02,Lobby,2026-02-22 08:25:00,HCM,10.7626,106.6602,0.94
+L302,EMP-2097,Nguyß╗àn V─ân 97,Office,FaceID,CheckOut,D02,Lobby,2026-02-22 17:15:00,HCM,10.7626,106.6602,0.91
+L103,EMP-2098,Nguyß╗àn V─ân 98,Office,App,CheckIn,D03,Mobile,2026-02-22 07:55:00,HCM,10.7626,106.6602,0.99
+L203,EMP-2098,Nguyß╗àn V─ân 98,Office,App,CheckOut,D03,Mobile,2026-02-22 16:30:00,HCM,10.7626,106.6602,0.99
+L104,EMP-2099,Nguyß╗àn V─ân 99,Office,Fingerprint,CheckIn,D01,Main Gate,2026-02-22 07:58:00,HCM,10.7626,106.6602,0.99
+L105,EMP-2100,Nguyß╗àn V─ân 100,Office,Fingerprint,CheckOut,D01,Main Gate,2026-02-22 17:10:00,HCM,10.7626,106.6602,0.99
+L106,EMP-6090,TRß║ªN V─éN ANH,Office,Card,CheckIn,D04,Side Gate,2026-02-22 08:00:00,HCM,10.7626,106.6602,0.99
+L206,EMP-6090,TRß║ªN V─éN ANH,Office,Card,CheckOut,D04,Side Gate,2026-02-22 21:00:00,HCM,10.7626,106.6602,0.99
+L9999,UNKNOWN,ChÆ°a cáº­p nháº­t,External,QR,CheckIn,D99,Guest,2026-02-22 09:00:00,HCM,10.7,106.6,0.5

@@ -24,10 +24,13 @@ namespace TTL.HR.Shared.Pages.Employees
         [Inject] public IEmployeeService EmployeeService { get; set; } = default!;
         [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
         [Inject] public NavigationManager Navigation { get; set; } = default!;
+        [Inject] public IPermissionService PermissionService { get; set; } = default!;
         [Inject] public IFormatService FormatService { get; set; } = default!;
+        [Inject] public IAuthService AuthService { get; set; } = default!;
 
         [Parameter] public string? Id { get; set; }
         public bool IsEditMode => !string.IsNullOrEmpty(Id);
+        private bool IsEmailValid => !string.IsNullOrEmpty(newEmployee.Email) && FormatService.IsValidEmail(newEmployee.Email);
 
         private List<LookupModel> genderLookups = new();
         private List<LookupModel> maritalStatusLookups = new();
@@ -37,6 +40,7 @@ namespace TTL.HR.Shared.Pages.Employees
         private List<DepartmentModel> departments = new();
         private List<PositionModel> positions = new();
         private List<EmployeeDto> allEmployees = new();
+        private List<RoleModel> availableRoles = new();
         private bool _isProcessing = false;
 
         private EmployeeModel newEmployee = new()
@@ -57,6 +61,7 @@ namespace TTL.HR.Shared.Pages.Employees
             workplaceLookups = await MasterDataService.GetCachedLookupsAsync("Workplace");
             departments = await DepartmentService.GetDepartmentsAsync();
             positions = await PositionService.GetPositionsAsync();
+            availableRoles = await PermissionService.GetRolesAsync();
             var employees = await EmployeeService.GetEmployeesAsync();
             allEmployees = employees;
 
@@ -98,10 +103,33 @@ namespace TTL.HR.Shared.Pages.Employees
                         if (string.IsNullOrEmpty(newEmployee.BankName)) newEmployee.BankName = newEmployee.PersonalDetails.BankName;
                     }
 
-                    // The SalaryAmount might be mapped to Salary, so ensure compatibility
-                    if (newEmployee.SalaryAmount.HasValue && string.IsNullOrEmpty(newEmployee.Salary))
+                    // The Salary might be mapped to SalaryDisplay, so ensure compatibility
+                    if (newEmployee.Salary.HasValue && string.IsNullOrEmpty(newEmployee.SalaryDisplay))
                     {
-                        newEmployee.Salary = newEmployee.SalaryAmount.Value.ToString("N0");
+                        newEmployee.SalaryDisplay = newEmployee.Salary.Value.ToString("N0");
+                    }
+                    
+                    // Account state initialization
+                    newEmployee.Username = employee.Username;
+                    newEmployee.IsCreateAccount = employee.IsCreateAccount;
+                    newEmployee.IsAccountActive = employee.IsAccountActive;
+                    newEmployee.IsActive = employee.IsAccountActive; // Primary toggle in UI
+
+                    if (employee.Roles != null && employee.Roles.Any())
+                    {
+                        var firstRole = employee.Roles.First();
+                        newEmployee.Role = firstRole switch
+                        {
+                            "65fc5b5b0000000000000001" or "ADMIN" => "Admin",
+                            "65fc5b5b0000000000000002" or "HR_MGR" => "HR",
+                            "65fc5b5b0000000000000005" or "DEPT_MGR" => "Manager",
+                            "65fc5b5b0000000000000004" or "EMPLOYEE" => "User",
+                            _ => firstRole
+                        };
+                    }
+                    else if (string.IsNullOrEmpty(newEmployee.Role))
+                    {
+                        newEmployee.Role = "User";
                     }
 
                     // Load Digital Profile (Documents)
@@ -119,6 +147,13 @@ namespace TTL.HR.Shared.Pages.Employees
             }
             else
             {
+                // Ensure lookups are not null
+                if (genderLookups == null) genderLookups = new();
+                if (employeeStatusLookups == null) employeeStatusLookups = new();
+                if (contractTypeLookups == null) contractTypeLookups = new();
+                if (departments == null) departments = new();
+                if (positions == null) positions = new();
+                
                 // Set defaults if lists are not empty
                 if (string.IsNullOrEmpty(newEmployee.Gender)) newEmployee.Gender = genderLookups.FirstOrDefault()?.Name ?? "Nam";
                 if (string.IsNullOrEmpty(newEmployee.StatusId)) newEmployee.StatusId = employeeStatusLookups.FirstOrDefault()?.Id ?? string.Empty;
@@ -126,6 +161,9 @@ namespace TTL.HR.Shared.Pages.Employees
                 if (string.IsNullOrEmpty(newEmployee.DeptId)) newEmployee.DeptId = departments.FirstOrDefault()?.Id ?? string.Empty;
                 if (string.IsNullOrEmpty(newEmployee.PositionId)) newEmployee.PositionId = positions.FirstOrDefault()?.Id ?? string.Empty;
                 if (string.IsNullOrEmpty(newEmployee.Workplace)) newEmployee.Workplace = workplaceLookups.FirstOrDefault()?.Name ?? "Văn phòng Hồ Chí Minh";
+                
+                // Defaults for Account
+                if (string.IsNullOrEmpty(newEmployee.Role)) newEmployee.Role = "User";
             }
         }
 
@@ -159,6 +197,12 @@ namespace TTL.HR.Shared.Pages.Employees
                 var rawPhone = "0" + new Random().Next(900000000, 999999999).ToString();
                 newEmployee.Phone = FormatService.FormatPhone(rawPhone);
                 
+                // Pre-fill username from name (normalized)
+                if (string.IsNullOrEmpty(newEmployee.Username))
+                {
+                    newEmployee.Username = FormatService.FormatEmail(newEmployee.Name.Replace(" ", ""));
+                }
+                
                 await JSRuntime.InvokeVoidAsync("Swal.fire", new {
                     title = "Thành công!",
                     text = "Dữ liệu đã được điền tự động vào biểu mẫu.",
@@ -168,6 +212,68 @@ namespace TTL.HR.Shared.Pages.Employees
                 });
                 
                 StateHasChanged();
+            }
+        }
+
+        private void GenerateUsername()
+        {
+            var username = FormatService.GenerateDefaultUsername(newEmployee.Phone, newEmployee.Email, newEmployee.IdCard);
+            if (!string.IsNullOrEmpty(username))
+            {
+                newEmployee.Username = username;
+                StateHasChanged();
+                _ = JSRuntime.InvokeVoidAsync("toastr.info", $"Đã tạo tên đăng nhập: {username}");
+            }
+            else
+            {
+                _ = JSRuntime.InvokeVoidAsync("toastr.warning", "Vui lòng nhập Số điện thoại, Email hoặc CCCD để tự động tạo Tên đăng nhập.");
+            }
+        }
+
+        private async Task RequestPasswordReset()
+        {
+            if (string.IsNullOrEmpty(newEmployee.Email))
+            {
+                await JSRuntime.InvokeVoidAsync("toastr.warning", "Nhân viên chưa có Email để nhận link đặt lại mật khẩu.");
+                return;
+            }
+
+            var confirmElement = await JSRuntime.InvokeAsync<System.Text.Json.JsonElement>("Swal.fire", new
+            {
+                title = "Xác nhận",
+                text = $"Hệ thống sẽ gửi link đặt lại mật khẩu tới email: {newEmployee.Email}. Bạn có chắc chắn muốn thực hiện?",
+                icon = "question",
+                showCancelButton = true,
+                confirmButtonText = "Đồng ý, gửi ngay!",
+                cancelButtonText = "Hủy"
+            });
+
+            if (confirmElement.TryGetProperty("isConfirmed", out var isConfirmed) && isConfirmed.GetBoolean())
+            {
+                _isProcessing = true;
+                StateHasChanged();
+
+                try
+                {
+                    var result = await AuthService.RequestPasswordResetAsync(newEmployee.Email);
+                    if (result.Success)
+                    {
+                        await JSRuntime.InvokeVoidAsync("Swal.fire", "Thành công", "Link đặt lại mật khẩu đã được gửi.", "success");
+                    }
+                    else
+                    {
+                        await JSRuntime.InvokeVoidAsync("Swal.fire", "Thất bại", result.Message, "error");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", ex.Message, "error");
+                }
+                finally
+                {
+                    _isProcessing = false;
+                    StateHasChanged();
+                }
             }
         }
 
@@ -308,6 +414,47 @@ namespace TTL.HR.Shared.Pages.Employees
             }
         }
 
+        private void AddDependent()
+        {
+            if (newEmployee.PersonalDetails == null) newEmployee.PersonalDetails = new EmployeePersonalDetails();
+            if (newEmployee.PersonalDetails.Dependents == null) newEmployee.PersonalDetails.Dependents = new List<DependentDetailDto>();
+            newEmployee.PersonalDetails.Dependents.Add(new DependentDetailDto { IsEligibleForDeduction = true });
+            StateHasChanged();
+        }
+
+        private void RemoveDependent(DependentDetailDto item)
+        {
+            newEmployee.PersonalDetails?.Dependents?.Remove(item);
+            StateHasChanged();
+        }
+
+        private void AddEducation()
+        {
+            if (newEmployee.Education == null) newEmployee.Education = new List<EducationDetailDto>();
+            newEmployee.Education.Add(new EducationDetailDto { StartYear = DateTime.Now.Year - 4, EndYear = DateTime.Now.Year });
+            StateHasChanged();
+        }
+
+        private void RemoveEducation(EducationDetailDto item)
+        {
+            newEmployee.Education?.Remove(item);
+            StateHasChanged();
+        }
+
+        private void AddExperience()
+        {
+            if (newEmployee.Experience == null) newEmployee.Experience = new List<ExperienceDetailDto>();
+            newEmployee.Experience.Add(new ExperienceDetailDto { StartDate = DateTime.Now.AddYears(-2), EndDate = DateTime.Now });
+            StateHasChanged();
+        }
+
+        private void RemoveExperience(ExperienceDetailDto item)
+        {
+            newEmployee.Experience?.Remove(item);
+            StateHasChanged();
+        }
+
+
         private async Task Submit()
         {
             // 1. Clean & Format Data
@@ -334,11 +481,47 @@ namespace TTL.HR.Shared.Pages.Employees
                 errors.Add("Số CCCD phải đủ 12 chữ số (hoặc 9 số đối với CMND cũ)");
             }
 
-            if (string.IsNullOrEmpty(newEmployee.DeptId)) errors.Add("Phòng ban");
-            if (string.IsNullOrEmpty(newEmployee.PositionId)) errors.Add("Chức vụ");
-            if (string.IsNullOrEmpty(newEmployee.StatusId)) errors.Add("Trạng thái");
-            if (string.IsNullOrEmpty(newEmployee.ContractTypeId)) errors.Add("Loại hợp đồng");
-            if (string.IsNullOrEmpty(newEmployee.Workplace)) errors.Add("Nơi làm việc");
+            // Only require structural fields when CREATING, not when editing
+            if (!IsEditMode)
+            {
+                if (string.IsNullOrEmpty(newEmployee.DeptId)) errors.Add("Phòng ban");
+                if (string.IsNullOrEmpty(newEmployee.PositionId)) errors.Add("Chức vụ");
+                if (string.IsNullOrEmpty(newEmployee.StatusId)) errors.Add("Trạng thái");
+                if (string.IsNullOrEmpty(newEmployee.Workplace)) errors.Add("Nơi làm việc");
+            }
+            
+            if (!IsEmailValid)
+            {
+                newEmployee.IsCreateAccount = false;
+            }
+
+            if (newEmployee.IsCreateAccount)
+            {
+                if (string.IsNullOrWhiteSpace(newEmployee.Username))
+                {
+                    // If username is empty but toggle is on, try to auto-generate
+                    newEmployee.Username = FormatService.GenerateDefaultUsername(newEmployee.Phone, newEmployee.Email, newEmployee.IdCard);
+                }
+
+                if (string.IsNullOrWhiteSpace(newEmployee.Username))
+                {
+                    errors.Add("Không thể tự động tạo Tên đăng nhập. Vui lòng nhập thủ công.");
+                }
+                else
+                {
+                    // Force normalization: lowercase, remove whitespace, remove unicode, etc.
+                    var normalized = FormatService.NormalizeUsername(newEmployee.Username);
+                    if (normalized != newEmployee.Username)
+                    {
+                        newEmployee.Username = normalized;
+                    }
+                    
+                    if (string.IsNullOrEmpty(newEmployee.Username))
+                    {
+                        errors.Add("Tên đăng nhập không hợp lệ (phải chứa ít nhất 1 ký tự a-z hoặc 0-9)");
+                    }
+                }
+            }
 
             if (errors.Any())
             {
@@ -387,10 +570,15 @@ namespace TTL.HR.Shared.Pages.Employees
                         ContractTypeId = IsValidObjectId(newEmployee.ContractTypeId) ? newEmployee.ContractTypeId : null,
                         
                         JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Now,
-                        Salary = ParseSalary(newEmployee.Salary),
+                        Salary = ParseSalary(newEmployee.SalaryDisplay),
                         ContractEndDate = newEmployee.ContractExpiry ?? newEmployee.ContractEndDate,
                         Workplace = newEmployee.Workplace,
                         IsAccountActive = newEmployee.IsActive,
+                        IsCreateAccount = newEmployee.IsCreateAccount,
+                        Username = newEmployee.Username,
+                        Password = newEmployee.Password,
+                        Role = newEmployee.Role,
+                        Roles = newEmployee.Roles ?? new List<string>(),
                         
                         PersonalDetails = new PersonalDetailsUpdateDto
                         {
@@ -410,16 +598,22 @@ namespace TTL.HR.Shared.Pages.Employees
                             MaritalStatus = string.IsNullOrEmpty(newEmployee.MaritalStatus) ? "Độc thân" : newEmployee.MaritalStatus,
                             PlaceOfOrigin = newEmployee.PlaceOfOrigin,
                             Residence = newEmployee.Residence,
-                            SocialInsuranceId = newEmployee.SocialInsuranceId
+                            SocialInsuranceId = newEmployee.SocialInsuranceId,
+                            Latitude = newEmployee.Latitude,
+                            Longitude = newEmployee.Longitude,
+                            Dependents = newEmployee.PersonalDetails?.Dependents ?? new List<DependentDetailDto>()
                         },
                         EmergencyContact = new EmergencyContactUpdateDto
                         {
                             Name = newEmployee.EmergencyContactName,
                             Relation = newEmployee.EmergencyContactRelation,
                             Phone = FormatService.CleanDigits(newEmployee.EmergencyContactPhone)
-                        }
+                        },
+                        Education = newEmployee.Education ?? new List<EducationDetailDto>(),
+                        Experience = newEmployee.Experience ?? new List<ExperienceDetailDto>()
                     };
                     
+                    Console.WriteLine($"[EmployeeAdd] UpdateRequest.IsCreateAccount={updateRequest.IsCreateAccount}, Username={updateRequest.Username}, Role={updateRequest.Role}");
                     Console.WriteLine($"[EmployeeAdd] Submitting update for employee ID: {Id} at {DateTime.Now:HH:mm:ss}");
                     var resultStr = await EmployeeService.UpdateEmployeeAsync(Id!, updateRequest);
                     
@@ -461,7 +655,7 @@ namespace TTL.HR.Shared.Pages.Employees
                         ContractTypeId = IsValidObjectId(newEmployee.ContractTypeId) ? newEmployee.ContractTypeId : null,
                         
                         JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Now,
-                        Salary = ParseSalary(newEmployee.Salary),
+                        Salary = ParseSalary(newEmployee.SalaryDisplay),
                         ContractEndDate = newEmployee.ContractExpiry ?? newEmployee.ContractEndDate,
                         Workplace = newEmployee.Workplace,
                         
@@ -485,7 +679,8 @@ namespace TTL.HR.Shared.Pages.Employees
                             Residence = newEmployee.Residence,
                             SocialInsuranceId = newEmployee.SocialInsuranceId,
                             Latitude = newEmployee.Latitude,
-                            Longitude = newEmployee.Longitude
+                            Longitude = newEmployee.Longitude,
+                            Dependents = newEmployee.PersonalDetails?.Dependents ?? new List<DependentDetailDto>()
                         },
                         
                         EmergencyContact = new EmergencyContactCommandDto
@@ -493,7 +688,17 @@ namespace TTL.HR.Shared.Pages.Employees
                             Name = newEmployee.EmergencyContactName,
                             Relation = newEmployee.EmergencyContactRelation,
                             Phone = FormatService.CleanDigits(newEmployee.EmergencyContactPhone)
-                        }
+                        },
+                        Education = newEmployee.Education ?? new List<EducationDetailDto>(),
+                        Experience = newEmployee.Experience ?? new List<ExperienceDetailDto>(),
+                        
+                        // Account Creation Fields
+                        IsCreateAccount = newEmployee.IsCreateAccount,
+                        Username = newEmployee.Username,
+                        Password = newEmployee.Password,
+                        Role = newEmployee.Role,
+                        Roles = newEmployee.Roles ?? new List<string>(),
+                        IsAccountActive = newEmployee.IsActive
                     };
 
                     // 4. Send API Request (We cast to object for serialization compatibility if needed, but CreateEmployeeAsync handles it)
@@ -565,6 +770,14 @@ namespace TTL.HR.Shared.Pages.Employees
             public string Workplace { get; set; } = string.Empty;
             public PersonalDetailsCommandDto PersonalDetails { get; set; } = new();
             public EmergencyContactCommandDto EmergencyContact { get; set; } = new();
+            public List<EducationDetailDto> Education { get; set; } = new();
+            public List<ExperienceDetailDto> Experience { get; set; } = new();
+            public bool IsCreateAccount { get; set; }
+            public string Username { get; set; } = string.Empty;
+            public string Password { get; set; } = string.Empty;
+            public string Role { get; set; } = string.Empty;
+            public List<string> Roles { get; set; } = new();
+            public bool IsAccountActive { get; set; }
         }
 
         private class PersonalDetailsCommandDto {
@@ -587,6 +800,7 @@ namespace TTL.HR.Shared.Pages.Employees
             public string SocialInsuranceId { get; set; } = string.Empty;
             public double Latitude { get; set; }
             public double Longitude { get; set; }
+            public List<DependentDetailDto> Dependents { get; set; } = new();
         }
 
         private class EmergencyContactCommandDto {
@@ -617,6 +831,8 @@ namespace TTL.HR.Shared.Pages.Employees
                 Salary = dto.Salary,
                 ContractEndDate = dto.ContractEndDate,
                 Workplace = dto.Workplace,
+                Education = dto.Education ?? new List<EducationDetailDto>(),
+                Experience = dto.Experience ?? new List<ExperienceDetailDto>(),
                 // IsAccountActive is not part of the DTO, assuming default or handled by service
                 
                 PersonalDetails = new Entities.PersonalInfo
@@ -639,14 +855,21 @@ namespace TTL.HR.Shared.Pages.Employees
                     Residence = dto.PersonalDetails.Residence,
                     SocialInsuranceId = dto.PersonalDetails.SocialInsuranceId,
                     Latitude = dto.PersonalDetails.Latitude,
-                    Longitude = dto.PersonalDetails.Longitude
+                    Longitude = dto.PersonalDetails.Longitude,
+                    Dependents = dto.PersonalDetails.Dependents ?? new List<DependentDetailDto>()
                 },
                 EmergencyContact = new Entities.EmergencyContact
                 {
                     Name = dto.EmergencyContact.Name,
                     Relation = dto.EmergencyContact.Relation,
                     Phone = dto.EmergencyContact.Phone
-                }
+                },
+                IsCreateAccount = dto.IsCreateAccount,
+                Username = dto.Username,
+                Password = dto.Password,
+                Role = dto.Role,
+                Roles = dto.Roles ?? new List<string>(),
+                IsAccountActive = dto.IsAccountActive
             };
         }
 

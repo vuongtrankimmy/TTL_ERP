@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace TTL.HR.Application.Modules.Common.Models
 {
@@ -15,18 +16,34 @@ namespace TTL.HR.Application.Modules.Common.Models
 
     public class ApiResponse<T>
     {
+        [JsonPropertyName("success")]
         public bool Success { get; set; }
+        
+        [JsonPropertyName("message")]
         public string Message { get; set; } = string.Empty;
+        
+        [JsonPropertyName("data")]
         public T? Data { get; set; }
+        
+        [JsonPropertyName("errors")]
         public List<string>? Errors { get; set; }
     }
 
     public class PagedResult<T>
     {
+        [JsonPropertyName("items")]
         public List<T> Items { get; set; } = new();
+        
+        [JsonPropertyName("pageIndex")]
         public int PageIndex { get; set; }
+        
+        [JsonPropertyName("pageSize")]
         public int PageSize { get; set; }
+        
+        [JsonPropertyName("totalCount")]
         public long TotalCount { get; set; }
+        
+        [JsonPropertyName("totalPages")]
         public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
     }
 }

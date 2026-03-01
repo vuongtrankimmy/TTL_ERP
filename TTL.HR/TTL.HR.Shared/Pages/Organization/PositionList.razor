@@ -220,7 +220,12 @@
                 <label class="fs-7 fw-bold mb-2">Dải lương cơ bản (triệu VNĐ)</label>
                 <div class="row g-3">
                     <div class="col-6">
-                        <input type="text" class="form-control form-control-solid fs-7" placeholder="Từ..." @bind="_editingPos.SalaryRange" />
+                        <label class="fs-8 text-muted mb-1">Tối thiểu</label>
+                        <input type="number" class="form-control form-control-solid fs-7" placeholder="Từ..." @bind="_editingPos.SalaryMin" />
+                    </div>
+                    <div class="col-6">
+                        <label class="fs-8 text-muted mb-1">Tối đa</label>
+                        <input type="number" class="form-control form-control-solid fs-7" placeholder="Đến..." @bind="_editingPos.SalaryMax" />
                     </div>
                 </div>
             </div>
@@ -238,6 +243,16 @@
             <div class="mb-8">
                 <label class="fs-7 fw-bold mb-2 text-warning">Quyền lợi & Phúc lợi</label>
                 <textarea class="form-control form-control-solid fs-7" rows="4" placeholder="Mỗi quyền lợi nhập một dòng..." @bind="_editingPos.Benefits"></textarea>
+            </div>
+
+            <div class="mb-8 d-flex flex-stack border border-dashed rounded p-4">
+                <div class="d-flex flex-column">
+                    <div class="fs-7 fw-bold text-dark">Trạng thái hoạt động</div>
+                    <div class="fs-8 text-muted">Cho phép sử dụng chức danh này cho nhân viên</div>
+                </div>
+                <div class="form-check form-switch form-check-custom form-check-solid">
+                    <input class="form-check-input h-20px w-30px" type="checkbox" @bind="_editingPos.IsActive" />
+                </div>
             </div>
 
             <div class="mb-8">
@@ -295,6 +310,9 @@
                     </div>
                 </div>
                 <div class="card-toolbar">
+                    <button class="btn btn-sm btn-light-primary fw-bold me-2" @onclick="openAssignModal">
+                        <i class="ki-outline ki-plus-circle fs-2"></i>Gán nhân sự
+                    </button>
                     <div class="btn btn-sm btn-icon btn-active-light-primary" @onclick="closeDetailDrawer">
                         <i class="ki-outline ki-cross fs-4"></i>
                     </div>
@@ -397,6 +415,52 @@
                     </div>
                 </div>
 
+                <div class="mb-10">
+                    <h5 class="fw-bolder text-dark mb-4 d-flex align-items-center">
+                        <i class="ki-outline ki-people fs-2 text-info me-3"></i>Thành viên (@_selectedPos.ActiveEmployees)
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle table-row-dashed fs-7 gy-2">
+                            <thead>
+                                <tr class="fw-bold text-muted bg-light">
+                                    <th class="ps-4 rounded-start">Nhân viên</th>
+                                    <th>Mã NV</th>
+                                    <th class="rounded-end">Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var currentMembers = _allEmployees.Where(e => e.PositionId == _selectedPos.Id).ToList();
+                                }
+                                @if (currentMembers.Any())
+                                {
+                                    @foreach (var emp in currentMembers)
+                                    {
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-30px me-3">
+                                                        <img src="@(string.IsNullOrEmpty(emp.AvatarUrl) ? "assets/media/avatars/blank.png" : emp.AvatarUrl)" alt="" />
+                                                    </div>
+                                                    <span class="text-gray-800 fw-bold">@emp.FullName</span>
+                                                </div>
+                                            </td>
+                                            <td><span class="badge badge-light-dark fw-bold">@emp.Code</span></td>
+                                            <td><span class="text-gray-600">@emp.Email</span></td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center py-5 text-muted italic">Chưa có nhân sự trong vị trí này</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <!-- Footer Summary -->
                 <div class="bg-gray-100 rounded p-8 d-flex align-items-center mt-10">
                     <div class="symbol symbol-45px me-6">
@@ -423,5 +487,27 @@
                          ItemName="@(_positionToDelete?.NameVN ?? "")"
                          OnConfirmed="confirmDeletePosition"
                          OnCancelled="closeDeleteModal" />
+
+<!-- DRAWER: CHỌN NHÂN SỰ -->
+<EmployeeSelectionDrawer @bind-IsVisible="_showAssignEmployeesDrawer"
+                         Title="Gán nhân sự vào chức danh"
+                         Employees="_assignableEmployees"
+                         InitialSelectedIds="_initialSelectedEmployeeIds"
+                         IsLoading="_isLoading"
+                         OnSave="saveEmployeeAssignments">
+    <ChildContent>
+        <div class="d-flex flex-column">
+            <label class="fs-7 fw-bold mb-2">Mức lương gán cho nhân sự (triệu VNĐ)</label>
+            <div class="input-group input-group-solid">
+                <input type="number" class="form-control" @bind="_assignmentSalary" placeholder="Nhập mức lương..." />
+                <span class="input-group-text">VNĐ</span>
+            </div>
+            <div class="fs-8 text-muted mt-2 mt-1">
+                <i class="ki-outline ki-information-5 fs-8 me-1"></i>
+                Dải lương chức danh: @(_selectedPos?.SalaryRange)
+            </div>
+        </div>
+    </ChildContent>
+</EmployeeSelectionDrawer>
 
 

@@ -1,3 +1,4 @@
+using ApexCharts;
 using TTL.HR.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,12 +6,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddLocalization();
+
 
 // standard-api-setup
 // Client-side services setup (Using API Repository from Application project)
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://gateway.tantanloc.com/") });
 builder.Services.AddScoped(typeof(TTL.HR.Application.Modules.Common.Interfaces.IApiRepository<>), typeof(TTL.HR.Application.Modules.Common.Services.ApiRepository<>));
 builder.Services.AddScoped<TTL.HR.Application.Modules.HumanResource.Interfaces.IEmployeeService, TTL.HR.Application.Modules.HumanResource.Services.EmployeeService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.HumanResource.Interfaces.IEmployeeImportService, TTL.HR.Application.Modules.HumanResource.Services.EmployeeImportService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IMasterDataService, TTL.HR.Application.Modules.Common.Services.MasterDataService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Organization.Interfaces.IDepartmentService, TTL.HR.Application.Modules.Organization.Services.DepartmentService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Organization.Interfaces.IPositionService, TTL.HR.Application.Modules.Organization.Services.PositionService>();
@@ -31,6 +35,10 @@ builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.ISetting
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IFileService, TTL.HR.Application.Modules.Common.Services.FileService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IFormatService, TTL.HR.Application.Modules.Common.Services.FormatService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IAuditService, TTL.HR.Application.Modules.Common.Services.AuditService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IPdfService, TTL.HR.Application.Modules.Common.Services.PdfService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.INavigationService, TTL.HR.Application.Modules.Common.Services.NavigationService>();
+builder.Services.AddApexCharts();
+
 
 
 
@@ -52,6 +60,14 @@ app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages:
 app.UseHttpsRedirection();
 
 app.UseAntiforgery();
+
+var supportedCultures = new[] { "vi", "en" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
 
 app.MapStaticAssets();
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Common.Interfaces;
 using TTL.HR.Application.Modules.Common.Models;
+using TTL.HR.Application.Modules.HumanResource.Interfaces;
 
 namespace TTL.HR.Shared.Pages.Settings
 {
@@ -15,6 +16,7 @@ namespace TTL.HR.Shared.Pages.Settings
         [Inject] public NavigationManager Navigation { get; set; } = default!;
         [Inject] public ISettingsService SettingsService { get; set; } = default!;
         [Inject] public IFileService FileService { get; set; } = default!;
+        [Inject] public IEmployeeService EmployeeService { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
 
 
@@ -24,6 +26,8 @@ namespace TTL.HR.Shared.Pages.Settings
         private CodeGeneratorConfigDto? SelectedConfig;
         private bool _isLoading = true;
         private bool _isSaving = false;
+        private bool _isAccruing = false;
+        public int SelectedYear { get; set; } = DateTime.Now.Year;
 
         protected override async Task OnInitializedAsync()
         {
@@ -92,6 +96,26 @@ namespace TTL.HR.Shared.Pages.Settings
             if (SelectedConfig == config)
             {
                 SelectedConfig = CodeConfigs.FirstOrDefault();
+            }
+        }
+
+        private void AddHoliday()
+        {
+            if (Model.Holidays == null) Model.Holidays = new List<HolidayConfigModel>();
+            Model.Holidays.Add(new HolidayConfigModel
+            {
+                Name = "Nghỉ lễ mới",
+                StartDate = DateTime.Today,
+                EndDate = DateTime.Today,
+                IsRecurring = false
+            });
+        }
+
+        private void RemoveHoliday(HolidayConfigModel holiday)
+        {
+            if (Model.Holidays != null && Model.Holidays.Contains(holiday))
+            {
+                Model.Holidays.Remove(holiday);
             }
         }
 
@@ -210,6 +234,54 @@ namespace TTL.HR.Shared.Pages.Settings
         {
             activeTab = tab;
             Navigation.NavigateTo($"/settings/general?Tab={tab}", false);
+        }
+
+        private async Task HandleAccrueLeave()
+        {
+            if (_isAccruing) return;
+            
+            _isAccruing = true;
+            StateHasChanged();
+
+            try
+            {
+                var error = await EmployeeService.AccrueLeaveAsync(DateTime.Now.Month, DateTime.Now.Year);
+                if (string.IsNullOrEmpty(error))
+                {
+                    await JS.InvokeVoidAsync("toastr.success", $"Đã cộng phép tháng {DateTime.Now.Month} cho toàn bộ nhân viên thành công!");
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", $"Lỗi: {error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JS.InvokeVoidAsync("toastr.error", $"Lỗi hệ thống: {ex.Message}");
+            }
+            finally
+            {
+                _isAccruing = false;
+                StateHasChanged();
+            }
+        }
+
+        private void AddTaxStep()
+        {
+            if (Model.PitSteps == null)
+                Model.PitSteps = new List<TaxStepModel>();
+
+            Model.PitSteps.Add(new TaxStepModel
+            {
+                Threshold = 0,
+                Rate = 0,
+                Deduction = 0
+            });
+        }
+
+        private void RemoveTaxStep(TaxStepModel step)
+        {
+            Model.PitSteps?.Remove(step);
         }
     }
 }
