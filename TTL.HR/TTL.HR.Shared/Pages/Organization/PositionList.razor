@@ -310,9 +310,6 @@
                     </div>
                 </div>
                 <div class="card-toolbar">
-                    <button class="btn btn-sm btn-light-primary fw-bold me-2" @onclick="openAssignModal">
-                        <i class="ki-outline ki-plus-circle fs-2"></i>Gán nhân sự
-                    </button>
                     <div class="btn btn-sm btn-icon btn-active-light-primary" @onclick="closeDetailDrawer">
                         <i class="ki-outline ki-cross fs-4"></i>
                     </div>
@@ -322,22 +319,22 @@
             <div class="card-body hover-scroll-overlay-y py-5 px-10">
                 <!-- Highlight Info -->
                 <div class="row g-5 mb-10 mt-2">
-                    <div class="col-md-4">
-                        <div class="bg-light-primary rounded p-5 text-center border border-primary border-dashed">
+                    <div class="col-4">
+                        <div class="bg-light-primary rounded p-5 text-center border border-primary border-dashed h-100 d-flex flex-column justify-content-center">
                             <div class="fs-4 fw-bolder text-gray-800">@_selectedPos.ActiveEmployees</div>
-                            <div class="fw-bold text-muted fs-8 text-uppercase">Nhân sự hiện tại</div>
+                            <div class="fw-bold text-muted fs-9 text-uppercase">Nhân sự hiện tại</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="bg-light-success rounded p-5 text-center border border-success border-dashed">
-                            <div class="fs-4 fw-bolder text-gray-800">@_selectedPos.SalaryRange</div>
-                            <div class="fw-bold text-muted fs-8 text-uppercase">Dải lương cơ sở</div>
+                    <div class="col-4">
+                        <div class="bg-light-success rounded p-5 text-center border border-success border-dashed h-100 d-flex flex-column justify-content-center">
+                            <div class="fs-6 fw-bolder text-gray-800">@_selectedPos.SalaryRange</div>
+                            <div class="fw-bold text-muted fs-9 text-uppercase">Dải lương cơ sở</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="bg-light-warning rounded p-5 text-center border border-warning border-dashed">
+                    <div class="col-4">
+                        <div class="bg-light-warning rounded p-5 text-center border border-warning border-dashed h-100 d-flex flex-column justify-content-center">
                             <div class="fs-4 fw-bolder text-gray-800">High</div>
-                            <div class="fw-bold text-muted fs-8 text-uppercase">Độ ưu tiên tuyển dụng</div>
+                            <div class="fw-bold text-muted fs-9 text-uppercase">Độ ưu tiên tuyển dụng</div>
                         </div>
                     </div>
                 </div>
@@ -416,9 +413,14 @@
                 </div>
 
                 <div class="mb-10">
-                    <h5 class="fw-bolder text-dark mb-4 d-flex align-items-center">
-                        <i class="ki-outline ki-people fs-2 text-info me-3"></i>Thành viên (@_selectedPos.ActiveEmployees)
-                    </h5>
+                    <div class="d-flex align-items-center justify-content-between mb-5">
+                        <h5 class="fw-bolder text-dark m-0 d-flex align-items-center">
+                            <i class="ki-outline ki-people fs-2 text-info me-3"></i>Thành viên (@_selectedPos.ActiveEmployees)
+                        </h5>
+                        <button class="btn btn-sm btn-light-primary fw-bold" @onclick="openAssignModal">
+                            <i class="ki-outline ki-plus-circle fs-4 me-1"></i>Gán nhân sự
+                        </button>
+                    </div>
                     <div class="table-responsive">
                         <table class="table align-middle table-row-dashed fs-7 gy-2">
                             <thead>

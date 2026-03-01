@@ -63,13 +63,6 @@
 					</div>
 				</div>
 
-				<!-- Export Excel -->
-				<button type="button" class="btn btn-light-success me-3">
-					<span class="svg-icon svg-icon-2">
-						<i class="bi bi-file-earmark-spreadsheet"></i>
-					</span>
-					Xuất Excel
-				</button>
 
 				<!-- Add New -->
 				<button class="btn btn-primary" @onclick='() => Navigation.NavigateTo("/contracts/add")'>
@@ -99,24 +92,28 @@
 					<a class="nav-link text-active-primary ms-0 me-10 @(ActiveTab == "All" || ActiveTab == "Templates" ? "active" : "")"
 					   href="javascript:void(0)" @onclick='async () => await SetActiveTab("Templates")' @onclick:preventDefault>
 						Tất cả mẫu
+						<span class="badge badge-light-primary fw-bolder px-2 py-1 ms-2">@TotalTemplateCount</span>
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link text-active-primary ms-0 me-10 @(ActiveTab == "Active" ? "active" : "")"
 					   href="javascript:void(0)" @onclick='async () => await SetActiveTab("Active")' @onclick:preventDefault>
 						Đang sử dụng
+						<span class="badge badge-light-success fw-bolder px-2 py-1 ms-2">@ActiveTemplateCount</span>
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link text-active-primary ms-0 me-10 @(ActiveTab == "Draft" ? "active" : "")"
 					   href="javascript:void(0)" @onclick='async () => await SetActiveTab("Draft")' @onclick:preventDefault>
 						Nháp
+						<span class="badge badge-light-secondary fw-bolder px-2 py-1 ms-2">@DraftTemplateCount</span>
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link text-active-primary ms-0 me-10 @(ActiveTab == "EmployeeContracts" ? "active" : "")"
 					   href="javascript:void(0)" @onclick='async () => await SetActiveTab("EmployeeContracts")' @onclick:preventDefault>
 						Hợp đồng nhân viên
+						<span class="badge badge-light-info fw-bolder px-2 py-1 ms-2">@EmployeeContractCount</span>
 					</a>
 				</li>
 			</ul>

@@ -12,6 +12,8 @@ using TTL.HR.Application.Modules.HumanResource.Models;
 using TTL.HR.Application.Modules.Organization.Interfaces;
 using TTL.HR.Application.Modules.Organization.Models;
 using Entities = TTL.HR.Application.Modules.HumanResource.Entities;
+using TTL.HR.Application.Modules.Attendance.Interfaces;
+using TTL.HR.Application.Modules.Attendance.Models;
 
 namespace TTL.HR.Shared.Pages.Employees
 {
@@ -27,6 +29,7 @@ namespace TTL.HR.Shared.Pages.Employees
         [Inject] public IContractService ContractService { get; set; } = default!;
         [Inject] public ISettingsService SettingsService { get; set; } = default!;
         [Inject] public IPdfService PdfService { get; set; } = default!;
+        [Inject] public IAttendanceService AttendanceService { get; set; } = default!;
 
 
         [Parameter, SupplyParameterFromQuery(Name = "q")] public string searchQuery { get; set; } = "";
@@ -47,6 +50,7 @@ namespace TTL.HR.Shared.Pages.Employees
         private List<LookupModel> CachedStatuses = new();
         private List<LookupModel> CachedContractTypes = new();
         private List<LookupModel> CachedWorkplaces = new();
+        private List<LookupModel> CachedAttendanceStatuses = new();
         private List<EmployeeDto> CachedEmployees = new();
         private EmployeeStatusCounts _counts = new();
         private bool _loadFailed = false;
@@ -58,6 +62,7 @@ namespace TTL.HR.Shared.Pages.Employees
         // Calendar viewing variables
         private int _calendarMonth = DateTime.Now.Month;
         private int _calendarYear = DateTime.Now.Year;
+        private List<AttendanceDetailModel> _attendanceDetails = new();
         private int pageSize = 10;
         private long totalCount = 0;
         private int totalPages => (int)Math.Ceiling(totalCount / (double)pageSize);
@@ -94,6 +99,10 @@ namespace TTL.HR.Shared.Pages.Employees
                 if (!CachedWorkplaces.Any())
                 {
                     CachedWorkplaces = await MasterDataService.GetCachedLookupsAsync("Workplace");
+                }
+                if (!CachedAttendanceStatuses.Any())
+                {
+                    CachedAttendanceStatuses = await MasterDataService.GetCachedLookupsAsync("AttendanceStatus");
                 }
                 if (!CachedEmployees.Any())
                 {
@@ -559,6 +568,9 @@ namespace TTL.HR.Shared.Pages.Employees
                 {
                     selectedEmployee = emp;
                 }
+
+                // Fetch real attendance data for the calendar
+                await LoadAttendanceDetailsAsync();
             }
             catch
             {
@@ -573,6 +585,62 @@ namespace TTL.HR.Shared.Pages.Employees
                 isPasswordVisible = false;
                 StateHasChanged();
             }
+        }
+
+        private async Task LoadAttendanceDetailsAsync()
+        {
+            if (string.IsNullOrEmpty(selectedEmployee?.Id)) return;
+            
+            try
+            {
+                var monthDate = new DateTime(_calendarYear, _calendarMonth, 1);
+                var details = await AttendanceService.GetAttendanceDetailsAsync(selectedEmployee.Id, monthDate);
+                _attendanceDetails = details?.ToList() ?? new();
+
+                // Also update summary stats if possible
+                var stats = await AttendanceService.GetEmployeeStatsAsync(selectedEmployee.Id, _calendarMonth, _calendarYear);
+                if (stats != null)
+                {
+                    selectedEmployee.AttendanceSummary ??= new EmployeeAttendanceSummary();
+                    selectedEmployee.AttendanceSummary.TotalWorkingDays = (int)stats.TotalWorkingHoursMonth / 8; // Approximation if not exact
+                    selectedEmployee.AttendanceSummary.RemainingLeaves = (int)stats.RemainingLeave;
+                    selectedEmployee.AttendanceSummary.OvertimeHours = stats.TotalWorkingHoursMonth; // Update as needed
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"Error loading attendance: {ex.Message}");
+            }
+        }
+
+        private async Task PrevMonth()
+        {
+            if (_calendarMonth == 1)
+            {
+                _calendarMonth = 12;
+                _calendarYear--;
+            }
+            else
+            {
+                _calendarMonth--;
+            }
+            await LoadAttendanceDetailsAsync();
+            StateHasChanged();
+        }
+
+        private async Task NextMonth()
+        {
+            if (_calendarMonth == 12)
+            {
+                _calendarMonth = 1;
+                _calendarYear++;
+            }
+            else
+            {
+                _calendarMonth++;
+            }
+            await LoadAttendanceDetailsAsync();
+            StateHasChanged();
         }
 
         private void ShowContextMenu(MouseEventArgs e, EmployeeModel emp) {
@@ -808,45 +876,7 @@ namespace TTL.HR.Shared.Pages.Employees
             }
         }
 
-        private void PrevMonth()
-        {
-            if (_calendarMonth == 1)
-            {
-                _calendarMonth = 12;
-                _calendarYear--;
-            }
-            else
-            {
-                _calendarMonth--;
-            }
-            RandomizeCalendarData();
-        }
 
-        private void NextMonth()
-        {
-            if (_calendarMonth == 12)
-            {
-                _calendarMonth = 1;
-                _calendarYear++;
-            }
-            else
-            {
-                _calendarMonth++;
-            }
-            RandomizeCalendarData();
-        }
-
-        private void RandomizeCalendarData()
-        {
-            // Update dummy stats when month changes so the user sees a difference in the UI
-            if (selectedEmployee != null && selectedEmployee.AttendanceSummary != null)
-            {
-                var rand = new Random();
-                selectedEmployee.AttendanceSummary.TotalWorkingDays = rand.Next(18, 25);
-                selectedEmployee.AttendanceSummary.RemainingLeaves = rand.Next(0, 12);
-                selectedEmployee.AttendanceSummary.OvertimeHours = rand.Next(0, 30);
-            }
-        }
         private string GetInitials(string? name)
         {
             if (string.IsNullOrWhiteSpace(name)) return "??";

@@ -35,12 +35,19 @@ namespace TTL.HR.Shared.Pages.Contracts
         private int PageSize = 10;
         private bool IsLoading = false;
 
+        private long TotalTemplateCount = 0;
+        private long ActiveTemplateCount = 0;
+        private long DraftTemplateCount = 0;
+        private long EmployeeContractCount = 0;
+
         protected override async Task OnInitializedAsync()
         {
-            contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType");
-            templateStatusLookups = await MasterDataService.GetCachedLookupsAsync("TemplateStatus");
-            contractStatusLookups = await MasterDataService.GetCachedLookupsAsync("ContractStatus");
+            var currentLang = "vi-VN"; // Default to vi-VN
+            contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType", currentLang);
+            templateStatusLookups = await MasterDataService.GetCachedLookupsAsync("TemplateStatus", currentLang);
+            contractStatusLookups = await MasterDataService.GetCachedLookupsAsync("ContractStatus", currentLang);
 
+            await LoadCounts();
             await LoadData();
         }
 
@@ -49,27 +56,42 @@ namespace TTL.HR.Shared.Pages.Contracts
             IsLoading = true;
             try
             {
+                var currentLang = "vi-VN"; // Default
                 if (ActiveTab.StartsWith("Templates") || ActiveTab == "All" || ActiveTab == "Active" || ActiveTab == "Draft")
                 {
                     var status = ActiveTab == "Templates" || ActiveTab == "All" ? FilterStatusId : ActiveTab;
-                    // If ActiveTab is Active/Draft, it's a fixed filter. If it's Templates/All, we use FilterStatusId.
-                    
-                    // Actually, the backend GetTemplatesAsync takes 'status' as a string.
-                    // I should probably pass IDs now.
-                    TemplateData = await ContractService.GetTemplatesAsync(PageIndex, PageSize, SearchQuery, status, FilterTypeId);
+                    TemplateData = await ContractService.GetTemplatesAsync(PageIndex, PageSize, SearchQuery, status, FilterTypeId, currentLang);
                 }
                 else if (ActiveTab == "EmployeeContracts")
                 {
-                    ContractData = await ContractService.GetEmployeeContractsAsync(PageIndex, PageSize, SearchQuery, FilterStatusId, FilterTypeId);
+                    ContractData = await ContractService.GetEmployeeContractsAsync(PageIndex, PageSize, SearchQuery, FilterStatusId, FilterTypeId, null, currentLang);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading data: {ex.Message}");
-                // Optionally show UI feedback here
             }
             IsLoading = false;
             StateHasChanged();
+        }
+
+        private async Task LoadCounts()
+        {
+            try
+            {
+                var summary = await ContractService.GetTemplateSummaryAsync();
+                TotalTemplateCount = summary.TotalCount;
+                ActiveTemplateCount = summary.ActiveCount;
+                DraftTemplateCount = summary.DraftCount;
+
+                // For Employee Contracts, we can fetch just 1 item to get the TotalCount
+                var employees = await ContractService.GetEmployeeContractsAsync(1, 1);
+                EmployeeContractCount = employees.TotalCount;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading counts: {ex.Message}");
+            }
         }
 
         private async Task ChangePage(int page)
@@ -165,6 +187,7 @@ namespace TTL.HR.Shared.Pages.Contracts
             
             if (success)
             {
+                await LoadCounts();
                 await LoadData();
 
                 

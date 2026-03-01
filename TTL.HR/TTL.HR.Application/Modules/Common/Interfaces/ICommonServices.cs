@@ -26,8 +26,8 @@ namespace TTL.HR.Application.Modules.Common.Interfaces
 
     public interface IMasterDataService
     {
-        Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetLookupsAsync(string type);
-        Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetCachedLookupsAsync(string type);
+        Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetLookupsAsync(string type, string? lang = null);
+        Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetCachedLookupsAsync(string type, string? lang = null);
     }
 
     public interface IAuthService

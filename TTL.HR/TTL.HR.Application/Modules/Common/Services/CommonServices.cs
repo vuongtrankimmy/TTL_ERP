@@ -39,16 +39,19 @@ namespace TTL.HR.Application.Modules.Common.Services
         private readonly HttpClient _httpClient;
         private static readonly Dictionary<string, List<LookupModel>> _cache = new();
         public MasterDataService(HttpClient httpClient) => _httpClient = httpClient;
-        public async Task<List<LookupModel>> GetLookupsAsync(string type)
+        public async Task<List<LookupModel>> GetLookupsAsync(string type, string? lang = null)
         {
             var url = $"{ApiEndpoints.Lookups.Base}?type={type}";
+            if (!string.IsNullOrEmpty(lang)) url += $"&LanguageCode={lang}";
+
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<LookupModel>>>(url);
             return response?.Data ?? new List<LookupModel>();
         }
-        public async Task<List<LookupModel>> GetCachedLookupsAsync(string type)
+        public async Task<List<LookupModel>> GetCachedLookupsAsync(string type, string? lang = null)
         {
-            if (!_cache.ContainsKey(type)) _cache[type] = await GetLookupsAsync(type);
-            return _cache[type];
+            var cacheKey = $"{type}_{lang ?? "default"}";
+            if (!_cache.ContainsKey(cacheKey)) _cache[cacheKey] = await GetLookupsAsync(type, lang);
+            return _cache[cacheKey];
         }
     }
 

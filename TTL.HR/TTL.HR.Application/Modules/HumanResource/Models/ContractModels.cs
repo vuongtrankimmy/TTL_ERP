@@ -37,4 +37,10 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string SignedFileUrl { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
     }
+    public class ContractTemplatesSummaryModel
+    {
+        public long TotalCount { get; set; }
+        public long ActiveCount { get; set; }
+        public long DraftCount { get; set; }
+    }
 }

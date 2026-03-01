@@ -61,10 +61,6 @@
 			<a href="/employees/add" class="btn btn-primary">
 				<i class="ki-outline ki-plus fs-2"></i> Thêm nhân viên
 			</a>
-
-			<a href="/employees/add" class="btn btn-primary">
-				<i class="ki-outline ki-plus fs-2"></i> Thêm nhân viên
-			</a>
 		</div>
 	</div>
 
@@ -625,17 +621,66 @@
 										{
 											<div class="text-muted fs-8 fw-bold p-2 text-center">@day</div>
 										}
-										@for (int i = 1; i <= 31; i++)
+										
+										@{
+											var firstDayOfMonth = new DateTime(_calendarYear, _calendarMonth, 1);
+											var daysInMonth = DateTime.DaysInMonth(_calendarYear, _calendarMonth);
+											int offset = (int)firstDayOfMonth.DayOfWeek; 
+										}
+
+										@for (int i = 0; i < offset; i++)
 										{
-											<div class="p-1 text-center">
-												<div class="rounded-circle w-30px h-30px d-flex align-items-center justify-content-center fs-8 fw-bold @(i % 7 == 0 ? "bg-light-danger text-danger" : i % 5 == 0 ? "bg-light-warning text-warning" : "bg-light-success text-success") mx-auto cursor-pointer border border-transparent hover-border-primary">@i</div>
+											<div class="p-1"></div>
+										}
+
+										@for (int dayNumber = 1; dayNumber <= daysInMonth; dayNumber++)
+										{
+											var dNum = dayNumber;
+											var currentDay = new DateTime(_calendarYear, _calendarMonth, dNum);
+											var detail = _attendanceDetails.FirstOrDefault(d => d.Date.Day == dNum);
+											bool isToday = currentDay.Date == DateTime.Today;
+											
+											string statusClass = "bg-light-secondary text-gray-400";
+											string statusText = "Không có dữ liệu";
+
+											if (detail != null)
+											{
+												var lookup = CachedAttendanceStatuses.FirstOrDefault(s => s.Code == detail.Status || s.Name == detail.Status);
+												var statusCode = lookup?.Code ?? detail.Status;
+												statusText = lookup?.Name ?? detail.Status;
+
+												if (statusCode == "Normal") statusClass = "bg-light-success text-success";
+												else if (detail.IsLate || detail.IsEarlyLeave || statusCode == "Late" || statusCode == "EarlyLeave") statusClass = "bg-light-warning text-warning";
+												else if (statusCode == "Absent") statusClass = "bg-light-danger text-danger";
+												else if (statusCode == "Holiday") statusClass = "bg-light-info text-info";
+											}
+											
+											bool hasOT = (detail?.OvertimeHours ?? 0) > 0;
+
+											<div class="p-1 text-center position-relative">
+												<div class="rounded-circle w-30px h-30px d-flex align-items-center justify-content-center fs-8 fw-bold @statusClass mx-auto cursor-pointer border @(isToday ? "border-primary border-2 shadow-sm" : "border-transparent") hover-border-primary" 
+													 title="@($"{dNum}/{_calendarMonth}: {statusText}")">
+													@dNum
+												</div>
+												@if (hasOT)
+												{
+													<span class="position-absolute top-0 start-50 badge badge-circle badge-primary w-10px h-10px ms-3 mt-1" title="Có OT: @detail.OvertimeHours h"></span>
+												}
 											</div>
 										}
 									</div>
-									<div class="d-flex justify-content-center gap-6">
-										<div class="d-flex align-items-center fs-8 fw-bold text-muted"><span class="w-8px h-8px rounded-circle bg-success me-2"></span>Đúng giờ</div>
-										<div class="d-flex align-items-center fs-8 fw-bold text-muted"><span class="w-8px h-8px rounded-circle bg-warning me-2"></span>Đi muộn</div>
-										<div class="d-flex align-items-center fs-8 fw-bold text-muted"><span class="w-8px h-8px rounded-circle bg-danger me-2"></span>Nghỉ/Không phép</div>
+									<div class="d-flex justify-content-center flex-wrap gap-4">
+										@foreach (var status in CachedAttendanceStatuses.OrderBy(s => s.Order))
+										{
+											var dotClass = "bg-secondary";
+											if (status.Code == "Normal") dotClass = "bg-success";
+											else if (status.Code == "Late" || status.Code == "EarlyLeave") dotClass = "bg-warning";
+											else if (status.Code == "Absent") dotClass = "bg-danger";
+											else if (status.Code == "Holiday") dotClass = "bg-info";
+
+											<div class="d-flex align-items-center fs-8 fw-bold text-muted"><span class="w-8px h-8px rounded-circle @dotClass me-2"></span>@status.Name</div>
+										}
+										<div class="d-flex align-items-center fs-8 fw-bold text-muted"><span class="w-8px h-8px rounded-circle bg-primary me-2"></span>Có tăng ca</div>
 									</div>
 								</div>
 							</div>
@@ -680,7 +725,7 @@
 										<div class="card-body p-4 d-flex flex-stack">
 											<div>
 												<div class="fs-8 text-muted fw-bold">ĐI MUỘN / VỀ SỚM</div>
-												<div class="fs-4 fw-bolder text-gray-900">0 <span class="fs-8 fw-normal">lần</span></div>
+												<div class="fs-4 fw-bolder text-gray-900">@(_attendanceDetails.Count(d => d.IsLate || d.IsEarlyLeave)) <span class="fs-8 fw-normal">lần</span></div>
 											</div>
 											<i class="bi bi-exclamation-triangle fs-1 text-warning"></i>
 										</div>

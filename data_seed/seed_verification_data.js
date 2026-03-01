@@ -176,7 +176,7 @@ async function main() {
         }
 
         // 4. Update Payroll Period totals
-        const totalNet = payrolls.reduce((sum, p) => sum + (p.NetSalary || 0), 0);
+        const totalNet = payrolls.reduce((sum, p) => sum + Number(p.NetSalary || 0), 0);
         await payrollPeriodCol.updateOne(
             { _id: periodId },
             { $set: { TotalNetSalary: totalNet, TotalInsurance: 0, TotalTax: 0 } }
@@ -221,6 +221,89 @@ async function main() {
         await benefitAllocCol.deleteMany({});
         await benefitAllocCol.insertMany(benefitAllocations);
         console.log(`  Inserted ${benefitAllocations.length} benefit allocations.`);
+
+        // 6. Seed Lookups
+        console.log("Seeding Lookups...");
+        const lookupCol = db.collection('lookups');
+        const lookupTransCol = db.collection('lookups_translate');
+
+        const rawLookups = [
+            // Gender
+            { Type: "Gender", Code: "Male", vi: "Nam", en: "Male", Order: 1 },
+            { Type: "Gender", Code: "Female", vi: "Nữ", en: "Female", Order: 2 },
+            { Type: "Gender", Code: "Other", vi: "Khác", en: "Other", Order: 3 },
+
+            // MaritalStatus
+            { Type: "MaritalStatus", Code: "Single", vi: "Độc thân", en: "Single", Order: 1 },
+            { Type: "MaritalStatus", Code: "Married", vi: "Đã kết hôn", en: "Married", Order: 2 },
+            { Type: "MaritalStatus", Code: "Divorced", vi: "Ly hôn", en: "Divorced", Order: 3 },
+            { Type: "MaritalStatus", Code: "Widowed", vi: "Góa", en: "Widowed", Order: 4 },
+
+            // EmployeeStatus
+            { Type: "EmployeeStatus", Code: "Active", vi: "Đang làm việc", en: "Active", Order: 1 },
+            { Type: "EmployeeStatus", Code: "Probation", vi: "Thử việc", en: "Probation", Order: 2 },
+            { Type: "EmployeeStatus", Code: "Resigned", vi: "Đã nghỉ việc", en: "Resigned", Order: 3 },
+
+            // ContractType
+            { Type: "ContractType", Code: "Probation", vi: "Thử việc", en: "Probation", Order: 1 },
+            { Type: "ContractType", Code: "Definite", vi: "Xác định thời hạn", en: "Definite", Order: 2 },
+            { Type: "ContractType", Code: "Indefinite", vi: "Không xác định thời hạn", en: "Indefinite", Order: 3 },
+
+            // Workplace
+            { Type: "Workplace", Code: "HQ", vi: "Trụ sở chính", en: "Headquarters", Order: 1 },
+            { Type: "Workplace", Code: "HN", vi: "Chi nhánh Hà Nội", en: "Hanoi Branch", Order: 2 },
+            { Type: "Workplace", Code: "DN", vi: "Chi nhánh Đà Nẵng", en: "Da Nang Branch", Order: 3 },
+
+            // AttendanceStatus
+            { Type: "AttendanceStatus", Code: "Normal", vi: "Đúng giờ", en: "On-time", Order: 1 },
+            { Type: "AttendanceStatus", Code: "Late", vi: "Đi muộn", en: "Late", Order: 2 },
+            { Type: "AttendanceStatus", Code: "EarlyLeave", vi: "Về sớm", en: "Early Leave", Order: 3 },
+            { Type: "AttendanceStatus", Code: "Absent", vi: "Nghỉ / Không phép", en: "Absent", Order: 4 },
+            { Type: "AttendanceStatus", Code: "Holiday", vi: "Lễ / Nghỉ chế độ", en: "Holiday", Order: 5 },
+
+            // TemplateStatus (For Contract Templates)
+            { Type: "TemplateStatus", Code: "Draft", vi: "Bản nháp", en: "Draft", Order: 1 },
+            { Type: "TemplateStatus", Code: "Active", vi: "Hoạt động", en: "Active", Order: 2 },
+            { Type: "TemplateStatus", Code: "Archived", vi: "Lưu trữ", en: "Archived", Order: 3 },
+
+            // ContractStatus (For Employee Contracts)
+            { Type: "ContractStatus", Code: "Draft", vi: "Bản nháp", en: "Draft", Order: 1 },
+            { Type: "ContractStatus", Code: "Signed", vi: "Đã ký", en: "Signed", Order: 2 },
+            { Type: "ContractStatus", Code: "Active", vi: "Đang hiệu lực", en: "Active", Order: 3 },
+            { Type: "ContractStatus", Code: "Expired", vi: "Hết hạn", en: "Expired", Order: 4 },
+            { Type: "ContractStatus", Code: "Terminated", vi: "Đã chấm dứt", en: "Terminated", Order: 5 }
+        ];
+
+        await lookupCol.deleteMany({});
+        await lookupTransCol.deleteMany({});
+
+        for (const rl of rawLookups) {
+            const lookupId = new ObjectId();
+            await lookupCol.insertOne({
+                _id: lookupId,
+                Type: rl.Type,
+                Code: rl.Code,
+                Order: rl.Order,
+                IsActive: true,
+                IsDeleted: false,
+                CreatedAt: new Date(),
+                UpdatedAt: new Date()
+            });
+
+            const translations = [
+                { LookupId: lookupId.toString(), LanguageCode: "vi-VN", Name: rl.vi },
+                { LookupId: lookupId.toString(), LanguageCode: "en-US", Name: rl.en }
+            ];
+
+            await lookupTransCol.insertMany(translations.map(t => ({
+                ...t,
+                IsDeleted: false,
+                CreatedAt: new Date(),
+                UpdatedAt: new Date()
+            })));
+        }
+
+        console.log(`  Inserted ${rawLookups.length} lookups with translations.`);
 
         console.log("\n--- VERIFICATION DATA SEEDING COMPLETED ---");
 

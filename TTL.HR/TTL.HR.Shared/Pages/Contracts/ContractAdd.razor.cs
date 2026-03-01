@@ -37,8 +37,10 @@ namespace TTL.HR.Shared.Pages.Contracts
                 document.body.removeAttribute('data-kt-drawer');
             ");
 
-            contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType");
-            templateStatusLookups = await MasterDataService.GetCachedLookupsAsync("TemplateStatus");
+            // Load lookups with multi-language support (default to vi-VN for now)
+            var currentLang = "vi-VN"; 
+            contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType", currentLang);
+            templateStatusLookups = await MasterDataService.GetCachedLookupsAsync("TemplateStatus", currentLang);
 
             if (!string.IsNullOrEmpty(Id))
             {
@@ -48,7 +50,8 @@ namespace TTL.HR.Shared.Pages.Contracts
             {
                 TemplateModel = new ContractTemplateModel
                 {
-                    StatusId = templateStatusLookups.FirstOrDefault(x => x.Name == "Active")?.Id ?? "65dae2f30000000000000401", // Default to Active
+                    StatusId = templateStatusLookups.FirstOrDefault(x => x.Code == "Active")?.Id ?? 
+                               templateStatusLookups.FirstOrDefault(x => x.Name == "Active")?.Id ?? "65dae2f30000000000000401", 
                     Icon = "bi bi-file-earmark-text",
                     Color = "primary",
                     ContentHtml = TemplateContent
@@ -59,10 +62,11 @@ namespace TTL.HR.Shared.Pages.Contracts
         private async Task LoadTemplate()
         {
             IsLoading = true;
+            var currentLang = "vi-VN"; // Get this from a language service in the future
             try
             {
                 Console.WriteLine($"Loading template with ID: {Id}");
-                var model = await ContractService.GetTemplateAsync(Id!);
+                var model = await ContractService.GetTemplateAsync(Id!, currentLang);
                 if (model != null)
                 {
                     TemplateModel = model;

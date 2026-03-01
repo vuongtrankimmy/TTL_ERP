@@ -21,20 +21,30 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         }
 
         // Templates
-        public async Task<PagedResult<ContractTemplateModel>> GetTemplatesAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null)
+        public async Task<PagedResult<ContractTemplateModel>> GetTemplatesAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null, string? lang = null)
         {
             var query = $"{ApiEndpoints.Contracts.Templates}?page={page}&pageSize={pageSize}";
             if (!string.IsNullOrEmpty(searchTerm)) query += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
             if (!string.IsNullOrEmpty(status) && status != "All") query += $"&status={status}";
             if (!string.IsNullOrEmpty(typeId)) query += $"&typeId={typeId}";
+            if (!string.IsNullOrEmpty(lang)) query += $"&LanguageCode={lang}";
 
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<ContractTemplateModel>>>(query);
             return response?.Data ?? new PagedResult<ContractTemplateModel>();
         }
 
-        public async Task<ContractTemplateModel?> GetTemplateAsync(string id)
+        public async Task<ContractTemplatesSummaryModel> GetTemplateSummaryAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<ContractTemplateModel>>($"{ApiEndpoints.Contracts.Templates}/{id}");
+            var url = $"{ApiEndpoints.Contracts.Templates}/summary";
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<ContractTemplatesSummaryModel>>(url);
+            return response?.Data ?? new ContractTemplatesSummaryModel();
+        }
+
+        public async Task<ContractTemplateModel?> GetTemplateAsync(string id, string? lang = null)
+        {
+            var url = $"{ApiEndpoints.Contracts.Templates}/{id}";
+            if (!string.IsNullOrEmpty(lang)) url += $"?LanguageCode={lang}";
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<ContractTemplateModel>>(url);
             return response?.Data;
         }
 
@@ -68,21 +78,24 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         }
 
         // Employee Contracts
-        public async Task<PagedResult<EmployeeContractModel>> GetEmployeeContractsAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null, string? employeeId = null)
+        public async Task<PagedResult<EmployeeContractModel>> GetEmployeeContractsAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null, string? employeeId = null, string? lang = null)
         {
             var query = $"{ApiEndpoints.Contracts.Base}?page={page}&pageSize={pageSize}";
             if (!string.IsNullOrEmpty(searchTerm)) query += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
             if (!string.IsNullOrEmpty(status) && status != "All") query += $"&status={status}";
             if (!string.IsNullOrEmpty(typeId)) query += $"&typeId={typeId}";
             if (!string.IsNullOrEmpty(employeeId)) query += $"&employeeId={employeeId}";
+            if (!string.IsNullOrEmpty(lang)) query += $"&LanguageCode={lang}";
 
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<EmployeeContractModel>>>(query);
             return response?.Data ?? new PagedResult<EmployeeContractModel>();
         }
 
-        public async Task<EmployeeContractModel?> GetEmployeeContractAsync(string id)
+        public async Task<EmployeeContractModel?> GetEmployeeContractAsync(string id, string? lang = null)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<EmployeeContractModel>>($"{ApiEndpoints.Contracts.Base}/{id}");
+            var url = $"{ApiEndpoints.Contracts.Base}/{id}";
+            if (!string.IsNullOrEmpty(lang)) url += $"?LanguageCode={lang}";
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<EmployeeContractModel>>(url);
             return response?.Data;
         }
 
