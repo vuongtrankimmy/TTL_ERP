@@ -48,6 +48,7 @@ namespace TTL.HR.Application.Modules.Training.Models
         
         public string AvatarUrl { get; set; } = "";
         public int Progress { get; set; }
+        public int? StatusId { get; set; }
         public string Status { get; set; } = "Enrolled"; // Enrolled, InProgress, Completed, Failed
         
         [System.Text.Json.Serialization.JsonPropertyName("EnrolledDate")]

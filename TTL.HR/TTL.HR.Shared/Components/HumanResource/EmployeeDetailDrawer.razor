@@ -1,90 +1,601 @@
 @using TTL.HR.Application.Modules.HumanResource.Models
+@using TTL.HR.Application.Modules.HumanResource.Interfaces
 @using TTL.HR.Application.Modules.Organization.Models
 @using TTL.HR.Application.Modules.Common.Models
+@using TTL.HR.Application.Modules.Attendance.Models
+@using TTL.HR.Application.Modules.Attendance.Interfaces
 
-@if (Show)
-{
-    <div id="kt_drawer_employee_detail_shared" class="bg-white drawer drawer-end drawer-on" 
-         style="width: 650px; position: fixed; right: 0; top: 0; bottom: 0; z-index: 1060; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
-        <div class="card shadow-none rounded-0 w-100 h-100 d-flex flex-column">
-            <!-- Header -->
-            <div class="card-header border-0 pt-7 pb-5 flex-shrink-0">
-                <div class="card-title w-100 d-flex justify-content-between align-items-start">
-                    <div class="d-flex">
-                        <div class="symbol symbol-70px symbol-circle me-5">
-                            <img src="@(Employee?.AvatarUrl ?? "assets/media/avatars/300-1.jpg")" alt="@Employee?.FullName" style="object-fit: cover;" />
-                        </div>
-                        <div class="d-flex flex-column">
-                            <h2 class="fs-4 fw-bolder text-gray-900 mb-1">@(Employee?.FullName ?? "N/A")</h2>
-                            <div class="text-primary fw-bold fs-7 mb-2">@(Employee?.PositionName ?? "N/A")</div>
-                            <div class="d-flex flex-wrap gap-2">
-                                <span class="badge badge-light-secondary text-gray-600 fw-bold px-2 py-1">Mã NV: @(Employee?.Code ?? "---")</span>
-                                <span class="badge badge-light-secondary text-gray-600 fw-bold px-2 py-1">Phòng: @(Employee?.DepartmentName ?? "---")</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-toolbar ms-3">
-                        <button type="button" class="btn btn-sm btn-icon btn-active-light-primary" @onclick="Close">
-                            <i class="bi bi-x-lg fs-2"></i>
-                        </button>
-                    </div>
-                </div>
+
+<div id="kt_drawer_employee_detail" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="employee-detail" data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '850px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle=".kt_drawer_employee_detail_toggle" data-kt-drawer-close="#kt_drawer_employee_detail_close">
+	<div class="card shadow-none rounded-0 w-100 h-100 d-flex flex-column">
+		<!-- SKELETON LOADING -->
+		@if (IsLoading)
+		{
+            <div class="card-body">
+			    <SkeletonLoading IsLoading="true" Type="SkeletonLoading.SkeletonType.Form" Rows="10" />
             </div>
+		}
+		else if (Employee != null)
+		{
+			<div class="card-header border-0 pt-7 pb-5 flex-shrink-0">
+				<div class="card-title w-100 d-flex justify-content-between align-items-start">
+					<div class="d-flex">
+						<div class="symbol symbol-70px symbol-circle me-5">
+							<img src="@(string.IsNullOrEmpty(Employee.AvatarUrl) ? "assets/media/avatars/300-1.jpg" : Employee.AvatarUrl)" alt="@Employee.FullName" style="object-fit: cover;" />
+						</div>
+						<div class="d-flex flex-column">
+							<h2 class="fs-4 fw-bolder text-gray-900 mb-1">@Employee.FullName</h2>
+							<div class="text-primary fw-bold fs-7 mb-2">@Employee.PositionName</div>
+							<div class="d-flex flex-wrap gap-2">
+								<span class="badge badge-light-secondary text-gray-600 fw-bold px-2 py-1">Mã NV: @Employee.Code</span>
+								<span class="badge badge-light-secondary text-gray-600 fw-bold px-2 py-1">Phòng: @Employee.DepartmentName</span>
+							</div>
+						</div>
+					</div>
+					<div class="card-toolbar ms-3">
+						<button type="button" class="btn btn-sm btn-icon btn-active-light-primary" id="kt_drawer_employee_detail_close">
+							<i class="ki-outline ki-cross fs-2"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="card-body p-0 flex-grow-1 hover-scroll-y">
+				<ul class="nav nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold px-5 mb-5 flex-nowrap overflow-auto">
+					<li class="nav-item">
+						<a class="nav-link text-active-primary @(activeTab == "profile" ? "active" : "") py-4" href="javascript:;" @onclick='() => SetActiveTab("profile")'>
+							<i class="ki-outline ki-user me-2"></i>Thông tin hồ sơ
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-active-primary @(activeTab == "account" ? "active" : "") py-4" href="javascript:;" @onclick='() => SetActiveTab("account")'>
+							<i class="ki-outline ki-lock-2 me-2"></i>Tài khoản & Phân quyền
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-active-primary @(activeTab == "calendar" ? "active" : "") py-4" href="javascript:;" @onclick='() => SetActiveTab("calendar")'>
+							<i class="ki-outline ki-calendar-8 me-2"></i>Lịch & Chấm công
+						</a>
+					</li>
+				</ul>
+				<div class="tab-content px-6">
+					@if (activeTab == "profile")
+					{
+						<div class="tab-pane fade show active">
+							<div class="py-5">
+                                <!-- PERSONAL INFO -->
+								<div class="d-flex flex-stack mb-5">
+									<h3 class="fw-bolder m-0 fs-5 text-uppercase"><i class="ki-outline ki-badge text-primary me-2"></i>Thông tin cá nhân</h3>
+								</div>
+								<div class="row g-6 mb-8">
+									<div class="col-md-6">
+										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Họ và tên</label>
+										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.FullName</div> }
+										else { <input type="text" class="form-control form-control-solid" @bind="Employee.FullName" /> }
+									</div>
+                                    <div class="col-md-6">
+										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Ngày sinh</label>
+										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.DOB?.ToString("dd/MM/yyyy")</div> }
+										else { <input type="date" class="form-control form-control-solid" @bind="Employee.DOB" /> }
+									</div>
+                                    <div class="col-md-6">
+										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Giới tính</label>
+										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.Gender</div> }
+										else {
+											<select class="form-select form-select-solid" @bind="Employee.Gender">
+												<option value="">Chọn giới tính</option>
+												<option value="Nam">Nam</option>
+												<option value="Nữ">Nữ</option>
+											</select>
+										}
+									</div>
+                                    <div class="col-md-6">
+										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Số CCCD</label>
+										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.IdCard</div> }
+										else {
+											<div class="position-relative">
+												<input type="text" class="form-control form-control-solid" @bind="Employee.IdCard" />
+												<button type="button" class="btn btn-icon btn-sm btn-active-color-primary position-absolute end-0 top-0 mt-1 me-1" @onclick="OnScanCCCD">
+													<i class="ki-outline ki-scan-barcode fs-3"></i>
+												</button>
+											</div>
+										}
+									</div>
+                                </div>
 
-            <!-- Body -->
-            <div class="card-body p-0 flex-grow-1 hover-scroll-y">
-                <ul class="nav nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold px-5 mb-5 flex-nowrap overflow-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-active-primary @(activeTab == "profile" ? "active" : "") py-4" href="javascript:;" @onclick='() => activeTab = "profile"'>
-                            <i class="bi bi-person-lines-fill me-2"></i>Thông tin hồ sơ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-active-primary @(activeTab == "account" ? "active" : "") py-4" href="javascript:;" @onclick='() => activeTab = "account"'>
-                            <i class="bi bi-shield-lock me-2"></i>Tài khoản & Phân quyền
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-active-primary @(activeTab == "calendar" ? "active" : "") py-4" href="javascript:;" @onclick='() => activeTab = "calendar"'>
-                            <i class="bi bi-calendar-check me-2"></i>Lịch & Chấm công
-                        </a>
-                    </li>
-                </ul>
+                                <!-- WORK INFO -->
+                                <div class="d-flex flex-stack mb-5">
+									<h3 class="fw-bolder m-0 fs-5 text-uppercase"><i class="ki-outline ki-briefcase text-primary me-2"></i>Thông tin công việc</h3>
+								</div>
+								<div class="row g-6 mb-8">
+									<div class="col-md-6">
+										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Phòng ban</label>
+										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.DepartmentName</div> }
+										else {
+											<select class="form-select form-select-solid" @bind="Employee.DepartmentId">
+												@if (Departments != null) {
+													@foreach (var dept in Departments)
+													{
+														<option value="@dept.Id">@dept.Name</option>
+													}
+												}
+											</select>
+										}
+									</div>
+                                    <div class="col-md-6">
+										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Chức vụ</label>
+										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.PositionName</div> }
+										else {
+											<select class="form-select form-select-solid" @bind="Employee.PositionId">
+												@if (Positions != null) {
+													@foreach (var pos in Positions)
+													{
+														<option value="@pos.Id">@pos.Name</option>
+													}
+												}
+											</select>
+										}
+									</div>
+                                    <div class="col-md-6">
+										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Người quản lý</label>
+										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@(string.IsNullOrEmpty(Employee.ReportToName) ? "Không có" : Employee.ReportToName)</div> }
+										else {
+											<select class="form-select form-select-solid" @bind="Employee.ReportToId">
+												<option value="">Không có</option>
+												@if (Managers != null) {
+													@foreach (var mgr in Managers)
+													{
+														<option value="@mgr.Id">@mgr.FullName</option>
+													}
+												}
+											</select>
+										}
+									</div>
+                                    <div class="col-md-6">
+										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Ngày gia nhập</label>
+										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.JoinDate?.ToString("dd/MM/yyyy")</div> }
+										else { <input type="date" class="form-control form-control-solid" @bind="Employee.JoinDate" /> }
+									</div>
+                                </div>
 
-                <div class="tab-content px-6">
-                    @if (activeTab == "profile")
+                                <!-- CONTRACT SECTION (Unified View/Print) -->
+								<div class="card bg-light-primary border-0 mb-8 rounded-3 shadow-xs position-relative overflow-hidden animate__animated animate__fadeInUp">
+									<div class="card-body p-6">
+										<div class="d-flex flex-stack mb-6">
+											<div class="d-flex align-items-center z-index-2">
+												<div class="symbol symbol-35px bg-white text-primary rounded-circle me-3 shadow-sm d-flex align-items-center justify-content-center">
+													<i class="ki-outline ki-file-sheet fs-4 text-primary"></i>
+												</div>
+												<h3 class="fw-boldest m-0 fs-6 text-uppercase text-gray-800 ls-1">Hợp đồng lao động</h3>
+											</div>
+											<span class="badge badge-light-success fs-9 fw-boldest px-3 py-2 rounded-pill shadow-xs z-index-2">ĐANG HIỆU LỰC</span>
+										</div>
+										<div class="row g-4 mb-6">
+											<div class="col-4">
+												<div class="bg-white rounded-3 p-4 border border-gray-200 shadow-xs h-100 transition-all hover-shadow-sm z-index-2 position-relative">
+													<div class="text-muted fs-10 fw-boldest text-uppercase mb-2">LOẠI HĐ</div>
+													<div class="d-flex align-items-center">
+														<i class="ki-outline ki-badge fs-6 text-primary me-2"></i>
+														<div class="fs-8 fw-boldest text-gray-800 text-truncate">@Employee.ContractTypeName</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-4">
+												<div class="bg-white rounded-3 p-4 border border-gray-200 shadow-xs h-100 transition-all hover-shadow-sm z-index-2 position-relative">
+													<div class="text-muted fs-10 fw-boldest text-uppercase mb-2">LƯƠNG CB</div>
+													<div class="d-flex align-items-center">
+														<i class="ki-outline ki-bill fs-6 text-success me-2"></i>
+														<div class="fs-8 fw-boldest text-gray-900 text-truncate">@Employee.SalaryDisplay</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-4">
+												<div class="bg-white rounded-3 p-4 border border-gray-200 shadow-xs h-100 transition-all hover-shadow-sm z-index-2 position-relative">
+													<div class="text-muted fs-10 fw-boldest text-uppercase mb-2">HẾT HẠN</div>
+													<div class="d-flex align-items-center">
+														<i class="ki-outline ki-calendar-remove fs-6 text-danger me-2"></i>
+														<div class="fs-8 fw-boldest text-danger">@(Employee.ContractExpiry?.ToString("dd/MM/yyyy") ?? "---")</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row g-3">
+											<div class="col-6">
+												<button class="btn btn-sm btn-outline btn-outline-primary bg-white w-100 fw-boldest py-3 rounded-3 shadow-xs transition-all hover-scale-105 z-index-2" @onclick="HandlePrintContract" disabled="@_isPrintLoading">
+													@if (_isPrintLoading) { <span class="spinner-border spinner-border-sm me-2"></span> }
+													else { <i class="ki-outline ki-printer fs-4 me-2"></i> }
+													In hợp đồng
+												</button>
+											</div>
+											<div class="col-6">
+												<button class="btn btn-sm btn-primary w-100 fw-boldest py-3 rounded-3 shadow-xs transition-all hover-scale-105 z-index-2" @onclick="HandleViewContract">
+													<i class="ki-outline ki-eye fs-4 me-2"></i>Xem hiện tại
+												</button>
+											</div>
+											@if (!IsReadOnly)
+											{
+												<div class="col-12">
+													<button class="btn btn-sm btn-light btn-active-light-primary w-100 fw-boldest py-3 border border-dashed border-primary rounded-3 text-primary z-index-2">
+														<i class="ki-outline ki-cloud-upload fs-4 me-2"></i>Tải lên bản đã ký quét màu (.pdf)
+													</button>
+												</div>
+											}
+										</div>
+									</div>
+                                    <!-- Decorative background icon -->
+                                    <div class="position-absolute end-0 bottom-0 opacity-5 pe-5 pb-n5">
+                                        <i class="ki-outline ki-note-2 fs-5tx text-primary"></i>
+                                    </div>
+								</div>
+
+								<!-- AUDIT LOG TIMELINE -->
+								<h3 class="fw-bolder m-0 fs-5 text-uppercase mb-5"><i class="ki-outline ki-time text-gray-600 me-2"></i>Nhật ký thay đổi</h3>
+								<div class="timeline-label">
+									@if (Employee.AuditLogs != null && Employee.AuditLogs.Any())
+									{
+										@foreach (var log in Employee.AuditLogs.OrderByDescending(l => l.Timestamp).Take(5))
+										{
+											<div class="timeline-item">
+												<div class="timeline-label fw-bolder text-gray-800 fs-8 w-75px">@log.Timestamp.ToString("HH:mm")</div>
+												<div class="timeline-badge"><i class="fa fa-genderless text-primary fs-1"></i></div>
+												<div class="timeline-content fw-bold text-gray-800 ps-3">
+													@log.Detail bởi <span class="text-primary">@log.UserName</span>
+													<div class="text-muted fs-9">@log.Timestamp.ToString("dd/MM/yyyy")</div>
+												</div>
+											</div>
+										}
+									}
+                                    else
+                                    {
+                                        <div class="text-muted fs-7">Chưa có nhật ký thay đổi.</div>
+                                    }
+								</div>
+							</div>
+						</div>
+					}
+                    else if (activeTab == "account")
                     {
-                        @* Content from EmployeeList.razor *@
-                        <div class="tab-pane fade show active">
-                            @* (Simplified for now, will add full content later) *@
-                            <div class="py-5">
-                                <h3 class="fw-bolder m-0 fs-5 text-uppercase mb-5">Thông tin cá nhân</h3>
-                                <div class="row g-6 mb-8">
-                                    <div class="col-md-6">
-                                        <label class="form-label text-muted fs-7 text-uppercase fw-bold">Họ và tên</label>
-                                        <input type="text" class="form-control form-control-solid" value="@Employee?.FullName" readonly />
+                        <div class="tab-pane fade show active py-5">
+                            <!-- ERP Activation Card -->
+                            <div class="card bg-light-primary border-0 mb-8 rounded-3 shadow-sm overflow-hidden animate__animated animate__fadeIn">
+                                <div class="card-body p-6 d-flex flex-stack position-relative">
+                                    <div class="d-flex align-items-center z-index-2">
+                                        <div class="symbol symbol-50px symbol-circle bg-white text-primary me-5 shadow-sm d-flex align-items-center justify-content-center">
+                                            <i class="ki-outline ki-switch fs-2tx text-primary"></i>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <h3 class="fw-bolder fs-5 text-gray-900 mb-1">Kích hoạt tài khoản ERP</h3>
+                                            <div class="text-muted fs-7 fw-semibold">Cho phép nhân viên này truy cập vào hệ thống ERP</div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label text-muted fs-7 text-uppercase fw-bold">Số điện thoại</label>
-                                        <input type="text" class="form-control form-control-solid" value="@Employee?.Phone" readonly />
+                                    <div class="form-check form-switch form-check-custom form-check-solid z-index-2">
+                                        <input class="form-check-input w-50px h-25px cursor-pointer" type="checkbox" @bind="Employee.IsAccountActive" id="account_active_switch" disabled="@IsReadOnly" />
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label text-muted fs-7 text-uppercase fw-bold">Email</label>
-                                        <input type="text" class="form-control form-control-solid" value="@Employee?.Email" readonly />
+                                    <!-- Decorative background icon -->
+                                    <div class="position-absolute end-0 bottom-0 opacity-10 pe-5 pb-n5">
+                                        <i class="ki-outline ki-shield-tick fs-5tx text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Account Information Section -->
+                            <div class="mb-10 animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+                                <div class="d-flex align-items-center mb-5">
+                                    <i class="ki-outline ki-user fs-2 text-primary me-3"></i>
+                                    <h3 class="fw-bolder m-0 fs-5 text-uppercase text-gray-800">THÔNG TIN TÀI KHOẢN</h3>
+                                </div>
+                                <div class="bg-white border border-gray-200 rounded-3 p-8 shadow-xs hover-shadow-sm transition-all">
+                                    <div class="row g-9 mb-6">
+                                        <div class="col-md-6">
+                                            <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-3">TÊN ĐĂNG NHẬP (USERNAME)</label>
+                                            @if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded shadow-xs">@Employee.Username</div> }
+                                            else { <input type="text" class="form-control form-control-solid fw-bold fs-6" @bind="Employee.Username" placeholder="ten.dang.nhap" /> }
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-3">MẬT KHẨU (PASSWORD)</label>
+                                            <div class="position-relative">
+                                                @if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded shadow-xs">••••••••</div> }
+                                                else {
+                                                    <input type="@(_isPasswordVisible ? "text" : "password")" class="form-control form-control-solid fw-bold fs-6" @bind="Employee.Password" placeholder="••••••••" />
+                                                    <button type="button" class="btn btn-icon btn-sm btn-active-color-primary position-absolute end-0 top-0 mt-2 me-1" @onclick="() => _isPasswordVisible = !_isPasswordVisible">
+                                                        <i class="ki-outline @(_isPasswordVisible ? "ki-eye-slash" : "ki-eye") fs-2 text-gray-500"></i>
+                                                    </button>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (!IsReadOnly)
+                                    {
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" class="btn btn-sm btn-light btn-active-light-primary fw-bolder px-5 py-3 border border-dashed rounded-3">
+                                                <i class="ki-outline ki-arrows-circle fs-4 me-2"></i>Tạo mới / Reset mật khẩu
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Permissions Configuration Section -->
+                            <div class="mb-5 animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                                <div class="d-flex align-items-center mb-5">
+                                    <i class="ki-outline ki-lock-2 fs-2 text-primary me-3"></i>
+                                    <h3 class="fw-bolder m-0 fs-5 text-uppercase text-gray-800">CẤU HÌNH PHÂN QUYỀN</h3>
+                                </div>
+                                <div class="bg-white border border-gray-200 rounded-3 shadow-xs">
+                                    <!-- Sub-tabs for permissions -->
+                                    <div class="bg-light p-2 rounded-top-3 border-bottom d-flex gap-1">
+                                        <button class="btn btn-sm flex-grow-1 @(permissionTab == "role" ? "btn-white shadow-sm fw-boldest" : "text-muted fw-bold") py-3 border-0" @onclick='() => permissionTab = "role"'>
+                                            <i class="ki-outline ki-badge fs-4 @(permissionTab == "role" ? "text-primary" : "text-muted") me-2"></i>Phân quyền theo vai trò
+                                        </button>
+                                        <button class="btn btn-sm flex-grow-1 @(permissionTab == "detail" ? "btn-white shadow-sm fw-boldest" : "text-muted fw-bold") py-3 border-0" @onclick='() => permissionTab = "detail"'>
+                                            <i class="ki-outline ki-setting-4 fs-4 @(permissionTab == "detail" ? "text-primary" : "text-muted") me-2"></i>Tùy chỉnh quyền chi tiết
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="p-8">
+                                        @if (permissionTab == "role")
+                                        {
+                                            <div class="mb-6 animate__animated animate__fadeIn">
+                                                <label class="form-label text-muted fs-8 text-uppercase fw-bolder mb-3">CHỌN VAI TRÒ HỆ THỐNG</label>
+                                                @if (IsReadOnly) {
+                                                    <div class="fw-bolder fs-6 text-gray-800 p-4 bg-light rounded shadow-xs">
+                                                        <i class="ki-outline ki-badge fs-3 text-primary me-2"></i>@(Roles?.FirstOrDefault(r => r.Id == Employee.Role)?.Name ?? "Chưa chỉ định")
+                                                    </div>
+                                                }
+                                                else {
+                                                    <select class="form-select form-select-solid fw-bold fs-6" @bind="Employee.Role">
+                                                        <option value="">Chọn vai trò...</option>
+                                                        @if (Roles != null) {
+                                                            @foreach (var role in Roles)
+                                                            {
+                                                                <option value="@role.Id">@role.Name</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                }
+                                                <div class="text-muted fs-8 mt-4 fw-medium fst-italic">
+                                                    * Vai trò này sẽ tự động áp dụng bộ quyền mặc định cho các module.
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <!-- Module Permission Table -->
+                                        <div class="table-responsive @(permissionTab == "detail" ? "animate__animated animate__fadeIn" : "")">
+                                            <div class="d-flex justify-content-between align-items-center mb-5 mt-2">
+                                                <h4 class="fs-7 fw-bolder text-gray-700 text-uppercase m-0">QUYỀN HẠN MODULE CHI TIẾT</h4>
+                                            </div>
+                                            <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 mb-0">
+                                                <thead class="bg-gray-50 rounded-2">
+                                                    <tr class="fw-bolder text-muted fs-9 text-uppercase border-bottom-0">
+                                                        <th class="ps-4 min-w-150px rounded-start">MODULE</th>
+                                                        <th class="min-w-60px text-center">XEM</th>
+                                                        <th class="min-w-60px text-center">THÊM</th>
+                                                        <th class="min-w-60px text-center">SỬA</th>
+                                                        <th class="min-w-60px text-center rounded-end">XÓA</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Employee.ModulePermissions != null && Employee.ModulePermissions.Any())
+                                                    {
+                                                        @foreach (var perm in Employee.ModulePermissions)
+                                                        {
+                                                            <tr class="hover-bg-light transition-all">
+                                                                <td class="ps-4">
+                                                                    <div class="text-gray-800 fw-bolder fs-7">@perm.ModuleName</div>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    @if (perm.CanView) { <i class="ki-outline ki-check fs-2 text-success"></i> }
+                                                                    else { <i class="ki-outline ki-cross fs-2 text-gray-400"></i> }
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    @if (perm.CanAdd) { <i class="ki-outline ki-check fs-2 text-success"></i> }
+                                                                    else { <i class="ki-outline ki-cross fs-2 text-gray-400"></i> }
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    @if (perm.CanEdit) { <i class="ki-outline ki-check fs-2 text-success"></i> }
+                                                                    else { <i class="ki-outline ki-cross fs-2 text-gray-400"></i> }
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    @if (perm.CanDelete) { <i class="ki-outline ki-check fs-2 text-success"></i> }
+                                                                    else { <i class="ki-outline ki-cross fs-2 text-gray-400"></i> }
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            <td colspan="5" class="text-center py-10 text-muted fs-7">Chưa cấu hình quyền module.</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     }
-                </div>
-            </div>
+                    else if (activeTab == "calendar")
+                    {
+                        <div class="tab-pane fade show active py-5">
+                            <!-- CALENDAR HEADER & NAVIGATION -->
+                            <div class="d-flex flex-stack mb-7">
+                                <div class="d-flex flex-column">
+                                    <h3 class="fw-bolder text-gray-900 m-0 fs-4">Lịch sử chấm công</h3>
+                                    <span class="text-muted fw-bold fs-7 mt-1">Dữ liệu chi tiết tháng @_calendarMonth / @_calendarYear</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="btn btn-sm btn-icon btn-light btn-active-light-primary" @onclick="PrevMonth"><i class="ki-outline ki-arrow-left fs-3"></i></button>
+                                    <span class="fw-bolder text-gray-800 min-w-80px text-center">T@_calendarMonth - @_calendarYear</span>
+                                    <button class="btn btn-sm btn-icon btn-light btn-active-light-primary" @onclick="NextMonth"><i class="ki-outline ki-arrow-right fs-3"></i></button>
+                                </div>
+                            </div>
 
-            <!-- Footer -->
-            <div class="card-footer py-5 d-flex justify-content-end gap-3 flex-shrink-0">
-                <button type="button" class="btn btn-light" @onclick="Close">Đóng</button>
-                <button type="button" class="btn btn-primary" @onclick="OnEdit">Chỉnh sửa hồ sơ</button>
-            </div>
-        </div>
-    </div>
-    <div class="drawer-overlay" style="z-index: 1059; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);" @onclick="Close"></div>
-}
+                            <!-- SUMMARY STATS (Thống kê nhanh tháng) -->
+                            <div class="mb-5 animate__animated animate__fadeInUp">
+                                <div class="d-flex align-items-center mb-5">
+                                    <i class="ki-outline ki-chart-line fs-2 text-primary me-3"></i>
+                                    <h3 class="fw-bolder m-0 fs-5 text-uppercase text-gray-800">THỐNG KÊ NHANH THÁNG</h3>
+                                </div>
+                                <div class="row g-4 mb-8">
+                                    <!-- Số công chuẩn -->
+                                    <div class="col-6 col-sm-3">
+                                        <div class="bg-white rounded-3 border border-gray-200 p-5 shadow-xs h-100 position-relative">
+                                            <div class="d-flex flex-stack mb-3">
+                                                <div class="text-muted fs-9 fw-boldest text-uppercase">SỐ CÔNG CHUẨN</div>
+                                                <i class="ki-outline ki-calendar fs-4 text-gray-400"></i>
+                                            </div>
+                                            <div class="d-flex align-items-end">
+                                                <span class="fs-2tx fw-boldest text-gray-900 me-2 lh-1">22</span>
+                                                <span class="fs-7 fw-bold text-muted pb-1 lh-1">ngày</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Số công thực tế -->
+                                    <div class="col-6 col-sm-3">
+                                        <div class="bg-white rounded-3 border border-gray-200 p-5 shadow-xs h-100 position-relative">
+                                            <div class="d-flex flex-stack mb-3">
+                                                <div class="text-muted fs-9 fw-boldest text-uppercase text-primary">SỐ CÔNG THỰC TẾ</div>
+                                                <i class="ki-outline ki-check-circle fs-4 text-success"></i>
+                                            </div>
+                                            <div class="d-flex align-items-end">
+                                                <span class="fs-2tx fw-boldest text-gray-900 me-2 lh-1">@((_stats?.TotalWorkingHoursMonth / 8 ?? 0).ToString("F1"))</span>
+                                                <span class="fs-7 fw-bold text-muted pb-1 lh-1">ngày</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Số giờ tăng ca -->
+                                    <div class="col-6 col-sm-3">
+                                        <div class="bg-white rounded-3 border border-gray-200 p-5 shadow-xs h-100 position-relative">
+                                            <div class="d-flex flex-stack mb-3">
+                                                <div class="text-muted fs-9 fw-boldest text-uppercase">SỐ GIỜ TĂNG CA</div>
+                                                <i class="ki-outline ki-time fs-4 text-info"></i>
+                                            </div>
+                                            <div class="d-flex align-items-end">
+                                                <span class="fs-2tx fw-boldest text-gray-900 me-2 lh-1">@(_attendanceDetails.Sum(x => x.OvertimeHours).ToString("F0"))</span>
+                                                <span class="fs-7 fw-bold text-muted pb-1 lh-1">giờ</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Số lần đi muộn -->
+                                    <div class="col-6 col-sm-3">
+                                        <div class="bg-white rounded-3 border border-gray-200 p-5 shadow-xs h-100 position-relative">
+                                            <div class="d-flex flex-stack mb-3">
+                                                <div class="text-muted fs-9 fw-boldest text-uppercase">SỐ LẦN ĐI MUỘN</div>
+                                                <i class="ki-outline ki-warning fs-4 text-warning"></i>
+                                            </div>
+                                            <div class="d-flex align-items-end">
+                                                <span class="fs-2tx fw-boldest text-gray-900 me-2 lh-1">@(_attendanceDetails.Count(x => x.IsLate).ToString("D2"))</span>
+                                                <span class="fs-7 fw-bold text-muted pb-1 lh-1">lần</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CALENDAR GRID -->
+                            <div class="calendar-wrapper border-0 mb-8">
+                                <div class="d-flex align-items-center mb-5">
+                                    <i class="ki-outline ki-calendar-tick fs-2 text-primary me-3"></i>
+                                    <h3 class="fw-bolder m-0 fs-5 text-uppercase text-gray-800">LỊCH CHẤM CÔNG CHI TIẾT</h3>
+                                </div>
+                                <div class="bg-white border rounded-3 p-5 shadow-xs">
+                                    <div class="d-grid gap-2 mb-4" style="grid-template-columns: repeat(7, 1fr);">
+                                        @foreach (var day in new[] { "CN", "T2", "T3", "T4", "T5", "T6", "T7" })
+                                        {
+                                            <div class="text-center py-2 fw-bold text-gray-500 fs-9 text-uppercase">@day</div>
+                                        }
+                                    </div>
+                                    <div class="d-grid gap-2" style="grid-template-columns: repeat(7, 1fr);">
+                                        @foreach (var blank in GetLeadingBlankDates())
+                                        {
+                                            <div class="bg-gray-100 bg-opacity-40 rounded-3 p-3 min-h-60px d-flex align-items-start">
+                                                <span class="fs-9 fw-bold text-gray-400">@blank.Day</span>
+                                            </div>
+                                        }
+                                        @foreach (var record in _attendanceDetails)
+                                        {
+                                            <div class="bg-white rounded-3 p-3 min-h-60px border @(record.Date.Date == DateTime.Now.Date ? "border-primary border-2 shadow-sm scale-105" : "border-gray-200") hover-border-primary cursor-pointer d-flex flex-column align-items-center justify-content-between transition-all position-relative" 
+                                                 style="z-index: @(record.Date.Date == DateTime.Now.Date ? "10" : "1");">
+                                                <div class="w-100 d-flex align-items-start">
+                                                    <span class="fs-9 fw-boldest @(record.Date.DayOfWeek == DayOfWeek.Sunday ? "text-danger" : "text-gray-800")">@record.Date.Day</span>
+                                                </div>
+                                                <div class="mt-auto">
+                                                    @if (record.Status == "Off" || record.WorkValue == 0) {
+                                                        <span class="w-8px h-8px rounded-circle bg-danger animate__animated animate__pulse animate__infinite" style="box-shadow: 0 0 5px rgba(241, 65, 108, 0.4);"></span>
+                                                    } else if (record.IsLate || record.IsEarlyLeave) {
+                                                        <span class="w-8px h-8px rounded-circle bg-warning shadow-xs"></span>
+                                                    } else {
+                                                        <span class="w-8px h-8px rounded-circle bg-success shadow-xs"></span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                        @foreach (var blank in GetTrailingBlankDates())
+                                        {
+                                            <div class="bg-gray-100 bg-opacity-40 rounded-3 p-3 min-h-60px d-flex align-items-start">
+                                                <span class="fs-9 fw-bold text-gray-400">@blank.Day</span>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="mt-8 d-flex justify-content-center gap-6">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="w-10px h-10px rounded-circle bg-success shadow-xs"></span> 
+                                            <span class="fs-9 text-gray-600 fw-boldest">Đúng giờ</span>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="w-10px h-10px rounded-circle bg-warning shadow-xs"></span> 
+                                            <span class="fs-9 text-gray-600 fw-boldest">Đi muộn</span>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="w-10px h-10px rounded-circle bg-danger shadow-xs"></span> 
+                                            <span class="fs-9 text-gray-600 fw-boldest">Nghỉ</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- NOTES SECTION -->
+                            <div class="card bg-light-info border-0 rounded-3 mt-10 animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+                                <div class="card-body p-6 d-flex align-items-center">
+                                    <div class="symbol symbol-40px bg-white text-info me-5 d-flex align-items-center justify-content-center shadow-sm">
+                                        <i class="ki-outline ki-information-2 fs-2 text-info"></i>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <h4 class="fw-boldest fs-6 text-gray-900 mb-1">Ghi chú quan trọng</h4>
+                                        <div class="text-muted fs-8 fw-semibold">Các ngày nghỉ không phép hoặc đi muộn vượt quá 30 phút sẽ bị trừ lương theo quy định hiện hành.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+				</div>
+			</div>
+			<div class="card-footer border-0 d-flex gap-4 justify-content-between p-10 flex-shrink-0 bg-white shadow-lg z-index-2">
+                @if (activeTab == "calendar")
+                {
+                    <button type="button" class="btn btn-primary flex-grow-1 fw-boldest py-4 rounded-pill shadow-sm">
+                        <i class="ki-outline ki-file-down fs-3 me-2"></i>Xuất báo cáo cá nhân
+                    </button>
+                    <button type="button" class="btn btn-light flex-grow-1 fw-boldest py-4 border rounded-pill" id="kt_drawer_employee_detail_close">Đóng</button>
+                }
+                else {
+                    @if (IsReadOnly)
+                    {
+                        <button type="button" class="btn btn-primary flex-grow-1 fw-boldest py-4 rounded-pill shadow-sm" @onclick="() => IsReadOnly = false">Chỉnh sửa hồ sơ</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary flex-grow-1 fw-boldest py-4 rounded-pill shadow-sm" @onclick="() => OnSave.InvokeAsync(Employee)">
+                            <i class="ki-outline ki-check-circle fs-3 me-2"></i>Cập nhật cấu hình
+                        </button>
+                        <button type="button" class="btn btn-light flex-grow-1 fw-boldest py-4 border rounded-pill" @onclick="() => IsReadOnly = true">Hủy</button>
+                    }
+                    <button type="button" class="btn btn-light flex-grow-1 fw-boldest py-4 border rounded-pill" id="kt_drawer_employee_detail_close">Đóng</button>
+                }
+			</div>
+		}
+	</div>
+</div>
+
+

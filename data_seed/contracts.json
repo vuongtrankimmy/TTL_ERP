@@ -1,11 +1,11 @@
-[
+﻿[
     {
         "_id": {
             "$oid": "65dae2f30000000000000101"
         },
         "ContractNumber": "001/2024/HDLD-TTL",
         "EmployeeId": "65bf0c300000000000000001",
-        "EmployeeName": "Phạm Minh Hùng",
+        "EmployeeName": "Pháº¡m Minh HÃ¹ng",
         "ContractTemplateId": "65dae2f30000000000000004",
         "TypeId": "65dae2f30000000000000205",
         "StartDate": {
@@ -14,13 +14,13 @@
         "EndDate": null,
         "BasicSalary": 25000000.0,
         "InsuranceSalary": 25000000.0,
-        "StatusId": "65dae2f30000000000000303",
+        "StatusId": 3,
         "SignedDate": {
             "$date": "2023-12-30T00:00:00Z"
         },
-        "SignedAddress": "TP. Hồ Chí Minh",
+        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
         "FilePath": "/contracts/001_2024_A.pdf",
-        "Note": "Hợp đồng không thời hạn",
+        "Note": "Há»£p Ä‘á»“ng khÃ´ng thá»i háº¡n",
         "IsDeleted": false
     },
     {
@@ -29,7 +29,7 @@
         },
         "ContractNumber": "NDA-001/2024",
         "EmployeeId": "65bf0c300000000000000001",
-        "EmployeeName": "Phạm Minh Hùng",
+        "EmployeeName": "Pháº¡m Minh HÃ¹ng",
         "ContractTemplateId": "65dae2f30000000000000006",
         "TypeId": "65dae2f30000000000000207",
         "StartDate": {
@@ -38,13 +38,13 @@
         "EndDate": null,
         "BasicSalary": 0.0,
         "InsuranceSalary": 0.0,
-        "StatusId": "65dae2f30000000000000303",
+        "StatusId": 3,
         "SignedDate": {
             "$date": "2023-12-30T00:00:00Z"
         },
-        "SignedAddress": "TP. Hồ Chí Minh",
+        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
         "FilePath": "/contracts/NDA_001_A.pdf",
-        "Note": "Cam kết bảo mật",
+        "Note": "Cam káº¿t báº£o máº­t",
         "IsDeleted": false
     },
     {
@@ -53,7 +53,7 @@
         },
         "ContractNumber": "002/2024/HDTV-TTL",
         "EmployeeId": "65bf0c300000000000000002",
-        "EmployeeName": "Nguyễn Thị Mai",
+        "EmployeeName": "Nguyá»…n Thá»‹ Mai",
         "ContractTemplateId": "65dae2f30000000000000001",
         "TypeId": "65dae2f30000000000000201",
         "StartDate": {
@@ -64,13 +64,13 @@
         },
         "BasicSalary": 12000000.0,
         "InsuranceSalary": 12000000.0,
-        "StatusId": "65dae2f30000000000000303",
+        "StatusId": 3,
         "SignedDate": {
             "$date": "2024-02-10T00:00:00Z"
         },
-        "SignedAddress": "TP. Hồ Chí Minh",
+        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
         "FilePath": "/contracts/002_2024_B.pdf",
-        "Note": "Thử việc 2 tháng",
+        "Note": "Thá»­ viá»‡c 2 thÃ¡ng",
         "IsDeleted": false
     },
     {
@@ -79,7 +79,7 @@
         },
         "ContractNumber": "003/2024/HDLD-TTL",
         "EmployeeId": "65dae2f30000000000000003",
-        "EmployeeName": "Lê Văn C",
+        "EmployeeName": "LÃª VÄƒn C",
         "ContractTemplateId": "65dae2f30000000000000002",
         "TypeId": "65dae2f30000000000000202",
         "StartDate": {
@@ -90,13 +90,13 @@
         },
         "BasicSalary": 18000000.0,
         "InsuranceSalary": 18000000.0,
-        "StatusId": "65dae2f30000000000000303",
+        "StatusId": 3,
         "SignedDate": {
             "$date": "2024-02-25T00:00:00Z"
         },
-        "SignedAddress": "TP. Hồ Chí Minh",
+        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
         "FilePath": "/contracts/003_2024_C.pdf",
-        "Note": "Hợp đồng 1 năm",
+        "Note": "Há»£p Ä‘á»“ng 1 nÄƒm",
         "IsDeleted": false
     },
     {
@@ -105,7 +105,7 @@
         },
         "ContractNumber": "004/2023/HDLD-TTL",
         "EmployeeId": "65dae2f30000000000000004",
-        "EmployeeName": "Phạm Văn D",
+        "EmployeeName": "Pháº¡m VÄƒn D",
         "ContractTemplateId": "65dae2f30000000000000003",
         "TypeId": "65dae2f30000000000000204",
         "StartDate": {
@@ -116,13 +116,13 @@
         },
         "BasicSalary": 45000000.0,
         "InsuranceSalary": 45000000.0,
-        "StatusId": "65dae2f30000000000000303",
+        "StatusId": 3,
         "SignedDate": {
             "$date": "2022-12-25T00:00:00Z"
         },
-        "SignedAddress": "TP. Hồ Chí Minh",
+        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
         "FilePath": "/contracts/004_2023_D.pdf",
-        "Note": "Hợp đồng 3 năm",
+        "Note": "Há»£p Ä‘á»“ng 3 nÄƒm",
         "IsDeleted": false
     },
     {
@@ -131,7 +131,7 @@
         },
         "ContractNumber": "PL-001/2024/HDLD-TTL",
         "EmployeeId": "65dae2f30000000000000004",
-        "EmployeeName": "Phạm Văn D",
+        "EmployeeName": "Pháº¡m VÄƒn D",
         "ContractTemplateId": "65dae2f30000000000000008",
         "TypeId": "65dae2f30000000000000209",
         "StartDate": {
@@ -140,13 +140,13 @@
         "EndDate": null,
         "BasicSalary": 50000000.0,
         "InsuranceSalary": 50000000.0,
-        "StatusId": "65dae2f30000000000000302",
+        "StatusId": 2,
         "SignedDate": {
             "$date": "2023-12-28T00:00:00Z"
         },
-        "SignedAddress": "TP. Hồ Chí Minh",
+        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
         "FilePath": "/contracts/PL001_D.pdf",
-        "Note": "Điều chỉnh tăng lương",
+        "Note": "Äiá»u chá»‰nh tÄƒng lÆ°Æ¡ng",
         "IsDeleted": false
     },
     {
@@ -155,7 +155,7 @@
         },
         "ContractNumber": "005/2024/HDCTV-TTL",
         "EmployeeId": "65dae2f30000000000000005",
-        "EmployeeName": "Hoàng Thị E",
+        "EmployeeName": "HoÃ ng Thá»‹ E",
         "ContractTemplateId": "65dae2f30000000000000007",
         "TypeId": "65dae2f30000000000000208",
         "StartDate": {
@@ -166,13 +166,14 @@
         },
         "BasicSalary": 15000000.0,
         "InsuranceSalary": 0.0,
-        "StatusId": "65dae2f30000000000000301",
+        "StatusId": 1,
         "SignedDate": {
             "$date": "2024-03-25T00:00:00Z"
         },
-        "SignedAddress": "TP. Hồ Chí Minh",
+        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
         "FilePath": "",
-        "Note": "Cộng tác viên 6 tháng",
+        "Note": "Cá»™ng tÃ¡c viÃªn 6 thÃ¡ng",
         "IsDeleted": false
     }
 ]
+

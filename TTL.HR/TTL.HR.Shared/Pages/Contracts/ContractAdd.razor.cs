@@ -50,8 +50,8 @@ namespace TTL.HR.Shared.Pages.Contracts
             {
                 TemplateModel = new ContractTemplateModel
                 {
-                    StatusId = templateStatusLookups.FirstOrDefault(x => x.Code == "Active")?.Id ?? 
-                               templateStatusLookups.FirstOrDefault(x => x.Name == "Active")?.Id ?? "65dae2f30000000000000401", 
+                    StatusId = templateStatusLookups.FirstOrDefault(x => x.Code == "Active")?.LookupID ?? 
+                               templateStatusLookups.FirstOrDefault(x => x.Name == "Active")?.LookupID ?? 401, 
                     Icon = "bi bi-file-earmark-text",
                     Color = "primary",
                     ContentHtml = TemplateContent
@@ -346,13 +346,13 @@ namespace TTL.HR.Shared.Pages.Contracts
                      IsLoading = false;
                      return;
                 }
-                if (string.IsNullOrWhiteSpace(TemplateModel.TypeId))
+                if (!TemplateModel.TypeId.HasValue)
                 {
                      await JSRuntime.InvokeVoidAsync("Swal.fire", "Cảnh báo", "Vui lòng chọn loại hợp đồng.", "warning");
                      IsLoading = false;
                      return;
                 }
-                if (string.IsNullOrWhiteSpace(TemplateModel.StatusId))
+                if (!TemplateModel.StatusId.HasValue)
                 {
                      await JSRuntime.InvokeVoidAsync("Swal.fire", "Cảnh báo", "Vui lòng chọn trạng thái.", "warning");
                      IsLoading = false;

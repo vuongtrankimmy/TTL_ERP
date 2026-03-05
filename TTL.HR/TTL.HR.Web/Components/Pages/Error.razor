@@ -1,28 +1,64 @@
 ﻿@page "/Error"
 @using System.Diagnostics
+@using Microsoft.AspNetCore.Diagnostics
 
 <PageTitle>Error</PageTitle>
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="card shadow-sm border-danger mt-10">
+    <div class="card-header bg-danger py-4">
+        <h3 class="card-title fw-bold text-white">Oops! Đã có lỗi xảy ra</h3>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-danger d-flex align-items-center p-5 mb-10">
+            <i class="ki-outline ki-shield-cross fs-2hx text-danger me-4"></i>
+            <div class="d-flex flex-column">
+                <h4 class="mb-1 text-danger">An unhandled error occurred while processing your request.</h4>
+                <span>Vui lòng kiểm tra thông tin chi tiết bên dưới để hỗ trợ xử lý lỗi.</span>
+            </div>
+        </div>
 
-@if (ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@RequestId</code>
-    </p>
-}
+        @if (ShowRequestId)
+        {
+            <div class="mb-5">
+                <strong>Request ID:</strong> <code class="bg-light-primary text-primary px-2 py-1 rounded">@RequestId</code>
+            </div>
+        }
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+        @if (_exception != null)
+        {
+            <div class="mb-5">
+                <h5 class="fw-bold mb-3">Chi tiết lỗi:</h5>
+                <div class="p-5 bg-light rounded text-danger fw-semibold mb-5" style="border-left: 5px solid #f1416c;">
+                    @_exception.Message
+                </div>
+
+                <div class="mb-3 d-flex align-items-center justify-content-between">
+                    <h5 class="fw-bold m-0">Stack Trace:</h5>
+                    <button class="btn btn-sm btn-light-primary" onclick="navigator.clipboard.writeText(document.getElementById('stacktrace').innerText)">
+                        <i class="ki-outline ki-copy fs-5 me-1"></i> Copy
+                    </button>
+                </div>
+                <div id="stacktrace" class="p-5 bg-dark text-white rounded overflow-auto" style="max-height: 400px; font-family: monospace; font-size: 0.85rem; line-height: 1.5;">
+                    <pre class="m-0" style="white-space: pre-wrap;">@_exception.StackTrace</pre>
+                </div>
+            </div>
+        }
+
+        <div class="separator separator-dashed my-8"></div>
+
+        <div class="d-flex flex-column">
+            <h5 class="fw-bold mb-3">Hành động:</h5>
+            <div class="d-flex gap-3">
+                <a href="/" class="btn btn-primary d-flex align-items-center">
+                    <i class="ki-outline ki-home fs-4 me-2"></i> Quay về trang chủ
+                </a>
+                <button type="button" class="btn btn-light-danger d-flex align-items-center" onclick="window.location.reload()">
+                    <i class="ki-outline ki-arrows-circle fs-4 me-2"></i> Thử lại
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code{
     [CascadingParameter]
@@ -30,7 +66,16 @@
 
     private string? RequestId { get; set; }
     private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+    private Exception? _exception;
 
-    protected override void OnInitialized() =>
+    protected override void OnInitialized()
+    {
         RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+        
+        var exceptionHandlerPathFeature = HttpContext?.Features.Get<IExceptionHandlerPathFeature>();
+        if (exceptionHandlerPathFeature?.Error != null)
+        {
+            _exception = exceptionHandlerPathFeature.Error;
+        }
+    }
 }

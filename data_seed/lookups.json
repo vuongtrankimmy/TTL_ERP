@@ -408,5 +408,35 @@
         "Name": "Đã hủy",
         "Order": 4,
         "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000001301"
+        },
+        "Type": "JobStatus",
+        "Code": "Active",
+        "Name": "Đang hoạt động",
+        "Order": 1,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000001302"
+        },
+        "Type": "JobStatus",
+        "Code": "Draft",
+        "Name": "Bản nháp",
+        "Order": 2,
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65dae2f30000000000001303"
+        },
+        "Type": "JobStatus",
+        "Code": "Closed",
+        "Name": "Đã đóng",
+        "Order": 3,
+        "IsActive": true
     }
 ]

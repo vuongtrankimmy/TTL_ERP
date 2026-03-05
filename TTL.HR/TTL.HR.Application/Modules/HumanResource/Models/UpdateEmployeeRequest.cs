@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace TTL.HR.Application.Modules.HumanResource.Models
 {
@@ -14,11 +15,12 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string? DepartmentId { get; set; }
         public string? PositionId { get; set; }
         public string? ReportToId { get; set; }
-        public string? StatusId { get; set; }
-        public string? ContractTypeId { get; set; }
+        public int? StatusId { get; set; }
+        public int? ContractTypeId { get; set; }
         public DateTime JoinDate { get; set; }
         public decimal? Salary { get; set; }
         public DateTime? ContractEndDate { get; set; }
+        public int? WorkplaceId { get; set; }
         public string Workplace { get; set; } = string.Empty;
         public bool IsAccountActive { get; set; }
         public bool IsCreateAccount { get; set; }
@@ -35,6 +37,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
     public class PersonalDetailsUpdateDto
     {
         public DateTime? DOB { get; set; } // Changed to nullable to match UI model
+        public int? GenderId { get; set; }
         public string Gender { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public string Hometown { get; set; } = string.Empty;
@@ -44,10 +47,14 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string TaxCode { get; set; } = string.Empty;
         public string BankAccount { get; set; } = string.Empty;
         public string BankName { get; set; } = string.Empty;
-        public string Nationality { get; set; } = "Việt Nam";
-        public string Ethnicity { get; set; } = "Kinh";
-        public string Religion { get; set; } = "Không";
-        public string MaritalStatus { get; set; } = "Độc thân";
+        public int? NationalityId { get; set; }
+        public string Nationality { get; set; } = string.Empty;
+        public int? EthnicityId { get; set; }
+        public string Ethnicity { get; set; } = string.Empty;
+        public int? ReligionId { get; set; }
+        public string Religion { get; set; } = string.Empty;
+        public int? MaritalStatusId { get; set; }
+        public string MaritalStatus { get; set; } = string.Empty;
         public string PlaceOfOrigin { get; set; } = string.Empty;
         public string Residence { get; set; } = string.Empty;
         public string SocialInsuranceId { get; set; } = string.Empty;

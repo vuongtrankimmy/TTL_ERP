@@ -22,8 +22,8 @@ namespace TTL.HR.Shared.Pages.Contracts
         private List<LookupModel> templateStatusLookups = new();
         private List<LookupModel> contractStatusLookups = new();
 
-        private string FilterTypeId = "";
-        private string FilterStatusId = "";
+        private int? FilterTypeId;
+        private int? FilterStatusId;
         private string SearchQuery = "";
         private ContractTemplateModel? selectedTemplate;
         private string deleteConfirmInput = "";
@@ -59,12 +59,12 @@ namespace TTL.HR.Shared.Pages.Contracts
                 var currentLang = "vi-VN"; // Default
                 if (ActiveTab.StartsWith("Templates") || ActiveTab == "All" || ActiveTab == "Active" || ActiveTab == "Draft")
                 {
-                    var status = ActiveTab == "Templates" || ActiveTab == "All" ? FilterStatusId : ActiveTab;
+                    var status = ActiveTab == "Templates" || ActiveTab == "All" ? FilterStatusId?.ToString() : ActiveTab;
                     TemplateData = await ContractService.GetTemplatesAsync(PageIndex, PageSize, SearchQuery, status, FilterTypeId, currentLang);
                 }
                 else if (ActiveTab == "EmployeeContracts")
                 {
-                    ContractData = await ContractService.GetEmployeeContractsAsync(PageIndex, PageSize, SearchQuery, FilterStatusId, FilterTypeId, null, currentLang);
+                    ContractData = await ContractService.GetEmployeeContractsAsync(PageIndex, PageSize, SearchQuery, FilterStatusId?.ToString(), FilterTypeId, null, currentLang);
                 }
             }
             catch (Exception ex)
@@ -108,8 +108,8 @@ namespace TTL.HR.Shared.Pages.Contracts
 
         private async Task ResetFilters()
         {
-            FilterTypeId = "";
-            FilterStatusId = "";
+            FilterTypeId = null;
+            FilterStatusId = null;
             PageIndex = 1;
             await LoadData();
         }

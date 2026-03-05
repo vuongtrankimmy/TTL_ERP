@@ -1,15 +1,15 @@
-[
+﻿[
     {
         "_id": {
             "$oid": "65dae2f30000000000000001"
         },
-        "Name": "Hợp đồng thử việc (2 tháng)",
+        "Name": "Há»£p Ä‘á»“ng thá»­ viá»‡c (2 thÃ¡ng)",
         "Code": "HD-TV-02M",
-        "Description": "Hợp đồng thử việc tiêu chuẩn cho nhân viên chính thức, thời gian 02 tháng (60 ngày).",
+        "Description": "Há»£p Ä‘á»“ng thá»­ viá»‡c tiÃªu chuáº©n cho nhÃ¢n viÃªn chÃ­nh thá»©c, thá»i gian 02 thÃ¡ng (60 ngÃ y).",
         "TypeId": "65dae2f30000000000000201",
-        "ContentHtml": "<p>Cộng hòa xã hội chủ nghĩa Việt Nam...</p>",
+        "ContentHtml": "<p>Cá»™ng hÃ²a xÃ£ há»™i chá»§ nghÄ©a Viá»‡t Nam...</p>",
         "FilePath": "/templates/HD-TV-02M.docx",
-        "StatusId": "65dae2f30000000000000401",
+        "StatusId": 1,
         "Icon": "bi bi-person-check",
         "Color": "primary",
         "CreatedAt": {
@@ -21,13 +21,13 @@
         "_id": {
             "$oid": "65dae2f30000000000000002"
         },
-        "Name": "Hợp đồng lao động (12 tháng)",
+        "Name": "Há»£p Ä‘á»“ng lao Ä‘á»™ng (12 thÃ¡ng)",
         "Code": "HD-LD-12M",
-        "Description": "Hợp đồng lao động xác định thời hạn 01 năm. Áp dụng sau khi kết thúc thử việc.",
+        "Description": "Há»£p Ä‘á»“ng lao Ä‘á»™ng xÃ¡c Ä‘á»‹nh thá»i háº¡n 01 nÄƒm. Ãp dá»¥ng sau khi káº¿t thÃºc thá»­ viá»‡c.",
         "TypeId": "65dae2f30000000000000202",
-        "ContentHtml": "<p>Điều 1: Thời hạn hợp đồng...</p>",
+        "ContentHtml": "<p>Äiá»u 1: Thá»i háº¡n há»£p Ä‘á»“ng...</p>",
         "FilePath": "/templates/HD-LD-12M.docx",
-        "StatusId": "65dae2f30000000000000401",
+        "StatusId": 1,
         "Icon": "bi bi-calendar-check",
         "Color": "success",
         "CreatedAt": {
@@ -39,13 +39,13 @@
         "_id": {
             "$oid": "65dae2f30000000000000003"
         },
-        "Name": "Hợp đồng lao động (36 tháng)",
+        "Name": "Há»£p Ä‘á»“ng lao Ä‘á»™ng (36 thÃ¡ng)",
         "Code": "HD-LD-36M",
-        "Description": "Hợp đồng lao động xác định thời hạn 03 năm. Dành cho nhân sự gắn bó lâu dài.",
+        "Description": "Há»£p Ä‘á»“ng lao Ä‘á»™ng xÃ¡c Ä‘á»‹nh thá»i háº¡n 03 nÄƒm. DÃ nh cho nhÃ¢n sá»± gáº¯n bÃ³ lÃ¢u dÃ i.",
         "TypeId": "65dae2f30000000000000204",
-        "ContentHtml": "<p>Quyền và nghĩa vụ của người lao động...</p>",
+        "ContentHtml": "<p>Quyá»n vÃ  nghÄ©a vá»¥ cá»§a ngÆ°á»i lao Ä‘á»™ng...</p>",
         "FilePath": "/templates/HD-LD-36M.docx",
-        "StatusId": "65dae2f30000000000000401",
+        "StatusId": 1,
         "Icon": "bi bi-calendar3",
         "Color": "info",
         "CreatedAt": {
@@ -57,13 +57,13 @@
         "_id": {
             "$oid": "65dae2f30000000000000004"
         },
-        "Name": "Hợp đồng không xác định thời hạn",
+        "Name": "Há»£p Ä‘á»“ng khÃ´ng xÃ¡c Ä‘á»‹nh thá»i háº¡n",
         "Code": "HD-LD-KTH",
-        "Description": "Hợp đồng lao động không xác định thời hạn. Dành cho nhân sự cấp cao hoặc thâm niên.",
+        "Description": "Há»£p Ä‘á»“ng lao Ä‘á»™ng khÃ´ng xÃ¡c Ä‘á»‹nh thá»i háº¡n. DÃ nh cho nhÃ¢n sá»± cáº¥p cao hoáº·c thÃ¢m niÃªn.",
         "TypeId": "65dae2f30000000000000205",
-        "ContentHtml": "<p>Hợp đồng này có hiệu lực kể từ ngày ký...</p>",
+        "ContentHtml": "<p>Há»£p Ä‘á»“ng nÃ y cÃ³ hiá»‡u lá»±c ká»ƒ tá»« ngÃ y kÃ½...</p>",
         "FilePath": "/templates/HD-LD-KTH.docx",
-        "StatusId": "65dae2f30000000000000401",
+        "StatusId": 1,
         "Icon": "bi bi-infinity",
         "Color": "primary",
         "CreatedAt": {
@@ -75,13 +75,13 @@
         "_id": {
             "$oid": "65dae2f30000000000000005"
         },
-        "Name": "Hợp đồng thực tập sinh",
+        "Name": "Há»£p Ä‘á»“ng thá»±c táº­p sinh",
         "Code": "HD-TT-03M",
-        "Description": "Hợp đồng đào tạo/thực tập nghề thời hạn 3 tháng.",
+        "Description": "Há»£p Ä‘á»“ng Ä‘Ã o táº¡o/thá»±c táº­p nghá» thá»i háº¡n 3 thÃ¡ng.",
         "TypeId": "65dae2f30000000000000206",
-        "ContentHtml": "<p>Thỏa thuận thực tập...</p>",
+        "ContentHtml": "<p>Thá»a thuáº­n thá»±c táº­p...</p>",
         "FilePath": "/templates/HD-TT-03M.docx",
-        "StatusId": "65dae2f30000000000000401",
+        "StatusId": 1,
         "Icon": "bi bi-mortarboard",
         "Color": "warning",
         "CreatedAt": {
@@ -93,13 +93,13 @@
         "_id": {
             "$oid": "65dae2f30000000000000006"
         },
-        "Name": "Thỏa thuận bảo mật (NDA)",
+        "Name": "Thá»a thuáº­n báº£o máº­t (NDA)",
         "Code": "NDA-STD",
-        "Description": "Cam kết bảo mật thông tin và không cạnh tranh (Non-Disclosure Agreement).",
+        "Description": "Cam káº¿t báº£o máº­t thÃ´ng tin vÃ  khÃ´ng cáº¡nh tranh (Non-Disclosure Agreement).",
         "TypeId": "65dae2f30000000000000207",
-        "ContentHtml": "<p>Cam kết bảo mật...</p>",
+        "ContentHtml": "<p>Cam káº¿t báº£o máº­t...</p>",
         "FilePath": "/templates/NDA-STD.docx",
-        "StatusId": "65dae2f30000000000000401",
+        "StatusId": 1,
         "Icon": "bi bi-shield-lock-fill",
         "Color": "danger",
         "CreatedAt": {
@@ -111,13 +111,13 @@
         "_id": {
             "$oid": "65dae2f30000000000000007"
         },
-        "Name": "Hợp đồng cộng tác viên",
+        "Name": "Há»£p Ä‘á»“ng cá»™ng tÃ¡c viÃªn",
         "Code": "HD-CTV",
-        "Description": "Hợp đồng dịch vụ dành cho cộng tác viên, Freelancer.",
+        "Description": "Há»£p Ä‘á»“ng dá»‹ch vá»¥ dÃ nh cho cá»™ng tÃ¡c viÃªn, Freelancer.",
         "TypeId": "65dae2f30000000000000208",
-        "ContentHtml": "<p>Hợp đồng khoán việc...</p>",
+        "ContentHtml": "<p>Há»£p Ä‘á»“ng khoÃ¡n viá»‡c...</p>",
         "FilePath": "/templates/HD-CTV.docx",
-        "StatusId": "65dae2f30000000000000401",
+        "StatusId": 1,
         "Icon": "bi bi-people",
         "Color": "secondary",
         "CreatedAt": {
@@ -129,13 +129,13 @@
         "_id": {
             "$oid": "65dae2f30000000000000008"
         },
-        "Name": "Phụ lục điều chỉnh lương",
+        "Name": "Phá»¥ lá»¥c Ä‘iá»u chá»‰nh lÆ°Æ¡ng",
         "Code": "PL-LUONG",
-        "Description": "Phụ lục hợp đồng ghi nhận việc điều chỉnh mức lương và thu nhập.",
+        "Description": "Phá»¥ lá»¥c há»£p Ä‘á»“ng ghi nháº­n viá»‡c Ä‘iá»u chá»‰nh má»©c lÆ°Æ¡ng vÃ  thu nháº­p.",
         "TypeId": "65dae2f30000000000000209",
-        "ContentHtml": "<p>Căn cứ hợp đồng số...</p>",
+        "ContentHtml": "<p>CÄƒn cá»© há»£p Ä‘á»“ng sá»‘...</p>",
         "FilePath": "/templates/PL-LUONG.docx",
-        "StatusId": "65dae2f30000000000000401",
+        "StatusId": 1,
         "Icon": "bi bi-cash-coin",
         "Color": "success",
         "CreatedAt": {
@@ -147,13 +147,13 @@
         "_id": {
             "$oid": "65dae2f30000000000000009"
         },
-        "Name": "Hợp đồng lao động (24 tháng)",
+        "Name": "Há»£p Ä‘á»“ng lao Ä‘á»™ng (24 thÃ¡ng)",
         "Code": "HD-LD-24M",
-        "Description": "Hợp đồng xác định thời hạn 2 năm.",
+        "Description": "Há»£p Ä‘á»“ng xÃ¡c Ä‘á»‹nh thá»i háº¡n 2 nÄƒm.",
         "TypeId": "65dae2f30000000000000203",
-        "ContentHtml": "<p>Nội dung hợp đồng 24 tháng...</p>",
+        "ContentHtml": "<p>Ná»™i dung há»£p Ä‘á»“ng 24 thÃ¡ng...</p>",
         "FilePath": "/templates/HD-LD-24M.docx",
-        "StatusId": "65dae2f30000000000000402",
+        "StatusId": 2,
         "Icon": "bi bi-journal-text",
         "Color": "info",
         "CreatedAt": {
@@ -165,13 +165,13 @@
         "_id": {
             "$oid": "65dae2f30000000000000010"
         },
-        "Name": "Cam kết đào tạo",
+        "Name": "Cam káº¿t Ä‘Ã o táº¡o",
         "Code": "CK-DT",
-        "Description": "Cam kết phục vụ sau khi được cử đi đào tạo.",
+        "Description": "Cam káº¿t phá»¥c vá»¥ sau khi Ä‘Æ°á»£c cá»­ Ä‘i Ä‘Ã o táº¡o.",
         "TypeId": "65dae2f30000000000000210",
-        "ContentHtml": "<p>Cam kết bồi hoàn chi phí đào tạo...</p>",
+        "ContentHtml": "<p>Cam káº¿t bá»“i hoÃ n chi phÃ­ Ä‘Ã o táº¡o...</p>",
         "FilePath": "/templates/CK-DT.docx",
-        "StatusId": "65dae2f30000000000000401",
+        "StatusId": 1,
         "Icon": "bi bi-award",
         "Color": "warning",
         "CreatedAt": {
@@ -180,3 +180,4 @@
         "IsDeleted": false
     }
 ]
+

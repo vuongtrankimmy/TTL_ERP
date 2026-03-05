@@ -1,0 +1,22 @@
+[
+    {
+        "Key": "CompanyName",
+        "Content": "CÔNG TY TNHH TÂN TẤN LỘC",
+        "Category": "General",
+        "Tags": [
+            "company",
+            "info"
+        ],
+        "Source": "System"
+    },
+    {
+        "Key": "CompanyAddress",
+        "Content": "Số 123, Đường ABC, Quận XYZ, TP.HCM",
+        "Category": "General",
+        "Tags": [
+            "address",
+            "info"
+        ],
+        "Source": "System"
+    }
+]

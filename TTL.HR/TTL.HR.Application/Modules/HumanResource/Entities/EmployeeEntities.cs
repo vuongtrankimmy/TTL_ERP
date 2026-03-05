@@ -18,8 +18,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
         public string? PositionId { get; set; }
         public string? ReportToId { get; set; }
 
-        public string? StatusId { get; set; }
-        public string? ContractTypeId { get; set; }
+        public int? StatusId { get; set; }
+        public int? ContractTypeId { get; set; }
         public DateTime? JoinDate { get; set; }
         public DateTime? DepartureDate { get; set; }
         public string? DepartureReason { get; set; }
@@ -45,6 +45,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
     public class PersonalInfo
     {
         public DateTime? DOB { get; set; }
+        public int? GenderId { get; set; }
         public string Gender { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public string Hometown { get; set; } = string.Empty;
@@ -54,9 +55,13 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
         public string TaxCode { get; set; } = string.Empty;
         public string BankAccount { get; set; } = string.Empty;
         public string BankName { get; set; } = string.Empty;
+        public int? NationalityId { get; set; }
         public string Nationality { get; set; } = "Việt Nam";
+        public int? EthnicityId { get; set; }
         public string Ethnicity { get; set; } = "Kinh";
+        public int? ReligionId { get; set; }
         public string Religion { get; set; } = "Không";
+        public int? MaritalStatusId { get; set; }
         public string MaritalStatus { get; set; } = "Độc thân";
         public string PlaceOfOrigin { get; set; } = string.Empty;
         public string Residence { get; set; } = string.Empty;

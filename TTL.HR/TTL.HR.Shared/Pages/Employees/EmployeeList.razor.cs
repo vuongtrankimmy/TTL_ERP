@@ -39,11 +39,15 @@ namespace TTL.HR.Shared.Pages.Employees
         [Parameter, SupplyParameterFromQuery(Name = "page")] public int currentPage { get; set; } = 1;
         [Parameter, SupplyParameterFromQuery(Name = "sortBy")] public string sortBy { get; set; } = "name";
         [Parameter, SupplyParameterFromQuery(Name = "sortDesc")] public bool sortDesc { get; set; } = false;
+        [Parameter, SupplyParameterFromQuery(Name = "viewMode")] public string filterViewMode { get; set; } = "table";
         
         private bool isContextMenuVisible = false;
         private double contextMenuX = 0;
         private double contextMenuY = 0;
-        private bool _isLoading = true;
+               private bool _isLoading = false;
+        private string _viewMode = "table"; // "table" or "card"
+        private CancellationTokenSource? _cts;
+        private string _errorMessage = "";
 
         private List<DepartmentModel> CachedDepartments = new();
         private List<PositionModel> CachedPositions = new();
@@ -51,90 +55,123 @@ namespace TTL.HR.Shared.Pages.Employees
         private List<LookupModel> CachedContractTypes = new();
         private List<LookupModel> CachedWorkplaces = new();
         private List<LookupModel> CachedAttendanceStatuses = new();
+        private List<LookupModel> CachedRoles = new();
         private List<EmployeeDto> CachedEmployees = new();
         private EmployeeStatusCounts _counts = new();
         private bool _loadFailed = false;
-        private bool _isReadOnly = true; // Default to true as per request for detail view
-        // Print & Document variables
         private bool _isPrintLoading = false;
         private string PreviewContent { get; set; } = "";
-        
-        // Calendar viewing variables
-        private int _calendarMonth = DateTime.Now.Month;
-        private int _calendarYear = DateTime.Now.Year;
-        private List<AttendanceDetailModel> _attendanceDetails = new();
-        private int pageSize = 10;
+        private List<EmployeeModel> employees = new();
+        private EmployeeModel selectedEmployee = new();
         private long totalCount = 0;
+        private bool _isReadOnlyDetail = true;
+        private int pageSize = 10;
         private int totalPages => (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        private TTL.HR.Shared.Components.Common.CccdScanner cccdScanner = default!;
+        private ImportWizard importWizard = default!;
+
+        private async Task OpenImportWizard()
+        {
+            await JSRuntime.InvokeVoidAsync("showModal", "#import_wizard_modal");
+        }
+
+        private async Task ReloadData()
+        {
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            await LoadDataAsync(_cts.Token);
+        }
 
         protected override async Task OnParametersSetAsync()
         {
             if (currentPage < 1) currentPage = 1;
-            await LoadDataAsync();
-        }
+            if (!string.IsNullOrEmpty(filterViewMode)) _viewMode = filterViewMode;
 
-        private async Task LoadDataAsync()
-        {
-            if (_isLoading && employees.Any()) return; // Prevent double load if already loading
-
-            _isLoading = true;
+            // Manual sync if needed (though SupplyParameterFromQuery usually handles this)
+            // But if the user reports "wrong state", we can be extra careful.
+            
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            
             try 
             {
-                if (!CachedDepartments.Any())
+                await LoadDataAsync(_cts.Token);
+            }
+            catch (OperationCanceledException) { }
+        }
+
+        private void ToggleViewMode(string mode)
+        {
+            _viewMode = mode;
+            UpdateUrl(); // Use UpdateUrl to persist view mode and trigger refresh
+        }
+
+        private async Task LoadDataAsync(CancellationToken ct = default)
+        {
+            _isLoading = true;
+            _loadFailed = false;
+            _errorMessage = "";
+            StateHasChanged();
+
+            try 
+            {
+                // Parallelize cache loads for best performance
+                var tasks = new List<Task>();
+                
+                if (!CachedDepartments.Any()) tasks.Add(DepartmentService.GetDepartmentsAsync().ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedDepartments = t.Result; }));
+                if (!CachedPositions.Any()) tasks.Add(PositionService.GetPositionsAsync().ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedPositions = t.Result; }));
+                if (!CachedStatuses.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("EmployeeStatus").ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedStatuses = t.Result; }));
+                if (!CachedContractTypes.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("ContractType").ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedContractTypes = t.Result; }));
+                if (!CachedWorkplaces.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("Workplace").ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedWorkplaces = t.Result; }));
+                if (!CachedAttendanceStatuses.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("AttendanceStatus").ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedAttendanceStatuses = t.Result; }));
+                if (!CachedRoles.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("Role").ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedRoles = t.Result; }));
+
+                if (tasks.Any())
                 {
-                    CachedDepartments = await DepartmentService.GetDepartmentsAsync();
-                }
-                if (!CachedPositions.Any())
-                {
-                    CachedPositions = await PositionService.GetPositionsAsync();
-                }
-                if (!CachedStatuses.Any())
-                {
-                    CachedStatuses = await MasterDataService.GetCachedLookupsAsync("EmployeeStatus");
-                }
-                if (!CachedContractTypes.Any())
-                {
-                    CachedContractTypes = await MasterDataService.GetCachedLookupsAsync("ContractType");
-                }
-                if (!CachedWorkplaces.Any())
-                {
-                    CachedWorkplaces = await MasterDataService.GetCachedLookupsAsync("Workplace");
-                }
-                if (!CachedAttendanceStatuses.Any())
-                {
-                    CachedAttendanceStatuses = await MasterDataService.GetCachedLookupsAsync("AttendanceStatus");
-                }
-                if (!CachedEmployees.Any())
-                {
-                    CachedEmployees = await EmployeeService.GetEmployeesAsync();
+                    await Task.WhenAll(tasks);
                 }
                 
-                await LoadEmployeesAsync();
+                if (ct.IsCancellationRequested) return;
+
+                await LoadEmployeesAsync(ct);
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
-                System.Console.WriteLine($"EmployeeList Error: {ex.Message}");
+                System.Console.WriteLine($"LoadDataAsync Error: {ex.Message}");
                 _loadFailed = true;
+                _errorMessage = ex.Message;
             }
-            finally 
+            finally
             {
-                _isLoading = false;
+                if (!ct.IsCancellationRequested)
+                {
+                    _isLoading = false;
+                    StateHasChanged();
+                }
             }
         }
 
-        private async Task LoadEmployeesAsync()
+        private async Task LoadEmployeesAsync(CancellationToken ct = default)
         {
-            _isLoading = true;
             try
             {
                 var departmentId = CachedDepartments.FirstOrDefault(d => d.Name == filterDept)?.Id;
-                _counts = await EmployeeService.GetStatusCountsAsync(searchQuery, departmentId, filterWorkplace);
+                
+                // Fetch counts and paged result
+                var countTask = EmployeeService.GetStatusCountsAsync(searchQuery, departmentId, filterWorkplace);
+                var pagedTask = EmployeeService.GetEmployeesPaginatedAsync(currentPage, pageSize, searchQuery, departmentId, filterStatus, filterWorkplace, sortBy, sortDesc);
+                
+                await Task.WhenAll(countTask, pagedTask);
+                
+                if (ct.IsCancellationRequested) return;
 
-                var pagedResult = await EmployeeService.GetEmployeesPaginatedAsync(currentPage, pageSize, searchQuery, departmentId, filterStatus, filterWorkplace, sortBy, sortDesc);
+                _counts = countTask.Result;
+                var pagedResult = pagedTask.Result;
                 
                 totalCount = pagedResult.TotalCount;
-                var positionsList = await PositionService.GetPositionsAsync();
-
+                
                 employees = pagedResult.Items.Select(e => new EmployeeModel
                 {
                     Id = e.Id,
@@ -161,34 +198,19 @@ namespace TTL.HR.Shared.Pages.Employees
                     Workplace = e.Workplace
                 }).ToList();
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 System.Console.WriteLine($"LoadEmployeesAsync Error: {ex.Message}");
                 _loadFailed = true;
-            }
-            finally
-            {
-                _isLoading = false;
-                StateHasChanged();
+                _errorMessage = ex.Message;
             }
         }
 
-        private bool isPhoneVisible = false;
-        private bool isIdCardVisible = false;
-        private bool isSalaryVisible = false;
-        private bool isPasswordVisible = false;
-
-        private TTL.HR.Shared.Components.Common.CccdScanner cccdScanner = default!;
-
-        private string activeTab = "profile";
-
         private HashSet<string> selectedIds = new();
-        private bool isAllSelected => FilteredEmployees.Any() && selectedIds.Count >= FilteredEmployees.Count();
+        private bool isAllSelected => FilteredEmployees != null && FilteredEmployees.Any() && selectedIds.Count >= FilteredEmployees.Count();
 
-        private EmployeeModel selectedEmployee = new();
-        private List<EmployeeModel> employees = new();
-
-        private IEnumerable<EmployeeModel> FilteredEmployees => employees;
+        private IEnumerable<EmployeeModel> FilteredEmployees => employees ?? new List<EmployeeModel>();
 
         private void UpdateUrl()
         {
@@ -200,6 +222,7 @@ namespace TTL.HR.Shared.Pages.Employees
             if (currentPage > 1) query["page"] = currentPage;
             if (sortBy != "name") query["sortBy"] = sortBy;
             if (sortDesc) query["sortDesc"] = sortDesc;
+            if (_viewMode != "table") query["viewMode"] = _viewMode;
 
             var url = Nav.GetUriWithQueryParameters(query);
             Nav.NavigateTo(url);
@@ -255,7 +278,9 @@ namespace TTL.HR.Shared.Pages.Employees
         private void ToggleSelectAll(ChangeEventArgs e) {
             bool isChecked = (bool)(e.Value ?? false);
             if (isChecked) {
-                foreach (var emp in FilteredEmployees) selectedIds.Add(emp.Id);
+                foreach (var emp in FilteredEmployees) {
+                    if (!string.IsNullOrEmpty(emp.Id)) selectedIds.Add(emp.Id);
+                }
             } else {
                 selectedIds.Clear();
             }
@@ -307,8 +332,9 @@ namespace TTL.HR.Shared.Pages.Employees
             }
         }
 
-        private async Task SaveChanges() {
-            if (selectedEmployee == null) return;
+        private async Task SaveChanges(EmployeeModel? emp = null) {
+            var target = emp ?? selectedEmployee;
+            if (target == null) return;
 
             try 
             {
@@ -328,7 +354,7 @@ namespace TTL.HR.Shared.Pages.Employees
                     await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Vui lòng chọn Chức vụ.", "warning");
                     return;
                 }
-                if (string.IsNullOrEmpty(selectedEmployee.StatusId))
+                if (!selectedEmployee.StatusId.HasValue || selectedEmployee.StatusId <= 0)
                 {
                     await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Vui lòng chọn Trạng thái nhân viên.", "warning");
                     return;
@@ -360,8 +386,8 @@ namespace TTL.HR.Shared.Pages.Employees
                     DepartmentId = selectedEmployee.DepartmentId,
                     PositionId = selectedEmployee.PositionId,
                     ReportToId = IsValidObjectId(selectedEmployee.ReportToId) ? selectedEmployee.ReportToId : null,
-                    StatusId = IsValidObjectId(selectedEmployee.StatusId) ? selectedEmployee.StatusId : (CachedStatuses.FirstOrDefault()?.Id),
-                    ContractTypeId = IsValidObjectId(selectedEmployee.ContractTypeId) ? selectedEmployee.ContractTypeId : (CachedContractTypes.FirstOrDefault()?.Id ?? "65dae2f30000000000000202"),
+                    StatusId = selectedEmployee.StatusId > 0 ? selectedEmployee.StatusId : (CachedStatuses.FirstOrDefault()?.LookupID),
+                    ContractTypeId = selectedEmployee.ContractTypeId.HasValue ? selectedEmployee.ContractTypeId : (CachedContractTypes.FirstOrDefault()?.LookupID),
                     JoinDate = selectedEmployee.JoinDate ?? DateTime.UtcNow,
                     Salary = ParseSalary(selectedEmployee.SalaryDisplay),
                     ContractEndDate = selectedEmployee.ContractExpiry ?? selectedEmployee.ContractEndDate,
@@ -370,6 +396,7 @@ namespace TTL.HR.Shared.Pages.Employees
                     PersonalDetails = new PersonalDetailsUpdateDto
                     {
                         DOB = selectedEmployee.DOB,
+                        GenderId = selectedEmployee.GenderId,
                         Gender = selectedEmployee.Gender,
                         Address = selectedEmployee.Address,
                         Hometown = selectedEmployee.Hometown,
@@ -379,9 +406,13 @@ namespace TTL.HR.Shared.Pages.Employees
                         TaxCode = selectedEmployee.TaxId,
                         BankAccount = selectedEmployee.BankAccountNumber,
                         BankName = selectedEmployee.BankName,
+                        NationalityId = selectedEmployee.NationalityId,
                         Nationality = string.IsNullOrEmpty(selectedEmployee.Nationality) ? "Việt Nam" : selectedEmployee.Nationality,
+                        EthnicityId = selectedEmployee.EthnicityId,
                         Ethnicity = string.IsNullOrEmpty(selectedEmployee.Ethnicity) ? "Kinh" : selectedEmployee.Ethnicity,
+                        ReligionId = selectedEmployee.ReligionId,
                         Religion = string.IsNullOrEmpty(selectedEmployee.Religion) ? "Không" : selectedEmployee.Religion,
+                        MaritalStatusId = selectedEmployee.MaritalStatusId,
                         MaritalStatus = string.IsNullOrEmpty(selectedEmployee.MaritalStatus) ? "Độc thân" : selectedEmployee.MaritalStatus,
                         PlaceOfOrigin = selectedEmployee.PlaceOfOrigin,
                         Residence = selectedEmployee.Residence,
@@ -409,7 +440,7 @@ namespace TTL.HR.Shared.Pages.Employees
                         targetEmp.Name = updateRequest.FullName; // Ensure Name property is also updated
                         targetEmp.Email = updateRequest.Email;
                         targetEmp.Phone = updateRequest.Phone;
-                        targetEmp.StatusName = CachedStatuses.FirstOrDefault(s => s.Id == updateRequest.StatusId)?.Name ?? "Unknown";
+                        targetEmp.StatusName = CachedStatuses.FirstOrDefault(s => s.LookupID == updateRequest.StatusId)?.Name ?? "Unknown";
                         targetEmp.Dept = CachedDepartments.FirstOrDefault(d => d.Id == updateRequest.DepartmentId)?.Name ?? "Unknown";
                         targetEmp.Role = CachedPositions.FirstOrDefault(p => p.Id == updateRequest.PositionId)?.Name ?? "Unknown";
                         targetEmp.Avatar = updateRequest.AvatarUrl;
@@ -426,9 +457,9 @@ namespace TTL.HR.Shared.Pages.Employees
                     selectedEmployee.PositionId = updateRequest.PositionId;
                     selectedEmployee.Role = CachedPositions.FirstOrDefault(p => p.Id == updateRequest.PositionId)?.Name ?? "Unknown";
                     selectedEmployee.StatusId = updateRequest.StatusId;
-                    selectedEmployee.StatusName = CachedStatuses.FirstOrDefault(s => s.Id == updateRequest.StatusId)?.Name ?? "Unknown";
+                    selectedEmployee.StatusName = CachedStatuses.FirstOrDefault(s => s.LookupID == updateRequest.StatusId)?.Name ?? "Unknown";
                     selectedEmployee.ContractTypeId = updateRequest.ContractTypeId;
-                    selectedEmployee.ContractTypeName = CachedContractTypes.FirstOrDefault(c => c.Id == updateRequest.ContractTypeId)?.Name ?? "Unknown";
+                    selectedEmployee.ContractTypeName = CachedContractTypes.FirstOrDefault(c => c.LookupID == updateRequest.ContractTypeId)?.Name ?? "Unknown";
                     selectedEmployee.Avatar = updateRequest.AvatarUrl;
                     selectedEmployee.AvatarUrl = updateRequest.AvatarUrl;
                     
@@ -457,7 +488,8 @@ namespace TTL.HR.Shared.Pages.Employees
         }
 
         private async Task ScanCCCD() {
-            if (selectedEmployee == null) return;
+            var target = selectedEmployee;
+            if (target == null) return;
 
             var scannedData = await cccdScanner.ScanAsync();
             
@@ -494,6 +526,7 @@ namespace TTL.HR.Shared.Pages.Employees
 
         private async Task SelectEmployeeByObj(EmployeeModel emp) {
             _isLoading = true;
+            _isReadOnlyDetail = true;
             try
             {
                 var fullDetail = await EmployeeService.GetEmployeeAsync(emp.Id);
@@ -521,8 +554,8 @@ namespace TTL.HR.Shared.Pages.Employees
                     if (string.IsNullOrEmpty(selectedEmployee.Dept)) selectedEmployee.Dept = emp.Dept;
                     if (string.IsNullOrEmpty(selectedEmployee.Role)) selectedEmployee.Role = emp.Role;
                     
-                    if (string.IsNullOrEmpty(selectedEmployee.StatusId)) selectedEmployee.StatusId = emp.StatusId;
-                    if (string.IsNullOrEmpty(selectedEmployee.ContractTypeId)) selectedEmployee.ContractTypeId = emp.ContractTypeId;
+                    if (selectedEmployee.StatusId <= 0) selectedEmployee.StatusId = emp.StatusId;
+                    if (!selectedEmployee.ContractTypeId.HasValue) selectedEmployee.ContractTypeId = emp.ContractTypeId;
                     if (string.IsNullOrEmpty(selectedEmployee.Phone)) selectedEmployee.Phone = emp.Phone;
                     if (string.IsNullOrEmpty(selectedEmployee.Email)) selectedEmployee.Email = emp.Email;
                     if (string.IsNullOrEmpty(selectedEmployee.Avatar)) selectedEmployee.Avatar = emp.Avatar;
@@ -568,9 +601,6 @@ namespace TTL.HR.Shared.Pages.Employees
                 {
                     selectedEmployee = emp;
                 }
-
-                // Fetch real attendance data for the calendar
-                await LoadAttendanceDetailsAsync();
             }
             catch
             {
@@ -579,69 +609,10 @@ namespace TTL.HR.Shared.Pages.Employees
             finally
             {
                 _isLoading = false;
-                isPhoneVisible = false;
-                isIdCardVisible = false;
-                isSalaryVisible = false;
-                isPasswordVisible = false;
                 StateHasChanged();
             }
         }
 
-        private async Task LoadAttendanceDetailsAsync()
-        {
-            if (string.IsNullOrEmpty(selectedEmployee?.Id)) return;
-            
-            try
-            {
-                var monthDate = new DateTime(_calendarYear, _calendarMonth, 1);
-                var details = await AttendanceService.GetAttendanceDetailsAsync(selectedEmployee.Id, monthDate);
-                _attendanceDetails = details?.ToList() ?? new();
-
-                // Also update summary stats if possible
-                var stats = await AttendanceService.GetEmployeeStatsAsync(selectedEmployee.Id, _calendarMonth, _calendarYear);
-                if (stats != null)
-                {
-                    selectedEmployee.AttendanceSummary ??= new EmployeeAttendanceSummary();
-                    selectedEmployee.AttendanceSummary.TotalWorkingDays = (int)stats.TotalWorkingHoursMonth / 8; // Approximation if not exact
-                    selectedEmployee.AttendanceSummary.RemainingLeaves = (int)stats.RemainingLeave;
-                    selectedEmployee.AttendanceSummary.OvertimeHours = stats.TotalWorkingHoursMonth; // Update as needed
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Console.WriteLine($"Error loading attendance: {ex.Message}");
-            }
-        }
-
-        private async Task PrevMonth()
-        {
-            if (_calendarMonth == 1)
-            {
-                _calendarMonth = 12;
-                _calendarYear--;
-            }
-            else
-            {
-                _calendarMonth--;
-            }
-            await LoadAttendanceDetailsAsync();
-            StateHasChanged();
-        }
-
-        private async Task NextMonth()
-        {
-            if (_calendarMonth == 12)
-            {
-                _calendarMonth = 1;
-                _calendarYear++;
-            }
-            else
-            {
-                _calendarMonth++;
-            }
-            await LoadAttendanceDetailsAsync();
-            StateHasChanged();
-        }
 
         private void ShowContextMenu(MouseEventArgs e, EmployeeModel emp) {
             selectedEmployee = emp;
@@ -752,15 +723,16 @@ namespace TTL.HR.Shared.Pages.Employees
             return System.Text.RegularExpressions.Regex.IsMatch(id, @"^[0-9a-fA-F]{24}$");
         }
 
-        private async Task PrintContract()
+        private async Task PrintContract(EmployeeModel? emp = null)
         {
-            if (selectedEmployee == null) return;
+            var target = emp ?? selectedEmployee;
+            if (target == null) return;
 
             _isPrintLoading = true;
             try
             {
                 // 1. Fetch templates for this type
-                var templates = await ContractService.GetTemplatesAsync(1, 10, typeId: selectedEmployee.ContractTypeId);
+                var templates = await ContractService.GetTemplatesAsync(1, 10, typeId: target.ContractTypeId);
                 
                 // Pick active one or just the first one if filtered by type
                 var templateBase = templates.Items.FirstOrDefault(t => t.StatusName == "Đang sử dụng" || t.StatusName == "Active") 
@@ -784,7 +756,7 @@ namespace TTL.HR.Shared.Pages.Employees
                 var settings = await SettingsService.GetSettingsAsync();
                 
                 // Try to get latest active contract record for this employee
-                var empContracts = await ContractService.GetEmployeeContractsAsync(1, 1, employeeId: selectedEmployee.Id, status: "Active");
+                var empContracts = await ContractService.GetEmployeeContractsAsync(1, 1, employeeId: target.Id, status: "Active");
                 var latestContract = empContracts.Items.OrderByDescending(c => c.CreatedAt).FirstOrDefault();
 
                 // 4. Prepare data for replacement
@@ -797,31 +769,31 @@ namespace TTL.HR.Shared.Pages.Employees
                     {"STK_Cong_Ty", "123456789 Tại VCB - TP.HCM"},
                     {"Nguoi_Dai_Dien", settings?.ContactPersonName ?? "TRẦN VƯƠNG KIM MY"},
                     {"Chuc_Vu_Nguoi_Dai_Dien", "Giám Đốc"},
-                    {"Ten_Nhan_Vien", selectedEmployee.FullName?.ToUpper() ?? ""},
-                    {"Ma_Nhan_Vien", selectedEmployee.Code},
-                    {"Ngay_Sinh", selectedEmployee.DOB?.ToString("dd/MM/yyyy") ?? ""},
-                    {"Quoc_Tich", selectedEmployee.Nationality ?? "Việt Nam"},
-                    {"Nghe_Nghiep", selectedEmployee.Role},
-                    {"Dia_Chi_Thuong_Tru", selectedEmployee.Address},
-                    {"So_CCCD", selectedEmployee.IdCard},
+                    {"Ten_Nhan_Vien", target.FullName?.ToUpper() ?? ""},
+                    {"Ma_Nhan_Vien", target.Code},
+                    {"Ngay_Sinh", target.DOB?.ToString("dd/MM/yyyy") ?? ""},
+                    {"Quoc_Tich", target.Nationality ?? "Việt Nam"},
+                    {"Nghe_Nghiep", target.Role},
+                    {"Dia_Chi_Thuong_Tru", target.Address},
+                    {"So_CCCD", target.IdCard},
                     {"So_So_Lao_Dong", ""},
-                    {"Ma_Hop_Dong", latestContract?.ContractNumber ?? $"HĐ/{DateTime.Now.Year}/{selectedEmployee.Code}"},
-                    {"Loai_Hop_Dong", selectedEmployee.ContractTypeName},
+                    {"Ma_Hop_Dong", latestContract?.ContractNumber ?? $"HĐ/{DateTime.Now.Year}/{target.Code}"},
+                    {"Loai_Hop_Dong", target.ContractTypeName},
                     {"Thoi_Han_Hop_Dong", "12"},
-                    {"Ngay_Bat_Dau", (latestContract?.StartDate ?? selectedEmployee.JoinDate)?.ToString("dd/MM/yyyy") ?? ""},
-                    {"Ngay_Ket_Thuc", (latestContract?.EndDate ?? selectedEmployee.ContractEndDate)?.ToString("dd/MM/yyyy") ?? ""},
-                    {"Dia_Diem_Lam_Viec", selectedEmployee.Workplace ?? "TP.HCM"},
-                    {"Phong_Ban", selectedEmployee.Dept},
-                    {"Chuc_Vu", selectedEmployee.Role},
+                    {"Ngay_Bat_Dau", (latestContract?.StartDate ?? target.JoinDate)?.ToString("dd/MM/yyyy") ?? ""},
+                    {"Ngay_Ket_Thuc", (latestContract?.EndDate ?? target.ContractEndDate)?.ToString("dd/MM/yyyy") ?? ""},
+                    {"Dia_Diem_Lam_Viec", target.Workplace ?? "TP.HCM"},
+                    {"Phong_Ban", target.Dept},
+                    {"Chuc_Vu", target.Role},
                     {"Thoi_Gian_Lam_Viec", "44 giờ/tuần (Thứ 2 - Thứ 7)"},
                     {"Ngay_Ky", DateTime.Now.ToString("dd")},
                     {"Thang_Ky", DateTime.Now.ToString("MM")},
                     {"Nam_Ky", DateTime.Now.ToString("yyyy")},
                     {"Dia_Diem_Ky", "TP.HCM"},
-                    {"Muc_Luong", (latestContract?.BasicSalary ?? selectedEmployee.Salary)?.ToString("N0") ?? "0"},
+                    {"Muc_Luong", (latestContract?.BasicSalary ?? target.Salary)?.ToString("N0") ?? "0"},
                     {"Phu_Cap", (latestContract?.AllowanceTotal ?? 0).ToString("N0")},
-                    {"FullName", selectedEmployee.FullName},
-                    {"Code", selectedEmployee.Code},
+                    {"FullName", target.FullName},
+                    {"Code", target.Code},
                     {"Today", DateTime.Now.ToString("dd/MM/yyyy")}
                 };
 
@@ -854,12 +826,13 @@ namespace TTL.HR.Shared.Pages.Employees
             }
         }
 
-        private async Task ViewCurrentContract()
+        private async Task ViewCurrentContract(EmployeeModel? emp = null)
         {
-            if (selectedEmployee == null) return;
+            var target = emp ?? selectedEmployee;
+            if (target == null) return;
 
             // Check if there are any uploaded signed contracts first
-            var profile = await EmployeeService.GetDigitalProfileAsync(selectedEmployee.Id);
+            var profile = await EmployeeService.GetDigitalProfileAsync(target.Id);
             var signedContract = profile?.Documents?.FirstOrDefault(d => 
                 (d.DocumentType.Contains("Contract") || d.DocumentName.Contains("Hợp đồng")) && 
                 !string.IsNullOrEmpty(d.FileUrl));
@@ -872,7 +845,7 @@ namespace TTL.HR.Shared.Pages.Employees
             else
             {
                 // Fallback to viewing generated preview if no signed contract exists
-                await PrintContract();
+                await PrintContract(target);
             }
         }
 

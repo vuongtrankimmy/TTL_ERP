@@ -10,6 +10,7 @@ namespace TTL.HR.Application.Modules.Common.Models
         public string Name { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
         public string? Description { get; set; }
+        public int LookupID { get; set; }
         public string? Type { get; set; }
         public int Order { get; set; }
         public string? Module { get; set; }

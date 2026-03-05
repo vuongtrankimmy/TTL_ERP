@@ -12,7 +12,10 @@ namespace TTL.HR.Application.Modules.Recruitment.Models
         public string JobPostingId { get; set; } = string.Empty;
         public string JobTitle { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
+        public int? StatusId { get; set; }
         public string Status { get; set; } = "Applied";
+        public int? GenderId { get; set; }
+        public string Gender { get; set; } = string.Empty;
         
         // Aliases for UI
         public string Name => FullName;
@@ -56,7 +59,9 @@ namespace TTL.HR.Application.Modules.Recruitment.Models
 
     public class CandidateHistoryDto
     {
+        public int? FromStatusId { get; set; }
         public string FromStatus { get; set; } = string.Empty;
+        public int? ToStatusId { get; set; }
         public string ToStatus { get; set; } = string.Empty;
         public string Comment { get; set; } = string.Empty;
         public DateTime ChangedAt { get; set; }
@@ -102,6 +107,7 @@ namespace TTL.HR.Application.Modules.Recruitment.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         
+        public int? StatusId { get; set; }
         public string Status { get; set; } = "Draft";
         public string StatusClass => Status switch
         {
@@ -127,6 +133,7 @@ namespace TTL.HR.Application.Modules.Recruitment.Models
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
+        public int? GenderId { get; set; }
         public string Gender { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; } = DateTime.Today.AddYears(-25);
         public string CvUrl { get; set; } = string.Empty;

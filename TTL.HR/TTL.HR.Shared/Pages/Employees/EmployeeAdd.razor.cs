@@ -156,8 +156,8 @@ namespace TTL.HR.Shared.Pages.Employees
                 
                 // Set defaults if lists are not empty
                 if (string.IsNullOrEmpty(newEmployee.Gender)) newEmployee.Gender = genderLookups.FirstOrDefault()?.Name ?? "Nam";
-                if (string.IsNullOrEmpty(newEmployee.StatusId)) newEmployee.StatusId = employeeStatusLookups.FirstOrDefault()?.Id ?? string.Empty;
-                if (string.IsNullOrEmpty(newEmployee.ContractTypeId)) newEmployee.ContractTypeId = contractTypeLookups.FirstOrDefault()?.Id ?? string.Empty;
+                if (!newEmployee.StatusId.HasValue || newEmployee.StatusId <= 0) newEmployee.StatusId = employeeStatusLookups.FirstOrDefault()?.LookupID;
+                if (!newEmployee.ContractTypeId.HasValue) newEmployee.ContractTypeId = contractTypeLookups.FirstOrDefault()?.LookupID;
                 if (string.IsNullOrEmpty(newEmployee.DeptId)) newEmployee.DeptId = departments.FirstOrDefault()?.Id ?? string.Empty;
                 if (string.IsNullOrEmpty(newEmployee.PositionId)) newEmployee.PositionId = positions.FirstOrDefault()?.Id ?? string.Empty;
                 if (string.IsNullOrEmpty(newEmployee.Workplace)) newEmployee.Workplace = workplaceLookups.FirstOrDefault()?.Name ?? "Văn phòng Hồ Chí Minh";
@@ -486,7 +486,7 @@ namespace TTL.HR.Shared.Pages.Employees
             {
                 if (string.IsNullOrEmpty(newEmployee.DeptId)) errors.Add("Phòng ban");
                 if (string.IsNullOrEmpty(newEmployee.PositionId)) errors.Add("Chức vụ");
-                if (string.IsNullOrEmpty(newEmployee.StatusId)) errors.Add("Trạng thái");
+                if (!newEmployee.StatusId.HasValue || newEmployee.StatusId <= 0) errors.Add("Trạng thái");
                 if (string.IsNullOrEmpty(newEmployee.Workplace)) errors.Add("Nơi làm việc");
             }
             
@@ -566,8 +566,8 @@ namespace TTL.HR.Shared.Pages.Employees
                         DepartmentId = IsValidObjectId(newEmployee.DeptId) ? newEmployee.DeptId : null,
                         PositionId = IsValidObjectId(newEmployee.PositionId) ? newEmployee.PositionId : null,
                         ReportToId = IsValidObjectId(newEmployee.ReportToId) ? newEmployee.ReportToId : null,
-                        StatusId = IsValidObjectId(newEmployee.StatusId) ? newEmployee.StatusId : null,
-                        ContractTypeId = IsValidObjectId(newEmployee.ContractTypeId) ? newEmployee.ContractTypeId : null,
+                        StatusId = newEmployee.StatusId > 0 ? newEmployee.StatusId : null,
+                        ContractTypeId = newEmployee.ContractTypeId,
                         
                         JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Now,
                         Salary = ParseSalary(newEmployee.SalaryDisplay),
@@ -583,7 +583,7 @@ namespace TTL.HR.Shared.Pages.Employees
                         PersonalDetails = new PersonalDetailsUpdateDto
                         {
                             DOB = newEmployee.DOB,
-                            Gender = newEmployee.Gender,
+                            GenderId = newEmployee.GenderId,
                             Address = newEmployee.Address,
                             Hometown = newEmployee.Hometown,
                             IdCardNumber = FormatService.CleanDigits(newEmployee.IdCard),
@@ -592,10 +592,10 @@ namespace TTL.HR.Shared.Pages.Employees
                             TaxCode = newEmployee.TaxId,
                             BankAccount = newEmployee.BankAccountNumber,
                             BankName = newEmployee.BankName,
-                            Nationality = string.IsNullOrEmpty(newEmployee.Nationality) ? "Việt Nam" : newEmployee.Nationality,
-                            Ethnicity = string.IsNullOrEmpty(newEmployee.Ethnicity) ? "Kinh" : newEmployee.Ethnicity,
-                            Religion = string.IsNullOrEmpty(newEmployee.Religion) ? "Không" : newEmployee.Religion,
-                            MaritalStatus = string.IsNullOrEmpty(newEmployee.MaritalStatus) ? "Độc thân" : newEmployee.MaritalStatus,
+                            NationalityId = newEmployee.NationalityId,
+                            EthnicityId = newEmployee.EthnicityId,
+                            ReligionId = newEmployee.ReligionId,
+                            MaritalStatusId = newEmployee.MaritalStatusId,
                             PlaceOfOrigin = newEmployee.PlaceOfOrigin,
                             Residence = newEmployee.Residence,
                             SocialInsuranceId = newEmployee.SocialInsuranceId,
@@ -651,8 +651,8 @@ namespace TTL.HR.Shared.Pages.Employees
                         DepartmentId = IsValidObjectId(newEmployee.DeptId) ? newEmployee.DeptId : null,
                         PositionId = IsValidObjectId(newEmployee.PositionId) ? newEmployee.PositionId : null,
                         ReportToId = IsValidObjectId(newEmployee.ReportToId) ? newEmployee.ReportToId : null,
-                        StatusId = IsValidObjectId(newEmployee.StatusId) ? newEmployee.StatusId : null,
-                        ContractTypeId = IsValidObjectId(newEmployee.ContractTypeId) ? newEmployee.ContractTypeId : null,
+                        StatusId = newEmployee.StatusId > 0 ? newEmployee.StatusId : null,
+                        ContractTypeId = newEmployee.ContractTypeId,
                         
                         JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Now,
                         Salary = ParseSalary(newEmployee.SalaryDisplay),
@@ -662,7 +662,7 @@ namespace TTL.HR.Shared.Pages.Employees
                         PersonalDetails = new PersonalDetailsCommandDto
                         {
                             DOB = newEmployee.DOB,
-                            Gender = newEmployee.Gender,
+                            GenderId = newEmployee.GenderId,
                             Address = newEmployee.Address,
                             Hometown = newEmployee.Hometown,
                             IdCardNumber = FormatService.CleanDigits(newEmployee.IdCard),
@@ -671,10 +671,10 @@ namespace TTL.HR.Shared.Pages.Employees
                             TaxCode = newEmployee.TaxId,
                             BankAccount = newEmployee.BankAccountNumber,
                             BankName = newEmployee.BankName,
-                            Nationality = string.IsNullOrEmpty(newEmployee.Nationality) ? "Việt Nam" : newEmployee.Nationality,
-                            Ethnicity = string.IsNullOrEmpty(newEmployee.Ethnicity) ? "Kinh" : newEmployee.Ethnicity,
-                            Religion = string.IsNullOrEmpty(newEmployee.Religion) ? "Không" : newEmployee.Religion,
-                            MaritalStatus = string.IsNullOrEmpty(newEmployee.MaritalStatus) ? "Độc thân" : newEmployee.MaritalStatus,
+                            NationalityId = newEmployee.NationalityId,
+                            EthnicityId = newEmployee.EthnicityId,
+                            ReligionId = newEmployee.ReligionId,
+                            MaritalStatusId = newEmployee.MaritalStatusId,
                             PlaceOfOrigin = newEmployee.PlaceOfOrigin,
                             Residence = newEmployee.Residence,
                             SocialInsuranceId = newEmployee.SocialInsuranceId,
@@ -762,8 +762,8 @@ namespace TTL.HR.Shared.Pages.Employees
             public string? DepartmentId { get; set; }
             public string? PositionId { get; set; }
             public string? ReportToId { get; set; }
-            public string? StatusId { get; set; }
-            public string? ContractTypeId { get; set; }
+            public int? StatusId { get; set; }
+            public int? ContractTypeId { get; set; }
             public DateTime JoinDate { get; set; }
             public decimal? Salary { get; set; }
             public DateTime? ContractEndDate { get; set; }
@@ -782,6 +782,7 @@ namespace TTL.HR.Shared.Pages.Employees
 
         private class PersonalDetailsCommandDto {
             public DateTime? DOB { get; set; }
+            public int? GenderId { get; set; }
             public string Gender { get; set; } = string.Empty;
             public string Address { get; set; } = string.Empty;
             public string Hometown { get; set; } = string.Empty;
@@ -791,9 +792,13 @@ namespace TTL.HR.Shared.Pages.Employees
             public string TaxCode { get; set; } = string.Empty;
             public string BankAccount { get; set; } = string.Empty;
             public string BankName { get; set; } = string.Empty;
+            public int? NationalityId { get; set; }
             public string Nationality { get; set; } = "Việt Nam";
+            public int? EthnicityId { get; set; }
             public string Ethnicity { get; set; } = "Kinh";
+            public int? ReligionId { get; set; }
             public string Religion { get; set; } = "Không";
+            public int? MaritalStatusId { get; set; }
             public string MaritalStatus { get; set; } = "Độc thân";
             public string PlaceOfOrigin { get; set; } = string.Empty;
             public string Residence { get; set; } = string.Empty;
@@ -825,8 +830,8 @@ namespace TTL.HR.Shared.Pages.Employees
                 DepartmentId = IsValidObjectId(dto.DepartmentId) ? dto.DepartmentId : null,
                 PositionId = IsValidObjectId(dto.PositionId) ? dto.PositionId : null,
                 ReportToId = IsValidObjectId(dto.ReportToId) ? dto.ReportToId : null,
-                StatusId = IsValidObjectId(dto.StatusId) ? dto.StatusId : null,
-                ContractTypeId = IsValidObjectId(dto.ContractTypeId) ? dto.ContractTypeId : null,
+                StatusId = dto.StatusId,
+                ContractTypeId = dto.ContractTypeId,
                 JoinDate = dto.JoinDate,
                 Salary = dto.Salary,
                 ContractEndDate = dto.ContractEndDate,
@@ -838,6 +843,7 @@ namespace TTL.HR.Shared.Pages.Employees
                 PersonalDetails = new Entities.PersonalInfo
                 {
                     DOB = dto.PersonalDetails.DOB,
+                    GenderId = dto.PersonalDetails.GenderId,
                     Gender = dto.PersonalDetails.Gender,
                     Address = dto.PersonalDetails.Address,
                     Hometown = dto.PersonalDetails.Hometown,
@@ -847,9 +853,13 @@ namespace TTL.HR.Shared.Pages.Employees
                     TaxCode = dto.PersonalDetails.TaxCode,
                     BankAccount = dto.PersonalDetails.BankAccount,
                     BankName = dto.PersonalDetails.BankName,
+                    NationalityId = dto.PersonalDetails.NationalityId,
                     Nationality = dto.PersonalDetails.Nationality,
+                    EthnicityId = dto.PersonalDetails.EthnicityId,
                     Ethnicity = dto.PersonalDetails.Ethnicity,
+                    ReligionId = dto.PersonalDetails.ReligionId,
                     Religion = dto.PersonalDetails.Religion,
+                    MaritalStatusId = dto.PersonalDetails.MaritalStatusId,
                     MaritalStatus = dto.PersonalDetails.MaritalStatus,
                     PlaceOfOrigin = dto.PersonalDetails.PlaceOfOrigin,
                     Residence = dto.PersonalDetails.Residence,

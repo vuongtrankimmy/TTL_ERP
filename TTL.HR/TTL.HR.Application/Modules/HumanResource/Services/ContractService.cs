@@ -21,12 +21,12 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         }
 
         // Templates
-        public async Task<PagedResult<ContractTemplateModel>> GetTemplatesAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null, string? lang = null)
+        public async Task<PagedResult<ContractTemplateModel>> GetTemplatesAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, int? typeId = null, string? lang = null)
         {
             var query = $"{ApiEndpoints.Contracts.Templates}?page={page}&pageSize={pageSize}";
             if (!string.IsNullOrEmpty(searchTerm)) query += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
             if (!string.IsNullOrEmpty(status) && status != "All") query += $"&status={status}";
-            if (!string.IsNullOrEmpty(typeId)) query += $"&typeId={typeId}";
+            if (typeId.HasValue) query += $"&typeId={typeId}";
             if (!string.IsNullOrEmpty(lang)) query += $"&LanguageCode={lang}";
 
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<ContractTemplateModel>>>(query);
@@ -78,12 +78,12 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         }
 
         // Employee Contracts
-        public async Task<PagedResult<EmployeeContractModel>> GetEmployeeContractsAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? typeId = null, string? employeeId = null, string? lang = null)
+        public async Task<PagedResult<EmployeeContractModel>> GetEmployeeContractsAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, int? typeId = null, string? employeeId = null, string? lang = null)
         {
             var query = $"{ApiEndpoints.Contracts.Base}?page={page}&pageSize={pageSize}";
             if (!string.IsNullOrEmpty(searchTerm)) query += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
             if (!string.IsNullOrEmpty(status) && status != "All") query += $"&status={status}";
-            if (!string.IsNullOrEmpty(typeId)) query += $"&typeId={typeId}";
+            if (typeId.HasValue) query += $"&typeId={typeId}";
             if (!string.IsNullOrEmpty(employeeId)) query += $"&employeeId={employeeId}";
             if (!string.IsNullOrEmpty(lang)) query += $"&LanguageCode={lang}";
 
