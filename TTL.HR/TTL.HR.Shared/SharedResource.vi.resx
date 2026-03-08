@@ -215,6 +215,12 @@
   <data name="Menu_UserGuide" xml:space="preserve">
     <value>Hướng dẫn sử dụng</value>
   </data>
+  <data name="Menu_Banks" xml:space="preserve">
+    <value>Quản lý Ngân hàng</value>
+  </data>
+  <data name="Placeholder_SearchByNameOrCode" xml:space="preserve">
+    <value>Tìm theo tên hoặc mã...</value>
+  </data>
   <data name="Error_ApiConnection" xml:space="preserve">
     <value>Có lỗi xảy ra khi tải dữ liệu. Vui lòng kiểm tra kết nối API.</value>
   </data>

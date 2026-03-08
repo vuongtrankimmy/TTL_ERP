@@ -34,6 +34,7 @@ namespace TTL.HR.Shared.Components.Attendance
         private bool _show = false;
         private bool _isSubmitting = false;
         private bool _showEmployeeSelection = false;
+        private List<string> _initialSelectedIds = new();
 
         public async Task Open()
         {
@@ -55,6 +56,11 @@ namespace TTL.HR.Shared.Components.Attendance
                     (e.PositionName?.Contains("HR") ?? false) ||
                     (e.PositionName?.Contains("Trưởng phòng") ?? false)
                 ).ToList();
+            }
+
+            if (IsHR && !string.IsNullOrEmpty(Model.EmployeeId) && AllEmployees.Any())
+            {
+                SelectedEmployee = AllEmployees.FirstOrDefault(e => e.Id == Model.EmployeeId);
             }
 
             _show = true;
@@ -82,18 +88,20 @@ namespace TTL.HR.Shared.Components.Attendance
             }
 
             _isSubmitting = true;
+            StateHasChanged();
+            await JS.InvokeVoidAsync("toastr.info", "Đang xử lý gửi yêu cầu...");
             try
             {
-                var success = await AttendanceService.CreateShiftRequestAsync(Model);
-                if (success)
+                var result = await AttendanceService.CreateShiftRequestAsync(Model);
+                if (result.Success)
                 {
-                    await JS.InvokeVoidAsync("toastr.success", "Gửi yêu cầu đổi ca thành công");
+                    await JS.InvokeVoidAsync("toastr.success", result.Message ?? "Gửi yêu cầu đổi ca thành công");
                     await OnSuccess.InvokeAsync();
                     Close();
                 }
                 else
                 {
-                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại sau.");
+                    await JS.InvokeVoidAsync("toastr.error", result.Message ?? "Có lỗi xảy ra khi gửi yêu cầu.");
                 }
             }
             catch (Exception ex)
@@ -129,7 +137,11 @@ namespace TTL.HR.Shared.Components.Attendance
         }
         private bool IsWeekend(DateTime date) => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
 
-        private void OpenEmployeeSelection() => _showEmployeeSelection = true;
+        private void OpenEmployeeSelection() 
+        {
+            _initialSelectedIds = string.IsNullOrEmpty(Model.EmployeeId) ? new List<string>() : new List<string> { Model.EmployeeId };
+            _showEmployeeSelection = true;
+        }
 
         private void OnEmployeeSelected(List<string> selectedIds)
         {
@@ -163,6 +175,11 @@ namespace TTL.HR.Shared.Components.Attendance
             foreach (var c in text) hash += c;
             var index = hash % _colors.Length;
             return $"bg-light-{_colors[index]} text-{_colors[index]}";
+        }
+
+        private async Task OpenPicker(string id)
+        {
+            await JS.InvokeVoidAsync("showPickerHelper", id);
         }
     }
 }

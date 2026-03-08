@@ -209,7 +209,16 @@
             <div class="btn-group">
                 <button class="btn btn-sm btn-light-info fw-bolder px-4" @onclick="ExportDiagram"><i class="bi bi-download me-2"></i>Xuất sơ đồ</button>
             </div>
-            <button class="btn btn-sm btn-primary fw-bolder px-5" @onclick="ToggleAddModal"><i class="bi bi-plus-lg me-1"></i>Thêm nút mới</button>
+            @if (!_isReadOnly)
+            {
+                <button class="btn btn-sm btn-primary fw-bolder px-5" @onclick="ToggleAddModal"><i class="bi bi-plus-lg me-1"></i>Thêm nút mới</button>
+            }
+            else
+            {
+                <button class="btn btn-sm btn-light fw-bolder px-5" disabled title="Chức năng đang tạm khóa">
+                    <i class="bi bi-lock-fill me-1"></i>Thêm nút mới
+                </button>
+            }
         </div>
     </div>
 </div>
@@ -221,7 +230,7 @@
                 <ul>
                     @if (rootNode != null)
                     {
-                        <OrgNodeView Node="rootNode" OnNodeClick="HandleNodeClick" />
+                        <OrgNodeView Node="rootNode" OnNodeClick="HandleNodeClick" IsReadOnly="@_isReadOnly" />
                     }
                 </ul>
             </div>

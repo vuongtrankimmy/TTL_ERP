@@ -21,7 +21,8 @@ const SEED_FILES = [
     { file: 'job_postings.json', col: 'recruitment_jobs' },
     { file: 'holidays.json', col: 'holidays' },
     { file: 'contract_templates.json', col: 'contract_templates' },
-    { file: 'contracts.json', col: 'contracts' }
+    { file: 'contracts.json', col: 'contracts' },
+    { file: 'leave_types.json', col: 'leave_types' }
 ];
 
 function transform(obj) {

@@ -127,6 +127,7 @@ namespace TTL.HR.Shared.Pages.Payroll
                                 TotalWorkSalary = p.TotalWorkSalary,
                                 OvertimeSalary = p.OvertimeSalary,
                                 TotalAllowances = p.Allowance,
+                                AllowanceDetails = p.AllowanceDetails ?? new(),
                                 Bonus = p.Bonus,
                                 
                                 BhxhAmount = p.BhxhAmount,
@@ -147,7 +148,9 @@ namespace TTL.HR.Shared.Pages.Payroll
                                 TotalDeductions = p.Deduction,
                                 
                                 NetSalary = p.NetSalary,
-                                Status = (p.Status == "Closed" || p.Status == "Đã chốt") ? "Đã chốt" : "Dự thảo",
+                                Status = p.Status ?? string.Empty,
+                                StatusName = p.StatusName,
+                                StatusColor = p.StatusColor,
                                 WarningMessage = p.WarningMessage,
                                 OriginalModel = p
                             });
@@ -348,9 +351,17 @@ namespace TTL.HR.Shared.Pages.Payroll
                 (p.EmployeeName ?? "").Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) || 
                 (p.EmployeeCode ?? "").Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
 
-        private string GetStatusColor(string status)
+        private string GetStatusColor(string? color, string? status)
         {
+            if (!string.IsNullOrEmpty(color)) return color;
             return (status == "Đã chốt" || status == "Closed") ? "success" : "warning";
+        }
+
+        private string GetStatusBg(string? color, string? status)
+        {
+            var c = GetStatusColor(color, status);
+            if (c == "secondary" || c == "warning" || string.IsNullOrEmpty(c)) return "gray-900";
+            return c;
         }
 
         private async Task InvokeToastr(string type, string message)
@@ -388,6 +399,7 @@ namespace TTL.HR.Shared.Pages.Payroll
             public decimal TotalWorkSalary { get; set; }
             public decimal OvertimeSalary { get; set; }
             public decimal TotalAllowances { get; set; }
+            public List<BreakdownItemModel> AllowanceDetails { get; set; } = new();
             public decimal Bonus { get; set; }
             
             public decimal BhxhAmount { get; set; }
@@ -409,6 +421,8 @@ namespace TTL.HR.Shared.Pages.Payroll
             public decimal NetSalary { get; set; }
             
             public string Status { get; set; } = string.Empty;
+            public string? StatusName { get; set; }
+            public string? StatusColor { get; set; }
             public string? WarningMessage { get; set; }
             public double OtRateWeekday { get; set; } = 1.5;
             public double OtRateWeekend { get; set; } = 2.0;

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Assets.Interfaces;
 using TTL.HR.Application.Modules.Assets.Models;
+using TTL.HR.Application.Modules.Common.Interfaces;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Shared.Pages.Assets
 {
@@ -13,9 +15,11 @@ namespace TTL.HR.Shared.Pages.Assets
     {
         [Inject] public NavigationManager Navigation { get; set; } = default!;
         [Inject] public IAssetService AssetService { get; set; } = default!;
+        [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
 
         private List<AssetViewModel> AssetList = new();
+        private List<LookupModel> StatusLookups = new();
         private bool IsDeleteModalOpen = false;
         private AssetViewModel? AssetToDelete;
         private bool _isLoading = true;
@@ -31,7 +35,13 @@ namespace TTL.HR.Shared.Pages.Assets
             _isLoading = true;
             try
             {
-                var assets = await AssetService.GetAssetsAsync();
+                var assetsTask = AssetService.GetAssetsAsync(null, 100);
+                var lookupsTask = MasterDataService.GetCachedLookupsAsync("AssetStatus");
+                
+                await Task.WhenAll(assetsTask, lookupsTask);
+
+                var assets = await assetsTask;
+                StatusLookups = await lookupsTask;
                 if (assets != null)
                 {
                     AssetList = assets.Select(a => new AssetViewModel
@@ -40,10 +50,10 @@ namespace TTL.HR.Shared.Pages.Assets
                         Name = a.Name,
                         Code = a.Code,
                         Type = a.Type,
-                        Category = a.Category,
+                        Category = !string.IsNullOrEmpty(a.CategoryName) ? a.CategoryName : (!string.IsNullOrEmpty(a.Category) ? a.Category : "Của công ty"),
                         AssignedTo = a.AssignedToName ?? "Chưa bàn giao",
-                        Status = TranslateStatus(a.Status),
-                        StatusKey = a.Status,
+                        Status = TranslateStatus(a.Status, a.StatusId),
+                        StatusKey = a.Status ?? "Available",
                         PurchaseDate = a.PurchaseDate
                     }).ToList();
                 }
@@ -58,28 +68,41 @@ namespace TTL.HR.Shared.Pages.Assets
             }
         }
 
-        private string TranslateStatus(string status)
+        private string TranslateStatus(string? status, int? statusId = null)
         {
-            return status switch
+            if (statusId.HasValue)
             {
-                "Available" => "Sẵn dùng",
-                "Assigned" => "Đã bàn giao",
-                "Maintenance" => "Đang bảo trì",
-                "Broken" => "Đã hỏng",
-                "Lost" => "Đã mất",
+                var lookup = StatusLookups.FirstOrDefault(l => l.LookupID == statusId.Value);
+                if (lookup != null) return lookup.Name;
+            }
+
+            if (string.IsNullOrEmpty(status)) return "Sẵn dùng";
+
+            var lByName = StatusLookups.FirstOrDefault(l => string.Equals(l.Code, status, StringComparison.OrdinalIgnoreCase));
+            if (lByName != null) return lByName.Name;
+
+            return status.ToLower().Trim() switch
+            {
+                "available" => "Sẵn dùng",
+                "assigned" => "Đã bàn giao",
+                "maintenance" => "Đang bảo trì",
+                "broken" => "Đã hỏng",
+                "lost" => "Đã mất",
                 _ => status
             };
         }
 
-        private string GetStatusColor(string status)
+        private string GetStatusColor(string? status)
         {
-            return status switch
+            if (string.IsNullOrEmpty(status)) return "success";
+
+            return status.ToLower().Trim() switch
             {
-                "Available" => "success",
-                "Assigned" => "primary",
-                "Maintenance" => "warning",
-                "Broken" => "danger",
-                "Lost" => "danger",
+                "available" => "success",
+                "assigned" => "primary",
+                "maintenance" => "warning",
+                "broken" => "danger",
+                "lost" => "danger",
                 _ => "secondary"
             };
         }

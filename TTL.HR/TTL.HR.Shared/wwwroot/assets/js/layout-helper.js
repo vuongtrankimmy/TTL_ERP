@@ -51,5 +51,19 @@ window.LayoutHelper = {
         a.click();
         URL.revokeObjectURL(exportUrl);
         document.body.removeChild(a);
+    },
+    scrollToElement: function (elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.focus();
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // For TTLInput which uses custom layout, we might need to highlight the parent fv-row
+            const container = element.closest('.fv-row') || element.closest('.row');
+            if (container) {
+                container.classList.add('pulse', 'pulse-danger');
+                setTimeout(() => container.classList.remove('pulse', 'pulse-danger'), 3000);
+            }
+        }
     }
 };

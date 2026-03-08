@@ -5,8 +5,11 @@ namespace TTL.HR.Application.Modules.Assets.Models
         public string Id { get; set; } = "";
         public string Name { get; set; } = "";
         public string Code { get; set; } = "";
-        public string Category { get; set; } = "";
-        public string Status { get; set; } = "";
+        public string Category { get; set; } = ""; // Display Name
+        public string CategoryName { get; set; } = ""; // From API
+        public string CategoryId { get; set; } = ""; // Required for backend
+        public string Status { get; set; } = ""; // Key/Code (e.g. Available)
+        public int? StatusId { get; set; }
         public string Type { get; set; } = "";
         public decimal PurchasePrice { get; set; }
         public DateTime? PurchaseDate { get; set; }
@@ -37,5 +40,13 @@ namespace TTL.HR.Application.Modules.Assets.Models
         public string? Note { get; set; }
         public string? ActorName { get; set; }
         public string AssetId { get; set; } = string.Empty;
+    }
+
+    public class AssetCategoryDto
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
+        public string? Description { get; set; }
     }
 }

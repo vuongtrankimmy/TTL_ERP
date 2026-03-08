@@ -240,14 +240,14 @@ async function main() {
             { Type: "MaritalStatus", Code: "Widowed", vi: "Góa", en: "Widowed", Order: 4 },
 
             // EmployeeStatus
-            { Type: "EmployeeStatus", Code: "Active", vi: "Đang làm việc", en: "Active", Order: 1 },
-            { Type: "EmployeeStatus", Code: "Probation", vi: "Thử việc", en: "Probation", Order: 2 },
-            { Type: "EmployeeStatus", Code: "Resigned", vi: "Đã nghỉ việc", en: "Resigned", Order: 3 },
+            { Type: "EmployeeStatus", Code: "Active", vi: "Đang làm việc", en: "Active", Order: 1, Color: "success" },
+            { Type: "EmployeeStatus", Code: "Probation", vi: "Thử việc", en: "Probation", Order: 2, Color: "warning" },
+            { Type: "EmployeeStatus", Code: "Resigned", vi: "Đã nghỉ việc", en: "Resigned", Order: 3, Color: "danger" },
 
             // ContractType
-            { Type: "ContractType", Code: "Probation", vi: "Thử việc", en: "Probation", Order: 1 },
-            { Type: "ContractType", Code: "Definite", vi: "Xác định thời hạn", en: "Definite", Order: 2 },
-            { Type: "ContractType", Code: "Indefinite", vi: "Không xác định thời hạn", en: "Indefinite", Order: 3 },
+            { Type: "ContractType", Code: "Probation", vi: "Thử việc", en: "Probation", Order: 1, Color: "warning" },
+            { Type: "ContractType", Code: "Definite", vi: "Xác định thời hạn", en: "Definite", Order: 2, Color: "primary" },
+            { Type: "ContractType", Code: "Indefinite", vi: "Không xác định thời hạn", en: "Indefinite", Order: 3, Color: "success" },
 
             // Workplace
             { Type: "Workplace", Code: "HQ", vi: "Trụ sở chính", en: "Headquarters", Order: 1 },
@@ -271,19 +271,50 @@ async function main() {
             { Type: "ContractStatus", Code: "Signed", vi: "Đã ký", en: "Signed", Order: 2 },
             { Type: "ContractStatus", Code: "Active", vi: "Đang hiệu lực", en: "Active", Order: 3 },
             { Type: "ContractStatus", Code: "Expired", vi: "Hết hạn", en: "Expired", Order: 4 },
-            { Type: "ContractStatus", Code: "Terminated", vi: "Đã chấm dứt", en: "Terminated", Order: 5 }
+            { Type: "ContractStatus", Code: "Terminated", vi: "Đã chấm dứt", en: "Terminated", Order: 5 },
+
+            // Ethnicity
+            { Type: "Ethnicity", Code: "Kinh", vi: "Kinh", en: "Kinh", Order: 1 },
+            { Type: "Ethnicity", Code: "Tay", vi: "Tày", en: "Tay", Order: 2 },
+            { Type: "Ethnicity", Code: "Thai", vi: "Thái", en: "Thai", Order: 3 },
+            { Type: "Ethnicity", Code: "Muong", vi: "Mường", en: "Muong", Order: 4 },
+            { Type: "Ethnicity", Code: "Khmer", vi: "Khmer", en: "Khmer", Order: 5 },
+            { Type: "Ethnicity", Code: "Other", vi: "Khác", en: "Other", Order: 99 },
+
+            // Religion
+            { Type: "Religion", Code: "None", vi: "Không", en: "None", Order: 1 },
+            { Type: "Religion", Code: "Buddhism", vi: "Phật giáo", en: "Buddhism", Order: 2 },
+            { Type: "Religion", Code: "Catholicism", vi: "Công giáo", en: "Catholicism", Order: 3 },
+            { Type: "Religion", Code: "Protestantism", vi: "Tin lành", en: "Protestantism", Order: 4 },
+            { Type: "Religion", Code: "Other", vi: "Khác", en: "Other", Order: 99 },
+
+            // Nationality
+            { Type: "Nationality", Code: "VN", vi: "Việt Nam", en: "Vietnam", Order: 1 },
+            { Type: "Nationality", Code: "US", vi: "Mỹ", en: "USA", Order: 2 },
+            { Type: "Nationality", Code: "JP", vi: "Nhật Bản", en: "Japan", Order: 3 },
+            { Type: "Nationality", Code: "KR", vi: "Hàn Quốc", en: "South Korea", Order: 4 },
+            { Type: "Nationality", Code: "CN", vi: "Trung Quốc", en: "China", Order: 5 }
         ];
 
         await lookupCol.deleteMany({});
         await lookupTransCol.deleteMany({});
 
+        const typeCounters = {};
+
         for (const rl of rawLookups) {
+            // Assign sequential LookupID per Type
+            if (!typeCounters[rl.Type]) typeCounters[rl.Type] = 1;
+            const seqId = typeCounters[rl.Type]++;
+
             const lookupId = new ObjectId();
             await lookupCol.insertOne({
                 _id: lookupId,
                 Type: rl.Type,
                 Code: rl.Code,
+                Name: rl.vi, // Legacy support
                 Order: rl.Order,
+                LookupID: seqId,
+                Color: rl.Color || "",
                 IsActive: true,
                 IsDeleted: false,
                 CreatedAt: new Date(),

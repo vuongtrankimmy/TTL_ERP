@@ -1,6 +1,4 @@
-@using TTL.HR.Application.Modules.Leave.Models
-@using TTL.HR.Application.Modules.Leave.Interfaces
-@inject ILeaveService LeaveService
+@namespace TTL.HR.Shared.Pages.User.Components
 
 <div class="row g-5 g-xl-10 animate__animated animate__fadeIn">
     <!--begin::Col-->
@@ -120,11 +118,12 @@
                     @if (!string.IsNullOrEmpty(_error)) { <div class="alert alert-danger">@_error</div> }
                     <div class="mb-5">
                         <label class="form-label fw-bold">Loại nghỉ phép</label>
-                        <select class="form-select form-select-solid" @bind="_newRequest.Type">
-                            <option value="Nghỉ phép năm">Nghỉ phép năm</option>
-                            <option value="Nghỉ không lương">Nghỉ không lương</option>
-                            <option value="Nghỉ ốm">Nghỉ ốm (Có BHXH)</option>
-                            <option value="Công tác">Đi công tác</option>
+                        <select class="form-select form-select-solid" @bind="_newRequest.LeaveTypeId">
+                            <option value="">-- Chọn loại yêu cầu --</option>
+                            @foreach(var type in _leaveTypes)
+                            {
+                                <option value="@type.Id">@type.Name</option>
+                            }
                         </select>
                     </div>
                     <div class="row mb-5">
@@ -154,68 +153,3 @@
     </div>
 }
 
-@code {
-    [Parameter] public string? EmployeeId { get; set; }
-    private string? employeeId => EmployeeId;
-
-    private List<LeaveRequestModel> _leaveRequests = new();
-    private LeaveBalanceModel? _balance;
-    private bool _isLoading = true;
-    private bool _isModalOpen = false;
-    private bool _isSubmitting = false;
-    private string? _error;
-
-    private LeaveRequestModel _newRequest = new() { StartDate = DateTime.Now, EndDate = DateTime.Now, Type = "Nghỉ phép năm" };
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadData();
-    }
-
-    private async Task LoadData()
-    {
-        _isLoading = true;
-        try
-        {
-             var result = await LeaveService.GetLeaveRequestsAsync(1, 10); // Simple fetch
-             _leaveRequests = result.Items.Where(x => x.EmployeeId == employeeId).ToList();
-             
-             if (employeeId != null)
-             {
-                 _balance = await LeaveService.GetLeaveBalanceAsync(employeeId, DateTime.Now.Year);
-             }
-        }
-        catch { }
-        _isLoading = false;
-    }
-
-    private void ShowRequestModal()
-    {
-        _error = null;
-        _isModalOpen = true;
-        _newRequest = new() { StartDate = DateTime.Today, EndDate = DateTime.Today, Type = "Nghỉ phép năm", EmployeeId = employeeId ?? "" };
-    }
-
-    private void CloseModal() => _isModalOpen = false;
-
-    private async Task SubmitRequest()
-    {
-        if (string.IsNullOrEmpty(_newRequest.Reason)) { _error = "Vui lòng nhập lý do."; return; }
-        if (_newRequest.EndDate < _newRequest.StartDate) { _error = "Ngày kết thúc không thể trước ngày bắt đầu."; return; }
-
-        _isSubmitting = true;
-        _error = null;
-        
-        var success = await LeaveService.SubmitLeaveRequestAsync(_newRequest);
-        if (success)
-        {
-            await LoadData();
-            CloseModal();
-        }
-        else
-        {
-            _error = "Không thể gửi yêu cầu. Vui lòng kiểm tra lại quỹ phép của bạn.";
-        }
-        _isSubmitting = false;
-    }
-}

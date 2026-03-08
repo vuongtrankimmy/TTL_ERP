@@ -18,12 +18,21 @@ namespace TTL.HR.Shared.Pages.Settings
         [Inject] public IFileService FileService { get; set; } = default!;
         [Inject] public IEmployeeService EmployeeService { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
+        [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
 
 
         private string activeTab = "company_profile";
         private SystemSettingsModel Model = new();
         private List<CodeGeneratorConfigDto> CodeConfigs = new();
         private CodeGeneratorConfigDto? SelectedConfig;
+        
+        private List<LookupModel> TimeZoneLookups = new();
+        private List<LookupModel> LanguageLookups = new();
+        private List<LookupModel> CurrencyLookups = new();
+        private List<LookupModel> ThousandSeparatorLookups = new();
+        private List<LookupModel> DecimalSeparatorLookups = new();
+        private List<LookupModel> CodeSeparatorLookups = new();
+        private List<LookupModel> CodeDateFormatLookups = new();
         private bool _isLoading = true;
         private bool _isSaving = false;
         private bool _isAccruing = false;
@@ -49,12 +58,21 @@ namespace TTL.HR.Shared.Pages.Settings
 
             var dataTask = SettingsService.GetSettingsAsync();
             var codeConfigsTask = SettingsService.GetCodeGeneratorConfigsAsync();
+            var tzTask = MasterDataService.GetLookupsAsync("TimeZone");
+            var langTask = MasterDataService.GetLookupsAsync("Language");
+            var curTask = MasterDataService.GetLookupsAsync("Currency");
+            var thouTask = MasterDataService.GetLookupsAsync("ThousandSeparator");
+            var decTask = MasterDataService.GetLookupsAsync("DecimalSeparator");
+            var codeSepTask = MasterDataService.GetLookupsAsync("CodeSeparator");
+            var codeDateTask = MasterDataService.GetLookupsAsync("CodeDateFormat");
 
-            await Task.WhenAll(dataTask, codeConfigsTask);
+            await Task.WhenAll(dataTask, codeConfigsTask, tzTask, langTask, curTask, thouTask, decTask, codeSepTask, codeDateTask);
 
             if (dataTask.Result != null)
             {
                 Model = dataTask.Result;
+                if (Model.WorkDays == null) Model.WorkDays = new List<string>();
+                if (Model.Holidays == null) Model.Holidays = new List<HolidayConfigModel>();
             }
             if (codeConfigsTask.Result != null)
             {
@@ -63,6 +81,14 @@ namespace TTL.HR.Shared.Pages.Settings
                     SelectedConfig = CodeConfigs.First();
                 }
             }
+
+            TimeZoneLookups = tzTask.Result ?? new();
+            LanguageLookups = langTask.Result ?? new();
+            CurrencyLookups = curTask.Result ?? new();
+            ThousandSeparatorLookups = thouTask.Result ?? new();
+            DecimalSeparatorLookups = decTask.Result ?? new();
+            CodeSeparatorLookups = codeSepTask.Result ?? new();
+            CodeDateFormatLookups = codeDateTask.Result ?? new();
 
             _isLoading = false;
         }
@@ -155,26 +181,39 @@ namespace TTL.HR.Shared.Pages.Settings
             _isSaving = true;
             StateHasChanged();
 
-            bool success = false;
+            TTL.HR.Application.Modules.Common.Models.ApiResponse<bool> result = null;
             if (activeTab == "code_generator")
             {
-                success = await SettingsService.UpdateCodeGeneratorConfigsAsync(CodeConfigs);
+                result = await SettingsService.UpdateCodeGeneratorConfigsAsync(CodeConfigs);
             }
             else
             {
-                success = await SettingsService.UpdateSettingsAsync(Model);
+                Model.ActiveTab = activeTab;
+                result = await SettingsService.UpdateSettingsAsync(Model);
             }
 
             _isSaving = false;
             StateHasChanged();
 
-            if (success)
+            if (result != null && result.Success)
             {
                 await JS.InvokeVoidAsync("toastr.success", "Cập nhật cấu hình thành công!");
             }
             else
             {
-                await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi cập nhật cấu hình.");
+                string errorMsg = "Có lỗi xảy ra khi cập nhật cấu hình.";
+                if (result != null)
+                {
+                    if (result.Errors != null && result.Errors.Any())
+                    {
+                        errorMsg = string.Join("<br/>", result.Errors);
+                    }
+                    else if (!string.IsNullOrEmpty(result.Message))
+                    {
+                        errorMsg = result.Message;
+                    }
+                }
+                await JS.InvokeVoidAsync("toastr.error", errorMsg);
             }
         }
 

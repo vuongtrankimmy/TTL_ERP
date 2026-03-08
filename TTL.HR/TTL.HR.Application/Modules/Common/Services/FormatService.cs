@@ -82,7 +82,11 @@ namespace TTL.HR.Application.Modules.Common.Services
             }
         }
 
-        public string FormatFullName(string? name) => name?.Trim().ToUpper() ?? string.Empty;
+        public string FormatFullName(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return string.Empty;
+            return _vnCulture.TextInfo.ToTitleCase(name.ToLower());
+        }
 
         public string FormatIdCard(string? idCard) => CleanDigits(idCard);
 

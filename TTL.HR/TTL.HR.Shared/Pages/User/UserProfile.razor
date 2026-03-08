@@ -63,15 +63,46 @@ else
             <div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
                 <div class="card-header"><h3 class="card-title fw-bold">Chi tiết hồ sơ nhân sự</h3></div>
                 <div class="card-body p-9">
+                    @if (currentEmployee == null)
+                    {
+                        <div class="alert alert-dismissible bg-light-warning d-flex flex-column flex-sm-row p-5 mb-10">
+                            <i class="ki-outline ki-information fs-2hx text-warning me-4 mb-5 mb-sm-0"></i>
+                            <div class="d-flex flex-column pe-0 pe-sm-10">
+                                <h4 class="fw-bold">Tài khoản chưa được liên kết</h4>
+                                <span>Tài khoản của bạn chưa được kết nối với hồ sơ nhân viên trong hệ thống. Vui lòng chọn hồ sơ của bạn bên dưới để liên kết.</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-10">
+                            <label class="form-label fw-bold fs-6 text-gray-700">Tìm hồ sơ của bạn:</label>
+                            <div class="d-flex align-items-center">
+                                <select class="form-select form-select-solid me-3" @bind="_selectedEmployeeToLink">
+                                    <option value="">-- Chọn đúng nhân viên từ danh sách --</option>
+                                    @if (_allEmployees != null)
+                                    {
+                                        @foreach (var emp in _allEmployees)
+                                        {
+                                            <option value="@emp.Id">@emp.FullName (@emp.Code) - @emp.DepartmentName</option>
+                                        }
+                                    }
+                                </select>
+                                <button class="btn btn-primary fw-bold flex-shrink-0" @onclick="HandleLinkIdentity" disabled="@(string.IsNullOrEmpty(_selectedEmployeeToLink))">
+                                    <i class="ki-outline ki-link fs-2 me-1"></i>Kết nối ngay
+                                </button>
+                            </div>
+                            <div class="text-muted fs-7 mt-2">Sau khi kết nối, bạn mới có thể chỉnh sửa các thông tin chi tiết (Số điện thoại, Ngân hàng, v.v.).</div>
+                        </div>
+                    }
+                    
                     <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Mã nhân viên</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.Code ?? "N/A")</div></div>
                     <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Họ và tên</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.FullName ?? currentUser?.FullName ?? "N/A")</div></div>
                     <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Phòng ban</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.DepartmentName ?? "N/A")</div></div>
                     <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Chức vụ</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.PositionName ?? "N/A")</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số điện thoại</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.Phone ?? "N/A")</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số CMND/CCCD</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.IdCard ?? "N/A")</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Quê quán</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.Hometown ?? "N/A")</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Tài khoản ngân hàng</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.BankAccountNumber ?? "N/A") (@(currentEmployee?.BankName ?? "N/A"))</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số người phụ thuộc</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.NumberOfDependents ?? 0)</div></div>
+                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số ĐT liên lạc</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.Phone ?? "N/A")</div></div>
+                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số CMND/CCCD</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.PersonalDetails?.IdCardNumber ?? currentEmployee?.IdCard ?? "N/A")</div></div>
+                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Quê quán</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.PersonalDetails?.Hometown ?? currentEmployee?.Hometown ?? "N/A")</div></div>
+                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Tài khoản ngân hàng</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.PersonalDetails?.BankAccount ?? currentEmployee?.BankAccountNumber ?? "N/A") (@(currentEmployee?.PersonalDetails?.BankName ?? currentEmployee?.BankName ?? "N/A"))</div></div>
+                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số người phụ thuộc</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.PersonalDetails?.NumberOfDependents ?? currentEmployee?.NumberOfDependents ?? 0)</div></div>
                 </div>
             </div>
         }
@@ -154,7 +185,20 @@ else
                         <input type="number" class="form-control" @bind="_editDependents" />
                     </div>
                 </div>
-                <div class="modal-footer"><button class="btn btn-light" @onclick="CloseModals">Hủy</button><button class="btn btn-primary" @onclick="HandleSaveProfile">Lưu thay đổi</button></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" @onclick="CloseModals" disabled="@_isSaving">Hủy</button>
+                    <button type="button" class="btn btn-primary" @onclick="HandleSaveProfile" disabled="@_isSaving">
+                        @if (_isSaving)
+                        {
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            <span class="ms-2">Đang xử lý...</span>
+                        }
+                        else
+                        {
+                            <span>Lưu thay đổi</span>
+                        }
+                    </button>
+                </div>
             </div>
         </div>
     </div>

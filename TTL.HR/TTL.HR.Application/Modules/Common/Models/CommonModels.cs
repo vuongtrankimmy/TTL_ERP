@@ -16,6 +16,14 @@ namespace TTL.HR.Application.Modules.Common.Models
         public string? Module { get; set; }
     }
 
+    public class CountryModel
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
+        public string PhoneCode { get; set; } = string.Empty;
+    }
+
     public class ApiResponse<T>
     {
         [JsonPropertyName("success")]

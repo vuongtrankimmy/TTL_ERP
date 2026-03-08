@@ -21,6 +21,8 @@ namespace TTL.HR.Application.Modules.Common.Models
 
     public class SystemSettingsModel
     {
+        public string ActiveTab { get; set; } = string.Empty;
+
         // Company Information
         public string CompanyName { get; set; } = string.Empty;
         public string CompanyAddress { get; set; } = string.Empty;
@@ -37,6 +39,8 @@ namespace TTL.HR.Application.Modules.Common.Models
         public string DefaultLanguage { get; set; } = "vi-VN";
         public string TimeZone { get; set; } = "SE Asia Standard Time";
         public string Currency { get; set; } = "VND";
+        public string ThousandSeparator { get; set; } = ",";
+        public string DecimalSeparator { get; set; } = ".";
         
         // Email & Notifications
         public bool EnableEmailNotifications { get; set; } = true;
@@ -103,6 +107,7 @@ namespace TTL.HR.Application.Modules.Common.Models
         public decimal DefaultPersonalDeduction { get; set; } = 11000000;
         public decimal DefaultDependentDeduction { get; set; } = 4400000;
         public List<TaxStepModel> PitSteps { get; set; } = new();
+        public string PitExplanation { get; set; } = string.Empty;
         
         // Statutory Pay Rate (Lương cơ sở)
         public decimal StatutoryPayRate { get; set; } = 2340000;

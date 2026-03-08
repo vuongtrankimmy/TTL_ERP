@@ -32,6 +32,15 @@ namespace TTL.HR.Shared.Pages.Attendance
         private int _currentPage = 1;
         private int _pageSize = 10;
         private int _totalItems = 0;
+        private bool _isJsReady = false;
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _isJsReady = true;
+            }
+        }
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
@@ -61,8 +70,14 @@ namespace TTL.HR.Shared.Pages.Attendance
             }
             catch (Exception ex)
             {
-                var url = $"{ApiEndpoints.Attendance.Timesheets}";
-                await JS.InvokeVoidAsync("toastr.error", $"Lỗi tải dữ liệu chấm công: {ex.Message}");
+                if (_isJsReady)
+                {
+                    await JS.InvokeVoidAsync("toastr.error", $"Lỗi tải dữ liệu chấm công: {ex.Message}");
+                }
+                else
+                {
+                    System.Console.WriteLine($"[Attendance] LoadData Error: {ex.Message}");
+                }
             }
             finally
             {
@@ -118,69 +133,103 @@ namespace TTL.HR.Shared.Pages.Attendance
 
         private List<AttendanceModel> FilteredEmployees => _employees;
         
-        private bool _isPeriodLocked => _employees.Any() && _employees.All(e => e.Status == "Locked" || e.Status == "Đã chốt");
+        private bool _isPeriodLocked => _employees.Any() && _employees.All(e => e.Status == "Locked" || e.Status == "Closed" || e.Status == "Đã chốt");
 
         private async Task LockMonth()
         {
-            _isLoading = true;
             try
             {
-                var result = await AttendanceService.CloseMonthlyAsync(_currentMonth, _currentYear);
-                if (result.Success)
+                _isLoading = true;
+                StateHasChanged();
+
+                var response = await AttendanceService.CloseMonthlyAsync(_currentMonth, _currentYear);
+                if (response.Success)
                 {
-                    await JS.InvokeVoidAsync("toastr.success", result.Message ?? "Đã chốt công tháng thành công!");
+                    if (_isJsReady) await JS.InvokeVoidAsync("toastr.success", "Chốt công tháng thành công.");
                     await LoadData();
                 }
                 else
                 {
-                    await JS.InvokeVoidAsync("toastr.error", result.Message ?? "Có lỗi xảy ra khi chốt công.");
+                    if (_isJsReady) await JS.InvokeVoidAsync("toastr.error", response.Message ?? "Lỗi khi chốt công tháng");
                 }
             }
             catch (Exception ex)
             {
-                await JS.InvokeVoidAsync("toastr.error", $"Lỗi: {ex.Message}");
+                if (_isJsReady) await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra: " + ex.Message);
             }
             finally
             {
                 _isLoading = false;
+                StateHasChanged();
             }
         }
 
-        private string GetStatusColor(string status)
+        private async Task LockTimesheet(string id)
         {
-            return status switch
+            try
             {
-                "Đã chốt" or "Locked" => "badge-light-success",
-                "Đang mở" or "Open" => "badge-light-primary",
-                "Vi phạm" or "Violation" => "badge-light-danger",
-                "Chờ duyệt" or "Pending" => "badge-light-warning",
-                _ => "badge-light-info"
-            };
+                _isLoading = true;
+                StateHasChanged();
+
+                var response = await AttendanceService.CloseMonthlyAsync(_currentMonth, _currentYear, id);
+                if (response.Success)
+                {
+                    if (_isJsReady) await JS.InvokeVoidAsync("toastr.success", "Chốt công nhân viên thành công.");
+                    await LoadData();
+                }
+                else
+                {
+                    if (_isJsReady) await JS.InvokeVoidAsync("toastr.error", response.Message ?? "Lỗi khi chốt công");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (_isJsReady) await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra: " + ex.Message);
+            }
+            finally
+            {
+                _isLoading = false;
+                StateHasChanged();
+            }
         }
 
-        private string GetStatusBulletClass(string status)
+        private async Task ExportExcel()
         {
-            return status switch
+            try
             {
-                "Đã chốt" or "Locked" => "bg-success",
-                "Đang mở" or "Open" => "bg-primary",
-                "Vi phạm" or "Violation" => "bg-danger",
-                "Chờ duyệt" or "Pending" => "bg-warning",
-                _ => "bg-info"
-            };
+                await JS.InvokeVoidAsync("Swal.fire", new
+                {
+                    title = "Đang trích xuất dữ liệu",
+                    text = "Vui lòng chờ trong giây lát...",
+                    allowOutsideClick = false,
+                    showConfirmButton = false,
+                    didOpen = new JSObjectReference() // This is a trick to get Swal to show the loading spinner if not using specialized lib
+                });
+                try { await JS.InvokeVoidAsync("Swal.showLoading"); } catch { }
+
+                var fileBytes = await AttendanceService.ExportTimesheetAsync(_currentMonth, _currentYear, _searchTerm, _selectedDepartmentId);
+
+                await JS.InvokeVoidAsync("Swal.close");
+
+                if (fileBytes != null && fileBytes.Length > 0)
+                {
+                    var fileName = $"TTL_BangCong_{_currentMonth}_{_currentYear}_{DateTime.Now:yyyyMMdd_HHmm}.xlsx";
+                    await JS.InvokeVoidAsync("LayoutHelper.downloadFile", fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileBytes);
+                    await JS.InvokeVoidAsync("toastr.success", "Đã xuất file thành công!");
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("Swal.fire", "Thông báo", "Không thể trích xuất dữ liệu. Vui lòng thử lại sau.", "error");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JS.InvokeVoidAsync("Swal.fire", "Lỗi", "Lỗi hệ thống khi xuất file: " + ex.Message, "error");
+            }
         }
 
-        private string TranslateStatus(string status)
-        {
-            return status switch
-            {
-                "Locked" => "Đã chốt",
-                "Open" => "Đang mở",
-                "Violation" => "Vi phạm",
-                "Pending" => "Chờ duyệt",
-                _ => status
-            };
-        }
+        private class JSObjectReference { }
+
 
         private string GetShiftClass(string? color, string prefix = "bg-")
         {

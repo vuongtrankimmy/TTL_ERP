@@ -130,7 +130,6 @@ namespace TTL.HR.Application.Modules.Common.Services
                     SubItems = new List<NavItem>
                     {
                         new NavItem { Title = "Menu_LeaveRequests", Href = "/leave/requests", Permission = "Permissions.LeaveRequests.View" },
-                        new NavItem { Title = "Menu_LeaveApprovals", Href = "/leave/approvals", Permission = "Permissions.LeaveRequests.Approve" },
                         new NavItem { Title = "Menu_BusinessTrip", Href = "/attendance/leave-trip", Permission = "Permissions.LeaveRequests.View" }
                     }
                 },
@@ -169,6 +168,7 @@ namespace TTL.HR.Application.Modules.Common.Services
                         new NavItem { Title = "Menu_RolesAndGroups", Href = "/administration/roles" },
                         new NavItem { Title = "Menu_Permissions", Href = "/permissions" },
                         new NavItem { Title = "Menu_GeneralSettings", Href = "/settings/general" },
+                        new NavItem { Title = "Menu_Banks", Href = "/settings/banks" },
                         new NavItem { Title = "Menu_PayrollConfig", Href = "/settings/payroll-config" }
                     }
                 },

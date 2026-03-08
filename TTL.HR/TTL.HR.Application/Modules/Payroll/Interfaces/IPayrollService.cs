@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TTL.HR.Application.Modules.Payroll.Models;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Application.Modules.Payroll.Interfaces
 {
@@ -15,5 +16,7 @@ namespace TTL.HR.Application.Modules.Payroll.Interfaces
         Task<bool> UpdatePayrollAsync(string id, PayrollModel payroll);
         Task<bool> LockPayrollAsync(int month, int year);
         Task<bool> LockPayrollAsync(string id);
+        Task<bool> DeletePeriodAsync(string id);
+        Task<PagedResult<PayrollModel>> GetMyPayrollsAsync(string? employeeId = null, int? year = null, int page = 1, int pageSize = 10);
     }
 }

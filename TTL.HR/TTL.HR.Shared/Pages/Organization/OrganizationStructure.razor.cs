@@ -23,6 +23,7 @@ namespace TTL.HR.Shared.Pages.Organization
         private int AllEmployeesCount = 0;
         private bool _isLoading = true;
         private bool _jsInitialized = false;
+        private bool _isReadOnly = true; // Set to true to lock add/edit functions
 
         // Add Node Modal state
         private bool showAddModal = false;

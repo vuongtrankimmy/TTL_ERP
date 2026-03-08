@@ -36,18 +36,24 @@ namespace TTL.HR.Application.Modules.Leave.Services
             return response?.Data;
         }
 
-        public async Task<bool> SubmitLeaveRequestAsync(LeaveRequestModel request)
+        public async Task<List<LeaveTypeDto>> GetLeaveTypesAsync()
         {
-            // Map to Backend Command structure if needed, or send directly if structure matches
-            var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Leave.Base, request);
-            return response.IsSuccessStatusCode;
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<LeaveTypeDto>>>($"{ApiEndpoints.Leave.Base}/types");
+            return response?.Data ?? new List<LeaveTypeDto>();
         }
 
+        public async Task<ApiResponse<string>> SubmitLeaveRequestAsync(LeaveRequestModel request)
+        {
+            var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Leave.Base, request);
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
+            return result ?? new ApiResponse<string> { Success = false, Message = "Unknown error" };
+        }
 
-        public async Task<bool> ProcessLeaveRequestAsync(string id, bool approved, string? note)
+        public async Task<ApiResponse<bool>> ProcessLeaveRequestAsync(string id, bool approved, string? note)
         {
             var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Leave.Base}/{id}/process", new { Approved = approved, Note = note });
-            return response.IsSuccessStatusCode;
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>();
+            return result ?? new ApiResponse<bool> { Success = false, Message = "Unknown error" };
         }
     }
 }

@@ -15,15 +15,19 @@ namespace TTL.HR.Shared.Pages.Attendance
         [Inject] public IJSRuntime JS { get; set; } = default!;
 
         private List<LeaveRequestModel> _requests = new();
-        private List<LeaveRequestModel> _filteredRequests = new();
-
+        private LeaveStateSummaryModel _summary = new();
+        private string _activeTab = "All";
+        private bool _isLoading = true;
         private bool _showDetail = false;
         private bool _showActionModal = false;
-        private bool _isLoading = true;
         private LeaveRequestModel? _selectedRequest;
         private LeaveRequestModel? _requestToProcess;
-
         private string _searchTerm = "";
+
+        private int _pageIndex = 1;
+        private int _pageSize = 10;
+        private long _totalCount = 0;
+        private int TotalPages => (int)Math.Ceiling(_totalCount / (double)_pageSize);
 
         protected override async Task OnInitializedAsync()
         {
@@ -35,39 +39,48 @@ namespace TTL.HR.Shared.Pages.Attendance
             _isLoading = true;
             try
             {
-                var result = await LeaveService.GetLeaveRequestsAsync();
+                var summaryTask = LeaveService.GetLeaveSummaryAsync();
+                var statusFilter = _activeTab == "All" ? null : _activeTab;
+                var requestsTask = LeaveService.GetLeaveRequestsAsync(_pageIndex, _pageSize, statusFilter, _searchTerm);
+
+                await Task.WhenAll(summaryTask, requestsTask);
+
+                _summary = await summaryTask;
+                var result = await requestsTask;
+
                 _requests = result?.Items ?? new List<LeaveRequestModel>();
-                ApplyFilter();
+                _totalCount = result?.TotalCount ?? 0;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await JS.InvokeVoidAsync("toastr.error", "Lỗi tải danh sách yêu cầu nghỉ phép.");
+                await JS.InvokeVoidAsync("toastr.error", "Lỗi tải dữ liệu: " + ex.Message);
             }
             finally
             {
                 _isLoading = false;
+                StateHasChanged();
             }
         }
 
-        private void ApplyFilter()
+        private async Task SetTab(string tab)
         {
-            if (string.IsNullOrWhiteSpace(_searchTerm))
-            {
-                _filteredRequests = _requests;
-            }
-            else
-            {
-                _filteredRequests = _requests.Where(r => 
-                    r.EmployeeName.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                    r.Type.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)
-                ).ToList();
-            }
+            _activeTab = tab;
+            _pageIndex = 1;
+            await LoadData();
         }
 
-        private void OnSearch(ChangeEventArgs e)
+        private async Task ChangePage(int newPage)
+        {
+            if (newPage < 1 || newPage > TotalPages) return;
+            _pageIndex = newPage;
+            await LoadData();
+        }
+
+        private async Task OnSearch(ChangeEventArgs e)
         {
             _searchTerm = e.Value?.ToString() ?? "";
-            ApplyFilter();
+            _pageIndex = 1;
+            await LoadData();
         }
 
         private string _modalTitle = "";
@@ -127,10 +140,10 @@ namespace TTL.HR.Shared.Pages.Attendance
             
             try 
             {
-                var success = await LeaveService.ProcessLeaveRequestAsync(_requestToProcess.Id, approved, reason);
-                if (success)
+                var response = await LeaveService.ProcessLeaveRequestAsync(_requestToProcess.Id, approved, reason);
+                if (response.Success)
                 {
-                    await JS.InvokeVoidAsync("toastr.success", approved ? "Đã phê duyệt yêu cầu." : "Đã từ chối yêu cầu.");
+                    await JS.InvokeVoidAsync("toastr.success", approved ? "Đã phê duyệt yêu cầu thành công." : "Đã từ chối yêu cầu thành công.");
                     await LoadData();
                     if (_selectedRequest?.Id == _requestToProcess.Id)
                     {
@@ -139,12 +152,12 @@ namespace TTL.HR.Shared.Pages.Attendance
                 }
                 else
                 {
-                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi xử lý yêu cầu.");
+                    await JS.InvokeVoidAsync("toastr.error", $"Thao tác thất bại: {response.Message}");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await JS.InvokeVoidAsync("toastr.error", "Có lỗi hệ thống.");
+                await JS.InvokeVoidAsync("toastr.error", "Có lỗi hệ thống: " + ex.Message);
             }
             
             CloseModal();
@@ -158,19 +171,19 @@ namespace TTL.HR.Shared.Pages.Attendance
 
         private string GetTypeClass(string type) => type switch
         {
-            "Nghỉ phép" or "Annual Leave" => "badge-light-primary",
-            "Công tác" or "Business Trip" => "badge-light-info",
-            "Nghỉ ốm" or "Sick Leave" => "badge-light-danger",
-            "Làm từ xa" or "WFH" => "badge-light-success",
-            "Thai sản" or "Maternity Leave" => "badge-light-purple",
+            "Nghỉ phép năm" or "Annual Leave" or "Nghỉ phép" => "badge-light-primary",
+            "Công tác" or "Business Trip" or "Đi công tác" => "badge-light-info",
+            "Nghỉ ốm" or "Sick Leave" or "Nghỉ ốm" => "badge-light-warning",
+            "Làm từ xa" or "WFH" or "Remote" => "badge-light-success",
+            "Thai sản" or "Maternity Leave" or "Thai sản" => "badge-light-purple",
             _ => "badge-light-dark"
         };
 
         private string GetStatusClass(string status) => status switch
         {
-            "Đã phê duyệt" or "Approved" => "badge-light-success",
+            "Đã phê duyệt" or "Approved" or "Đã duyệt" => "badge-light-success",
             "Từ chối" or "Rejected" => "badge-light-danger",
-            "Chờ phê duyệt" or "Pending" or "Chờ duyệt" => "badge-light-warning",
+            "Chờ phê duyệt" or "Pending" or "Chờ duyệt" or "PartiallyApproved" => "badge-light-warning",
             _ => "badge-light-secondary"
         };
     }

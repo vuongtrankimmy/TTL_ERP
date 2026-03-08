@@ -1,0 +1,172 @@
+[
+    {
+        "ProvinceId": "65fc5b5b0000000000000101",
+        "Code": "ST001",
+        "Name": "Phố Duy Tân"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000101",
+        "Code": "ST002",
+        "Name": "Đường Xuân Thủy"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000101",
+        "Code": "ST003",
+        "Name": "Phố Cầu Giấy"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000101",
+        "Code": "ST004",
+        "Name": "Đường Láng"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000101",
+        "Code": "ST005",
+        "Name": "Phố Huế"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000101",
+        "Code": "ST006",
+        "Name": "Đường Giải Phóng"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000101",
+        "Code": "ST007",
+        "Name": "Phố Bà Triệu"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000101",
+        "Code": "ST008",
+        "Name": "Đường Nguyễn Trãi"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000101",
+        "Code": "ST009",
+        "Name": "Phố Trần Hưng Đạo"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000101",
+        "Code": "ST010",
+        "Name": "Đường Phạm Văn Đồng"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000179",
+        "Code": "ST101",
+        "Name": "Đường Lê Lợi"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000179",
+        "Code": "ST102",
+        "Name": "Đường Nguyễn Huệ"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000179",
+        "Code": "ST103",
+        "Name": "Đường Lê Duẩn"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000179",
+        "Code": "ST104",
+        "Name": "Đường Nam Kỳ Khởi Nghĩa"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000179",
+        "Code": "ST105",
+        "Name": "Đường Pasteur"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000179",
+        "Code": "ST106",
+        "Name": "Đường Nguyễn Thị Minh Khai"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000179",
+        "Code": "ST107",
+        "Name": "Đường Cách Mạng Tháng 8"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000179",
+        "Code": "ST108",
+        "Name": "Đường Võ Văn Kiệt"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000179",
+        "Code": "ST109",
+        "Name": "Đường Điện Biên Phủ"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000179",
+        "Code": "ST110",
+        "Name": "Đường Hai Bà Trưng"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000134",
+        "Code": "ST201",
+        "Name": "Phố Lý Thường Kiệt"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000134",
+        "Code": "ST202",
+        "Name": "Đường Lê Quý Đôn"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000134",
+        "Code": "ST203",
+        "Name": "Đường Hai Bà Trưng"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000134",
+        "Code": "ST204",
+        "Name": "Phố Trần Hưng Đạo"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000134",
+        "Code": "ST205",
+        "Name": "Đường Phan Bá Vành"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000134",
+        "Code": "ST206",
+        "Name": "Phố Quang Trung"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000148",
+        "Code": "ST301",
+        "Name": "Đường Bạch Đằng"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000148",
+        "Code": "ST302",
+        "Name": "Đường Trần Phú"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000148",
+        "Code": "ST303",
+        "Name": "Đường Nguyễn Văn Linh"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000148",
+        "Code": "ST304",
+        "Name": "Đường 2 Tháng 9"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000131",
+        "Code": "ST401",
+        "Name": "Đường Lạch Tray"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000131",
+        "Code": "ST402",
+        "Name": "Đường Lê Hồng Phong"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000192",
+        "Code": "ST501",
+        "Name": "Đường 3 Tháng 2"
+    },
+    {
+        "ProvinceId": "65fc5b5b0000000000000192",
+        "Code": "ST502",
+        "Name": "Đường Nguyễn Văn Cừ"
+    }
+]

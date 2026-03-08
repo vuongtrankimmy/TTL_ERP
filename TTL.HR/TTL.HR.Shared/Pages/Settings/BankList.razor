@@ -1,0 +1,385 @@
+@page "/settings/banks"
+@using TTL.HR.Shared.Components.Common
+@using TTL.HR.Application.Modules.Common.Models
+@inject IStringLocalizer<SharedResource> L
+
+<div class="card card-flush shadow-sm">
+    <div class="card-header border-0 pt-6">
+        <div class="card-title">
+            <div class="d-flex align-items-center position-relative my-1">
+                <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
+                        <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
+                    </svg>
+                </span>
+                <input type="text" value="@_searchTerm" @oninput="HandleSearch" class="form-control form-control-solid w-250px ps-14" placeholder="Tìm kiếm ngân hàng..." />
+            </div>
+        </div>
+        <div class="card-toolbar">
+            <!-- VIEW MODE TOGGLE -->
+            <div class="d-flex justify-content-end align-items-center me-4 border rounded shadow-xs overflow-hidden">
+                <button type="button" class="btn btn-icon btn-sm btn-active-color-primary @(_viewMode == "table" ? "bg-light-primary text-primary" : "bg-white text-gray-400")" 
+                        @onclick='() => ToggleViewMode("table")' title="Xem dạng bảng">
+                    <i class="ki-outline ki-row-horizontal fs-2"></i>
+                </button>
+                <button type="button" class="btn btn-icon btn-sm btn-active-color-primary @(_viewMode == "card" ? "bg-light-primary text-primary" : "bg-white text-gray-400")" 
+                        @onclick='() => ToggleViewMode("card")' title="Xem dạng lưới">
+                    <i class="ki-outline ki-element-11 fs-2"></i>
+                </button>
+            </div>
+
+            <button type="button" class="btn btn-primary" @onclick="OpenAddBank">
+                <i class="ki-outline ki-plus fs-2"></i> Thêm ngân hàng
+            </button>
+        </div>
+    </div>
+
+    <div class="card-body pt-0">
+        <!-- TABS -->
+        <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder px-5 mb-5">
+            <li class="nav-item">
+                <a class="nav-link text-active-primary py-4 @(string.IsNullOrEmpty(_filterStatus) ? "active" : "")" href="javascript:;" @onclick='() => ChangeStatusFilter("")'>
+                    Tất cả <span class="badge badge-light-primary ms-2">@_counts.All</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-active-primary py-4 @(_filterStatus == "Active" ? "active" : "")" href="javascript:;" @onclick='() => ChangeStatusFilter("Active")'>
+                    Đang hoạt động <span class="badge badge-light-success ms-2">@_counts.Active</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-active-primary py-4 @(_filterStatus == "Inactive" ? "active" : "")" href="javascript:;" @onclick='() => ChangeStatusFilter("Inactive")'>
+                    Đã tắt <span class="badge badge-light-danger ms-2">@_counts.Inactive</span>
+                </a>
+            </li>
+        </ul>
+
+        @if (_loadFailed)
+        {
+            <div class="alert alert-danger d-flex align-items-center p-5 mb-10 transition-all animate__animated animate__shakeX">
+                <i class="ki-outline ki-information-5 fs-2hx text-danger me-4"></i>
+                <div class="d-flex flex-column">
+                    <h4 class="mb-1 text-danger fw-bolder">Có lỗi xảy ra khi tải dữ liệu</h4>
+                    <span class="fs-6 text-gray-700">@_errorMessage</span>
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-danger fw-boldest px-6" @onclick="ReloadData">
+                            <i class="ki-outline ki-arrows-circle fs-3 me-2"></i> Thử lại ngay
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <SkeletonLoading IsLoading="_isLoading" Type='@(_viewMode == "card" ? SkeletonLoading.SkeletonType.CardGrid : SkeletonLoading.SkeletonType.Table)' Rows="5" Columns="6">
+            @if (_viewMode == "card")
+            {
+                <!-- CARD GRID VIEW -->
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 row-cols-xxl-4 g-9 animate__animated animate__fadeIn">
+                    @if (FilteredBanks != null && FilteredBanks.Any())
+                    {
+                        @foreach (var bank in FilteredBanks)
+                        {
+                            <div class="col">
+                                <div class="card h-100 shadow-xs border-0 rounded-4 overflow-hidden position-relative hover-elevate-up transition-all hover-shadow-sm">
+                                    <div class="card-body p-8">
+                                        <!-- Card Header: Status & Actions -->
+                                        <div class="d-flex flex-stack mb-5">
+                                            <div class="badge @(bank.IsActive ? "badge-light-success" : "badge-light-danger") fw-boldest fs-9 px-3 py-2 rounded-pill shadow-xs">
+                                                @(bank.IsActive ? "Đang hoạt động" : "Đã tắt")
+                                            </div>
+
+                                            <div class="dropdown">
+                                                <button class="btn btn-icon btn-sm btn-light btn-active-light-primary rounded-circle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="ki-outline ki-dots-horizontal fs-3"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm rounded-3">
+                                                    <li><a class="dropdown-item py-3 cursor-pointer" @onclick="() => EditBank(bank)"><i class="ki-outline ki-pencil fs-5 me-3 text-warning"></i>Sửa thông tin</a></li>
+                                                    <li><hr class="dropdown-divider bg-gray-200"></li>
+                                                    <li><a class="dropdown-item py-3 cursor-pointer @(bank.IsActive ? "text-danger" : "text-success")" @onclick="() => ToggleStatus(bank)">
+                                                        <i class="ki-outline @(bank.IsActive ? "ki-cross-circle text-danger" : "ki-check-circle text-success") fs-5 me-3"></i>
+                                                        @(bank.IsActive ? "Tắt hoạt động" : "Mở hoạt động")
+                                                    </a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <!-- Card Content: Identity -->
+                                        <div class="d-flex flex-column align-items-center mb-7">
+                                            <div class="symbol symbol-70px symbol-circle mb-4 shadow-sm border border-2 border-white">
+                                                @if (!string.IsNullOrEmpty(bank.Logo))
+                                                {
+                                                    <img src="@bank.Logo" alt="@bank.Name" style="object-fit: contain; padding: 5px;" />
+                                                }
+                                                else
+                                                {
+                                                    <div class="symbol-label fs-2 bg-light-primary text-primary fw-boldest">@bank.Code?[0]</div>
+                                                }
+                                            </div>
+                                            <a href="javascript:;" class="text-gray-900 text-hover-primary fw-boldest fs-5 mb-1 text-center px-2" @onclick="() => EditBank(bank)">@bank.Name</a>
+                                            <span class="badge badge-light-primary fw-bold fs-7 mt-2">@bank.Code</span>
+                                        </div>
+
+                                        <!-- Card Stats: Practical Info -->
+                                        <div class="bg-light rounded-4 p-5 mb-0 border border-dashed border-gray-300">
+                                            <div class="d-flex flex-stack mb-3">
+                                                <span class="text-gray-600 fw-bold fs-8 text-uppercase">Swift Code:</span>
+                                                <span class="text-gray-800 fw-boldest fs-8 text-end">@(string.IsNullOrEmpty(bank.SwiftCode) ? "---" : bank.SwiftCode)</span>
+                                            </div>
+                                            <div class="d-flex flex-stack mb-0">
+                                                <span class="text-gray-600 fw-bold fs-8 text-uppercase">Ưu tiên:</span>
+                                                <span class="text-gray-800 fw-boldest fs-8 text-end">@bank.Priority</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Hover decoration -->
+                                    <div class="position-absolute end-0 bottom-0 opacity-5 pe-3 pb-3">
+                                        <i class="ki-outline ki-bank fs-1 text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12 py-10">
+                            <div class="text-center bg-light rounded-4 p-10 border border-dashed border-gray-300">
+                                <i class="ki-outline ki-bank fs-3x text-gray-400 mb-5"></i>
+                                <div class="text-gray-500 fw-bold fs-6">Không tìm thấy ngân hàng nào trong danh sách.</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <!-- TABLE VIEW (Default) -->
+                <div class="table-responsive">
+                    <table class="table align-middle table-row-dashed fs-7 gy-5 animate__animated animate__fadeIn">
+                        <thead>
+                            <tr class="text-start text-muted fw-bold fs-8 text-uppercase gs-0">
+                                <th class="min-w-250px cursor-pointer" @onclick='() => ToggleSort("name")'>Ngân hàng <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(_sortBy == "name" ? "text-primary" : "text-muted")"></i></th>
+                                <th class="min-w-100px cursor-pointer" @onclick='() => ToggleSort("code")'>Mã Code <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(_sortBy == "code" ? "text-primary" : "text-muted")"></i></th>
+                                <th class="min-w-120px">Swift Code</th>
+                                <th class="min-w-100px cursor-pointer text-center" @onclick='() => ToggleSort("priority")'>Ưu tiên <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(_sortBy == "priority" ? "text-primary" : "text-muted")"></i></th>
+                                <th class="min-w-150px text-center">Trạng thái</th>
+                                <th class="text-end min-w-100px">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-600 fw-bold">
+                            @if (FilteredBanks != null && FilteredBanks.Any())
+                            {
+                                @foreach (var bank in FilteredBanks)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-40px me-3">
+                                                    @if (!string.IsNullOrEmpty(bank.Logo))
+                                                    {
+                                                        <img src="@bank.Logo" alt="@bank.Name" style="object-fit: contain" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="symbol-label fs-3 bg-light-primary text-primary">@bank.Code?[0]</div>
+                                                    }
+                                                </div>
+                                                <div class="d-flex flex-column">
+                                                    <a href="javascript:;" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6" @onclick="() => EditBank(bank)">@bank.Name</a>
+                                                    <span class="text-muted fs-7">@bank.Note</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge badge-light-primary fw-bold">@bank.Code</span></td>
+                                        <td>@(string.IsNullOrEmpty(bank.SwiftCode) ? "---" : bank.SwiftCode)</td>
+                                        <td class="text-center">@bank.Priority</td>
+                                        <td class="text-center">
+                                            <div class="form-check form-switch form-check-custom form-check-solid d-inline-block">
+                                                <input class="form-check-input h-20px w-30px" type="checkbox" checked="@bank.IsActive" @onchange="() => ToggleStatus(bank)" />
+                                                <label class="form-check-label ms-2">
+                                                    <span class="badge @(bank.IsActive ? "badge-light-success" : "badge-light-danger")">
+                                                        @(bank.IsActive ? "Đang hoạt động" : "Đã tắt")
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="d-flex justify-content-end flex-shrink-0">
+                                                <button type="button" class="btn btn-icon btn-bg-light btn-active-color-warning btn-sm me-1" title="Sửa thông tin" @onclick="() => EditBank(bank)">
+                                                    <i class="ki-outline ki-pencil fs-3"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" title="@(bank.IsActive ? "Tắt hoạt động" : "Mở hoạt động")" @onclick="() => ToggleStatus(bank)">
+                                                    <i class="ki-outline @(bank.IsActive ? "ki-cross-circle" : "ki-check-circle") fs-3"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center py-10">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <i class="ki-outline ki-bank fs-3x text-gray-300 mb-3"></i>
+                                            <span class="text-gray-400">Không có dữ liệu ngân hàng để hiển thị.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </SkeletonLoading>
+
+        <!-- INFO BARS -->
+        <div class="row g-5 mt-5">
+            <div class="col-md-8">
+                <div class="row g-5 h-100">
+                    <div class="col-md-6">
+                        <div class="card bg-light-info border border-dashed border-info p-5 h-100 hover-elevate-up">
+                            <div class="d-flex align-items-center">
+                                <i class="ki-outline ki-notification-on fs-2hx text-info me-4"></i>
+                                <div>
+                                    <div class="fs-6 fw-bolder text-gray-800">Quản lý ngân hàng</div>
+                                    <div class="fs-8 text-muted mt-1">Hệ thống danh mục ngân hàng dùng cho việc chuyển lương và thanh toán.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light-warning border border-dashed border-warning p-5 h-100 hover-elevate-up">
+                            <div class="d-flex align-items-center">
+                                <i class="ki-outline ki-information-2 fs-2hx text-warning me-4"></i>
+                                <div>
+                                    <div class="fs-6 fw-bolder text-gray-800">Swift Code & Logo</div>
+                                    <div class="fs-8 text-muted mt-1">Đảm bảo Swift Code chính xác để hỗ trợ các giao dịch quốc tế nếu có.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light-primary border border-dashed border-primary p-5 h-100 hover-elevate-up">
+                    <div class="d-flex align-items-center h-100">
+                        <i class="ki-outline ki-chart-line-4 fs-2hx text-primary me-4"></i>
+                        <div>
+                            <div class="fs-6 fw-bolder text-gray-800">Đồng bộ dữ liệu</div>
+                            <div class="fs-8 text-muted mt-1">Dữ liệu ngân hàng được áp dụng tức thì cho hồ sơ nhân sự trên toàn hệ thống.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Drawer -->
+<div class="drawer drawer-end @(_showEditDrawer ? "drawer-on" : "")" style="width: 450px; transition: all 0.3s ease;">
+    <div class="card w-100 rounded-0 shadow-lg">
+        <div class="card-header pe-5">
+            <div class="card-title">
+                <div class="d-flex justify-content-center flex-column me-3">
+                    <span class="fs-4 fw-boldest text-gray-900 me-1 lh-1">@(_isNewBank ? "Thêm ngân hàng mới" : "Cập nhật ngân hàng")</span>
+                    <span class="text-muted fs-7 fw-bold mt-1">Cung cấp thông tin chi tiết về đối tác ngân hàng</span>
+                </div>
+            </div>
+            <div class="card-toolbar">
+                <div class="btn btn-sm btn-icon btn-active-light-primary rounded-circle" @onclick="() => _showEditDrawer = false">
+                    <i class="ki-outline ki-cross fs-2"></i>
+                </div>
+            </div>
+        </div>
+        <div class="card-body hover-scroll-overlay-y">
+            <EditForm Model="_editingBank" OnValidSubmit="SaveBank">
+                <DataAnnotationsValidator />
+                <div class="fv-row mb-7">
+                    <label class="required fw-boldest fs-6 mb-2">Tên ngân hàng</label>
+                    <InputText @bind-Value="_editingBank.Name" class="form-control form-control-solid mb-3 mb-lg-0 shadow-xs" placeholder="VD: Ngân hàng Ngoại thương Việt Nam" />
+                    <ValidationMessage For="@(() => _editingBank.Name)" class="text-danger mt-2" />
+                </div>
+                <div class="row mb-7">
+                    <div class="col-6">
+                        <label class="required fw-boldest fs-6 mb-2">Mã Code (Short)</label>
+                        <InputText @bind-Value="_editingBank.Code" class="form-control form-control-solid shadow-xs" placeholder="VD: VCB" />
+                        <ValidationMessage For="@(() => _editingBank.Code)" class="text-danger mt-2" />
+                    </div>
+                    <div class="col-6">
+                        <label class="fw-boldest fs-6 mb-2">Swift Code</label>
+                        <InputText @bind-Value="_editingBank.SwiftCode" class="form-control form-control-solid shadow-xs" placeholder="VD: BFTVVNVX" />
+                    </div>
+                </div>
+                <div class="fv-row mb-7">
+                    <label class="fw-boldest fs-6 mb-2">Logo ngân hàng</label>
+                    <div class="d-flex flex-center flex-column py-5 px-9 border border-dashed border-gray-300 rounded-3 bg-light-soft position-relative">
+                        <!-- Custom Upload UI -->
+                        <div class="symbol symbol-70px symbol-circle mb-4 border border-2 border-white shadow-sm overflow-hidden bg-white">
+                            @if (!string.IsNullOrEmpty(_editingBank.Logo))
+                            {
+                                <img src="@_editingBank.Logo" alt="Logo preview" style="object-fit: contain; padding: 5px;" />
+                            }
+                            else
+                            {
+                                <div class="symbol-label fs-2 bg-light-primary text-primary fw-boldest">@(_editingBank.Code?.Length > 0 ? _editingBank.Code[0].ToString() : "B")</div>
+                            }
+                        </div>
+
+                        <div class="text-center">
+                            <label class="btn btn-sm btn-light-primary fw-boldest px-4 cursor-pointer">
+                                <span><i class="ki-outline ki-file-up fs-4 me-2"></i>Chọn ảnh Logo</span>
+                                <InputFile OnChange="HandleLogoUpload" accept=".png, .jpg, .jpeg" class="d-none" />
+                            </label>
+                            @if (!string.IsNullOrEmpty(_editingBank.Logo))
+                            {
+                                <button type="button" class="btn btn-sm btn-icon btn-light-danger rounded-circle ms-2" @onclick='() => _editingBank.Logo = ""' title="Xóa logo">
+                                    <i class="ki-outline ki-trash fs-5"></i>
+                                </button>
+                            }
+                        </div>
+                        <div class="fs-9 text-muted mt-3">Khuyên dùng: PNG nền trong suốt. Tối đa 2MB.</div>
+                    </div>
+                </div>
+                <div class="row mb-7">
+                    <div class="col-6">
+                        <label class="fw-boldest fs-6 mb-2">Thứ tự ưu tiên</label>
+                        <InputNumber @bind-Value="_editingBank.Priority" class="form-control form-control-solid shadow-xs" />
+                    </div>
+                    <div class="col-6 d-flex align-items-center mt-8">
+                        <div class="form-check form-switch form-check-custom form-check-solid">
+                            <InputCheckbox @bind-Value="_editingBank.IsActive" class="form-check-input h-25px w-45px" id="isActiveSwitch" />
+                            <label class="form-check-label fw-boldest text-gray-700" for="isActiveSwitch">Đang hoạt động</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="fv-row mb-10">
+                    <label class="fw-boldest fs-6 mb-2">Ghi chú</label>
+                    <InputTextArea @bind-Value="_editingBank.Note" class="form-control form-control-solid shadow-xs" rows="3" placeholder="Thông tin bổ sung..." />
+                </div>
+
+                <div class="text-center pt-5">
+                    <button type="button" class="btn btn-light me-3 fw-boldest px-10" @onclick="() => _showEditDrawer = false" disabled="@_isLoading">Hủy</button>
+                    <button type="submit" class="btn btn-primary fw-boldest px-10" disabled="@_isLoading">
+                        @if (_isLoading) { <span class="spinner-border spinner-border-sm align-middle ms-2"></span> }
+                        <span class="indicator-label">Lưu thông tin</span>
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@if (_showEditDrawer)
+{
+    <div class="drawer-overlay" @onclick="() => _showEditDrawer = false"></div>
+}
+
+<style>
+    .drawer.drawer-on { z-index: 1060; }
+    .drawer-overlay { z-index: 1059; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); transition: all 0.3s ease; }
+    
+    .hover-elevate-up { transition: transform 0.2s ease; }
+    .hover-elevate-up:hover { transform: translateY(-5px); }
+</style>

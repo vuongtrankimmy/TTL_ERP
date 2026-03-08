@@ -94,5 +94,22 @@ namespace TTL.HR.Application.Modules.Payroll.Services
             var response = await _httpClient.PostAsync($"{ApiEndpoints.Payroll.Periods}/lock?id={id}", null);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> DeletePeriodAsync(string id)
+        {
+            var response = await _httpClient.DeleteAsync($"{ApiEndpoints.Payroll.Periods}/{id}");
+            return response.IsSuccessStatusCode;
+        }
+        
+        public async Task<PagedResult<PayrollModel>> GetMyPayrollsAsync(string? employeeId = null, int? year = null, int page = 1, int pageSize = 10)
+        {
+            var url = $"{ApiEndpoints.Payroll.Me}?page={page}&pageSize={pageSize}";
+            if (!string.IsNullOrEmpty(employeeId)) url += $"&employeeId={employeeId}";
+            if (year.HasValue) url += $"&year={year}";
+            
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<PayrollModel>>>(url, options);
+            return response?.Data ?? new PagedResult<PayrollModel>();
+        }
     }
 }

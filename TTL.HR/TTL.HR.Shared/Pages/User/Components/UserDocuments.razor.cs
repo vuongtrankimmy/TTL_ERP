@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using TTL.HR.Application.Modules.Common.Interfaces;
 using TTL.HR.Application.Modules.HumanResource.Interfaces;
 using TTL.HR.Application.Modules.HumanResource.Models;
 
@@ -13,8 +14,10 @@ namespace TTL.HR.Shared.Pages.User.Components
     {
         [Parameter] public string? EmployeeId { get; set; }
         [Inject] private IEmployeeService EmployeeService { get; set; } = default!;
+        [Inject] private IMasterDataService MasterDataService { get; set; } = default!;
 
         private DigitalProfileModel? _profile;
+        private List<TTL.HR.Application.Modules.Common.Models.LookupModel> _documentTypeLookups = new();
         private bool _isLoading = true;
         private bool _isUploading = false;
         private bool _showUploadModal = false;
@@ -30,18 +33,26 @@ namespace TTL.HR.Shared.Pages.User.Components
         private string? _uploadError;
         private bool _uploadSuccess = false;
 
-        private static readonly Dictionary<string, string> DocumentTypes = new()
+        protected override async Task OnInitializedAsync()
         {
-            { "CCCD", "CMND / CCCD" },
-            { "DegreeUniversity", "Bằng Đại học / Sau Đại học" },
-            { "Certificate", "Chứng chỉ / Chứng nhận" },
-            { "HealthCertificate", "Giấy khám sức khỏe" },
-            { "CV", "Sơ yếu lý lịch" },
-            { "BirthCertificate", "Giấy khai sinh" },
-            { "MarriageCertificate", "Giấy đăng ký kết hôn" },
-            { "HouseholdBook", "Sổ hộ khẩu" },
-            { "Other", "Tài liệu khác" }
-        };
+            await LoadLookups();
+        }
+
+        private async Task LoadLookups()
+        {
+            try 
+            {
+                _documentTypeLookups = await MasterDataService.GetCachedLookupsAsync("DocumentType");
+                if (_documentTypeLookups.Any())
+                {
+                    _selectedDocumentType = _documentTypeLookups.First().Code;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[UserDocuments] LoadLookups error: {ex.Message}");
+            }
+        }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -85,7 +96,7 @@ namespace TTL.HR.Shared.Pages.User.Components
 
         private void OpenUploadModal()
         {
-            _selectedDocumentType = "CCCD";
+            _selectedDocumentType = _documentTypeLookups.FirstOrDefault()?.Code ?? "CCCD";
             _selectedFile = null;
             _selectedFileName = "";
             _expiryDate = null;
@@ -201,9 +212,6 @@ namespace TTL.HR.Shared.Pages.User.Components
 
         private bool IsImage(string fileType) =>
             fileType.ToLower() == "jpg" || fileType.ToLower() == "jpeg" || fileType.ToLower() == "png";
-
-        private string GetDocumentTypeLabel(string type) =>
-            DocumentTypes.TryGetValue(type, out var label) ? label : type;
 
         private int CompletionPercent => _profile == null ? 0 : (int)_profile.CompletionPercentage;
     }

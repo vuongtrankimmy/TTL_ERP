@@ -27,6 +27,8 @@ namespace TTL.HR.Shared.Pages.Employees
         [Inject] public IPermissionService PermissionService { get; set; } = default!;
         [Inject] public IFormatService FormatService { get; set; } = default!;
         [Inject] public IAuthService AuthService { get; set; } = default!;
+        [Inject] public IBankService BankService { get; set; } = default!;
+        [Inject] public ISettingsService SettingsService { get; set; } = default!;
 
         [Parameter] public string? Id { get; set; }
         public bool IsEditMode => !string.IsNullOrEmpty(Id);
@@ -37,11 +39,16 @@ namespace TTL.HR.Shared.Pages.Employees
         private List<LookupModel> employeeStatusLookups = new();
         private List<LookupModel> contractTypeLookups = new();
         private List<LookupModel> workplaceLookups = new();
+        private List<CountryModel> nationalityLookups = new();
+        private List<LookupModel> ethnicityLookups = new();
+        private List<LookupModel> religionLookups = new();
         private List<DepartmentModel> departments = new();
         private List<PositionModel> positions = new();
         private List<EmployeeDto> allEmployees = new();
         private List<RoleModel> availableRoles = new();
+        private List<BankDto> activeBanks = new();
         private bool _isProcessing = false;
+        private Dictionary<string, string> errorsMap = new();
 
         private EmployeeModel newEmployee = new()
         {
@@ -54,16 +61,34 @@ namespace TTL.HR.Shared.Pages.Employees
 
         protected override async Task OnInitializedAsync()
         {
-            genderLookups = await MasterDataService.GetCachedLookupsAsync("Gender");
-            maritalStatusLookups = await MasterDataService.GetCachedLookupsAsync("MaritalStatus");
-            employeeStatusLookups = await MasterDataService.GetCachedLookupsAsync("EmployeeStatus");
-            contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType");
-            workplaceLookups = await MasterDataService.GetCachedLookupsAsync("Workplace");
+            // Initial Settings & Language
+            await SettingsService.InitializeAsync();
+            var lang = SettingsService.CachedSettings?.DefaultLanguage ?? "vi-VN";
+
+            genderLookups = await MasterDataService.GetCachedLookupsAsync("Gender", lang);
+            maritalStatusLookups = await MasterDataService.GetCachedLookupsAsync("MaritalStatus", lang);
+            employeeStatusLookups = await MasterDataService.GetCachedLookupsAsync("EmployeeStatus", lang);
+            contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType", lang);
+            workplaceLookups = await MasterDataService.GetCachedLookupsAsync("Workplace", lang);
             departments = await DepartmentService.GetDepartmentsAsync();
             positions = await PositionService.GetPositionsAsync();
             availableRoles = await PermissionService.GetRolesAsync();
             var employees = await EmployeeService.GetEmployeesAsync();
             allEmployees = employees;
+
+            nationalityLookups = await MasterDataService.GetCachedCountriesAsync(lang);
+            ethnicityLookups = await MasterDataService.GetCachedLookupsAsync("Ethnicity", lang);
+            religionLookups = await MasterDataService.GetCachedLookupsAsync("Religion", lang);
+
+            try
+            {
+                var bankResult = await BankService.GetBanksAsync(new GetBanksRequest { Page = 1, PageSize = 1000 });
+                activeBanks = bankResult?.Items?.Where(b => b.IsActive).OrderByDescending(b => b.Priority).ThenBy(b => b.Code).ToList() ?? new();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading banks: {ex.Message}");
+            }
 
             if (IsEditMode)
             {
@@ -160,8 +185,12 @@ namespace TTL.HR.Shared.Pages.Employees
                 if (!newEmployee.ContractTypeId.HasValue) newEmployee.ContractTypeId = contractTypeLookups.FirstOrDefault()?.LookupID;
                 if (string.IsNullOrEmpty(newEmployee.DeptId)) newEmployee.DeptId = departments.FirstOrDefault()?.Id ?? string.Empty;
                 if (string.IsNullOrEmpty(newEmployee.PositionId)) newEmployee.PositionId = positions.FirstOrDefault()?.Id ?? string.Empty;
-                if (string.IsNullOrEmpty(newEmployee.Workplace)) newEmployee.Workplace = workplaceLookups.FirstOrDefault()?.Name ?? "Văn phòng Hồ Chí Minh";
+                if (!newEmployee.WorkplaceId.HasValue || newEmployee.WorkplaceId <= 0) newEmployee.WorkplaceId = workplaceLookups.FirstOrDefault()?.LookupID;
                 
+                if (string.IsNullOrEmpty(newEmployee.Nationality)) newEmployee.Nationality = nationalityLookups.FirstOrDefault()?.Name ?? "Việt Nam";
+                if (string.IsNullOrEmpty(newEmployee.Ethnicity)) newEmployee.Ethnicity = ethnicityLookups.FirstOrDefault()?.Name ?? "Kinh";
+                if (string.IsNullOrEmpty(newEmployee.Religion)) newEmployee.Religion = religionLookups.FirstOrDefault()?.Name ?? "Không";
+
                 // Defaults for Account
                 if (string.IsNullOrEmpty(newEmployee.Role)) newEmployee.Role = "User";
             }
@@ -464,30 +493,55 @@ namespace TTL.HR.Shared.Pages.Employees
             newEmployee.Phone = FormatService.CleanDigits(newEmployee.Phone);
 
             // 2. Strict Validation
+            errorsMap.Clear();
             var errors = new List<string>();
-            if (string.IsNullOrWhiteSpace(newEmployee.Name)) errors.Add("Họ tên nhân viên");
+            
+            if (string.IsNullOrWhiteSpace(newEmployee.Name)) errorsMap["Name"] = "Họ tên nhân viên không hợp lệ";
+            
             if (!string.IsNullOrWhiteSpace(newEmployee.Email) && !FormatService.IsValidEmail(newEmployee.Email)) 
             {
-                errors.Add("Email không đúng định dạng (VD: example@mail.com)");
+                errorsMap["Email"] = "Email không đúng định dạng (VD: example@mail.com)";
             }
 
             if (!string.IsNullOrWhiteSpace(newEmployee.Phone) && newEmployee.Phone.Length < 10) 
             {
-                errors.Add("Số điện thoại phải từ 10 số");
+                errorsMap["Phone"] = "Số điện thoại phải từ 10 số";
             }
 
             if (!string.IsNullOrWhiteSpace(newEmployee.IdCard) && newEmployee.IdCard.Length != 12 && newEmployee.IdCard.Length != 9) 
             {
-                errors.Add("Số CCCD phải đủ 12 chữ số (hoặc 9 số đối với CMND cũ)");
+                errorsMap["IdCard"] = "Số CCCD phải đủ 12 chữ số (hoặc 9 số đối với CMND cũ)";
+            }
+
+            if (!string.IsNullOrWhiteSpace(newEmployee.BankAccountNumber))
+            {
+                if (newEmployee.BankAccountNumber.Length < 6 || newEmployee.BankAccountNumber.Length > 20)
+                {
+                    errorsMap["BankAccountNumber"] = "Số tài khoản phải từ 6-20 chữ số";
+                }
+                if (string.IsNullOrEmpty(newEmployee.BankName))
+                {
+                    errorsMap["BankName"] = "Vui lòng chọn ngân hàng cho số tài khoản này";
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(newEmployee.TaxId))
+            {
+                // Regexp: 10 digits or 10 digits + hyphen + 3 digits
+                if (!System.Text.RegularExpressions.Regex.IsMatch(newEmployee.TaxId, @"^\d{10}(-?\d{3})?$"))
+                {
+                    errorsMap["TaxId"] = "Mã số thuế không hợp lệ (10 hoặc 13 chữ số)";
+                }
             }
 
             // Only require structural fields when CREATING, not when editing
             if (!IsEditMode)
             {
-                if (string.IsNullOrEmpty(newEmployee.DeptId)) errors.Add("Phòng ban");
-                if (string.IsNullOrEmpty(newEmployee.PositionId)) errors.Add("Chức vụ");
-                if (!newEmployee.StatusId.HasValue || newEmployee.StatusId <= 0) errors.Add("Trạng thái");
-                if (string.IsNullOrEmpty(newEmployee.Workplace)) errors.Add("Nơi làm việc");
+                if (string.IsNullOrEmpty(newEmployee.DeptId)) errorsMap["DeptId"] = "Vui lòng chọn Phòng ban";
+                if (string.IsNullOrEmpty(newEmployee.PositionId)) errorsMap["PositionId"] = "Vui lòng chọn Chức vụ";
+                if (!newEmployee.StatusId.HasValue || newEmployee.StatusId <= 0) errorsMap["StatusId"] = "Vui lòng chọn Trạng thái";
+                if (!newEmployee.WorkplaceId.HasValue || newEmployee.WorkplaceId <= 0) errorsMap["WorkplaceId"] = "Vui lòng chọn Nơi làm việc";
+                if (!newEmployee.ContractTypeId.HasValue || newEmployee.ContractTypeId <= 0) errorsMap["ContractTypeId"] = "Vui lòng chọn Loại hợp đồng";
             }
             
             if (!IsEmailValid)
@@ -505,7 +559,7 @@ namespace TTL.HR.Shared.Pages.Employees
 
                 if (string.IsNullOrWhiteSpace(newEmployee.Username))
                 {
-                    errors.Add("Không thể tự động tạo Tên đăng nhập. Vui lòng nhập thủ công.");
+                    errorsMap["Username"] = "Không thể tự động tạo Tên đăng nhập. Vui lòng nhập thủ công.";
                 }
                 else
                 {
@@ -518,15 +572,19 @@ namespace TTL.HR.Shared.Pages.Employees
                     
                     if (string.IsNullOrEmpty(newEmployee.Username))
                     {
-                        errors.Add("Tên đăng nhập không hợp lệ (phải chứa ít nhất 1 ký tự a-z hoặc 0-9)");
+                        errorsMap["Username"] = "Tên đăng nhập không hợp lệ (phải chứa ít nhất 1 ký tự a-z hoặc 0-9)";
                     }
                 }
             }
 
-            if (errors.Any())
+            if (errorsMap.Any())
             {
                 await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông tin chưa hợp lệ", 
-                    $"{string.Join("<br/>", errors.Select(e => "• " + e))}", "warning");
+                    "Vui lòng kiểm tra lại các trường thông tin được đánh dấu đỏ.", "warning");
+                
+                // Focus on first error
+                var firstErrorKey = errorsMap.Keys.First();
+                await JSRuntime.InvokeVoidAsync("LayoutHelper.scrollToElement", $"input_{firstErrorKey}");
                 return;
             }
 
@@ -572,7 +630,7 @@ namespace TTL.HR.Shared.Pages.Employees
                         JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Now,
                         Salary = ParseSalary(newEmployee.SalaryDisplay),
                         ContractEndDate = newEmployee.ContractExpiry ?? newEmployee.ContractEndDate,
-                        Workplace = newEmployee.Workplace,
+                        WorkplaceId = newEmployee.WorkplaceId,
                         IsAccountActive = newEmployee.IsActive,
                         IsCreateAccount = newEmployee.IsCreateAccount,
                         Username = newEmployee.Username,
@@ -630,10 +688,7 @@ namespace TTL.HR.Shared.Pages.Employees
                     }
                     else
                     {
-                        var errorMsg = !string.IsNullOrEmpty(resultStr) ? resultStr : "Không thể cập nhật hồ sơ. Vui lòng kiểm tra lại dữ liệu.";
-                        if (errorMsg.Contains("<!DOCTYPE html>")) errorMsg = "Lỗi máy chủ (500 Internal Server Error).";
-                        else if (errorMsg.Length > 500) errorMsg = errorMsg.Substring(0, 500) + "...";
-                        await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", errorMsg, "error");
+                        await HandleServerError(resultStr);
                     }
                 }
                 else
@@ -657,7 +712,7 @@ namespace TTL.HR.Shared.Pages.Employees
                         JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Now,
                         Salary = ParseSalary(newEmployee.SalaryDisplay),
                         ContractEndDate = newEmployee.ContractExpiry ?? newEmployee.ContractEndDate,
-                        Workplace = newEmployee.Workplace,
+                        WorkplaceId = newEmployee.WorkplaceId,
                         
                         PersonalDetails = new PersonalDetailsCommandDto
                         {
@@ -720,19 +775,8 @@ namespace TTL.HR.Shared.Pages.Employees
                     }
                     else 
                     {
-                        var errorMsg = !string.IsNullOrEmpty(result) ? result : "Không thể lưu hồ sơ. Vui lòng kiểm tra lại dữ liệu hoặc thử lại.";
-                        
-                        // Simple HTML check
-                        if (errorMsg.Contains("<!DOCTYPE html>") || errorMsg.Contains("<html"))
-                        {
-                            errorMsg = "Lỗi máy chủ (500 Internal Server Error). Vui lòng liên hệ bộ phận kỹ thuật.";
-                        }
-                        else if (errorMsg.Length > 500) 
-                        {
-                            errorMsg = errorMsg.Substring(0, 500) + "...";
-                        }
+                        await HandleServerError(result ?? "Không thể lưu hồ sơ. Vui lòng kiểm tra lại dữ liệu.");
 
-                        await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", errorMsg, "error");
                     }
                 }
 
@@ -748,6 +792,63 @@ namespace TTL.HR.Shared.Pages.Employees
                 // We DON'T call Swal.close here because it would close the Success/Error modals 
                 // that were opened in the try/catch blocks. 
                 // Success/Error modals from Swal.fire already replace the loading spinner.
+            }
+        }
+        
+        private async Task HandleServerError(string errorMsg)
+        {
+            errorsMap.Clear();
+            
+            if (errorMsg.Contains("<!DOCTYPE html>") || errorMsg.Contains("<html"))
+            {
+                errorMsg = "Lỗi máy chủ (500 Internal Server Error). Vui lòng liên hệ bộ phận kỹ thuật.";
+            }
+
+            // Typical format: "Invalid data : Email: Email đã tồn tại..."
+            if (errorMsg.Contains("Invalid data"))
+            {
+                var parts = errorMsg.Split(':', StringSplitOptions.TrimEntries);
+                if (parts.Length >= 2)
+                {
+                    // parts[0] = "Invalid data"
+                    // parts[1] = "Email"
+                    // parts[2] = "Email đã tồn tại..."
+                    
+                    var fieldPart = parts[1].ToLower();
+                    var msg = parts.Length > 2 ? string.Join(": ", parts.Skip(2)) : parts[1];
+                    
+                    bool found = false;
+                    if (fieldPart.Contains("email")) { errorsMap["Email"] = msg; found = true; }
+                    else if (fieldPart.Contains("fullname") || fieldPart.Contains("name")) { errorsMap["Name"] = msg; found = true; }
+                    else if (fieldPart.Contains("code")) { errorsMap["Code"] = msg; found = true; }
+                    else if (fieldPart.Contains("phone")) { errorsMap["Phone"] = msg; found = true; }
+                    else if (fieldPart.Contains("idcard")) { errorsMap["IdCard"] = msg; found = true; }
+                    else if (fieldPart.Contains("username")) { errorsMap["Username"] = msg; found = true; }
+                    else if (fieldPart.Contains("bankaccount")) { errorsMap["BankAccountNumber"] = msg; found = true; }
+                    else if (fieldPart.Contains("bankname")) { errorsMap["BankName"] = msg; found = true; }
+                    else if (fieldPart.Contains("tax")) { errorsMap["TaxId"] = msg; found = true; }
+                    else if (fieldPart.Contains("nationality")) { errorsMap["Nationality"] = msg; found = true; }
+                    else if (fieldPart.Contains("ethnicity")) { errorsMap["EthnicityId"] = msg; found = true; }
+                    else if (fieldPart.Contains("religion")) { errorsMap["ReligionId"] = msg; found = true; }
+                    else if (fieldPart.Contains("dept") || fieldPart.Contains("department")) { errorsMap["DeptId"] = msg; found = true; }
+                    else if (fieldPart.Contains("position")) { errorsMap["PositionId"] = msg; found = true; }
+                    else if (fieldPart.Contains("status")) { errorsMap["StatusId"] = msg; found = true; }
+                    else if (fieldPart.Contains("contract")) { errorsMap["ContractTypeId"] = msg; found = true; }
+                    
+                    if (found) {
+                        errorMsg = msg; // Simplify message for Swal if we identified the field
+                    }
+                }
+            }
+            
+            await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", errorMsg, "error");
+            
+            if (errorsMap.Any())
+            {
+                StateHasChanged();
+                await Task.Delay(300); // Wait for modal to show/animate
+                var firstErrorKey = errorsMap.Keys.First();
+                await JSRuntime.InvokeVoidAsync("LayoutHelper.scrollToElement", $"input_{firstErrorKey}");
             }
         }
 
@@ -767,7 +868,7 @@ namespace TTL.HR.Shared.Pages.Employees
             public DateTime JoinDate { get; set; }
             public decimal? Salary { get; set; }
             public DateTime? ContractEndDate { get; set; }
-            public string Workplace { get; set; } = string.Empty;
+            public int? WorkplaceId { get; set; }
             public PersonalDetailsCommandDto PersonalDetails { get; set; } = new();
             public EmergencyContactCommandDto EmergencyContact { get; set; } = new();
             public List<EducationDetailDto> Education { get; set; } = new();
@@ -835,7 +936,7 @@ namespace TTL.HR.Shared.Pages.Employees
                 JoinDate = dto.JoinDate,
                 Salary = dto.Salary,
                 ContractEndDate = dto.ContractEndDate,
-                Workplace = dto.Workplace,
+                WorkplaceId = dto.WorkplaceId,
                 Education = dto.Education ?? new List<EducationDetailDto>(),
                 Experience = dto.Experience ?? new List<ExperienceDetailDto>(),
                 // IsAccountActive is not part of the DTO, assuming default or handled by service

@@ -23,12 +23,15 @@ namespace TTL.HR.Application.Modules.Attendance.Interfaces
         Task<ApiResponse<bool>> UpdateWorkShiftAsync(string id, WorkShiftModel model);
         Task<ApiResponse<bool>> DeleteWorkShiftAsync(string id);
         Task<bool> AssignScheduleAsync(AssignWorkScheduleModel model);
-        Task<ApiResponse<object>> CloseMonthlyAsync(int month, int year);
-        Task<PagedResult<AttendanceModel>> GetAttendanceListAsync(int page = 1, int pageSize = 10, string? searchTerm = null, DateTime? date = null, string? status = null, string? orderBy = null);
+        Task<ApiResponse<object>> CloseMonthlyAsync(int month, int year, string? employeeId = null);
+        Task<PagedResult<AttendanceModel>> GetAttendanceListAsync
+(int page = 1, int pageSize = 10, string? searchTerm = null, DateTime? date = null, string? status = null, string? orderBy = null);
         Task<ApiResponse<ImportAttendanceResultModel>> ImportAttendanceAsync(string? rawData, byte[]? fileBytes, string? fileName, string source, int codeCol = 1, int timeCol = 2, bool isPreview = false);
-        Task<bool> CreateShiftRequestAsync(CreateShiftRequestModel model);
+        Task<ApiResponse<bool>> CreateShiftRequestAsync(CreateShiftRequestModel model);
         Task<EmployeeStatsModel> GetEmployeeStatsAsync(string employeeId, int month, int year);
         Task<bool> WithdrawShiftRequestAsync(string id);
+        Task<bool> DeleteShiftRequestAsync(string id);
         Task<bool> RecalculateAttendanceSummaryAsync(string employeeId, int month, int year);
+        Task<byte[]?> ExportTimesheetAsync(int month, int year, string? searchTerm = null, string? departmentId = null);
     }
 }

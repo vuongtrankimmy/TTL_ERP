@@ -8,6 +8,7 @@ namespace TTL.HR.Shared.Pages.Attendance
     public partial class ShiftList
     {
         [Inject] private IAttendanceService AttendanceService { get; set; } = default!;
+        [Inject] private TTL.HR.Application.Modules.HumanResource.Interfaces.IEmployeeService EmployeeService { get; set; } = default!;
         [Inject] private IJSRuntime JS { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
@@ -51,6 +52,15 @@ namespace TTL.HR.Shared.Pages.Attendance
             .Skip((_detailPageIndex - 1) * _detailPageSize)
             .Take(_detailPageSize)
             .ToList();
+
+        // Assign Employee Selection Drawer
+        private bool _showAssignDrawer = false;
+        private WorkShiftModel? _assigningShift;
+        private List<TTL.HR.Application.Modules.HumanResource.Models.EmployeeDto> _allEmployees = new();
+        private List<string> _initialSelectedEmployeesForAssign = new();
+        private DateTime _assignStartDate = DateTime.Today;
+        private DateTime _assignEndDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
+        private bool _isAssigning = false;
 
         private List<string> _predefinedColors = new() { 
             "primary", "success", "info", "warning", "danger", "dark",
@@ -243,6 +253,81 @@ namespace TTL.HR.Shared.Pages.Attendance
         {
             _showAssignedObjects = false;
             _selectedShiftForDetail = null;
+        }
+
+        private async Task OpenAssignDrawer(WorkShiftModel? shift)
+        {
+            if (shift == null) return;
+            _assigningShift = shift;
+            
+            // Load employees if not loaded yet
+            if (!_allEmployees.Any())
+            {
+                _allEmployees = await EmployeeService.GetEmployeesAsync();
+            }
+
+            var now = DateTime.Today;
+            var m = Month ?? now.Month;
+            var y = Year ?? now.Year;
+            var startDate = new DateTime(y, m, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+            
+            var allSchedules = await AttendanceService.GetMonthlyWorkSchedulesAsync(startDate, endDate);
+            
+            _initialSelectedEmployeesForAssign = allSchedules
+                .Where(e => e.Schedules.Any(s => s.ShiftId == shift.Id))
+                .Select(e => e.EmployeeId)
+                .ToList();
+
+            _showAssignDrawer = true;
+        }
+
+        private async Task HandleAssignSchedule(List<string> selectedEmployeeIds)
+        {
+            if (!selectedEmployeeIds.Any())
+            {
+                await JS.InvokeVoidAsync("toastr.warning", "Vui lòng chọn ít nhất một nhân viên để gán ca");
+                return;
+            }
+
+            if (_assigningShift == null) return;
+
+            _isAssigning = true;
+            try
+            {
+                var assignModel = new AssignWorkScheduleModel
+                {
+                    ShiftId = _assigningShift.Id,
+                    EmployeeIds = selectedEmployeeIds,
+                    StartDate = _assignStartDate,
+                    EndDate = _assignEndDate,
+                    DaysOfWeek = new List<DayOfWeek> { 
+                        DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, 
+                        DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday 
+                    }
+                };
+
+                var result = await AttendanceService.AssignScheduleAsync(assignModel);
+                if (result)
+                {
+                    await JS.InvokeVoidAsync("toastr.success", $"Đã gán ca {_assigningShift.Name} thành công");
+                    _showAssignDrawer = false;
+                    
+                    if (_showAssignedObjects)
+                    {
+                        // Reload assigned objects drawer
+                        await OpenAssignedObjects(_assigningShift);
+                    }
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi gán ca");
+                }
+            }
+            finally
+            {
+                _isAssigning = false;
+            }
         }
 
         private void GoToScheduler(WorkShiftModel shift)

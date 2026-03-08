@@ -25,6 +25,7 @@ public partial class EmployeeDetailDrawer
     [Parameter] public List<PositionModel> Positions { get; set; } = new();
     [Parameter] public List<EmployeeDto> Managers { get; set; } = new();
     [Parameter] public List<LookupModel> Roles { get; set; } = new();
+    [Parameter] public List<LookupModel> Workplaces { get; set; } = new();
     [Parameter] public EventCallback<EmployeeModel> OnSave { get; set; }
     [Parameter] public EventCallback OnScanCCCD { get; set; }
     [Parameter] public EventCallback<EmployeeModel> OnViewContract { get; set; }

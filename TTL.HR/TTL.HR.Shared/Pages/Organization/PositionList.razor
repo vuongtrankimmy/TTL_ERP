@@ -11,10 +11,8 @@
                 <span class="h-20px border-gray-300 border-start ms-3 mx-2"></span>
                 <small class="text-muted fs-7 fw-bold my-1 ms-1">Cơ cấu tổ chức</small>
             </h1>
-            <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <button class="btn btn-sm btn-light-primary fw-bold" @onclick="openAddPosition">
-                    <i class="ki-outline ki-plus fs-2"></i>Thêm chức danh mới
-                </button>
+            <div class="d-flex align-items-center gap-2">
+                <!-- Header toolbar space cleaned as button moved to filter bar -->
             </div>
         </div>
         @if (_loadError)
@@ -81,7 +79,12 @@
                     </div>
 
                     <div class="ms-auto my-1 d-flex gap-2">
-                        <button class="btn btn-icon btn-light btn-sm border" @onclick="resetFilters"><i class="ki-outline ki-arrows-circle fs-5"></i></button>
+                        <button class="btn btn-sm btn-light-primary fw-bold px-4" @onclick="openAddPosition">
+                            <i class="ki-outline ki-plus fs-4 me-1"></i>Tạo mới
+                        </button>
+                        <button class="btn btn-icon btn-light btn-sm border" @onclick="LoadData" title="Làm mới">
+                            <i class="ki-outline ki-arrows-circle fs-5"></i>
+                        </button>
                     </div>
                 </div>
             </div>

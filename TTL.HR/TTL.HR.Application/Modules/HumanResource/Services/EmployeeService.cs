@@ -17,7 +17,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         public EmployeeService(HttpClient httpClient) => _httpClient = httpClient;
         public async Task<List<EmployeeDto>> GetEmployeesAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<EmployeeDto>>>(ApiEndpoints.Employees.Base);
+            // Fetch all (well, a large chunk) to avoid paging issues in modals
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<EmployeeDto>>>($"{ApiEndpoints.Employees.Base}?pageSize=9999");
             return response?.Data?.Items ?? new List<EmployeeDto>();
         }
 

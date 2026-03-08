@@ -37,6 +37,61 @@
     </div>
     
     <div class="card-body pt-0">
+        <!-- Dashboard Summary -->
+        <div class="row g-5 mb-8">
+            <!-- TỔNG THỰC LĨNH -->
+            <div class="col-md-3">
+                <div class="card card-flush bg-@(Periods.FirstOrDefault(p => !p.IsPlaceholder) != null ? GetStatusBg(Periods.FirstOrDefault(p => !p.IsPlaceholder)?.StatusColor, Periods.FirstOrDefault(p => !p.IsPlaceholder)?.Status) : "gray-900") h-100 shadow-sm border border-white border-opacity-10">
+                    <div class="card-header pt-5 overflow-hidden position-relative">
+                        <div class="card-title d-flex flex-column z-index-1">
+                             <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">@_totalNet.ToString("N0") <span class="fs-6 fw-normal">đ</span></span>
+                             <span class="text-white text-opacity-70 pt-1 fw-semibold fs-6">TỔNG THỰC LĨNH</span>
+                        </div>
+                        <i class="ki-outline ki-wallet fs-4tx text-white opacity-20 position-absolute end-0 bottom-0 mb-n5 me-n5"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TỔNG THUẾ -->
+            <div class="col-md-3">
+                <div class="card card-flush bg-light-danger h-100 shadow-sm border border-danger border-opacity-10">
+                    <div class="card-header pt-5 overflow-hidden position-relative">
+                        <div class="card-title d-flex flex-column z-index-1">
+                             <span class="fs-2hx fw-bold text-danger me-2 lh-1 ls-n2">@_totalTax.ToString("N0") <span class="fs-6 fw-normal">đ</span></span>
+                             <span class="text-danger text-opacity-70 pt-1 fw-semibold fs-6">TỔNG THUẾ TNCN</span>
+                        </div>
+                        <i class="ki-outline ki-book-open fs-4tx text-danger opacity-10 position-absolute end-0 bottom-0 mb-n5 me-n5"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TỔNG BẢO HIỂM -->
+            <div class="col-md-3">
+                <div class="card card-flush bg-light-success h-100 shadow-sm border border-success border-opacity-10">
+                    <div class="card-header pt-5 overflow-hidden position-relative">
+                        <div class="card-title d-flex flex-column z-index-1">
+                             <span class="fs-2hx fw-bold text-success me-2 lh-1 ls-n2">@_totalInsurance.ToString("N0") <span class="fs-6 fw-normal">đ</span></span>
+                             <span class="text-success text-opacity-70 pt-1 fw-semibold fs-6">TỔNG BẢO HIỂM</span>
+                        </div>
+                        <i class="ki-outline ki-shield-tick fs-4tx text-success opacity-10 position-absolute end-0 bottom-0 mb-n5 me-n5"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TỔNG NHÂN SỰ -->
+            <div class="col-md-3">
+                <div class="card card-flush h-100 shadow-sm border border-gray-200">
+                    <div class="card-header pt-5 overflow-hidden position-relative">
+                        <div class="card-title d-flex flex-column z-index-1">
+                             <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">@_totalEmployeeCount</span>
+                             <span class="text-gray-500 pt-1 fw-semibold fs-6">TỔNG NHÂN SỰ</span>
+                        </div>
+                        <i class="ki-outline ki-profile-user fs-4tx text-gray-200 opacity-50 position-absolute end-0 bottom-0 mb-n5 me-n5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Table" Rows="12">
             <div class="table-responsive">
                 <table class="table align-middle table-row-dashed fs-6 gy-5">
@@ -59,8 +114,8 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="symbol symbol-40px me-3">
-                                                <div class="symbol-label @(period.IsPlaceholder ? "bg-light-secondary" : "bg-light-success")">
-                                                    <i class="ki-outline ki-dollar @(period.IsPlaceholder ? "text-gray-400" : "text-success") fs-2"></i>
+                                                <div class="symbol-label bg-@GetStatusBg(period.StatusColor, period.Status)">
+                                                    <i class="ki-outline ki-dollar text-white fs-2"></i>
                                                 </div>
                                             </div>
                                             @if (period.IsPlaceholder)
@@ -93,20 +148,13 @@
                                         }
                                         else
                                         {
-                                            <span class="text-dark fw-bolder fs-6">@period.TotalAmount.ToString("N0") VND</span>
+                                            <span class="text-primary fw-bolder fs-6">@period.TotalAmount.ToString("N0") <span class="fs-8 fw-normal">đ</span></span>
                                         }
                                     </td>
                                     <td class="text-center">
-                                        @if (period.IsPlaceholder)
-                                        {
-                                            <div class="badge badge-light fw-bold px-4 py-3 text-gray-500">Chưa khởi tạo</div>
-                                        }
-                                        else
-                                        {
-                                            <div class="badge @(period.Status == "Closed" || period.Status == "Đã chốt" ? "badge-light-success" : "badge-light-warning") fw-bold px-4 py-3">
-                                                @(period.Status == "Closed" || period.Status == "Đã chốt" ? "Đã chốt" : "Dự thảo")
-                                            </div>
-                                        }
+                                        <div class="badge badge-light-@GetStatusColor(period.StatusColor, period.Status) fw-bold px-4 py-2 rounded-pill fs-7">
+                                            @(string.IsNullOrEmpty(period.StatusName) ? period.Status : period.StatusName)
+                                        </div>
                                     </td>
                                     <td class="text-end">
                                         @if (period.IsPlaceholder)
@@ -120,9 +168,13 @@
                                             <button class="btn btn-sm btn-icon btn-light-primary btn-active-primary me-2 hover-scale" title="Xem chi tiết" @onclick="() => ViewDetail(period.Id, period.Month, period.Year)">
                                                 <i class="ki-outline ki-eye fs-2"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-icon btn-light-danger btn-active-danger hover-scale" title="Xóa">
-                                                <i class="ki-outline ki-trash fs-2"></i>
-                                            </button>
+                                            
+                                            @if (period.Status != "Closed" && period.Status != "Đã chốt")
+                                            {
+                                                <button class="btn btn-sm btn-icon btn-light-danger btn-active-danger hover-scale" title="Xóa" @onclick="() => DeletePeriod(period.Id, period.Name)">
+                                                    <i class="ki-outline ki-trash fs-2"></i>
+                                                </button>
+                                            }
                                         }
                                     </td>
                                 </tr>
@@ -142,3 +194,12 @@
         </SkeletonLoading>
     </div>
 </div>
+
+<TTL.HR.Shared.Components.Common.DeleteConfirmationModal 
+    IsVisible="@_isDeleteModalVisible"
+    Title="Xóa kỳ lương"
+    Message="Bạn đang yêu cầu xóa kỳ lương"
+    ItemName="@_itemToDeleteName"
+    OnConfirmed="OnConfirmDelete"
+    OnCancelled="OnCancelDelete" />
+

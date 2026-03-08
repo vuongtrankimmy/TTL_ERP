@@ -128,6 +128,15 @@ namespace TTL.HR.Application.Modules.Payroll.Models
         [JsonPropertyName("netSalary")]
         public decimal NetSalary { get; set; }
         
+        [JsonPropertyName("statusId")]
+        public int? StatusId { get; set; }
+        
+        [JsonPropertyName("statusName")]
+        public string StatusName { get; set; } = string.Empty;
+        
+        [JsonPropertyName("statusColor")]
+        public string StatusColor { get; set; } = string.Empty;
+        
         [JsonPropertyName("status")]
         public string Status { get; set; } = string.Empty;
         
@@ -169,6 +178,15 @@ namespace TTL.HR.Application.Modules.Payroll.Models
         
         [JsonPropertyName("status")]
         public string Status { get; set; } = "";
+
+        [JsonPropertyName("statusId")]
+        public int? StatusId { get; set; }
+
+        [JsonPropertyName("statusName")]
+        public string? StatusName { get; set; }
+
+        [JsonPropertyName("statusColor")]
+        public string? StatusColor { get; set; }
         
         [JsonPropertyName("totalNetSalary")]
         public decimal TotalNetSalary { get; set; }

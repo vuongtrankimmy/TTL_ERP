@@ -38,15 +38,11 @@
                 <div class="row g-9 mb-8">
                     <div class="col-md-6 fv-row">
                         <label class="required fs-6 fw-bold mb-2">Loại tài sản</label>
-                        <InputSelect class="form-select form-select-solid" @bind-Value="Asset.Category">
-                            <option value="Laptop">Máy tính xách tay (Laptop)</option>
-                            <option value="Desktop">Máy tính để bàn (PC)</option>
-                            <option value="Monitor">Màn hình</option>
-                            <option value="Phone">Điện thoại</option>
-                            <option value="Vehicle">Phương tiện đi lại</option>
-                            <option value="Furniture">Nội thất văn phòng</option>
-                            <option value="Office">Thiết bị văn phòng</option>
-                            <option value="Other">Khác</option>
+                        <InputSelect class="form-select form-select-solid" @bind-Value="Asset.CategoryId">
+                            @foreach (var cat in Categories)
+                            {
+                                <option value="@cat.Id">@cat.Name (@cat.Code)</option>
+                            }
                         </InputSelect>
                     </div>
                     <div class="col-md-6 fv-row">
@@ -69,19 +65,18 @@
                     </div>
                     <div class="col-md-4 fv-row">
                         <label class="required fs-6 fw-bold mb-2">Trạng thái kho</label>
-                        <InputSelect class="form-select form-select-solid" @bind-Value="Asset.Status">
-                            <option value="Available">Sẵn dùng</option>
-                            <option value="Assigned">Đã bàn giao</option>
-                            <option value="Maintenance">Đang bảo trì</option>
-                            <option value="Broken">Đã hỏng</option>
-                            <option value="Lost">Đã mất</option>
+                        <InputSelect class="form-select form-select-solid" @bind-Value="Asset.StatusId">
+                            @foreach (var status in Statuses)
+                            {
+                                <option value="@status.LookupID">@status.Name</option>
+                            }
                         </InputSelect>
                     </div>
                 </div>
 
                 <div class="fv-row mb-15">
                     <label class="fs-6 fw-bold mb-2">Ghi chú chi tiết</label>
-                    <InputTextArea class="form-control form-control-solid" rows="4" @bind-Value="Asset.SerialNumber" placeholder="Thông số kỹ thuật, cấu hình, tình trạng khi nhập kho..." />
+                    <InputTextArea class="form-control form-control-solid" rows="4" @bind-Value="Asset.Specification" placeholder="Thông số kỹ thuật, cấu hình, tình trạng khi nhập kho..." />
                 </div>
 
                 <div class="d-flex justify-content-end gap-3">

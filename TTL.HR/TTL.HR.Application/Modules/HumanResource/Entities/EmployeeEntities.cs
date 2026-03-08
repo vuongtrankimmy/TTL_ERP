@@ -26,6 +26,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
 
         public decimal? Salary { get; set; }
         public DateTime? ContractEndDate { get; set; }
+        public int? WorkplaceId { get; set; }
         public string Workplace { get; set; } = string.Empty;
         public bool IsAccountActive { get; set; }
 

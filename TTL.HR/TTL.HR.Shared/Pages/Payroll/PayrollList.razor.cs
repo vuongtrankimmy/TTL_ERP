@@ -19,6 +19,15 @@ namespace TTL.HR.Shared.Pages.Payroll
         private bool _isLoading = true;
         private int _selectedYear = DateTime.Now.Year;
         private int _selectedMonth = 0; // Default to all months
+        private int _totalEmployeeCount = 0;
+        private decimal _totalTax = 0;
+        private decimal _totalInsurance = 0;
+        private decimal _totalNet = 0;
+
+        // Delete Modal State
+        private bool _isDeleteModalVisible = false;
+        private string _itemToDeleteId = string.Empty;
+        private string _itemToDeleteName = string.Empty;
 
         protected override async Task OnInitializedAsync()
         {
@@ -92,7 +101,11 @@ namespace TTL.HR.Shared.Pages.Payroll
                                 Month = official.Month,
                                 Year = official.Year,
                                 Status = official.Status,
+                                StatusName = official.StatusName,
+                                StatusColor = official.StatusColor,
                                 TotalAmount = official.TotalNetSalary,
+                                TotalInsurance = official.TotalInsurance,
+                                TotalTax = official.TotalTax,
                                 EmployeeCount = official.EmployeeCount,
                                 IsPlaceholder = false
                             });
@@ -103,11 +116,15 @@ namespace TTL.HR.Shared.Pages.Payroll
                             periodsList.Add(new PayrollPeriodViewModel
                             {
                                 Id = "",
-                                Name = $"Bảng lương tháng {month:D2}/{year}",
+                                Name = $"Bảng lương tháng {month:D2}/{year} (Chưa khởi tạo)",
                                 Month = month,
                                 Year = year,
                                 Status = "Chưa khởi tạo",
+                                StatusName = "Chưa khởi tạo",
+                                StatusColor = "secondary",
                                 TotalAmount = 0,
+                                TotalInsurance = 0,
+                                TotalTax = 0,
                                 EmployeeCount = 0,
                                 IsPlaceholder = true
                             });
@@ -116,6 +133,10 @@ namespace TTL.HR.Shared.Pages.Payroll
                 }
 
                 Periods = periodsList;
+                _totalEmployeeCount = periodsList.Where(p => !p.IsPlaceholder).Sum(p => p.EmployeeCount);
+                _totalTax = periodsList.Where(p => !p.IsPlaceholder).Sum(p => p.TotalTax);
+                _totalInsurance = periodsList.Where(p => !p.IsPlaceholder).Sum(p => p.TotalInsurance);
+                _totalNet = periodsList.Where(p => !p.IsPlaceholder).Sum(p => p.TotalAmount);
             }
             catch (Exception ex)
             {
@@ -155,6 +176,42 @@ namespace TTL.HR.Shared.Pages.Payroll
             }
         }
 
+        private void DeletePeriod(string id, string name)
+        {
+            if (string.IsNullOrEmpty(id)) return;
+            
+            _itemToDeleteId = id;
+            _itemToDeleteName = name;
+            _isDeleteModalVisible = true;
+            StateHasChanged();
+        }
+
+        private async Task OnConfirmDelete()
+        {
+            if (string.IsNullOrEmpty(_itemToDeleteId)) return;
+
+            var success = await PayrollService.DeletePeriodAsync(_itemToDeleteId);
+            if (success)
+            {
+                await JS.InvokeVoidAsync("toastr.success", $"Đã xóa {_itemToDeleteName} thành công.");
+                _isDeleteModalVisible = false;
+                _itemToDeleteId = string.Empty;
+                _itemToDeleteName = string.Empty;
+                await LoadData();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Xóa kỳ lương thất bại. Vui lòng thử lại.");
+            }
+        }
+
+        private void OnCancelDelete()
+        {
+            _isDeleteModalVisible = false;
+            _itemToDeleteId = string.Empty;
+            _itemToDeleteName = string.Empty;
+        }
+
         private void ViewDetail(int month, int year)
         {
             Navigation.NavigateTo($"/payroll/period/{year}/{month}");
@@ -179,9 +236,25 @@ namespace TTL.HR.Shared.Pages.Payroll
             public int Month { get; set; }
             public int Year { get; set; }
             public string Status { get; set; } = string.Empty;
+            public string? StatusName { get; set; }
+            public string? StatusColor { get; set; }
             public decimal TotalAmount { get; set; }
+            public decimal TotalInsurance { get; set; }
+            public decimal TotalTax { get; set; }
             public int EmployeeCount { get; set; }
             public bool IsPlaceholder { get; set; }
+        }
+        private string GetStatusColor(string? color, string? status)
+        {
+            if (!string.IsNullOrEmpty(color)) return color;
+            return (status == "Đã chốt" || status == "Closed") ? "success" : "warning";
+        }
+
+        private string GetStatusBg(string? color, string? status)
+        {
+            var c = GetStatusColor(color, status);
+            if (c == "secondary" || c == "warning" || string.IsNullOrEmpty(c)) return "gray-900";
+            return c;
         }
     }
 }

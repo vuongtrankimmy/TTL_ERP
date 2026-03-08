@@ -237,11 +237,12 @@
                             </div>
                             <div class="col-md-6 fv-row">
                                 <label class="fs-6 fw-bold mb-2">Tình trạng bàn giao</label>
-                                <select class="form-select form-select-solid">
-                                    <option value="Mới">Mới 100%</option>
-                                    <option value="Tốt" selected>Đang dùng tốt</option>
-                                    <option value="Cũ">Cũ / Xước nhẹ</option>
-                                </select>
+                                <InputSelect class="form-select form-select-solid" @bind-Value="NewAllocation.Condition">
+                                    @foreach (var condition in Conditions)
+                                    {
+                                        <option value="@condition.Code">@condition.Name</option>
+                                    }
+                                </InputSelect>
                             </div>
                         </div>
                         
@@ -291,10 +292,10 @@
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-bold mb-2">Tình trạng thực tế</label>
                             <select class="form-select form-select-solid" @bind="ReturnCondition">
-                                <option value="Available">Sẵn dùng (Tốt)</option>
-                                <option value="Maintenance">Cần bảo trì</option>
-                                <option value="Broken">Đã hỏng</option>
-                                <option value="Lost">Đã mất</option>
+                                @foreach (var status in StatusLookups)
+                                {
+                                    <option value="@status.Code">@status.Name</option>
+                                }
                             </select>
                         </div>
                     </div>

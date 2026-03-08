@@ -45,7 +45,7 @@ namespace TTL.HR.Application.Modules.Common.Services
             }
         }
 
-        public async Task<bool> UpdateSettingsAsync(SystemSettingsModel settings)
+        public async Task<ApiResponse<bool>> UpdateSettingsAsync(SystemSettingsModel settings)
         {
             try
             {
@@ -54,14 +54,25 @@ namespace TTL.HR.Application.Modules.Common.Services
                 {
                     _cachedSettings = settings;
                     OnSettingsUpdated?.Invoke();
-                    return true;
+                    return new ApiResponse<bool> { Success = true, Data = true };
                 }
+                
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"UpdateSettings Error: {response.StatusCode} - {errorContent}");
+                
+                try 
+                {
+                    var apiError = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<bool>>(errorContent, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (apiError != null) return apiError;
+                } 
+                catch { }
 
-                return false;
+                return new ApiResponse<bool> { Success = false, Message = $"Lỗi cập nhật: {response.StatusCode}", Data = false };
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                Console.WriteLine($"Exception UpdateSettings: {ex.Message}");
+                return new ApiResponse<bool> { Success = false, Message = "Lỗi kết nối máy chủ", Data = false };
             }
         }
 
@@ -78,17 +89,29 @@ namespace TTL.HR.Application.Modules.Common.Services
             }
         }
 
-        public async Task<bool> UpdateCodeGeneratorConfigsAsync(List<CodeGeneratorConfigDto> configs)
+        public async Task<ApiResponse<bool>> UpdateCodeGeneratorConfigsAsync(List<CodeGeneratorConfigDto> configs)
         {
             try
             {
                 var wrapper = new { Configs = configs };
                 var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.System.CodeGeneratorConfigs, wrapper);
-                return response.IsSuccessStatusCode;
+                if (response.IsSuccessStatusCode)
+                {
+                    return new ApiResponse<bool> { Success = true, Data = true };
+                }
+                var errorContent = await response.Content.ReadAsStringAsync();
+                try 
+                {
+                    var apiError = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<bool>>(errorContent, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (apiError != null) return apiError;
+                } 
+                catch { }
+                return new ApiResponse<bool> { Success = false, Message = $"Lỗi cập nhật: {response.StatusCode}", Data = false };
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                Console.WriteLine($"Exception UpdateCode: {ex.Message}");
+                return new ApiResponse<bool> { Success = false, Message = "Lỗi kết nối máy chủ", Data = false };
             }
         }
     }

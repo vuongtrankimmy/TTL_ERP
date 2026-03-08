@@ -4,9 +4,12 @@
 <li>
     <div class="org-node @(Node.Type == "Department" ? "is-department" : "") @(Node.IsManager ? "is-manager" : "")" 
          @onclick="() => OnNodeClick.InvokeAsync(Node)" @onclick:stopPropagation="true">
-        <div class="node-tools">
-            <button class="btn btn-icon btn-xs btn-light-primary"><i class="bi bi-pencil fs-9"></i></button>
-        </div>
+        @if (!IsReadOnly)
+        {
+            <div class="node-tools">
+                <button class="btn btn-icon btn-xs btn-light-primary"><i class="bi bi-pencil fs-9"></i></button>
+            </div>
+        }
         
         <div class="d-flex align-items-center">
             <img src="@Node.Avatar" class="avatar" alt="@Node.Name" />
@@ -40,7 +43,7 @@
         <ul>
             @foreach (var child in Node.Children)
             {
-                <OrgNodeView Node="child" OnNodeClick="OnNodeClick" />
+                <OrgNodeView Node="child" OnNodeClick="OnNodeClick" IsReadOnly="@IsReadOnly" />
             }
         </ul>
     }

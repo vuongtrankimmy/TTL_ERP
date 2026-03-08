@@ -37,6 +37,11 @@ namespace TTL.HR.Shared.Pages.Attendance
         private string _selectedEmployeeId = "";
         private bool _showStats = false;
         private CreateShiftRequestModal? _createModal;
+        
+        // STANDARD DELETE MODAL
+        private bool IsDeleteModalOpen = false;
+        private ShiftRequestModel? ItemToDelete;
+        private string ItemToDeleteName => ItemToDelete != null ? $"Đổi ca {ItemToDelete.RequestedDate:dd/MM/yyyy}" : "";
 
         protected override async Task OnInitializedAsync()
         {
@@ -138,29 +143,60 @@ namespace TTL.HR.Shared.Pages.Attendance
 
         private async Task ConfirmWithdraw(string id)
         {
-            bool confirmed = await JS.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn hủy yêu cầu này không?");
+            bool confirmed = await JS.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn rút yêu cầu này không?");
             if (confirmed)
             {
                 var success = await AttendanceService.WithdrawShiftRequestAsync(id);
                 if (success)
                 {
-                    await JS.InvokeVoidAsync("toastr.success", "Đã hủy yêu cầu thành công");
+                    await JS.InvokeVoidAsync("toastr.success", "Đã rút yêu cầu thành công");
                     await LoadData();
                 }
                 else
                 {
-                    await JS.InvokeVoidAsync("toastr.error", "Không thể hủy yêu cầu này");
+                    await JS.InvokeVoidAsync("toastr.error", "Không thể rút yêu cầu này");
                 }
             }
+        }
+
+        private void OpenDeleteModal(ShiftRequestModel item)
+        {
+            ItemToDelete = item;
+            IsDeleteModalOpen = true;
+        }
+
+        private void CloseDeleteModal()
+        {
+            IsDeleteModalOpen = false;
+            ItemToDelete = null;
+        }
+
+        private async Task ConfirmDelete()
+        {
+            if (ItemToDelete == null) return;
+
+            var success = await AttendanceService.DeleteShiftRequestAsync(ItemToDelete.Id);
+            if (success)
+            {
+                await JS.InvokeVoidAsync("toastr.success", "Đã xóa yêu cầu thành công");
+                await LoadData();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Hệ thống từ chối xóa yêu cầu này (Đã được duyệt hoặc không đủ quyền)");
+            }
+            CloseDeleteModal();
         }
 
         private string TranslateStatus(string status)
         {
             return status switch
             {
-                "Pending" => "Chờ duyệt",
-                "Approved" => "Đã duyệt",
-                "Rejected" => "Đã hủy",
+                "Pending" or "1" => "Chờ duyệt",
+                "Approved" or "2" => "Đã duyệt",
+                "PartiallyApproved" => "Chờ duyệt (Cấp 1)",
+                "Rejected" or "3" => "Từ chối",
+                "Withdrawn" or "4" => "Đã rút",
                 _ => status
             };
         }

@@ -27,6 +27,12 @@
                 <div class="d-flex align-items-center me-4 my-1 bg-light px-4 py-2 rounded border border-gray-200">
                     <i class="ki-outline ki-calendar-8 fs-4 me-2 text-primary"></i>
                     <span class="fw-bold text-gray-700 fs-7">@PeriodName</span>
+                    @if (SelectedPeriod != null)
+                    {
+                        <span class="badge badge-light-@GetStatusColor(SelectedPeriod.StatusColor, SelectedPeriod.Status) fw-bold px-3 py-1 ms-2">
+                             @(string.IsNullOrEmpty(SelectedPeriod.StatusName) ? SelectedPeriod.Status : SelectedPeriod.StatusName)
+                        </span>
+                    }
                 </div>
             </ExtraFilters>
             <CustomActions>
@@ -48,67 +54,58 @@
             </CustomActions>
         </EmployeeToolbar>
 
-        <!-- Summary Cards Section -->
         @if (SelectedPeriod != null)
         {
-            <div class="row g-5 g-xl-10 mb-8 mt-4">
+            <!-- Dashboard Summary -->
+            <div class="row g-5 mb-8 mt-1 px-5">
+                <!-- TỔNG THỰC LĨNH -->
                 <div class="col-md-3">
-                    <div class="card card-flush h-md-100 bg-light-primary border-primary border-opacity-10 shadow-sm">
-                        <div class="card-header pt-5">
-                            <div class="card-title d-flex flex-column">
-                                <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">@FormatService.FormatCurrency(SelectedPeriod.TotalNetSalary)</span>
-                                <span class="text-gray-500 pt-1 fw-semibold fs-6">Tổng Thực Lĩnh (Net)</span>
+                    <div class="card card-flush bg-@GetStatusBg(SelectedPeriod.StatusColor, SelectedPeriod.Status) h-100 shadow-sm border border-white border-opacity-10 rounded-3">
+                        <div class="card-header pt-5 overflow-hidden position-relative min-h-125px">
+                            <div class="card-title d-flex flex-column z-index-1">
+                                 <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">@FormatService.FormatCurrency(SelectedPeriod.TotalNetSalary)</span>
+                                 <span class="text-white text-opacity-70 pt-1 fw-semibold fs-6 text-uppercase">TỔNG THỰC LĨNH</span>
                             </div>
-                        </div>
-                        <div class="card-body d-flex flex-column justify-content-end pe-0 pb-5">
-                            <span class="fs-7 fw-bolder text-gray-600 d-block mb-1">Dự chi tháng @Month/@Year</span>
-                            <div class="d-flex align-items-center">
-                                <span class="badge badge-light-primary fs-8 fw-bold">Mapping: 100%</span>
-                            </div>
+                            <i class="ki-outline ki-wallet fs-4tx text-white opacity-20 position-absolute end-0 bottom-0 mb-n5 me-n5"></i>
                         </div>
                     </div>
                 </div>
+
+                <!-- TỔNG THUẾ -->
                 <div class="col-md-3">
-                    <div class="card card-flush h-md-100 bg-light-danger border-danger border-opacity-10 shadow-sm">
-                        <div class="card-header pt-5">
-                            <div class="card-title d-flex flex-column">
-                                <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">@FormatService.FormatCurrency(SelectedPeriod.TotalTax)</span>
-                                <span class="text-gray-500 pt-1 fw-semibold fs-6">Thuế TNCN mapping</span>
+                    <div class="card card-flush bg-light-danger h-100 shadow-sm border border-danger border-opacity-10 rounded-3">
+                        <div class="card-header pt-5 overflow-hidden position-relative min-h-125px">
+                            <div class="card-title d-flex flex-column z-index-1">
+                                 <span class="fs-2hx fw-bold text-danger me-2 lh-1 ls-n2">@FormatService.FormatCurrency(SelectedPeriod.TotalTax)</span>
+                                 <span class="text-danger text-opacity-70 pt-1 fw-semibold fs-6 text-uppercase">TỔNG THUẾ TNCN</span>
                             </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end pt-0 pb-5">
-                            <div class="d-flex align-items-center">
-                                <span class="fs-7 fw-bolder text-danger me-2">Lũy tiến 7 bậc</span>
-                                <i class="ki-outline ki-chart-line-up fs-3 text-danger"></i>
-                            </div>
+                            <i class="ki-outline ki-book-open fs-4tx text-danger opacity-10 position-absolute end-0 bottom-0 mb-n5 me-n5"></i>
                         </div>
                     </div>
                 </div>
+
+                <!-- TỔNG BẢO HIỂM -->
                 <div class="col-md-3">
-                    <div class="card card-flush h-md-100 bg-light-success border-success border-opacity-10 shadow-sm">
-                        <div class="card-header pt-5">
-                            <div class="card-title d-flex flex-column">
-                                <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">@FormatService.FormatCurrency(SelectedPeriod.TotalInsurance)</span>
-                                <span class="text-gray-500 pt-1 fw-semibold fs-6">Bảo hiểm (10.5%)</span>
+                    <div class="card card-flush bg-light-success h-100 shadow-sm border border-success border-opacity-10 rounded-3">
+                        <div class="card-header pt-5 overflow-hidden position-relative min-h-125px">
+                            <div class="card-title d-flex flex-column z-index-1">
+                                 <span class="fs-2hx fw-bold text-success me-2 lh-1 ls-n2">@FormatService.FormatCurrency(SelectedPeriod.TotalInsurance)</span>
+                                 <span class="text-success text-opacity-70 pt-1 fw-semibold fs-6 text-uppercase">TỔNG BẢO HIỂM</span>
                             </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end pt-0 pb-5">
-                            <span class="text-gray-600 fs-7 fw-bold">Lấy từ mức lương đóng BH</span>
+                            <i class="ki-outline ki-shield-tick fs-4tx text-success opacity-10 position-absolute end-0 bottom-0 mb-n5 me-n5"></i>
                         </div>
                     </div>
                 </div>
+
+                <!-- TỔNG NHÂN SỰ -->
                 <div class="col-md-3">
-                    <div class="card card-flush h-md-100 bg-body border-gray-200 border shadow-sm">
-                        <div class="card-header pt-5">
-                            <div class="card-title d-flex flex-column">
-                                <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">@SelectedPeriod.EmployeeCount</span>
-                                <span class="text-gray-500 pt-1 fw-semibold fs-6">Nhân sự mapping</span>
+                    <div class="card card-flush h-100 shadow-sm border border-gray-200 rounded-3">
+                        <div class="card-header pt-5 overflow-hidden position-relative min-h-125px">
+                            <div class="card-title d-flex flex-column z-index-1">
+                                 <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">@SelectedPeriod.EmployeeCount</span>
+                                 <span class="text-gray-500 pt-1 fw-semibold fs-6 text-uppercase">TỔNG NHÂN SỰ</span>
                             </div>
-                        </div>
-                        <div class="card-body d-flex align-items-end pt-0 pb-5">
-                            <div class="d-flex align-items-center">
-                                <span class="badge badge-light-primary fs-7 fw-bold px-3 py-2">Đang xử lý: @Payslips.Count(p => p.Status == "Dự thảo") NS</span>
-                            </div>
+                            <i class="ki-outline ki-profile-user fs-4tx text-gray-200 opacity-50 position-absolute end-0 bottom-0 mb-n5 me-n5"></i>
                         </div>
                     </div>
                 </div>
@@ -208,8 +205,8 @@
                 <td class="text-end text-danger fw-bold">-@FormatService.FormatCurrency(slip.GrandTotalDeductions)</td>
                 <td class="text-end text-primary fs-5 fw-bolder">@FormatService.FormatCurrency(slip.NetSalary)</td>
                 <td class="text-center">
-                    <span class="badge @(slip.Status == "Đã chốt" ? "badge-light-success" : "badge-light-warning") fw-bold px-4 py-2 rounded-pill">
-                        @slip.Status
+                    <span class="badge badge-light-@GetStatusColor(slip.StatusColor, slip.Status) fw-bold px-4 py-2 rounded-pill">
+                        @(string.IsNullOrEmpty(slip.StatusName) ? slip.Status : slip.StatusName)
                     </span>
                 </td>
             </RowTemplate>
@@ -244,15 +241,18 @@
                 </div>
             </div>
             <div class="card-body p-9 scroll-y">
-                <!-- User Info -->
-                <div class="d-flex align-items-center mb-8 bg-light p-6 rounded">
-                    <div class="symbol symbol-70px symbol-circle me-5 border border-white border-4 shadow-sm">
+                <!-- User Info Header (Black as circled in frame) -->
+                <div class="d-flex align-items-center mb-8 bg-gray-900 p-6 rounded shadow-sm text-white">
+                    <div class="symbol symbol-70px symbol-circle me-5 border border-white border-opacity-10 shadow-sm">
                          <img src="@SelectedSlip.AvatarUrl" alt="" />
                     </div>
                     <div class="d-flex flex-column">
-                        <span class="fs-4 fw-bold text-gray-900 mb-1">@SelectedSlip.EmployeeName</span>
-                        <span class="fs-7 fw-semibold text-gray-500">Mã NV: @SelectedSlip.EmployeeCode</span>
-                        <span class="fs-7 fw-semibold text-gray-500">@SelectedSlip.Department</span>
+                        <span class="fs-4 fw-bold text-white mb-1">@SelectedSlip.EmployeeName</span>
+                        <div class="d-flex align-items-center">
+                            <span class="fs-7 fw-semibold text-gray-500">Mã NV: @SelectedSlip.EmployeeCode</span>
+                            <span class="bullet bullet-dot bg-success h-6px w-6px ms-2 me-2"></span>
+                            <span class="fs-7 fw-semibold text-gray-500">@SelectedSlip.Department</span>
+                        </div>
                     </div>
                 </div>
 
@@ -361,7 +361,7 @@
 
                 <div class="mb-10">
                     <h4 class="fw-bold mb-5 fs-6 text-uppercase text-gray-500 border-bottom pb-2">Điều chỉnh Thông tin lương</h4>
-                    <div class="row g-5">
+                    <div class="row g-5 mb-5">
                         <div class="col-6">
                             <label class="form-label fs-7 fw-bold">Lương cơ bản (HĐ):</label>
                             <input type="number" class="form-control form-control-solid" @bind="SelectedSlip.BasicSalary" @bind:event="oninput" @onkeyup="SelectedSlip.CalculateNet" />
@@ -371,6 +371,36 @@
                             <input type="number" class="form-control form-control-solid" @bind="SelectedSlip.TotalAllowances" @bind:event="oninput" @onkeyup="SelectedSlip.CalculateNet" />
                         </div>
                     </div>
+                    @if (SelectedSlip.AllowanceDetails != null && SelectedSlip.AllowanceDetails.Any())
+                    {
+                        <div class="bg-light-success rounded p-4 border border-success border-dashed">
+                            <div class="d-flex flex-stack mb-3">
+                                <span class="fw-bold text-success fs-7 text-uppercase">Phụ cấp theo setup nhân viên</span>
+                                <span class="badge badge-light-success fw-bold">@SelectedSlip.AllowanceDetails.Count khoản</span>
+                            </div>
+                            @foreach (var item in SelectedSlip.AllowanceDetails)
+                            {
+                                <div class="d-flex flex-stack mb-2 py-1 border-bottom border-dashed border-gray-200">
+                                    <div class="d-flex align-items-center">
+                                        <i class="ki-outline ki-gift fs-7 text-success me-2"></i>
+                                        <span class="text-gray-700 fw-semibold fs-7">@item.Name</span>
+                                    </div>
+                                    <span class="text-success fw-bolder">+@FormatService.FormatCurrency(item.Amount)</span>
+                                </div>
+                            }
+                            <div class="d-flex flex-stack pt-2 mt-1">
+                                <span class="text-gray-700 fw-bolder">Tổng cộng:</span>
+                                <span class="text-success fw-bolder fs-5">+@FormatService.FormatCurrency(SelectedSlip.AllowanceDetails.Sum(x => x.Amount))</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning fs-8 py-3">
+                            <i class="ki-outline ki-information-5 fs-7 me-2"></i>
+                            Nhân viên này chưa được thiết lập phụ cấp. Vui lòng cấu hình trong module Phú cấp & Phúc lợi.
+                        </div>
+                    }
                 </div>
 
                 <div class="mb-10">
@@ -390,6 +420,19 @@
                                  <span class="text-gray-700 fw-bold">Tăng ca mapping (@SelectedSlip.OvertimeHours h):</span>
                                  <span class="text-dark fw-bolder">@FormatService.FormatCurrency(SelectedSlip.OvertimeSalary)</span>
                             </div>
+                        }
+                        @if (SelectedSlip.AllowanceDetails != null && SelectedSlip.AllowanceDetails.Any())
+                        {
+                            @foreach (var item in SelectedSlip.AllowanceDetails)
+                            {
+                                <div class="d-flex flex-stack mb-2">
+                                    <span class="text-gray-600 fw-semibold">
+                                        <i class="ki-outline ki-check-circle fs-7 text-success me-1"></i>@item.Name:
+                                    </span>
+                                    <span class="text-dark fw-bold">+@FormatService.FormatCurrency(item.Amount)</span>
+                                </div>
+                            }
+                            <div class="separator separator-dashed my-2"></div>
                         }
                         <div class="d-flex flex-stack mb-2">
                              <span class="text-gray-700 fw-bold">Tổng phụ cấp mapping:</span>
@@ -439,13 +482,13 @@
                     </div>
                 </div>
 
-                <div class="bg-primary rounded p-8 d-flex flex-stack shadow-lg mb-5 overflow-hidden position-relative">
+                <div class="bg-gray-900 rounded p-8 d-flex flex-stack shadow-lg mb-5 overflow-hidden position-relative border border-gray-700">
                     <div class="d-flex flex-column position-relative z-index-1">
                         <span class="text-white fw-bold fs-6">THỰC LĨNH CUỐI CÙNG</span>
-                        <span class="text-white text-opacity-50 fs-8">Áp dụng công thức mapping động hàng ngày</span>
+                        <span class="text-gray-500 fs-8">Áp dụng công thức mapping động hàng ngày</span>
                     </div>
                     <span class="text-white fw-bolder fs-1 position-relative z-index-1">@FormatService.FormatCurrency(SelectedSlip.NetSalary)</span>
-                    <i class="ki-outline ki-wallet fs-4tx text-white opacity-10 position-absolute end-0 bottom-0 mb-n5 me-n5"></i>
+                    <i class="ki-outline ki-wallet fs-4tx text-white opacity-5 position-absolute end-0 bottom-0 mb-n5 me-n5"></i>
                 </div>
             </div>
             <div class="card-footer border-0 py-8 px-9 d-flex gap-3">

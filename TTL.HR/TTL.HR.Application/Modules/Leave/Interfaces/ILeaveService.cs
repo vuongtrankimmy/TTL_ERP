@@ -11,8 +11,8 @@ namespace TTL.HR.Application.Modules.Leave.Interfaces
         Task<PagedResult<LeaveRequestModel>> GetLeaveRequestsAsync(int page = 1, int pageSize = 10, string? status = null, string? searchTerm = null);
         Task<LeaveStateSummaryModel> GetLeaveSummaryAsync();
         Task<LeaveBalanceModel?> GetLeaveBalanceAsync(string employeeId, int year);
-        Task<bool> SubmitLeaveRequestAsync(LeaveRequestModel request);
-
-        Task<bool> ProcessLeaveRequestAsync(string id, bool approved, string? note);
+        Task<List<LeaveTypeDto>> GetLeaveTypesAsync();
+        Task<ApiResponse<string>> SubmitLeaveRequestAsync(LeaveRequestModel request);
+        Task<ApiResponse<bool>> ProcessLeaveRequestAsync(string id, bool approved, string? note);
     }
 }

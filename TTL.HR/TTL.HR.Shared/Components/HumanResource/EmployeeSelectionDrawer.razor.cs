@@ -18,6 +18,8 @@ namespace TTL.HR.Shared.Components.HumanResource
         [Parameter] public EventCallback<List<string>> OnSave { get; set; }
         [Parameter] public bool IsLoading { get; set; }
         [Parameter] public RenderFragment? ChildContent { get; set; }
+        [Parameter] public int ZIndex { get; set; } = 110;
+        [Parameter] public bool SingleSelection { get; set; } = false;
 
         private List<string> SelectedEmployeeIds { get; set; } = new();
         private string _searchTerm = "";
@@ -79,6 +81,15 @@ namespace TTL.HR.Shared.Components.HumanResource
                 {
                     SelectedEmployeeIds.Remove(empId);
                 }
+            }
+        }
+
+        private void SelectSingle(string empId)
+        {
+            if (SingleSelection)
+            {
+                SelectedEmployeeIds.Clear();
+                SelectedEmployeeIds.Add(empId);
             }
         }
 

@@ -17,6 +17,7 @@ namespace TTL.HR.Shared.Pages.Contracts
         [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
         [Inject] public IContractService ContractService { get; set; } = default!;
         [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
+        [Inject] public ISettingsService SettingsService { get; set; } = default!;
 
         private List<LookupModel> contractTypeLookups = new();
         private List<LookupModel> templateStatusLookups = new();
@@ -42,7 +43,9 @@ namespace TTL.HR.Shared.Pages.Contracts
 
         protected override async Task OnInitializedAsync()
         {
-            var currentLang = "vi-VN"; // Default to vi-VN
+            await SettingsService.InitializeAsync();
+            var currentLang = SettingsService.CachedSettings?.DefaultLanguage ?? "vi-VN";
+            
             contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType", currentLang);
             templateStatusLookups = await MasterDataService.GetCachedLookupsAsync("TemplateStatus", currentLang);
             contractStatusLookups = await MasterDataService.GetCachedLookupsAsync("ContractStatus", currentLang);
@@ -56,7 +59,7 @@ namespace TTL.HR.Shared.Pages.Contracts
             IsLoading = true;
             try
             {
-                var currentLang = "vi-VN"; // Default
+                var currentLang = SettingsService.CachedSettings?.DefaultLanguage ?? "vi-VN";
                 if (ActiveTab.StartsWith("Templates") || ActiveTab == "All" || ActiveTab == "Active" || ActiveTab == "Draft")
                 {
                     var status = ActiveTab == "Templates" || ActiveTab == "All" ? FilterStatusId?.ToString() : ActiveTab;

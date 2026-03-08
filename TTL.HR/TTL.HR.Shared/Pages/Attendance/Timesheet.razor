@@ -59,8 +59,8 @@
                 </div>
             </div>
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-sm btn-light-primary fw-bold px-4 py-2 fs-7 shadow-sm"><i class="ki-outline ki-exit-up fs-5 me-1"></i>Xuất Excel</button>
-                <button class="btn btn-sm btn-primary fw-bold px-4 py-2 fs-7 shadow-sm"><i class="ki-outline ki-lock fs-5 me-1"></i>Chốt công hàng loạt</button>
+                <button class="btn btn-sm btn-light-primary fw-bold px-4 py-2 fs-7 shadow-sm" @onclick="ExportExcel" disabled="@_isLoading"><i class="ki-outline ki-exit-up fs-5 me-1"></i>Xuất Excel</button>
+                <button class="btn btn-sm btn-primary fw-bold px-4 py-2 fs-7 shadow-sm" @onclick="LockMonth" disabled="@_isLoading"><i class="ki-outline ki-lock fs-5 me-1"></i>Chốt công hàng loạt</button>
             </div>
         </div>
 
@@ -121,8 +121,8 @@
                                         </td>
                                         <td class="text-center fw-bold text-success">@item.OvertimeHours.ToString("F1")h</td>
                                         <td class="text-center">
-                                            <span class="badge @GetStatusBadgeClass(item.Status) fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
-                                                <span class="bullet bullet-dot @GetStatusBulletClass(item.Status) w-6px h-6px me-2"></span>@TranslateStatus(item.Status)
+                                            <span class="badge badge-light-@(string.IsNullOrEmpty(item.StatusColor) ? "info" : item.StatusColor) fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
+                                                <span class="bullet bullet-dot bg-@(string.IsNullOrEmpty(item.StatusColor) ? "info" : item.StatusColor) w-6px h-6px me-2"></span>@item.Status
                                             </span>
                                         </td>
                                         <td class="text-end pe-7">
@@ -132,9 +132,18 @@
                                             <button type="button" class="btn btn-icon btn-bg-light btn-active-color-success btn-sm me-2 shadow-sm" title="Cập nhật dữ liệu công" @onclick="() => HandleRecalculate(item.EmployeeId)">
                                                 <i class="ki-outline ki-arrows-loop fs-3"></i>
                                             </button>
-                                            <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm shadow-sm" title="Chốt công" @onclick="() => LockTimesheet(item.Id)">
-                                                <i class="ki-outline ki-check fs-3"></i>
-                                            </button>
+                                             @if (item.Status == "Locked" || item.Status == "Closed" || item.Status == "Đã chốt")
+                                             {
+                                                 <button type="button" class="btn btn-icon btn-bg-light btn-active-color-success btn-sm me-2 shadow-sm" title="Đã chốt" disabled>
+                                                     <i class="ki-outline ki-check-all fs-3"></i>
+                                                 </button>
+                                             }
+                                             else
+                                             {
+                                                 <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm shadow-sm" title="Chốt công" @onclick="() => LockTimesheet(item.EmployeeId)">
+                                                     <i class="ki-outline ki-check fs-3"></i>
+                                                 </button>
+                                             }
                                         </td>
                                     </tr>
                                     index++;

@@ -6,11 +6,8 @@ namespace TTL.HR.Application.Modules.Attendance.Models
     {
         public string Id { get; set; } = "";
         public string EmployeeId { get; set; } = "";
-        [System.Text.Json.Serialization.JsonPropertyName("employeeCode")]
         public string EmployeeCode { get; set; } = "";
         public string EmployeeName { get; set; } = "";
-        
-        [System.Text.Json.Serialization.JsonPropertyName("avatarUrl")]
         public string Avatar { get; set; } = "";
 
         public DateTime Date { get; set; }
@@ -20,14 +17,14 @@ namespace TTL.HR.Application.Modules.Attendance.Models
         public string ShiftName { get; set; } = "";
         public string ShiftColor { get; set; } = "primary";
         public string Status { get; set; } = "";
+        public int StatusId { get; set; } = 1;
+        public string StatusColor { get; set; } = "primary";
         
-        [System.Text.Json.Serialization.JsonPropertyName("workingHours")]
         public double TotalWorkingHours { get; set; }
 
         public int LateMinutes { get; set; }
         public int EarlyLeaveMinutes { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("overtimeHours")]
         public double OvertimeHours { get; set; }
 
         public string Role { get; set; } = "";
@@ -113,7 +110,7 @@ namespace TTL.HR.Application.Modules.Attendance.Models
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         public string Status { get; set; } = "Pending";
         
-        public bool IsPending => Status == "Pending" || Status == "PartiallyApproved" || Status == "Chờ duyệt";
+        public bool IsPending => Status != "Approved" && Status != "2" && Status != "Rejected" && Status != "3" && Status != "Withdrawn" && Status != "Cancelled" && Status != "4";
         
         [System.Text.Json.Serialization.JsonPropertyName("comment")]
         public string? ManagerNote { get; set; }
@@ -133,10 +130,11 @@ namespace TTL.HR.Application.Modules.Attendance.Models
 
         public string StatusColor => Status switch
         {
-            "Approved" => "success",
+            "Approved" or "2" => "success",
             "PartiallyApproved" => "info",
-            "Rejected" => "danger",
-            "Pending" => "warning",
+            "Rejected" or "3" => "danger",
+            "Pending" or "1" => "warning",
+            "Withdrawn" or "4" => "secondary",
             _ => "secondary"
         };
     }
@@ -165,6 +163,7 @@ namespace TTL.HR.Application.Modules.Attendance.Models
         public int PendingCount { get; set; }
         public int ApprovedCount { get; set; }
         public int RejectedCount { get; set; }
+        public int CancelledCount { get; set; }
         public int TotalCount { get; set; }
     }
 

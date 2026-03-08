@@ -66,10 +66,11 @@
                         }
 
                         <div class="col-md-6">
-                            <label class="required fs-6 fw-bold mb-2">Ngày đổi ca</label>
-                            <div class="position-relative">
-                                <InputDate @bind-Value="Model.Date" class="form-control form-control-solid fw-bold" />
-                                <div class="position-absolute end-0 top-50 translate-middle-y me-3">
+                            <label class="required fs-6 fw-bold mb-2">Ngày giờ áp dụng</label>
+                            <div class="position-relative d-flex align-items-center">
+                                <label for="shift_date_picker" class="ki-outline ki-calendar fs-2 position-absolute ms-4 text-gray-700 cursor-pointer" @onclick='() => OpenPicker("shift_date_picker")'></label>
+                                <InputDate id="shift_date_picker" @bind-Value="Model.Date" Type="InputDateType.DateTimeLocal" class="form-control form-control-solid ps-12 fw-bold" />
+                                <div class="position-absolute end-0 top-50 translate-middle-y me-3 pe-none">
                                     @if (IsHoliday(Model.Date))
                                     {
                                         <span class="badge badge-light-danger fw-bold fs-8">Lễ (300%)</span>
@@ -153,6 +154,9 @@
 <EmployeeSelectionDrawer 
     @bind-IsVisible="_showEmployeeSelection" 
     Employees="AllEmployees" 
+    InitialSelectedIds="@_initialSelectedIds"
+    ZIndex="1060"
+    SingleSelection="true"
     OnSave="OnEmployeeSelected" 
     Title="Chọn nhân viên lập đơn" />
 

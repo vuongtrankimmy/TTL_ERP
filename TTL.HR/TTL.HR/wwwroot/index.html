@@ -57,6 +57,16 @@
     <script src="_content/TTL.HR.Shared/assets/js/layout-helper.js"></script>
     <!--end::Global Javascript Bundle-->
 
+    <script>
+        window.showPickerHelper = (id) => {
+            const el = document.getElementById(id);
+            if (el && el.showPicker) {
+                el.showPicker();
+            } else if (el) {
+                el.focus();
+                el.click();
+            }
+        };
+    </script>
 </body>
-
 </html>

@@ -141,9 +141,9 @@ namespace TTL.HR.Application.Modules.Attendance.Services
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<ApiResponse<object>> CloseMonthlyAsync(int month, int year)
+        public async Task<ApiResponse<object>> CloseMonthlyAsync(int month, int year, string? employeeId = null)
         {
-            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Attendance.Base}/close-monthly", new { Month = month, Year = year });
+            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Attendance.Base}/close-monthly", new { Month = month, Year = year, EmployeeId = employeeId });
             return await response.Content.ReadFromJsonAsync<ApiResponse<object>>() ?? new ApiResponse<object> { Success = false, Message = "Lỗi xử lý yêu cầu" };
         }
 
@@ -241,10 +241,16 @@ namespace TTL.HR.Application.Modules.Attendance.Services
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> CreateShiftRequestAsync(CreateShiftRequestModel model)
+        public async Task<ApiResponse<bool>> CreateShiftRequestAsync(CreateShiftRequestModel model)
         {
             var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Attendance.ShiftRequests, model);
-            return response.IsSuccessStatusCode;
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
+            return new ApiResponse<bool>
+            {
+                Success = result?.Success ?? false,
+                Message = result?.Message ?? "Lỗi phản hồi từ server",
+                Data = result?.Success ?? false
+            };
         }
 
         public async Task<EmployeeStatsModel> GetEmployeeStatsAsync(string employeeId, int month, int year)
@@ -261,11 +267,32 @@ namespace TTL.HR.Application.Modules.Attendance.Services
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<bool> DeleteShiftRequestAsync(string id)
+        {
+            var url = $"{ApiEndpoints.Attendance.ShiftRequests}/{id}";
+            var response = await _httpClient.DeleteAsync(url);
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<bool> RecalculateAttendanceSummaryAsync(string employeeId, int month, int year)
         {
             var url = $"{ApiEndpoints.Attendance.Base}/recalculate-summary";
             var response = await _httpClient.PostAsJsonAsync(url, new { employeeId, month, year });
             return response.IsSuccessStatusCode;
+        }
+
+        public async Task<byte[]?> ExportTimesheetAsync(int month, int year, string? searchTerm = null, string? departmentId = null)
+        {
+            var url = $"{ApiEndpoints.Attendance.ExportTimesheet}?month={month}&year={year}";
+            if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
+            if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
+
+            var response = await _httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsByteArrayAsync();
+            }
+            return null;
         }
     }
 }

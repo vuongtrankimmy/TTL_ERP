@@ -30,7 +30,7 @@ namespace TTL.HR.Shared.Pages.Attendance
 
         private bool _isLoading = true;
         
-        private DateTime _currentDate = new DateTime(2026, 2, 1); // Default to target month
+        private DateTime _currentDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
         private int _daysInMonth => DateTime.DaysInMonth(_currentDate.Year, _currentDate.Month);
         
         private List<EmployeeScheduleDto> _employees = new();

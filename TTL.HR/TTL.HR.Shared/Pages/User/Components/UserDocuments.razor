@@ -114,7 +114,7 @@
                                         @doc.DocumentName
                                     </div>
                                     <div class="text-primary fw-semibold fs-8 mb-1">
-                                        @GetDocumentTypeLabel(doc.DocumentType)
+                                        @doc.DocumentTypeName
                                     </div>
                                     <div class="text-muted fs-8 mb-3">
                                         @doc.FileSizeDisplay · @doc.CreatedAt.ToString("dd/MM/yyyy")
@@ -219,9 +219,9 @@
                             <div class="col-md-6 fv-row">
                                 <label class="required fs-6 fw-semibold mb-2">Loại tài liệu</label>
                                 <select class="form-select form-select-solid fw-bold" @bind="_selectedDocumentType">
-                                    @foreach (var kv in DocumentTypes)
+                                    @foreach (var lookup in _documentTypeLookups)
                                     {
-                                        <option value="@kv.Key">@kv.Value</option>
+                                        <option value="@lookup.Code">@lookup.Name</option>
                                     }
                                 </select>
                             </div>
@@ -324,7 +324,7 @@
                         <div>
                             <h4 class="modal-title fw-bold text-dark mb-0">@doc.DocumentName</h4>
                             <div class="text-muted fs-8">
-                                @GetDocumentTypeLabel(doc.DocumentType) ·
+                                @doc.DocumentTypeName ·
                                 @doc.FileSizeDisplay ·
                                 <span class="badge badge-light-@doc.StatusColor ms-1">@doc.StatusLabel</span>
                             </div>

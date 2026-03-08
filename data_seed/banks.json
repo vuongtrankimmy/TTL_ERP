@@ -1,0 +1,98 @@
+[
+  {
+    "_id": { "$oid": "65bc0c300000000000000001" },
+    "Name": "Ngân hàng Ngoại thương Việt Nam (Vietcombank)",
+    "Code": "VCB",
+    "Logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Logo_Vietcombank.svg/1024px-Logo_Vietcombank.svg.png",
+    "IsActive": true,
+    "Priority": 1,
+    "SwiftCode": "BFTV VNVX",
+    "Note": "Vietcombank",
+    "IsDeleted": false,
+    "CreatedAt": { "$date": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "65bc0c300000000000000002" },
+    "Name": "Ngân hàng Đầu tư và Phát triển Việt Nam (BIDV)",
+    "Code": "BIDV",
+    "Logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Logo_BIDV.svg/1024px-Logo_BIDV.svg.png",
+    "IsActive": true,
+    "Priority": 2,
+    "SwiftCode": "BIDV VNVX",
+    "Note": "BIDV",
+    "IsDeleted": false,
+    "CreatedAt": { "$date": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "65bc0c300000000000000003" },
+    "Name": "Ngân hàng Công thương Việt Nam (VietinBank)",
+    "Code": "CTG",
+    "Logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Logo_VietinBank.svg/1024px-Logo_VietinBank.svg.png",
+    "IsActive": true,
+    "Priority": 3,
+    "SwiftCode": "ICBV VNVX",
+    "Note": "VietinBank",
+    "IsDeleted": false,
+    "CreatedAt": { "$date": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "65bc0c300000000000000004" },
+    "Name": "Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt Nam (Agribank)",
+    "Code": "VBA",
+    "Logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Logo_Agribank.svg/1024px-Logo_Agribank.svg.png",
+    "IsActive": true,
+    "Priority": 4,
+    "SwiftCode": "VBAA VNVX",
+    "Note": "Agribank",
+    "IsDeleted": false,
+    "CreatedAt": { "$date": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "65bc0c300000000000000005" },
+    "Name": "Ngân hàng Kỹ thương Việt Nam (Techcombank)",
+    "Code": "TCB",
+    "Logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Logo_Techcombank.svg/1024px-Logo_Techcombank.svg.png",
+    "IsActive": true,
+    "Priority": 5,
+    "SwiftCode": "VTCB VNVX",
+    "Note": "Techcombank",
+    "IsDeleted": false,
+    "CreatedAt": { "$date": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "65bc0c300000000000000006" },
+    "Name": "Ngân hàng Quân đội (MB)",
+    "Code": "MBB",
+    "Logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Logo_MB_Bank.svg/1024px-Logo_MB_Bank.svg.png",
+    "IsActive": true,
+    "Priority": 6,
+    "SwiftCode": "MBBK VNVX",
+    "Note": "MB Bank",
+    "IsDeleted": false,
+    "CreatedAt": { "$date": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "65bc0c300000000000000007" },
+    "Name": "Ngân hàng Á Châu (ACB)",
+    "Code": "ACB",
+    "Logo": null,
+    "IsActive": true,
+    "Priority": 7,
+    "SwiftCode": "ACBA VNVX",
+    "Note": "ACB",
+    "IsDeleted": false,
+    "CreatedAt": { "$date": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "65bc0c300000000000000008" },
+    "Name": "Ngân hàng Việt Nam Thịnh Vượng (VPBank)",
+    "Code": "VPB",
+    "Logo": null,
+    "IsActive": true,
+    "Priority": 8,
+    "SwiftCode": "VPBA VNVX",
+    "Note": "VPBank",
+    "IsDeleted": false,
+    "CreatedAt": { "$date": "2024-01-01T00:00:00Z" }
+  }
+]

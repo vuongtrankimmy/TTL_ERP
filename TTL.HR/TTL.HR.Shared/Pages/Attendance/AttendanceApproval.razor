@@ -46,13 +46,23 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-active-primary py-5 me-10 @(_activeTab == "Approved" ? "active" : "")" href="javascript:;" @onclick='() => SetTab("Approved")'>
+                            <a class="nav-link text-active-primary py-5 me-10 @(_activeTab == "1" ? "active" : "")" href="javascript:;" @onclick='() => SetTab("1")'>
+                                Chờ duyệt <span class="badge badge-light-warning ms-2">@_summary.PendingCount</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-active-primary py-5 me-10 @(_activeTab == "2" ? "active" : "")" href="javascript:;" @onclick='() => SetTab("2")'>
                                 Đã duyệt <span class="badge badge-light-success ms-2">@_summary.ApprovedCount</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-active-primary py-5 me-10 @(_activeTab == "Rejected" ? "active" : "")" href="javascript:;" @onclick='() => SetTab("Rejected")'>
-                                Đã hủy <span class="badge badge-light-danger ms-2">@_summary.RejectedCount</span>
+                            <a class="nav-link text-active-primary py-5 me-10 @(_activeTab == "3" ? "active" : "")" href="javascript:;" @onclick='() => SetTab("3")'>
+                                Từ chối <span class="badge badge-light-danger ms-2">@_summary.RejectedCount</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-active-primary py-5 me-10 @(_activeTab == "4" ? "active" : "")" href="javascript:;" @onclick='() => SetTab("4")'>
+                                Đã rút <span class="badge badge-light-secondary ms-2">@_summary.CancelledCount</span>
                             </a>
                         </li>
                     </ul>
@@ -113,7 +123,10 @@
                                                     </div>
                                                     <div class="d-flex flex-column">
                                                         <a href="javascript:;" class="text-gray-900 fw-bold text-hover-primary mb-1 fs-6" @onclick="() => OpenStats(item.EmployeeId)">@item.EmployeeName</a>
-                                                        <span class="text-muted fw-bold fs-7">@item.RequestedDate.ToString("dd/MM/yyyy") (@item.RequestedDate.ToString("ddd", new System.Globalization.CultureInfo("vi-VN")))</span>
+                                                        <span class="text-muted fw-bold fs-7">
+                                                            @item.RequestedDate.ToString("dd/MM/yyyy" + (item.RequestedDate.Hour != 0 || item.RequestedDate.Minute != 0 ? " HH:mm" : "")) 
+                                                            (@item.RequestedDate.ToString("ddd", new System.Globalization.CultureInfo("vi-VN")))
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </td>
@@ -148,9 +161,14 @@
                                             <td class="text-end pe-8">
                                                 @if (item.IsPending)
                                                 {
-                                                    <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm shadow-sm hover-scale" title="Hủy yêu cầu" @onclick="() => ConfirmWithdraw(item.Id)">
-                                                        <i class="ki-outline ki-trash fs-3"></i>
-                                                    </button>
+                                                    <div class="d-flex justify-content-end gap-2">
+                                                        <button class="btn btn-icon btn-light-warning btn-sm shadow-sm hover-scale" title="Rút yêu cầu" @onclick="() => ConfirmWithdraw(item.Id)">
+                                                            <i class="ki-outline ki-arrows-loop fs-3"></i>
+                                                        </button>
+                                                        <button class="btn btn-icon btn-light-danger btn-sm shadow-sm hover-scale" title="Xóa yêu cầu (Draft/Lỗi)" @onclick="() => OpenDeleteModal(item)">
+                                                            <i class="ki-outline ki-trash fs-3"></i>
+                                                        </button>
+                                                    </div>
                                                 }
                                             </td>
                                         </tr>
@@ -183,7 +201,7 @@
     </div>
 </div>
 
-<CreateShiftRequestModal @ref="_createModal" EmployeeId="@_myEmployeeId" EmployeeName="@_myEmployeeName" EmployeeCode="@_myEmployeeCode" AvatarUrl="@_myAvatar" OnSuccess="LoadData" />
+<CreateShiftRequestModal @ref="_createModal" EmployeeId="@_myEmployeeId" EmployeeName="@_myEmployeeName" EmployeeCode="@_myEmployeeCode" AvatarUrl="@_myAvatar" IsHR="true" OnSuccess="LoadData" />
 
 <!-- Stats Drawer -->
 <div class="bg-body drawer drawer-end @(_showStats ? "drawer-on" : "")" style="width: 450px; z-index: 1100; position: fixed; top: 0; right: 0; bottom: 0; transform: translateX(@(_showStats ? "0" : "100%")); transition: transform 0.3s ease; box-shadow: -10px 0 30px rgba(0,0,0,0.1); overflow-y: auto;">
@@ -220,3 +238,11 @@
 {
     <div class="drawer-overlay" style="z-index: 1099; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(1px);" @onclick="CloseStats"></div>
 }
+
+<DeleteConfirmationModal 
+    IsVisible="@IsDeleteModalOpen"
+    Title="Xóa yêu cầu đổi ca"
+    Message="Bạn có chắc là muốn xóa yêu cầu"
+    ItemName="@ItemToDeleteName"
+    OnConfirmed="ConfirmDelete"
+    OnCancelled="CloseDeleteModal" />

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -21,6 +21,7 @@ namespace TTL.HR.Shared.Pages.Contracts
         [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
         [Inject] public IContractService ContractService { get; set; } = default!;
         [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
+        [Inject] public ISettingsService SettingsService { get; set; } = default!;
 
         private List<LookupModel> contractTypeLookups = new();
         private List<LookupModel> templateStatusLookups = new();
@@ -37,8 +38,10 @@ namespace TTL.HR.Shared.Pages.Contracts
                 document.body.removeAttribute('data-kt-drawer');
             ");
 
-            // Load lookups with multi-language support (default to vi-VN for now)
-            var currentLang = "vi-VN"; 
+            // Load lookups with multi-language support (default to settings)
+            await SettingsService.InitializeAsync();
+            var currentLang = SettingsService.CachedSettings?.DefaultLanguage ?? "vi-VN";
+
             contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType", currentLang);
             templateStatusLookups = await MasterDataService.GetCachedLookupsAsync("TemplateStatus", currentLang);
 
@@ -62,7 +65,7 @@ namespace TTL.HR.Shared.Pages.Contracts
         private async Task LoadTemplate()
         {
             IsLoading = true;
-            var currentLang = "vi-VN"; // Get this from a language service in the future
+            var currentLang = SettingsService.CachedSettings?.DefaultLanguage ?? "vi-VN";
             try
             {
                 Console.WriteLine($"Loading template with ID: {Id}");

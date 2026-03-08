@@ -155,6 +155,21 @@
 										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.JoinDate?.ToString("dd/MM/yyyy")</div> }
 										else { <input type="date" class="form-control form-control-solid" @bind="Employee.JoinDate" /> }
 									</div>
+                                    <div class="col-md-6">
+										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Nơi làm việc</label>
+										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@(string.IsNullOrEmpty(Employee.Workplace) ? "Chưa chọn" : Employee.Workplace)</div> }
+										else {
+											<select class="form-select form-select-solid" @bind="Employee.WorkplaceId">
+												<option value="">Chọn địa điểm...</option>
+												@if (Workplaces != null) {
+													@foreach (var wp in Workplaces)
+													{
+														<option value="@wp.LookupID">@wp.Name</option>
+													}
+												}
+											</select>
+										}
+									</div>
                                 </div>
 
                                 <!-- CONTRACT SECTION (Unified View/Print) -->

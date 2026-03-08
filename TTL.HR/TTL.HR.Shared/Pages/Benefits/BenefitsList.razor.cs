@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using TTL.HR.Application.Modules.HumanResource.Interfaces;
+using TTL.HR.Application.Modules.HumanResource.Models;
 using TTL.HR.Application.Modules.Payroll.Interfaces;
 using TTL.HR.Application.Modules.Payroll.Models;
 
@@ -12,6 +14,7 @@ namespace TTL.HR.Shared.Pages.Benefits
     public partial class BenefitsList
     {
         [Inject] public IBenefitService BenefitService { get; set; } = default!;
+        [Inject] public IEmployeeService EmployeeService { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
 
         private bool _showDetail = false;
@@ -19,6 +22,21 @@ namespace TTL.HR.Shared.Pages.Benefits
         private BenefitModel? _selectedBenefit;
         private List<BenefitModel> _benefits = new();
         private string _searchTerm = "";
+        private string _selectedCategory = "";
+
+        // Allocations
+        private bool _showAssignModal = false;
+        private bool _isAssignLoading = false;
+        private bool _isAllocationLoading = false;
+        private BenefitModel? _benefitToAssign;
+        private List<EmployeeDto> _allEmployees = new();
+        private List<string> _initiallyAssignedIds = new();
+        private List<string> _currentAssignedIds = new();
+        
+        private string _employeeSearchTerm = "";
+        private BenefitAssignRequest _assignRequest = new();
+        private int _totalAllocations = 0;
+        private string _allocationTab = "unassigned"; // unassigned, assigned
 
         private BenefitEditModal _editModal = default!;
         private bool IsDeleteModalOpen = false;
@@ -27,6 +45,11 @@ namespace TTL.HR.Shared.Pages.Benefits
         protected override async Task OnInitializedAsync()
         {
             await LoadData();
+            try
+            {
+                _allEmployees = await EmployeeService.GetEmployeesAsync() ?? new();
+            }
+            catch { }
         }
 
         private async Task LoadData()
@@ -39,7 +62,7 @@ namespace TTL.HR.Shared.Pages.Benefits
             }
             catch (Exception)
             {
-                await JS.InvokeVoidAsync("toastr.error", "Lỗi tải dữ liệu phúc lợi.");
+                try { await JS.InvokeVoidAsync("toastr.error", "L\u1ed7i t\u1ea3i d\u1eef li\u1ec7u ph\u00fac l\u1ee3i."); } catch { }
             }
             finally
             {
@@ -49,7 +72,6 @@ namespace TTL.HR.Shared.Pages.Benefits
         }
 
         private void CreateNewBenefit() => _editModal.OpenAsync();
-
         private void EditBenefit(BenefitModel item) => _editModal.OpenAsync(item.Id);
 
         private void PromptDeleteBenefit(BenefitModel item)
@@ -71,12 +93,12 @@ namespace TTL.HR.Shared.Pages.Benefits
                 var success = await BenefitService.DeleteBenefitAsync(BenefitToDelete.Id);
                 if (success)
                 {
-                    await JS.InvokeVoidAsync("toastr.success", $"Đã xóa phúc lợi {BenefitToDelete.Name}.");
+                    try { await JS.InvokeVoidAsync("toastr.success", $"Đã xóa phúc lợi {BenefitToDelete.Name}."); } catch { }
                     await LoadData();
                 }
                 else
                 {
-                    await JS.InvokeVoidAsync("toastr.error", "Xóa phúc lợi thất bại.");
+                    try { await JS.InvokeVoidAsync("toastr.error", "Xóa phúc lợi thất bại."); } catch { }
                 }
                 CloseDeleteModal();
             }
@@ -90,39 +112,162 @@ namespace TTL.HR.Shared.Pages.Benefits
 
         private void closeDetail() => _showDetail = false;
 
-        private List<BenefitModel> FilteredBenefits => string.IsNullOrWhiteSpace(_searchTerm)
-            ? _benefits
-            : _benefits.Where(x => x.Name.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) || 
-                                   x.Code.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
-
-        private string GetTypeBadgeClass(string type)
+        // ── ASSIGN MODAL ──────────────────────────────────────────────────────────
+        private async Task OpenAssignModal(BenefitModel benefit)
         {
-            return type switch
+            _benefitToAssign = benefit;
+            _showAssignModal = true;
+            _employeeSearchTerm = "";
+            _allocationTab = "unassigned";
+            _assignRequest = new BenefitAssignRequest
             {
-                "Cố định hàng tháng" or "Monthly" => "badge-light-primary",
-                "Sự kiện" or "Event" or "Yearly" => "badge-light-info",
-                "Một lần" or "One-time" or "OneTime" => "badge-light-success",
-                "Số lượng" or "Quantity" => "badge-light-warning",
-                _ => "badge-light-primary"
+                BenefitId = benefit.Id,
+                StartDate = DateTime.Today
             };
+            await LoadAllocationsForBenefit(benefit.Id);
         }
 
-        private string TranslateType(string type)
+        private void CloseAssignModal()
         {
-            return type switch
-            {
-                "Monthly" => "Cố định hàng tháng",
-                "Event" or "Yearly" => "Định kỳ năm",
-                "One-time" or "OneTime" => "Một lần",
-                "Quantity" => "Số lượng",
-                _ => type
-            };
+            _showAssignModal = false;
+            _benefitToAssign = null;
+            _initiallyAssignedIds = new();
+            _currentAssignedIds = new();
         }
-        
+
+        private async Task LoadAllocationsForBenefit(string benefitId)
+        {
+            _isAllocationLoading = true;
+            try
+            {
+                var allocations = await BenefitService.GetBenefitAllocationsAsync(benefitId);
+                _initiallyAssignedIds = allocations.Select(a => a.EmployeeId).ToList();
+                _currentAssignedIds = new List<string>(_initiallyAssignedIds);
+                _totalAllocations = _currentAssignedIds.Count;
+            }
+            catch { }
+            _isAllocationLoading = false;
+        }
+
+        private void ToggleEmployeeAssignment(string employeeId)
+        {
+            if (_currentAssignedIds.Contains(employeeId))
+                _currentAssignedIds.Remove(employeeId);
+            else
+                _currentAssignedIds.Add(employeeId);
+        }
+
+        private async Task SaveAssignments()
+        {
+            if (_benefitToAssign == null) return;
+            _isAssignLoading = true;
+            
+            try 
+            {
+                // Find IDs to add
+                var toAdd = _currentAssignedIds.Except(_initiallyAssignedIds).ToList();
+                // Find IDs to remove
+                var toRemove = _initiallyAssignedIds.Except(_currentAssignedIds).ToList();
+                
+                // Batched Request
+                var batchReq = new BatchAssignRequest
+                {
+                    BenefitId = _benefitToAssign.Id,
+                    EmployeeIdsToAssign = toAdd,
+                    EmployeeIdsToRemove = toRemove,
+                    StartDate = _assignRequest.StartDate,
+                    EndDate = _assignRequest.EndDate,
+                    OverrideAmount = _assignRequest.OverrideAmount,
+                    Note = _assignRequest.Note
+                };
+
+                if (await BenefitService.BatchAssignBenefitsAsync(batchReq))
+                {
+                    try { await JS.InvokeVoidAsync("toastr.success", $"Đã lưu thay đổi: Thêm {toAdd.Count}, Xóa {toRemove.Count}."); } catch { }
+                    await LoadData();
+                    CloseAssignModal();
+                }
+                else
+                {
+                    try { await JS.InvokeVoidAsync("toastr.error", "Lỗi khi lưu phân công hàng loạt."); } catch { }
+                }
+            }
+            catch (Exception)
+            {
+                try { await JS.InvokeVoidAsync("toastr.error", "Lỗi khi lưu phân công."); } catch { }
+            }
+            finally
+            {
+                _isAssignLoading = false;
+            }
+        }
+
+        private async Task AssignToAllEmployees()
+        {
+            if (_benefitToAssign == null || !_allEmployees.Any()) return;
+            
+            var filtered = FilteredEmployees;
+            foreach (var emp in filtered)
+            {
+                if (!_currentAssignedIds.Contains(emp.Id))
+                    _currentAssignedIds.Add(emp.Id);
+            }
+            StateHasChanged();
+        }
+
+        // ── FILTER ───────────────────────────────────────────────────────────────
+        private List<BenefitModel> FilteredBenefits => _benefits
+            .Where(x => (string.IsNullOrWhiteSpace(_searchTerm) || 
+                         x.Name.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                         x.Code.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)) &&
+                         (string.IsNullOrWhiteSpace(_selectedCategory) || x.Category == _selectedCategory))
+            .ToList();
+
+        private List<EmployeeDto> FilteredEmployees 
+        {
+            get 
+            {
+                var query = _allEmployees.AsEnumerable();
+                
+                if (_allocationTab == "assigned")
+                    query = query.Where(e => _currentAssignedIds.Contains(e.Id));
+                else
+                    query = query.Where(e => !_currentAssignedIds.Contains(e.Id));
+
+                if (!string.IsNullOrWhiteSpace(_employeeSearchTerm))
+                {
+                    query = query.Where(e =>
+                        (e.FullName ?? "").Contains(_employeeSearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                        (e.Code ?? "").Contains(_employeeSearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                        (e.DepartmentName ?? "").Contains(_employeeSearchTerm, StringComparison.OrdinalIgnoreCase));
+                }
+                
+                return query.ToList();
+            }
+        }
+
+        // ── HELPERS ──────────────────────────────────────────────────────────────
+        private string GetTypeBadgeClass(string type) => type switch
+        {
+            "Cố định hàng tháng" or "Monthly" => "badge-light-primary",
+            "Sự kiện" or "Event" or "Yearly" => "badge-light-info",
+            "Một lần" or "One-time" or "OneTime" => "badge-light-success",
+            "Số lượng" or "Quantity" => "badge-light-warning",
+            _ => "badge-light-primary"
+        };
+
+        private string TranslateType(string type) => type switch
+        {
+            "Monthly" => "Cố định hàng tháng",
+            "Event" or "Yearly" => "Định kỳ năm",
+            "One-time" or "OneTime" => "Một lần",
+            "Quantity" => "Số lượng",
+            _ => type
+        };
+
         private string GetIconByBenefit(BenefitModel item)
         {
             if (!string.IsNullOrEmpty(item.Icon)) return item.Icon;
-            
             return item.Category switch
             {
                 "Allowance" => "ki-outline ki-wallet",
@@ -130,6 +275,24 @@ namespace TTL.HR.Shared.Pages.Benefits
                 "Bonus" => "ki-outline ki-gift",
                 _ => "ki-outline ki-briefcase"
             };
+        }
+        private async Task ExportExcel()
+        {
+            try
+            {
+                var bytes = await BenefitService.ExportBenefitsAsync(_searchTerm, _selectedCategory);
+                if (bytes != null)
+                {
+                    var fileName = $"DanhSachPhucLoi_{DateTime.Now:yyyyMMdd}.xlsx";
+                    await JS.InvokeVoidAsync("saveAsFile", fileName, Convert.ToBase64String(bytes));
+                    try { await JS.InvokeVoidAsync("toastr.success", "Đã xuất file Excel thành công."); } catch { }
+                }
+                else
+                {
+                    try { await JS.InvokeVoidAsync("toastr.error", "Xuất file Excel thất bại."); } catch { }
+                }
+            }
+            catch { }
         }
     }
 }

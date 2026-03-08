@@ -116,16 +116,18 @@ namespace TTL.HR.Shared.Pages.Employees
 
             try 
             {
-                // Parallelize cache loads for best performance
+                // Initial Settings & Language
+                await SettingsService.InitializeAsync();
+                var lang = SettingsService.CachedSettings?.DefaultLanguage ?? "vi-VN";
                 var tasks = new List<Task>();
-                
+
                 if (!CachedDepartments.Any()) tasks.Add(DepartmentService.GetDepartmentsAsync().ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedDepartments = t.Result; }));
                 if (!CachedPositions.Any()) tasks.Add(PositionService.GetPositionsAsync().ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedPositions = t.Result; }));
-                if (!CachedStatuses.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("EmployeeStatus").ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedStatuses = t.Result; }));
-                if (!CachedContractTypes.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("ContractType").ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedContractTypes = t.Result; }));
-                if (!CachedWorkplaces.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("Workplace").ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedWorkplaces = t.Result; }));
-                if (!CachedAttendanceStatuses.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("AttendanceStatus").ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedAttendanceStatuses = t.Result; }));
-                if (!CachedRoles.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("Role").ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedRoles = t.Result; }));
+                if (!CachedStatuses.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("EmployeeStatus", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedStatuses = t.Result; }));
+                if (!CachedContractTypes.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("ContractType", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedContractTypes = t.Result; }));
+                if (!CachedWorkplaces.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("Workplace", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedWorkplaces = t.Result; }));
+                if (!CachedAttendanceStatuses.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("AttendanceStatus", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedAttendanceStatuses = t.Result; }));
+                if (!CachedRoles.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("Role", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedRoles = t.Result; }));
 
                 if (tasks.Any())
                 {
@@ -188,6 +190,8 @@ namespace TTL.HR.Shared.Pages.Employees
                     JoinDate = e.JoinDate,
                     StatusId = e.StatusId,
                     StatusName = e.StatusName,
+                    StatusCode = e.StatusCode,
+                    StatusColor = e.StatusColor,
                     ContractTypeId = e.ContractTypeId,
                     ContractTypeName = e.ContractTypeName,
                     Avatar = e.AvatarUrl,
@@ -195,6 +199,7 @@ namespace TTL.HR.Shared.Pages.Employees
                     Phone = e.Phone,
                     DisplayInitials = GetInitials(e.FullName),
                     IsActive = true,
+                    WorkplaceId = e.WorkplaceId,
                     Workplace = e.Workplace
                 }).ToList();
             }
@@ -391,7 +396,7 @@ namespace TTL.HR.Shared.Pages.Employees
                     JoinDate = selectedEmployee.JoinDate ?? DateTime.UtcNow,
                     Salary = ParseSalary(selectedEmployee.SalaryDisplay),
                     ContractEndDate = selectedEmployee.ContractExpiry ?? selectedEmployee.ContractEndDate,
-                    Workplace = selectedEmployee.Workplace,
+                    WorkplaceId = selectedEmployee.WorkplaceId,
                     IsAccountActive = selectedEmployee.IsActive,
                     PersonalDetails = new PersonalDetailsUpdateDto
                     {
@@ -440,11 +445,13 @@ namespace TTL.HR.Shared.Pages.Employees
                         targetEmp.Name = updateRequest.FullName; // Ensure Name property is also updated
                         targetEmp.Email = updateRequest.Email;
                         targetEmp.Phone = updateRequest.Phone;
-                        targetEmp.StatusName = CachedStatuses.FirstOrDefault(s => s.LookupID == updateRequest.StatusId)?.Name ?? "Unknown";
-                        targetEmp.Dept = CachedDepartments.FirstOrDefault(d => d.Id == updateRequest.DepartmentId)?.Name ?? "Unknown";
-                        targetEmp.Role = CachedPositions.FirstOrDefault(p => p.Id == updateRequest.PositionId)?.Name ?? "Unknown";
+                        targetEmp.StatusName = CachedStatuses.FirstOrDefault(s => s.LookupID == updateRequest.StatusId)?.Name ?? "Chưa xác định";
+                        targetEmp.Dept = CachedDepartments.FirstOrDefault(d => d.Id == updateRequest.DepartmentId)?.Name ?? "Chưa xác định";
+                        targetEmp.Role = CachedPositions.FirstOrDefault(p => p.Id == updateRequest.PositionId)?.Name ?? "Chưa xác định";
                         targetEmp.Avatar = updateRequest.AvatarUrl;
                         targetEmp.AvatarUrl = updateRequest.AvatarUrl;
+                        targetEmp.WorkplaceId = updateRequest.WorkplaceId;
+                        targetEmp.Workplace = CachedWorkplaces.FirstOrDefault(w => w.LookupID == updateRequest.WorkplaceId)?.Name ?? "Chưa xác định";
                     }
 
                     // Also update the currently selected employee model to reflect changes in the UI
@@ -453,15 +460,17 @@ namespace TTL.HR.Shared.Pages.Employees
                     selectedEmployee.Email = updateRequest.Email;
                     selectedEmployee.Phone = updateRequest.Phone;
                     selectedEmployee.DepartmentId = updateRequest.DepartmentId;
-                    selectedEmployee.Dept = CachedDepartments.FirstOrDefault(d => d.Id == updateRequest.DepartmentId)?.Name ?? "Unknown";
+                    selectedEmployee.Dept = CachedDepartments.FirstOrDefault(d => d.Id == updateRequest.DepartmentId)?.Name ?? "Chưa xác định";
                     selectedEmployee.PositionId = updateRequest.PositionId;
-                    selectedEmployee.Role = CachedPositions.FirstOrDefault(p => p.Id == updateRequest.PositionId)?.Name ?? "Unknown";
+                    selectedEmployee.Role = CachedPositions.FirstOrDefault(p => p.Id == updateRequest.PositionId)?.Name ?? "Chưa xác định";
                     selectedEmployee.StatusId = updateRequest.StatusId;
-                    selectedEmployee.StatusName = CachedStatuses.FirstOrDefault(s => s.LookupID == updateRequest.StatusId)?.Name ?? "Unknown";
+                    selectedEmployee.StatusName = CachedStatuses.FirstOrDefault(s => s.LookupID == updateRequest.StatusId)?.Name ?? "Chưa xác định";
                     selectedEmployee.ContractTypeId = updateRequest.ContractTypeId;
-                    selectedEmployee.ContractTypeName = CachedContractTypes.FirstOrDefault(c => c.LookupID == updateRequest.ContractTypeId)?.Name ?? "Unknown";
+                    selectedEmployee.ContractTypeName = CachedContractTypes.FirstOrDefault(c => c.LookupID == updateRequest.ContractTypeId)?.Name ?? "Chưa xác định";
                     selectedEmployee.Avatar = updateRequest.AvatarUrl;
                     selectedEmployee.AvatarUrl = updateRequest.AvatarUrl;
+                    selectedEmployee.WorkplaceId = updateRequest.WorkplaceId;
+                    selectedEmployee.Workplace = CachedWorkplaces.FirstOrDefault(w => w.LookupID == updateRequest.WorkplaceId)?.Name ?? "Chưa xác định";
                     
                     // Force UI refresh
                     StateHasChanged();

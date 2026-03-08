@@ -28,6 +28,8 @@ namespace TTL.HR.Application.Modules.Common.Interfaces
     {
         Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetLookupsAsync(string type, string? lang = null);
         Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetCachedLookupsAsync(string type, string? lang = null);
+        Task<List<TTL.HR.Application.Modules.Common.Models.CountryModel>> GetCountriesAsync(string? lang = null);
+        Task<List<TTL.HR.Application.Modules.Common.Models.CountryModel>> GetCachedCountriesAsync(string? lang = null);
     }
 
     public interface IAuthService

@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Components;
 using TTL.HR.Application.Modules.Leave.Interfaces;
 using TTL.HR.Application.Modules.Leave.Models;
 using TTL.HR.Application.Modules.Common.Models;
+using TTL.HR.Application.Modules.HumanResource.Interfaces;
+using TTL.HR.Application.Modules.HumanResource.Models;
+using Microsoft.JSInterop;
 
 namespace TTL.HR.Shared.Pages.Leave
 {
@@ -23,14 +26,40 @@ namespace TTL.HR.Shared.Pages.Leave
         private int _pageSize = 10;
         private long _totalCount = 0;
         private string? _searchTerm;
+        private string _activeTab = "All";
         private string? _statusFilter;
         private LeaveStateSummaryModel _summary = new();
         
+        private bool IsHR { get; set; } = false;
+        private LeaveRequestModel _createModel = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+        private bool _isSaving = false;
+
+        [Inject] private IJSRuntime JS { get; set; } = default!;
         [Inject] private ILeaveService LeaveService { get; set; } = default!;
+        [Inject] private IEmployeeService EmployeeService { get; set; } = default!;
+        [Inject] private TTL.HR.Application.Modules.Common.Interfaces.IAuthService AuthService { get; set; } = default!;
+
+        private List<EmployeeDto> _employees = new();
+        private List<LeaveTypeDto> _leaveTypes = new();
+
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
-            await LoadData();
+            try
+            {
+                var user = await AuthService.GetCurrentUserAsync();
+                IsHR = user?.Role == "Admin" || user?.Role == "HR";
+                try { _leaveTypes = await LeaveService.GetLeaveTypesAsync(); } catch { }
+                if (IsHR)
+                {
+                    try { _employees = await EmployeeService.GetEmployeesAsync() ?? new(); } catch { }
+                }
+                await LoadData();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[LeaveRequests] Init error: {ex.Message}");
+            }
         }
 
         private async System.Threading.Tasks.Task LoadData()
@@ -38,13 +67,15 @@ namespace TTL.HR.Shared.Pages.Leave
             _isLoading = true;
             try
             {
-                var result = await LeaveService.GetLeaveRequestsAsync(_pageIndex, _pageSize, _statusFilter, _searchTerm);
+                var status = _activeTab == "All" ? null : _activeTab;
+                var result = await LeaveService.GetLeaveRequestsAsync(_pageIndex, _pageSize, status, _searchTerm);
                 if (result != null)
                 {
                     _leaveRequests = result.Items.Select(r => new LeaveRequestItem
                     {
                         Id = r.Id,
                         Name = r.EmployeeName,
+                        EmployeeCode = r.EmployeeCode,
                         Department = r.Department,
                         Avatar = r.Avatar,
                         AvatarBg = "bg-primary",
@@ -53,7 +84,7 @@ namespace TTL.HR.Shared.Pages.Leave
                         DateRange = $"{r.StartDate:dd/MM} - {r.EndDate:dd/MM}",
                         Duration = $"{r.TotalDays} ngày",
                         Reason = r.Reason,
-                        Status = r.Status,
+                        Status = TranslateStatus(r.Status),
                         StatusColor = r.StatusBadgeClass
                     }).ToList();
                     _totalCount = result.TotalCount;
@@ -61,13 +92,14 @@ namespace TTL.HR.Shared.Pages.Leave
 
                 _summary = await LeaveService.GetLeaveSummaryAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Error handling
+                await JS.InvokeVoidAsync("toastr.error", $"Lỗi tải dữ liệu: {ex.Message}");
             }
             finally
             {
                 _isLoading = false;
+                StateHasChanged();
             }
         }
 
@@ -85,10 +117,9 @@ namespace TTL.HR.Shared.Pages.Leave
             await LoadData();
         }
 
-        private async Task FilterByStatus(ChangeEventArgs e)
+        private async Task SetTab(string tab)
         {
-            var val = e.Value?.ToString();
-            _statusFilter = (val == "All" || string.IsNullOrEmpty(val)) ? null : val;
+            _activeTab = tab;
             _pageIndex = 1;
             await LoadData();
         }
@@ -113,13 +144,70 @@ namespace TTL.HR.Shared.Pages.Leave
 
         private void closeDetail() => _showDetail = false;
 
-        private void openCreate()
+        private async Task openCreate()
         {
+            _createModel = new LeaveRequestModel { StartDate = DateTime.Today, EndDate = DateTime.Today };
+            var user = await AuthService.GetCurrentUserAsync();
+            _createModel.EmployeeId = user?.Id ?? "";
             _showCreate = true;
             _showDetail = false;
         }
 
         private void closeCreate() => _showCreate = false;
+
+        private async Task handleSubmitCreate()
+        {
+            if (string.IsNullOrEmpty(_createModel.LeaveTypeId))
+            {
+                await JS.InvokeVoidAsync("toastr.warning", "Vui lòng chọn loại nghỉ");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(_createModel.Reason))
+            {
+                await JS.InvokeVoidAsync("toastr.warning", "Vui lòng nhập lý do");
+                return;
+            }
+
+            if (_createModel.EndDate < _createModel.StartDate)
+            {
+                await JS.InvokeVoidAsync("toastr.warning", "Ngày kết thúc không được trước ngày bắt đầu");
+                return;
+            }
+
+            _isSaving = true;
+            StateHasChanged();
+
+            try
+            {
+                if (string.IsNullOrEmpty(_createModel.EmployeeId))
+                {
+                    var user = await AuthService.GetCurrentUserAsync();
+                    _createModel.EmployeeId = user?.Id ?? "";
+                }
+
+                var response = await LeaveService.SubmitLeaveRequestAsync(_createModel);
+                if (response.Success)
+                {
+                    await JS.InvokeVoidAsync("toastr.success", "Gửi yêu cầu thành công!");
+                    closeCreate();
+                    await LoadData();
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", $"Gửi yêu cầu thất bại: {response.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JS.InvokeVoidAsync("toastr.error", $"Lỗi: {ex.Message}");
+            }
+            finally
+            {
+                _isSaving = false;
+                StateHasChanged();
+            }
+        }
 
         private void requestApprove(LeaveRequestItem item)
         {
@@ -155,18 +243,23 @@ namespace TTL.HR.Shared.Pages.Leave
 
             bool isApprove = _actionType == "APPROVE";
             string status = isApprove ? "Approved" : "Rejected";
-            var success = await LeaveService.ProcessLeaveRequestAsync(_requestToProcess.Id, isApprove, reason);
+            var response = await LeaveService.ProcessLeaveRequestAsync(_requestToProcess.Id, isApprove, reason);
 
-            if (success)
+            if (response.Success)
             {
+                await JS.InvokeVoidAsync("toastr.success", isApprove ? "Đã phê duyệt yêu cầu." : "Đã từ chối yêu cầu.");
                 _requestToProcess.Status = status == "Approved" ? "Đã phê duyệt" : "Đã từ chối";
                 _requestToProcess.StatusColor = status == "Approved" ? "badge-light-success" : "badge-light-danger";
                 _requestToProcess.ManagerNote = reason;
+                await LoadData();
+                if (_selectedRequest?.Id == _requestToProcess.Id)
+                {
+                    closeDetail();
+                }
             }
-
-            if (_selectedRequest == _requestToProcess)
+            else
             {
-                _showDetail = false;
+                await JS.InvokeVoidAsync("toastr.error", $"Thao tác thất bại: {response.Message}");
             }
 
             closeModal();
@@ -184,6 +277,7 @@ namespace TTL.HR.Shared.Pages.Leave
         {
             public string Id { get; set; } = "";
             public string Name { get; set; } = "";
+            public string EmployeeCode { get; set; } = "";
             public string Department { get; set; } = "";
             public string Avatar { get; set; } = "";
             public string AvatarBg { get; set; } = "bg-primary";
@@ -196,5 +290,13 @@ namespace TTL.HR.Shared.Pages.Leave
             public string StatusColor { get; set; } = "";
             public string? ManagerNote { get; set; }
         }
+        private string TranslateStatus(string? status) => status switch
+        {
+            "Pending" => "Chờ duyệt",
+            "Approved" => "Đã duyệt",
+            "Rejected" => "Từ chối",
+            "Cancelled" => "Đã hủy",
+            _ => status ?? "N/A"
+        };
     }
 }

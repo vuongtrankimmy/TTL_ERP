@@ -54,20 +54,25 @@
 
             <div class="row g-9 mb-8">
                 <div class="col-md-6">
-                    <TTLInput Type="TTLInput.InputDataType.Name" 
-                              Label="Họ và tên nhân viên" 
-                              @bind-Value="newEmployee.Name" 
-                              Placeholder="VD: NGUYỄN VĂN A" 
-                              IsRequired="true" 
-                              Hint="Hệ thống sẽ tự động chuyển thành CHỮ HOA." />
+                    <TTLInput Type="TTLInput.InputDataType.Name"
+                              Label="Họ và tên nhân viên" id="input_Name"
+                              @bind-Value="newEmployee.Name"
+                              Placeholder="VD: Nguyễn Văn A"
+                              IsRequired="true"
+                              Hint="Hệ thống sẽ tự động viết hoa chữ cái đầu."
+                              IsInvalid='@errorsMap.ContainsKey("Name")'
+                              ErrorMessage='@errorsMap.GetValueOrDefault("Name")' />
                 </div>
                 <div class="col-md-6">
-                    <TTLInput Type="TTLInput.InputDataType.CCCD" 
-                              Label="Số CCCD / CMND" 
-                              @bind-Value="newEmployee.IdCard" 
-                              Placeholder="001xxxxxxxxx" 
-                              IsRequired="false" 
-                              Hint="Nhập 12 chữ số (không bắt buộc)." />
+                    <TTLInput Type="TTLInput.InputDataType.CCCD"
+                              Label="Số CCCD / CMND"
+                              @bind-Value="newEmployee.IdCard"
+                              Placeholder="001xxxxxxxxx"
+                              IsRequired="false"
+                              Hint="Nhập 12 chữ số (không bắt buộc)."
+                              IsInvalid='@errorsMap.ContainsKey("IdCard")'
+                              ErrorMessage='@errorsMap.GetValueOrDefault("IdCard")'
+                              Id="input_IdCard" />
                 </div>
             </div>
 
@@ -95,19 +100,21 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Giới tính</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.Gender">
+                    <select class="form-select form-select-solid" @bind="newEmployee.GenderId">
+                        <option value="">Chọn giới tính</option>
                         @foreach (var item in genderLookups)
                         {
-                            <option value="@item.Name">@item.Name</option>
+                            <option value="@item.LookupID">@item.Name</option>
                         }
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tình trạng hôn nhân</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.MaritalStatus">
+                    <select class="form-select form-select-solid" @bind="newEmployee.MaritalStatusId">
+                        <option value="">Chọn tình trạng</option>
                         @foreach (var item in maritalStatusLookups)
                         {
-                            <option value="@item.Name">@item.Name</option>
+                            <option value="@item.LookupID">@item.Name</option>
                         }
                     </select>
                 </div>
@@ -116,42 +123,77 @@
             <div class="row g-9 mb-8">
                 <div class="col-md-4">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Quốc tịch</label>
-                    <input type="text" class="form-control form-control-solid" placeholder="Việt Nam" @bind="newEmployee.Nationality" />
+                    <select id="input_Nationality" class="form-select form-select-solid @(errorsMap.ContainsKey("Nationality") ? "is-invalid border-danger" : "")" @bind="newEmployee.Nationality">
+                        @if (nationalityLookups == null || !nationalityLookups.Any())
+                        {
+                            <option value="Việt Nam">Việt Nam</option>
+                        }
+                        else
+                        {
+                            <option value="">-- Chọn quốc gia --</option>
+                            @foreach (var item in nationalityLookups)
+                            {
+                                <option value="@item.Name">@item.Name</option>
+                            }
+                        }
+                    </select>
+                    @if (errorsMap.ContainsKey("Nationality"))
+                    {
+                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["Nationality"]</div>
+                    }
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Dân tộc</label>
-                    <input type="text" class="form-control form-control-solid" placeholder="Kinh" @bind="newEmployee.Ethnicity" />
+                    <select id="input_EthnicityId" class="form-select form-select-solid @(errorsMap.ContainsKey("EthnicityId") ? "is-invalid border-danger" : "")" @bind="newEmployee.EthnicityId">
+                        <option value="">Chọn dân tộc</option>
+                        @foreach (var item in ethnicityLookups)
+                        {
+                            <option value="@item.LookupID">@item.Name</option>
+                        }
+                    </select>
+                    @if (errorsMap.ContainsKey("EthnicityId"))
+                    {
+                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["EthnicityId"]</div>
+                    }
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tôn giáo</label>
-                    <input type="text" class="form-control form-control-solid" placeholder="Không" @bind="newEmployee.Religion" />
+                    <select id="input_ReligionId" class="form-select form-select-solid @(errorsMap.ContainsKey("ReligionId") ? "is-invalid border-danger" : "")" @bind="newEmployee.ReligionId">
+                        <option value="">Chọn tôn giáo</option>
+                        @foreach (var item in religionLookups)
+                        {
+                            <option value="@item.LookupID">@item.Name</option>
+                        }
+                    </select>
+                    @if (errorsMap.ContainsKey("ReligionId"))
+                    {
+                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["ReligionId"]</div>
+                    }
                 </div>
             </div>
 
             <div class="row g-9">
                 <div class="col-md-6">
-                    <TTLInput Type="TTLInput.InputDataType.Email" 
-                              Label="Email cá nhân" 
-                              @bind-Value="newEmployee.Email" 
-                              Placeholder="example@mail.com" 
-                              IsRequired="false" 
-                              Hint="Địa chỉ email cá nhân (không bắt buộc)." />
+                    <TTLInput Type="TTLInput.InputDataType.Email"
+                              Label="Email cá nhân"
+                              @bind-Value="newEmployee.Email"
+                              Placeholder="example@mail.com"
+                              IsRequired="false"
+                              Hint="Địa chỉ email cá nhân (không bắt buộc)."
+                              IsInvalid='@errorsMap.ContainsKey("Email")'
+                              ErrorMessage='@errorsMap.GetValueOrDefault("Email")'
+                              Id="input_Email" />
                 </div>
                 <div class="col-md-6">
-                    <TTLInput Type="TTLInput.InputDataType.Phone" 
-                              Label="Số điện thoại" 
-                              @bind-Value="newEmployee.Phone" 
-                              Placeholder="090xxxxxxx" 
-                              IsRequired="false" 
-                              Hint="Số điện thoại liên lạc (không bắt buộc)." />
-                </div>
-            </div>
-            <div class="row g-9 mt-8">
-                <div class="col-md-4">
-                    <TTLInput Type="TTLInput.InputDataType.Text" 
-                              Label="Nơi làm việc (Văn phòng)" 
-                              @bind-Value="newEmployee.Workplace" 
-                              Placeholder="Trụ sở chính" />
+                    <TTLInput Type="TTLInput.InputDataType.Phone"
+                              Label="Số điện thoại"
+                              @bind-Value="newEmployee.Phone"
+                              Placeholder="090xxxxxxx"
+                              IsRequired="false"
+                              Hint="Số điện thoại liên lạc (không bắt buộc)."
+                              IsInvalid='@errorsMap.ContainsKey("Phone")'
+                              ErrorMessage='@errorsMap.GetValueOrDefault("Phone")'
+                              Id="input_Phone" />
                 </div>
             </div>
         </div>
@@ -170,15 +212,15 @@
         <div class="card-body pt-0">
             <div class="row g-9">
                 <div class="col-md-4">
-                    <TTLInput Type="TTLInput.InputDataType.Address" 
-                              Label="Quê quán" 
-                              @bind-Value="newEmployee.Hometown" 
+                    <TTLInput Type="TTLInput.InputDataType.Address"
+                              Label="Quê quán"
+                              @bind-Value="newEmployee.Hometown"
                               Placeholder="Ghi theo CCCD..." />
                 </div>
                 <div class="col-md-4">
-                    <TTLInput Type="TTLInput.InputDataType.Address" 
-                              Label="Nơi sinh" 
-                              @bind-Value="newEmployee.PlaceOfOrigin" 
+                    <TTLInput Type="TTLInput.InputDataType.Address"
+                              Label="Nơi sinh"
+                              @bind-Value="newEmployee.PlaceOfOrigin"
                               Placeholder="Ghi theo CCCD..." />
                 </div>
                 <div class="col-md-4">
@@ -188,10 +230,10 @@
                             <i class="bi bi-geo-alt-fill me-1"></i> Lấy tọa độ
                         </button>
                     </div>
-                    <TTLInput Type="TTLInput.InputDataType.Address" 
-                              @bind-Value="newEmployee.Residence" 
+                    <TTLInput Type="TTLInput.InputDataType.Address"
+                              @bind-Value="newEmployee.Residence"
                               Placeholder="Địa chỉ hiện tại..." />
-                    
+
                     @if (newEmployee.Latitude != 0 && newEmployee.Longitude != 0)
                     {
                         <div class="mt-2 p-3 bg-light-success bg-opacity-50 rounded border border-success border-dashed">
@@ -221,41 +263,57 @@
             <div class="row g-9 mb-8">
                 <div class="col-md-3">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Chức vụ / Vị trí</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.PositionId">
+                    <select id="input_PositionId" class="form-select form-select-solid @(errorsMap.ContainsKey("PositionId") ? "is-invalid border-danger" : "")" @bind="newEmployee.PositionId">
                         <option value="">Chọn chức danh...</option>
                         @foreach (var item in positions)
                         {
                             <option value="@item.Id">@item.Name</option>
                         }
                     </select>
+                    @if (errorsMap.ContainsKey("PositionId"))
+                    {
+                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["PositionId"]</div>
+                    }
                 </div>
                 <div class="col-md-3">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Phòng ban</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.DeptId">
+                    <select id="input_DeptId" class="form-select form-select-solid @(errorsMap.ContainsKey("DeptId") ? "is-invalid border-danger" : "")" @bind="newEmployee.DeptId">
                         @foreach (var item in departments)
                         {
                             <option value="@item.Id">@item.Name</option>
                         }
                     </select>
+                    @if (errorsMap.ContainsKey("DeptId"))
+                    {
+                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["DeptId"]</div>
+                    }
                 </div>
                 <div class="col-md-3">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Nơi làm việc</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.Workplace">
+                    <select id="input_WorkplaceId" class="form-select form-select-solid @(errorsMap.ContainsKey("WorkplaceId") ? "is-invalid border-danger" : "")" @bind="newEmployee.WorkplaceId">
                         <option value="">-- Chọn địa điểm --</option>
                         @foreach (var item in workplaceLookups)
                         {
-                            <option value="@item.Name">@item.Name</option>
+                            <option value="@item.LookupID">@item.Name</option>
                         }
                     </select>
+                    @if (errorsMap.ContainsKey("WorkplaceId"))
+                    {
+                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["WorkplaceId"]</div>
+                    }
                 </div>
                 <div class="col-md-3">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Trạng thái nhân sự</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.StatusId">
+                    <select id="input_StatusId" class="form-select form-select-solid @(errorsMap.ContainsKey("StatusId") ? "is-invalid border-danger" : "")" @bind="newEmployee.StatusId">
                         @foreach (var item in employeeStatusLookups)
                         {
                             <option value="@item.LookupID">@item.Name</option>
                         }
                     </select>
+                    @if (errorsMap.ContainsKey("StatusId"))
+                    {
+                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["StatusId"]</div>
+                    }
                 </div>
             </div>
             <div class="row g-9">
@@ -271,12 +329,16 @@
                 </div>
                 <div class="col-md-3">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Loại hợp đồng</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.ContractTypeId">
+                    <select id="input_ContractTypeId" class="form-select form-select-solid @(errorsMap.ContainsKey("ContractTypeId") ? "is-invalid border-danger" : "")" @bind="newEmployee.ContractTypeId">
                         @foreach (var item in contractTypeLookups)
                         {
                             <option value="@item.LookupID">@item.Name</option>
                         }
                     </select>
+                    @if (errorsMap.ContainsKey("ContractTypeId"))
+                    {
+                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["ContractTypeId"]</div>
+                    }
                 </div>
                 <div class="col-md-3">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Ngày gia nhập</label>
@@ -320,22 +382,34 @@
                 <div class="card-body pt-0">
                     <div class="row g-9 mb-8">
                         <div class="col-md-6">
-                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Ngân hàng</label>
-                            <input type="text" class="form-control form-control-solid" placeholder="Tên ngân hàng" @bind="newEmployee.BankName" />
+                            <div class="d-flex flex-stack mb-2">
+                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-0">Ngân hàng</label>
+                                <a href="/settings/banks" target="_blank" class="fs-9 fw-bold text-primary text-hover-underline"><i class="ki-outline ki-setting-2 fs-9"></i> Cấu hình</a>
+                            </div>
+                             <select id="input_BankName" class="form-select form-select-solid @(errorsMap.ContainsKey("BankName") ? "is-invalid border-danger" : "")" @bind="newEmployee.BankName">
+                                 <option value="">-- Chọn ngân hàng --</option>
+                                 @foreach (var bank in activeBanks)
+                                 {
+                                     <option value="@bank.Code">@bank.Code - @bank.Name</option>
+                                 }
+                             </select>
+                             @if (errorsMap.ContainsKey("BankName"))
+                             {
+                                 <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["BankName"]</div>
+                             }
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Số tài khoản</label>
-                            <input type="text" class="form-control form-control-solid" placeholder="STK ngân hàng" @bind="newEmployee.BankAccountNumber" />
+                            <TTLInput Label="Số tài khoản" Placeholder="STK ngân hàng" @bind-Value="newEmployee.BankAccountNumber" Type="TTLInput.InputDataType.CCCD"
+                                      IsInvalid='@errorsMap.ContainsKey("BankAccountNumber")' ErrorMessage='@errorsMap.GetValueOrDefault("BankAccountNumber")' Id="input_BankAccountNumber" />
                         </div>
                     </div>
                     <div class="row g-9">
                         <div class="col-md-6">
-                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mã số thuế</label>
-                            <input type="text" class="form-control form-control-solid" placeholder="MST cá nhân" @bind="newEmployee.TaxId" />
+                            <TTLInput Label="Mã số thuế" Placeholder="MST cá nhân" @bind-Value="newEmployee.TaxId" Type="TTLInput.InputDataType.CCCD"
+                                      IsInvalid='@errorsMap.ContainsKey("TaxId")' ErrorMessage='@errorsMap.GetValueOrDefault("TaxId")' Id="input_TaxId" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Số sổ BHXH</label>
-                            <input type="text" class="form-control form-control-solid" placeholder="Số BHXH" @bind="newEmployee.SocialInsuranceId" />
+                            <TTLInput Label="Số sổ BHXH" Placeholder="Số BHXH" @bind-Value="newEmployee.SocialInsuranceId" Type="TTLInput.InputDataType.CCCD" />
                         </div>
                     </div>
                 </div>
@@ -353,8 +427,13 @@
                 </div>
                 <div class="card-body pt-0">
                     <div class="mb-6">
-                        <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Họ tên người liên hệ</label>
-                        <input type="text" class="form-control form-control-solid" @bind="newEmployee.EmergencyContactName" />
+                        <TTLInput Type="TTLInput.InputDataType.Name"
+                                  Label="Họ tên người liên hệ"
+                                  @bind-Value="newEmployee.EmergencyContactName"
+                                  Placeholder="VD: Nguyễn Văn B"
+                                  IsInvalid='@errorsMap.ContainsKey("EmergencyContactName")'
+                                  ErrorMessage='@errorsMap.GetValueOrDefault("EmergencyContactName")'
+                                  Id="input_EmergencyContactName" />
                     </div>
                     <div class="row g-4 mb-0">
                         <div class="col-5">
@@ -362,8 +441,12 @@
                             <input type="text" class="form-control form-control-solid" @bind="newEmployee.EmergencyContactRelation" />
                         </div>
                         <div class="col-7">
-                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">SĐT Khẩn cấp</label>
-                            <input type="text" class="form-control form-control-solid" @bind="newEmployee.EmergencyContactPhone" />
+                            <TTLInput Type="TTLInput.InputDataType.Phone"
+                                      Label="SĐT Khẩn cấp"
+                                      @bind-Value="newEmployee.EmergencyContactPhone"
+                                      IsInvalid='@errorsMap.ContainsKey("EmergencyContactPhone")'
+                                      ErrorMessage='@errorsMap.GetValueOrDefault("EmergencyContactPhone")'
+                                      Id="input_EmergencyContactPhone" />
                         </div>
                     </div>
                 </div>
@@ -407,7 +490,7 @@
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tên đăng nhập (Username)</label>
                     <div class="position-relative d-flex align-items-center">
                         <i class="bi bi-person-fill position-absolute ms-4 text-gray-400"></i>
-                        <input type="text" class="form-control form-control-solid ps-12 pe-12" 
+                        <input type="text" id="input_Username" class="form-control form-control-solid ps-12 pe-12 @(errorsMap.ContainsKey("Username") ? "is-invalid border-danger" : "")" 
                                placeholder="VD: tantanloc" 
                                @bind="newEmployee.Username" 
                                disabled="@(!newEmployee.IsCreateAccount)" />
@@ -422,6 +505,10 @@
                             </button>
                         }
                     </div>
+                    @if (errorsMap.ContainsKey("Username"))
+                    {
+                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["Username"]</div>
+                    }
                 </div>
                 <div class="col-md-3">
                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mật khẩu (Password)</label>

@@ -55,6 +55,7 @@ namespace TTL.HR.Application.Modules.Common.Constants
             public const string Base = $"{CorePrefix}/Attendance";
             public const string Schedule = $"{Base}/schedule";
             public const string Timesheets = $"{Base}/timesheets";
+            public const string ExportTimesheet = $"{Base}/timesheet/export";
             public const string WorkSchedules = $"{Base}/work-schedules";
             public const string ShiftRequests = $"{Base}/shift-requests";
             public const string Shifts = $"{Base}/shifts";
@@ -69,6 +70,7 @@ namespace TTL.HR.Application.Modules.Common.Constants
         {
             public const string Base = $"{CorePrefix}/Payroll";
             public const string Periods = $"{Base}/periods";
+            public const string Me = $"{Base}/me";
         }
 
         public static class Training
@@ -123,6 +125,8 @@ namespace TTL.HR.Application.Modules.Common.Constants
             public const string Settings = $"{CorePrefix}/system/settings";
             public const string CodeGeneratorConfigs = $"{CorePrefix}/system/settings/code-generator";
             public const string Audit = $"{CorePrefix}/Audit";
+            public const string Banks = $"{CorePrefix}/banks";
+            public const string Countries = $"{CorePrefix}/countries";
         }
 
     }

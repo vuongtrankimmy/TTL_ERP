@@ -18,6 +18,7 @@
       "$date": "2024-01-01T00:00:00Z"
     },
     "IsDeleted": false,
+    "PitExplanation": "Giải thích: Thuế TNCN được tính theo công thức lũy tiến từng phần.\nCông thức: Thuế = (Thu nhập tính thuế * Thuế suất) - Số trừ cố định.\nVí dụ Bậc 2: Thu nhập từ 5.000.000 đến 10.000.000, Thuế suất 10%, Số trừ 250.000.\nCấu hình: Ngưỡng > 5.000.000, Thuế suất 0.1, Số trừ 250.000.",
     "Key": "General"
   }
 ]

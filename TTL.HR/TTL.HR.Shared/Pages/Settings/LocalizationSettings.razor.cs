@@ -33,16 +33,29 @@ namespace TTL.HR.Shared.Pages.Settings
         private async Task SaveSettings()
         {
             _isSaving = true;
-            var success = await SettingsService.UpdateSettingsAsync(Model);
+            Model.ActiveTab = "localization";
+            var result = await SettingsService.UpdateSettingsAsync(Model);
             _isSaving = false;
 
-            if (success)
+            if (result != null && result.Success)
             {
                 await JS.InvokeVoidAsync("toastr.success", "Cập nhật cấu hình vùng và ngôn ngữ thành công!");
             }
             else
             {
-                await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra khi cập nhật cấu hình.");
+                string errorMsg = "Có lỗi xảy ra khi cập nhật cấu hình.";
+                if (result != null)
+                {
+                    if (result.Errors != null && result.Errors.Any())
+                    {
+                        errorMsg = string.Join("<br/>", result.Errors);
+                    }
+                    else if (!string.IsNullOrEmpty(result.Message))
+                    {
+                        errorMsg = result.Message;
+                    }
+                }
+                await JS.InvokeVoidAsync("toastr.error", errorMsg);
             }
         }
 

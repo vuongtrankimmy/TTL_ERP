@@ -1,0 +1,68 @@
+[
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000101"
+        },
+        "Name": "Nghỉ phép năm",
+        "Code": "AL",
+        "Description": "Nghỉ phép năm theo quy định",
+        "IsPaid": true,
+        "Color": "primary",
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000102"
+        },
+        "Name": "Nghỉ ốm (Hưởng BHXH)",
+        "Code": "SL",
+        "Description": "Nghỉ ốm hưởng bảo hiểm xã hội",
+        "IsPaid": true,
+        "Color": "warning",
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000103"
+        },
+        "Name": "Nghỉ không lương",
+        "Code": "UP",
+        "Description": "Nghỉ không hưởng lương",
+        "IsPaid": false,
+        "Color": "danger",
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000104"
+        },
+        "Name": "Đi công tác",
+        "Code": "BT",
+        "Description": "Đi công tác bên ngoài",
+        "IsPaid": true,
+        "Color": "info",
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000105"
+        },
+        "Name": "Remote",
+        "Code": "RM",
+        "Description": "Làm việc từ xa",
+        "IsPaid": true,
+        "Color": "success",
+        "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000106"
+        },
+        "Name": "Thai sản",
+        "Code": "ML",
+        "Description": "Nghỉ thai sản",
+        "IsPaid": true,
+        "Color": "purple",
+        "IsActive": true
+    }
+]

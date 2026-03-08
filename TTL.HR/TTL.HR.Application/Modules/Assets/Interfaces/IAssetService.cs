@@ -8,7 +8,7 @@ namespace TTL.HR.Application.Modules.Assets.Interfaces
 {
     public interface IAssetService
     {
-        Task<IEnumerable<AssetModel>> GetAssetsAsync();
+        Task<IEnumerable<AssetModel>> GetAssetsAsync(string? status = null, int pageSize = 100);
         Task<PagedResult<AssetAllocationDto>> GetAllocationsAsync(int page, int pageSize, string? status = null, string? searchTerm = null);
         Task<AssetModel?> GetAssetAsync(string id);
         Task<IEnumerable<AssetHistoryModel>> GetAssetHistoryAsync(string assetId);
@@ -18,5 +18,6 @@ namespace TTL.HR.Application.Modules.Assets.Interfaces
         Task<bool> CreateAssetAsync(AssetModel asset);
         Task<bool> UpdateAssetAsync(string id, AssetModel asset);
         Task<bool> DeleteAssetAsync(string id);
+        Task<IEnumerable<AssetCategoryDto>> GetCategoriesAsync();
     }
 }

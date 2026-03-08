@@ -35,8 +35,8 @@
                     }
                 </div>
             </div>
-            <input type="text" 
-                   class="form-control form-control-solid phone-input-control @CssClass" 
+            <input type="text" id="@Id"
+                   class='form-control form-control-solid phone-input-control @CssClass @(IsInvalid ? "is-invalid border-danger" : "")' 
                    placeholder="@Placeholder" 
                    value="@displayPhoneValue" 
                    @onchange="HandleChange"
@@ -45,6 +45,10 @@
                    disabled="@Disabled"
                    inputmode="numeric"
                    onkeypress="if(event.keyCode === 32) return false; return event.charCode >= 48 && event.charCode <= 57" />
+            @if (IsInvalid && !string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@ErrorMessage</div>
+            }
         }
         else
         {
@@ -53,8 +57,8 @@
                 <i class="@Icon position-absolute ms-4 text-gray-500"></i>
             }
             
-            <input type="@InputType" 
-                   class="form-control form-control-solid @CssClass @GetFormatClass() @(Icon != null ? "ps-12" : "")" 
+            <input type="@InputType" id="@Id"
+                   class='form-control form-control-solid @CssClass @GetFormatClass() @(Icon != null ? "ps-12" : "") @(IsInvalid ? "is-invalid border-danger" : "")' 
                    placeholder="@Placeholder" 
                    value="@Value" 
                    @onchange="HandleChange"
@@ -65,6 +69,11 @@
                    onkeypress="if(event.keyCode === 32 && @((!IsSpaceAllowed).ToString().ToLower())) return false; @(Type == InputDataType.Password ? "if (event.charCode > 126) return false;" : "") @(IsNumericType ? "return event.charCode >= 48 && event.charCode <= 57" : "")" />
         }
     </div>
+    
+    @if (IsInvalid && !string.IsNullOrEmpty(ErrorMessage) && Type != InputDataType.Phone)
+    {
+        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@ErrorMessage</div>
+    }
     
     @if (!string.IsNullOrEmpty(Hint))
     {
@@ -86,6 +95,9 @@
     [Parameter] public string? CssClass { get; set; }
     [Parameter] public int? MaxLength { get; set; }
     [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool IsInvalid { get; set; }
+    [Parameter] public string? ErrorMessage { get; set; }
+    [Parameter] public string? Id { get; set; }
 
     private string InputType => Type switch
     {
@@ -98,7 +110,8 @@
 
     private string GetFormatClass() => Type switch
     {
-        InputDataType.Name => "text-uppercase fw-bold",
+        InputDataType.Name => "text-capitalize fw-bold",
+        InputDataType.Address => "text-capitalize",
         InputDataType.Email => "lowercase",
         _ => ""
     };
@@ -236,7 +249,10 @@
         switch (Type)
         {
             case InputDataType.Name:
-                val = val.ToUpper();
+                val = FormatService.FormatFullName(val);
+                break;
+            case InputDataType.Address:
+                val = FormatService.FormatAddress(val);
                 break;
             case InputDataType.Email:
                 val = val.Replace(" ", "").ToLower();
@@ -254,7 +270,7 @@
                 return;
         }
 
-        if (!IsSpaceAllowed && Type != InputDataType.CCCD && Type != InputDataType.Phone && Type != InputDataType.Email && Type != InputDataType.Password)
+        if (!IsSpaceAllowed && Type != InputDataType.Address && Type != InputDataType.Name && Type != InputDataType.CCCD && Type != InputDataType.Phone && Type != InputDataType.Email && Type != InputDataType.Password)
         {
             val = val.Replace(" ", "");
         }

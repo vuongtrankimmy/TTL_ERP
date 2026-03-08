@@ -21,6 +21,9 @@ namespace TTL.HR.Application.Modules.Leave.Models
         [System.Text.Json.Serialization.JsonPropertyName("employeeAvatar")]
         public string Avatar { get; set; } = "";
         
+        [System.Text.Json.Serialization.JsonPropertyName("leaveTypeId")]
+        public string LeaveTypeId { get; set; } = "";
+        
         [System.Text.Json.Serialization.JsonPropertyName("leaveTypeName")]
         public string Type { get; set; } = "";
         
@@ -124,5 +127,14 @@ namespace TTL.HR.Application.Modules.Leave.Models
         public double UsedDays { get; set; }
         public double RemainingDays { get; set; }
         public double PendingDays { get; set; }
+    }
+
+    public class LeaveTypeDto
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
+        public bool IsPaid { get; set; }
+        public string Color { get; set; } = string.Empty;
     }
 }

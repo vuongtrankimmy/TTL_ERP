@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Assets.Interfaces;
 using TTL.HR.Application.Modules.Assets.Models;
+using TTL.HR.Application.Modules.Common.Interfaces;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Shared.Pages.Assets
 {
@@ -15,9 +17,11 @@ namespace TTL.HR.Shared.Pages.Assets
 
         [Inject] public NavigationManager Navigation { get; set; } = default!;
         [Inject] public IAssetService AssetService { get; set; } = default!;
+        [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
 
         private AssetModel? Asset;
+        private List<LookupModel> StatusLookups = new();
         private List<HistoryViewModel> AllocationHistory = new();
         private bool _isLoading = true;
 
@@ -35,7 +39,13 @@ namespace TTL.HR.Shared.Pages.Assets
             _isLoading = true;
             try
             {
-                Asset = await AssetService.GetAssetAsync(Id);
+                var assetTask = AssetService.GetAssetAsync(Id);
+                var lookupsTask = MasterDataService.GetCachedLookupsAsync("AssetStatus");
+
+                await Task.WhenAll(assetTask, lookupsTask);
+
+                Asset = await assetTask;
+                StatusLookups = await lookupsTask;
                 if (Asset != null)
                 {
                     var history = await AssetService.GetAssetHistoryAsync(Id);
@@ -117,28 +127,43 @@ namespace TTL.HR.Shared.Pages.Assets
             Navigation.NavigateTo($"/assets/edit/{Id}");
         }
 
-        private string GetStatusColor(string status)
+        private string GetStatusColor(string? status, int? statusId = null)
         {
-            return status switch
+            var code = statusId.HasValue ? 
+                StatusLookups.FirstOrDefault(l => l.LookupID == statusId.Value)?.Code?.ToLower() : 
+                status?.ToLower();
+
+            return code switch
             {
-                "Available" => "success",
-                "Assigned" => "primary",
-                "Maintenance" => "warning",
-                "Broken" => "danger",
-                "Lost" => "danger",
+                "available" => "success",
+                "assigned" => "primary",
+                "maintenance" => "warning",
+                "broken" => "danger",
+                "lost" => "danger",
                 _ => "secondary"
             };
         }
 
-        private string TranslateStatus(string status)
+        private string TranslateStatus(string? status, int? statusId = null)
         {
-            return status switch
+            if (statusId.HasValue)
             {
-                "Available" => "Sẵn dùng",
-                "Assigned" => "Đã bàn giao",
-                "Maintenance" => "Đang bảo trì",
-                "Broken" => "Đã hỏng",
-                "Lost" => "Đã mất",
+                var lookup = StatusLookups.FirstOrDefault(l => l.LookupID == statusId.Value);
+                if (lookup != null) return lookup.Name;
+            }
+
+            if (string.IsNullOrEmpty(status)) return "Có sẵn";
+
+            var lByName = StatusLookups.FirstOrDefault(l => string.Equals(l.Code, status, StringComparison.OrdinalIgnoreCase));
+            if (lByName != null) return lByName.Name;
+
+            return status.ToLower().Trim() switch
+            {
+                "available" => "Sẵn dùng",
+                "assigned" => "Đã bàn giao",
+                "maintenance" => "Đang bảo trì",
+                "broken" => "Đã hỏng",
+                "lost" => "Đã mất",
                 _ => status
             };
         }

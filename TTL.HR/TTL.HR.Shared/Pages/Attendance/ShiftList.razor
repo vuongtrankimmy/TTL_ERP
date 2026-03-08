@@ -1,6 +1,7 @@
 @page "/attendance/shifts"
 @using TTL.HR.Application.Modules.Attendance.Models
 @using TTL.HR.Shared.Components.Common
+@using TTL.HR.Shared.Components.HumanResource
 @inject IStringLocalizer<SharedResource> L
 
 <div class="post d-flex flex-column-fluid" id="kt_post">
@@ -116,8 +117,12 @@
                                                     <i class="ki-outline ki-calendar-8 fs-4"></i>
                                                 </button>
                                                 <button class="btn btn-icon btn-light-primary btn-sm ripple" 
-                                                        title="Danh sách đối tượng" @onclick="() => OpenAssignedObjects(shift)">
+                                                        title="Gán phân ca nhanh" @onclick="() => OpenAssignDrawer(shift)">
                                                     <i class="ki-outline ki-profile-user fs-4"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-light-info btn-sm ripple" 
+                                                        title="Danh sách đối tượng" @onclick="() => OpenAssignedObjects(shift)">
+                                                    <i class="ki-outline ki-people fs-4"></i>
                                                 </button>
                                                 <button class="btn btn-icon btn-light-warning btn-sm ripple" @onclick="() => OpenShiftDialog(shift)" title="Sửa">
                                                     <i class="ki-outline ki-pencil fs-4"></i>
@@ -259,7 +264,7 @@
                         <div class="d-flex flex-column">
                             <div class="fw-bold text-gray-700 fs-8 text-uppercase ls-1">Nhân sự hiện tại (@_totalDetailCount)</div>
                             <button class="btn btn-link btn-color-warning btn-active-color-primary p-0 h-auto fs-9 fw-boldest text-start" 
-                                    @onclick='() => NavigationManager.NavigateTo($"/attendance/allocation?shiftId={_selectedShiftForDetail?.Id}&mode=clone&month={Month}&year={Year}")'>
+                                    @onclick="() => OpenAssignDrawer(_selectedShiftForDetail)">
                                 <i class="ki-outline ki-plus-square fs-9 me-1"></i>BỔ SUNG & GÁN THÊM
                             </button>
                         </div>
@@ -337,6 +342,32 @@
     
     <div class="modal-backdrop fade show" style="z-index: 1055; background-color: rgba(0,0,0,0.2) !important;" @onclick="CloseAssignedObjects"></div>
 }
+
+<!-- Employee Selection Drawer -->
+<EmployeeSelectionDrawer 
+    Title="@($"Gán ca làm việc: {(_assigningShift?.Name ?? "")}")"
+    IsVisible="@_showAssignDrawer"
+    IsVisibleChanged="@(val => _showAssignDrawer = val)"
+    Employees="@_allEmployees"
+    InitialSelectedIds="@_initialSelectedEmployeesForAssign"
+    IsLoading="@_isAssigning"
+    OnSave="HandleAssignSchedule">
+    
+    <div class="row g-5">
+        <div class="col-md-6">
+            <label class="form-label fs-8 fw-bold text-gray-700 required">Từ ngày</label>
+            <input type="date" class="form-control form-control-solid fs-7" 
+                   value="@(_assignStartDate.ToString("yyyy-MM-dd"))" 
+                   @onchange="@(e => _assignStartDate = DateTime.Parse(e.Value?.ToString() ?? DateTime.Today.ToString("yyyy-MM-dd")))" />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fs-8 fw-bold text-gray-700 required">Đến ngày</label>
+            <input type="date" class="form-control form-control-solid fs-7" 
+                   value="@(_assignEndDate.ToString("yyyy-MM-dd"))" 
+                   @onchange="@(e => _assignEndDate = DateTime.Parse(e.Value?.ToString() ?? DateTime.Today.ToString("yyyy-MM-dd")))" />
+        </div>
+    </div>
+</EmployeeSelectionDrawer>
 
 <style>
     .skeleton-line {

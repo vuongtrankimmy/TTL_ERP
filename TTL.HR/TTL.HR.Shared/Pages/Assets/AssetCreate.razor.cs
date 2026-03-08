@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Assets.Interfaces;
 using TTL.HR.Application.Modules.Assets.Models;
+using TTL.HR.Application.Modules.Common.Interfaces;
+using TTL.HR.Application.Modules.Common.Models;
+using System.Linq;
 
 namespace TTL.HR.Shared.Pages.Assets
 {
@@ -13,40 +16,58 @@ namespace TTL.HR.Shared.Pages.Assets
 
         [Inject] public NavigationManager Navigation { get; set; } = default!;
         [Inject] public IAssetService AssetService { get; set; } = default!;
+        [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
 
         private AssetModel Asset = new();
+        private List<AssetCategoryDto> Categories = new();
+        private List<LookupModel> Statuses = new();
+
         private bool IsEdit => !string.IsNullOrEmpty(Id);
         private bool _isSaving = false;
         private bool _isLoading = false;
 
         protected override async Task OnInitializedAsync()
         {
-            if (IsEdit && Id != null)
+            _isLoading = true;
+            try 
             {
-                _isLoading = true;
-                try
+                // Parallel load metadata
+                var categoriesTask = AssetService.GetCategoriesAsync();
+                var statusTask = MasterDataService.GetCachedLookupsAsync("AssetStatus");
+                
+                await Task.WhenAll(categoriesTask, statusTask);
+                Categories = (await categoriesTask).ToList();
+                Statuses = await statusTask;
+
+                if (IsEdit && Id != null)
                 {
                     var data = await AssetService.GetAssetAsync(Id);
                     if (data != null)
                     {
                         Asset = data;
+                        // For editing, ensure StatusId is synced if it's missing but we have the Status (string)
+                        if (!Asset.StatusId.HasValue && !string.IsNullOrEmpty(Asset.Status))
+                        {
+                            Asset.StatusId = Statuses.FirstOrDefault(s => s.Code == Asset.Status)?.LookupID;
+                        }
                     }
                 }
-                catch (Exception)
+                else
                 {
-                    await JS.InvokeVoidAsync("toastr.error", "Lỗi tải thông tin tài sản.");
-                }
-                finally
-                {
-                    _isLoading = false;
+                    Asset.PurchaseDate = DateTime.Today;
+                    Asset.StatusId = Statuses.FirstOrDefault(s => s.Code == "Available")?.LookupID ?? Statuses.FirstOrDefault()?.LookupID;
+                    Asset.Status = "Available";
+                    Asset.CategoryId = Categories.FirstOrDefault()?.Id ?? "";
                 }
             }
-            else
+            catch (Exception)
             {
-                Asset.PurchaseDate = DateTime.Today;
-                Asset.Status = "Available";
-                Asset.Category = "Laptop"; // Default
+                await JS.InvokeVoidAsync("toastr.error", "Lỗi tải thông tin khởi tạo.");
+            }
+            finally
+            {
+                _isLoading = false;
             }
         }
 

@@ -37,6 +37,7 @@ builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IFormatS
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IAuditService, TTL.HR.Application.Modules.Common.Services.AuditService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IPdfService, TTL.HR.Application.Modules.Common.Services.PdfService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.INavigationService, TTL.HR.Application.Modules.Common.Services.NavigationService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IBankService, TTL.HR.Application.Modules.Common.Services.BankService>();
 builder.Services.AddApexCharts();
 
 

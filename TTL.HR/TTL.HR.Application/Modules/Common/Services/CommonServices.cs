@@ -38,6 +38,7 @@ namespace TTL.HR.Application.Modules.Common.Services
     {
         private readonly HttpClient _httpClient;
         private static readonly Dictionary<string, List<LookupModel>> _cache = new();
+        private static readonly Dictionary<string, List<CountryModel>> _countryCache = new();
         public MasterDataService(HttpClient httpClient) => _httpClient = httpClient;
         public async Task<List<LookupModel>> GetLookupsAsync(string type, string? lang = null)
         {
@@ -52,6 +53,22 @@ namespace TTL.HR.Application.Modules.Common.Services
             var cacheKey = $"{type}_{lang ?? "default"}";
             if (!_cache.ContainsKey(cacheKey)) _cache[cacheKey] = await GetLookupsAsync(type, lang);
             return _cache[cacheKey];
+        }
+
+        public async Task<List<CountryModel>> GetCountriesAsync(string? lang = null)
+        {
+            var url = $"{ApiEndpoints.System.Countries}";
+            if (!string.IsNullOrEmpty(lang)) url += $"?lang={lang}";
+
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<CountryModel>>>(url);
+            return response?.Data ?? new List<CountryModel>();
+        }
+
+        public async Task<List<CountryModel>> GetCachedCountriesAsync(string? lang = null)
+        {
+            var cacheKey = lang ?? "default";
+            if (!_countryCache.ContainsKey(cacheKey)) _countryCache[cacheKey] = await GetCountriesAsync(lang);
+            return _countryCache[cacheKey];
         }
     }
 

@@ -42,6 +42,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public DateTime? JoinDate { get; set; }
         public int? StatusId { get; set; }
         public string StatusName { get; set; } = string.Empty;
+        public string StatusCode { get; set; } = string.Empty;
+        public string StatusColor { get; set; } = string.Empty;
         public string Avatar { get; set; } = string.Empty;
         public string IdCard { get; set; } = string.Empty;
         public DateTime? DOB { get; set; }
@@ -210,6 +212,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string PositionName { get; set; } = string.Empty;
         public int? StatusId { get; set; }
         public string StatusName { get; set; } = string.Empty;
+        public string StatusCode { get; set; } = string.Empty;
+        public string StatusColor { get; set; } = string.Empty;
         public int? ContractTypeId { get; set; }
         public string ContractTypeName { get; set; } = string.Empty;
         public DateTime? JoinDate { get; set; }
@@ -222,30 +226,19 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
     {
         public string Id { get; set; } = string.Empty;
         public string DocumentType { get; set; } = string.Empty;
+        public string DocumentTypeName { get; set; } = string.Empty;
         public string DocumentName { get; set; } = string.Empty;
         public string FileUrl { get; set; } = string.Empty;
         public string FileType { get; set; } = string.Empty;
         public long FileSize { get; set; }
         public DateTime? ExpiryDate { get; set; }
         public string Status { get; set; } = "Pending";
+        public string StatusName { get; set; } = string.Empty;
+        public string StatusColor { get; set; } = "secondary";
         public string? Note { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public string StatusColor => Status switch
-        {
-            "Pending" => "warning",
-            "Verified" => "success",
-            "Rejected" => "danger",
-            _ => "secondary"
-        };
-
-        public string StatusLabel => Status switch
-        {
-            "Pending" => "Chờ duyệt",
-            "Verified" => "Đã xác thực",
-            "Rejected" => "Từ chối",
-            _ => Status
-        };
+        public string StatusLabel => StatusName;
 
         public string FileSizeDisplay => FileSize switch
         {

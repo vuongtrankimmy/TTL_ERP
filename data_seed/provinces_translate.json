@@ -1,0 +1,342 @@
+﻿[
+  {
+    "ProvinceId": "65fc5b5b0000000000000101",
+    "LanguageCode": "vi-VN",
+    "Name": "Thành phố Hà Nội"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000101",
+    "LanguageCode": "en-US",
+    "Name": "Hà Nội"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000104",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Cao Bằng"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000104",
+    "LanguageCode": "en-US",
+    "Name": "Cao Bằng"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000108",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Tuyên Quang"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000108",
+    "LanguageCode": "en-US",
+    "Name": "Tuyên Quang"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000111",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Điện Biên"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000111",
+    "LanguageCode": "en-US",
+    "Name": "Điện Biên"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000112",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Lai Châu"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000112",
+    "LanguageCode": "en-US",
+    "Name": "Lai Châu"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000114",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Sơn La"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000114",
+    "LanguageCode": "en-US",
+    "Name": "Sơn La"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000115",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Lào Cai"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000115",
+    "LanguageCode": "en-US",
+    "Name": "Lào Cai"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000119",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Thái Nguyên"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000119",
+    "LanguageCode": "en-US",
+    "Name": "Thái Nguyên"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000120",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Lạng Sơn"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000120",
+    "LanguageCode": "en-US",
+    "Name": "Lạng Sơn"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000122",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Quảng Ninh"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000122",
+    "LanguageCode": "en-US",
+    "Name": "Quảng Ninh"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000124",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Bắc Ninh"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000124",
+    "LanguageCode": "en-US",
+    "Name": "Bắc Ninh"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000125",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Phú Thọ"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000125",
+    "LanguageCode": "en-US",
+    "Name": "Phú Thọ"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000131",
+    "LanguageCode": "vi-VN",
+    "Name": "Thành phố Hải Phòng"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000131",
+    "LanguageCode": "en-US",
+    "Name": "Hải Phòng"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000133",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Hưng Yên"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000133",
+    "LanguageCode": "en-US",
+    "Name": "Hưng Yên"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000137",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Ninh Bình"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000137",
+    "LanguageCode": "en-US",
+    "Name": "Ninh Bình"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000138",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Thanh Hóa"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000138",
+    "LanguageCode": "en-US",
+    "Name": "Thanh Hóa"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000140",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Nghệ An"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000140",
+    "LanguageCode": "en-US",
+    "Name": "Nghệ An"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000142",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Hà Tĩnh"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000142",
+    "LanguageCode": "en-US",
+    "Name": "Hà Tĩnh"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000144",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Quảng Trị"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000144",
+    "LanguageCode": "en-US",
+    "Name": "Quảng Trị"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000146",
+    "LanguageCode": "vi-VN",
+    "Name": "Thành phố Huế"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000146",
+    "LanguageCode": "en-US",
+    "Name": "Huế"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000148",
+    "LanguageCode": "vi-VN",
+    "Name": "Thành phố Đà Nẵng"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000148",
+    "LanguageCode": "en-US",
+    "Name": "Đà Nẵng"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000151",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Quảng Ngãi"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000151",
+    "LanguageCode": "en-US",
+    "Name": "Quảng Ngãi"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000152",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Gia Lai"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000152",
+    "LanguageCode": "en-US",
+    "Name": "Gia Lai"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000156",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Khánh Hòa"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000156",
+    "LanguageCode": "en-US",
+    "Name": "Khánh Hòa"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000166",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Đắk Lắk"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000166",
+    "LanguageCode": "en-US",
+    "Name": "Đắk Lắk"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000168",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Lâm Đồng"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000168",
+    "LanguageCode": "en-US",
+    "Name": "Lâm Đồng"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000175",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Đồng Nai"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000175",
+    "LanguageCode": "en-US",
+    "Name": "Đồng Nai"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000179",
+    "LanguageCode": "vi-VN",
+    "Name": "Thành phố Hồ Chí Minh"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000179",
+    "LanguageCode": "en-US",
+    "Name": "Hồ Chí Minh"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000180",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Tây Ninh"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000180",
+    "LanguageCode": "en-US",
+    "Name": "Tây Ninh"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000182",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Đồng Tháp"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000182",
+    "LanguageCode": "en-US",
+    "Name": "Đồng Tháp"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000186",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Vĩnh Long"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000186",
+    "LanguageCode": "en-US",
+    "Name": "Vĩnh Long"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000191",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh An Giang"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000191",
+    "LanguageCode": "en-US",
+    "Name": "An Giang"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000192",
+    "LanguageCode": "vi-VN",
+    "Name": "Thành phố Cần Thơ"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000192",
+    "LanguageCode": "en-US",
+    "Name": "Cần Thơ"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000196",
+    "LanguageCode": "vi-VN",
+    "Name": "Tỉnh Cà Mau"
+  },
+  {
+    "ProvinceId": "65fc5b5b0000000000000196",
+    "LanguageCode": "en-US",
+    "Name": "Cà Mau"
+  }
+]

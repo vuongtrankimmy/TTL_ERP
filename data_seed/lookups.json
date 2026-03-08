@@ -1,442 +1,1001 @@
 [
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000201"
-        },
-        "Type": "ContractType",
-        "Code": "Probation",
-        "Name": "Hợp đồng thử việc",
-        "Order": 1,
-        "IsActive": true
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000201"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000202"
-        },
-        "Type": "ContractType",
-        "Code": "Official_12M",
-        "Name": "Hợp đồng 12 tháng",
-        "Order": 2,
-        "IsActive": true
+    "Type": "ContractType",
+    "Code": "Probation",
+    "Name": "Hợp đồng thử việc",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000202"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000203"
-        },
-        "Type": "ContractType",
-        "Code": "Official_24M",
-        "Name": "Hợp đồng 24 tháng",
-        "Order": 3,
-        "IsActive": true
+    "Type": "ContractType",
+    "Code": "Official_12M",
+    "Name": "Hợp đồng 12 tháng",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000203"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000204"
-        },
-        "Type": "ContractType",
-        "Code": "Official_36M",
-        "Name": "Hợp đồng 36 tháng",
-        "Order": 4,
-        "IsActive": true
+    "Type": "ContractType",
+    "Code": "Official_24M",
+    "Name": "Hợp đồng 24 tháng",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000204"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000205"
-        },
-        "Type": "ContractType",
-        "Code": "Indefinite",
-        "Name": "Hợp đồng không xác định thời hạn",
-        "Order": 5,
-        "IsActive": true
+    "Type": "ContractType",
+    "Code": "Official_36M",
+    "Name": "Hợp đồng 36 tháng",
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000205"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000206"
-        },
-        "Type": "ContractType",
-        "Code": "Internship",
-        "Name": "Hợp đồng thực tập",
-        "Order": 6,
-        "IsActive": true
+    "Type": "ContractType",
+    "Code": "Indefinite",
+    "Name": "Hợp đồng không xác định thời hạn",
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000206"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000207"
-        },
-        "Type": "ContractType",
-        "Code": "NDA",
-        "Name": "Thỏa thuận bảo mật (NDA)",
-        "Order": 7,
-        "IsActive": true
+    "Type": "ContractType",
+    "Code": "Internship",
+    "Name": "Hợp đồng thực tập",
+    "Order": 6,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000207"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000208"
-        },
-        "Type": "ContractType",
-        "Code": "Collaborator",
-        "Name": "Hợp đồng cộng tác viên",
-        "Order": 8,
-        "IsActive": true
+    "Type": "ContractType",
+    "Code": "NDA",
+    "Name": "Thỏa thuận bảo mật (NDA)",
+    "Order": 7,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000208"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000209"
-        },
-        "Type": "ContractType",
-        "Code": "Appendix",
-        "Name": "Phụ lục hợp đồng",
-        "Order": 9,
-        "IsActive": true
+    "Type": "ContractType",
+    "Code": "Collaborator",
+    "Name": "Hợp đồng cộng tác viên",
+    "Order": 8,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000209"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000210"
-        },
-        "Type": "ContractType",
-        "Code": "Commitment",
-        "Name": "Bản cam kết",
-        "Order": 10,
-        "IsActive": true
+    "Type": "ContractType",
+    "Code": "Appendix",
+    "Name": "Phụ lục hợp đồng",
+    "Order": 9,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000210"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000301"
-        },
-        "Type": "ContractStatus",
-        "Code": "Draft",
-        "Name": "Dự thảo",
-        "Order": 1,
-        "IsActive": true
+    "Type": "ContractType",
+    "Code": "Commitment",
+    "Name": "Bản cam kết",
+    "Order": 10,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000301"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000302"
-        },
-        "Type": "ContractStatus",
-        "Code": "Signed",
-        "Name": "Đã ký kết",
-        "Order": 2,
-        "IsActive": true
+    "Type": "ContractStatus",
+    "Code": "Draft",
+    "Name": "Dự thảo",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000302"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000303"
-        },
-        "Type": "ContractStatus",
-        "Code": "Active",
-        "Name": "Đang hiệu lực",
-        "Order": 3,
-        "IsActive": true
+    "Type": "ContractStatus",
+    "Code": "Signed",
+    "Name": "Đã ký kết",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000303"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000304"
-        },
-        "Type": "ContractStatus",
-        "Code": "Completed",
-        "Name": "Đã hoàn thành",
-        "Order": 4,
-        "IsActive": true
+    "Type": "ContractStatus",
+    "Code": "Active",
+    "Name": "Đang hiệu lực",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000304"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000305"
-        },
-        "Type": "ContractStatus",
-        "Code": "Terminated",
-        "Name": "Đã chấm dứt",
-        "Order": 5,
-        "IsActive": true
+    "Type": "ContractStatus",
+    "Code": "Completed",
+    "Name": "Đã hoàn thành",
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000305"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000306"
-        },
-        "Type": "ContractStatus",
-        "Code": "Expired",
-        "Name": "Hết hạn",
-        "Order": 6,
-        "IsActive": true
+    "Type": "ContractStatus",
+    "Code": "Terminated",
+    "Name": "Đã chấm dứt",
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000306"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000401"
-        },
-        "Type": "TemplateStatus",
-        "Code": "Active",
-        "Name": "Đang sử dụng",
-        "Order": 1,
-        "IsActive": true
+    "Type": "ContractStatus",
+    "Code": "Expired",
+    "Name": "Hết hạn",
+    "Order": 6,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000401"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000402"
-        },
-        "Type": "TemplateStatus",
-        "Code": "Draft",
-        "Name": "Bản nháp",
-        "Order": 2,
-        "IsActive": true
+    "Type": "TemplateStatus",
+    "Code": "Active",
+    "Name": "Đang sử dụng",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000402"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000403"
-        },
-        "Type": "TemplateStatus",
-        "Code": "Inactive",
-        "Name": "Ngừng sử dụng",
-        "Order": 3,
-        "IsActive": true
+    "Type": "TemplateStatus",
+    "Code": "Draft",
+    "Name": "Bản nháp",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000403"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000501"
-        },
-        "Type": "EmployeeStatus",
-        "Code": "Active",
-        "Name": "Chính thức",
-        "Order": 1,
-        "IsActive": true
+    "Type": "TemplateStatus",
+    "Code": "Inactive",
+    "Name": "Ngừng sử dụng",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000501"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000502"
-        },
-        "Type": "EmployeeStatus",
-        "Code": "Probation",
-        "Name": "Thử việc",
-        "Order": 2,
-        "IsActive": true
+    "Type": "EmployeeStatus",
+    "Code": "Active",
+    "Name": "Chính thức",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000502"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000503"
-        },
-        "Type": "EmployeeStatus",
-        "Code": "MaternityLeave",
-        "Name": "Nghỉ thai sản",
-        "Order": 3,
-        "IsActive": true
+    "Type": "EmployeeStatus",
+    "Code": "Probation",
+    "Name": "Thử việc",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000503"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000504"
-        },
-        "Type": "EmployeeStatus",
-        "Code": "Resigned",
-        "Name": "Đã thôi việc",
-        "Order": 4,
-        "IsActive": true
+    "Type": "EmployeeStatus",
+    "Code": "MaternityLeave",
+    "Name": "Nghỉ thai sản",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000504"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000601"
-        },
-        "Type": "Workplace",
-        "Code": "HCM_OFFICE",
-        "Name": "Văn phòng Hồ Chí Minh",
-        "Order": 1,
-        "IsActive": true
+    "Type": "EmployeeStatus",
+    "Code": "Resigned",
+    "Name": "Đã thôi việc",
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000601"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000602"
-        },
-        "Type": "Workplace",
-        "Code": "HN_OFFICE",
-        "Name": "Văn phòng Hà Nội",
-        "Order": 2,
-        "IsActive": true
+    "Type": "Workplace",
+    "Code": "HCM_OFFICE",
+    "Name": "Văn phòng Hồ Chí Minh",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000602"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000603"
-        },
-        "Type": "Workplace",
-        "Code": "BD_WAREHOUSE",
-        "Name": "Kho Bình Dương",
-        "Order": 3,
-        "IsActive": true
+    "Type": "Workplace",
+    "Code": "HN_OFFICE",
+    "Name": "Văn phòng Hà Nội",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000603"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000604"
-        },
-        "Type": "Workplace",
-        "Code": "LA_FACTORY",
-        "Name": "Nhà máy Long An",
-        "Order": 4,
-        "IsActive": true
+    "Type": "Workplace",
+    "Code": "BD_WAREHOUSE",
+    "Name": "Kho Bình Dương",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000604"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000701"
-        },
-        "Type": "AttendanceStatus",
-        "Code": "Normal",
-        "Name": "Đi làm bình thường",
-        "Order": 1,
-        "IsActive": true
+    "Type": "Workplace",
+    "Code": "LA_FACTORY",
+    "Name": "Nhà máy Long An",
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000701"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000702"
-        },
-        "Type": "AttendanceStatus",
-        "Code": "Late",
-        "Name": "Đi trễ",
-        "Order": 2,
-        "IsActive": true
+    "Type": "AttendanceStatus",
+    "Code": "Normal",
+    "Name": "Đi làm bình thường",
+    "Order": 1,
+    "IsActive": true,
+    "Color": "info"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000702"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000703"
-        },
-        "Type": "AttendanceStatus",
-        "Code": "EarlyLeave",
-        "Name": "Về sớm",
-        "Order": 3,
-        "IsActive": true
+    "Type": "AttendanceStatus",
+    "Code": "Late",
+    "Name": "Đi trễ",
+    "Order": 2,
+    "IsActive": true,
+    "Color": "warning"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000703"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000704"
-        },
-        "Type": "AttendanceStatus",
-        "Code": "LateAndEarly",
-        "Name": "Trễ & Sớm",
-        "Order": 4,
-        "IsActive": true
+    "Type": "AttendanceStatus",
+    "Code": "EarlyLeave",
+    "Name": "Về sớm",
+    "Order": 3,
+    "IsActive": true,
+    "Color": "warning"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000704"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000705"
-        },
-        "Type": "AttendanceStatus",
-        "Code": "Absent",
-        "Name": "Nghỉ không phép",
-        "Order": 5,
-        "IsActive": true
+    "Type": "AttendanceStatus",
+    "Code": "LateAndEarly",
+    "Name": "Trễ & Sớm",
+    "Order": 4,
+    "IsActive": true,
+    "Color": "warning"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000705"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000706"
-        },
-        "Type": "AttendanceStatus",
-        "Code": "MissingCheckIn",
-        "Name": "Quên vân tay vào",
-        "Order": 6,
-        "IsActive": true
+    "Type": "AttendanceStatus",
+    "Code": "Absent",
+    "Name": "Nghỉ không phép",
+    "Order": 5,
+    "IsActive": true,
+    "Color": "danger"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000706"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000707"
-        },
-        "Type": "AttendanceStatus",
-        "Code": "MissingCheckOut",
-        "Name": "Quên vân tay ra",
-        "Order": 7,
-        "IsActive": true
+    "Type": "AttendanceStatus",
+    "Code": "MissingCheckIn",
+    "Name": "Quên vân tay vào",
+    "Order": 6,
+    "IsActive": true,
+    "Color": "danger"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000707"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000708"
-        },
-        "Type": "AttendanceStatus",
-        "Code": "Holiday",
-        "Name": "Nghỉ lễ",
-        "Order": 8,
-        "IsActive": true
+    "Type": "AttendanceStatus",
+    "Code": "MissingCheckOut",
+    "Name": "Quên vân tay ra",
+    "Order": 7,
+    "IsActive": true,
+    "Color": "danger"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000708"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000709"
-        },
-        "Type": "AttendanceStatus",
-        "Code": "Leave",
-        "Name": "Nghỉ có phép",
-        "Order": 9,
-        "IsActive": true
+    "Type": "AttendanceStatus",
+    "Code": "Holiday",
+    "Name": "Nghỉ lễ",
+    "Order": 8,
+    "IsActive": true,
+    "Color": "primary"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000709"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000710"
-        },
-        "Type": "AttendanceStatus",
-        "Code": "Weekend",
-        "Name": "Nghỉ cuối tuần",
-        "Order": 10,
-        "IsActive": true
+    "Type": "AttendanceStatus",
+    "Code": "Leave",
+    "Name": "Nghỉ có phép",
+    "Order": 9,
+    "IsActive": true,
+    "Color": "primary"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000710"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000801"
-        },
-        "Type": "LeaveStatus",
-        "Code": "Pending",
-        "Name": "Chờ duyệt",
-        "Order": 1,
-        "IsActive": true
+    "Type": "AttendanceStatus",
+    "Code": "Weekend",
+    "Name": "Nghỉ cuối tuần",
+    "Order": 10,
+    "IsActive": true,
+    "Color": "secondary"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000801"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000802"
-        },
-        "Type": "LeaveStatus",
-        "Code": "Approved",
-        "Name": "Đã duyệt",
-        "Order": 2,
-        "IsActive": true
+    "Type": "LeaveStatus",
+    "Code": "Pending",
+    "Name": "Chờ duyệt",
+    "Order": 1,
+    "IsActive": true,
+    "Color": "warning"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000802"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000803"
-        },
-        "Type": "LeaveStatus",
-        "Code": "Rejected",
-        "Name": "Từ chối",
-        "Order": 3,
-        "IsActive": true
+    "Type": "LeaveStatus",
+    "Code": "Approved",
+    "Name": "Đã duyệt",
+    "Order": 2,
+    "IsActive": true,
+    "Color": "success"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000803"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000000804"
-        },
-        "Type": "LeaveStatus",
-        "Code": "Cancelled",
-        "Name": "Đã hủy",
-        "Order": 4,
-        "IsActive": true
+    "Type": "LeaveStatus",
+    "Code": "Rejected",
+    "Name": "Từ chối",
+    "Order": 3,
+    "IsActive": true,
+    "Color": "danger"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000804"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000001301"
-        },
-        "Type": "JobStatus",
-        "Code": "Active",
-        "Name": "Đang hoạt động",
-        "Order": 1,
-        "IsActive": true
+    "Type": "LeaveStatus",
+    "Code": "Cancelled",
+    "Name": "Đã hủy",
+    "Order": 4,
+    "IsActive": true,
+    "Color": "secondary"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000805"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000001302"
-        },
-        "Type": "JobStatus",
-        "Code": "Draft",
-        "Name": "Bản nháp",
-        "Order": 2,
-        "IsActive": true
+    "Type": "LeaveStatus",
+    "Code": "PartiallyApproved",
+    "Name": "Chờ duyệt cấp 2",
+    "Order": 5,
+    "IsActive": true,
+    "Color": "primary"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000806"
     },
-    {
-        "_id": {
-            "$oid": "65dae2f30000000000001303"
-        },
-        "Type": "JobStatus",
-        "Code": "Closed",
-        "Name": "Đã đóng",
-        "Order": 3,
-        "IsActive": true
-    }
+    "Type": "LeaveStatus",
+    "Code": "Draft",
+    "Name": "Bản nháp",
+    "Order": 6,
+    "IsActive": true,
+    "Color": "secondary"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000807"
+    },
+    "Type": "LeaveStatus",
+    "Code": "Invalid",
+    "Name": "Không hợp lệ",
+    "Order": 7,
+    "IsActive": true,
+    "Color": "danger"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000808"
+    },
+    "Type": "LeaveStatus",
+    "Code": "Withdrawn",
+    "Name": "Đã rút đơn",
+    "Order": 8,
+    "IsActive": true,
+    "Color": "secondary"
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000001301"
+    },
+    "Type": "JobStatus",
+    "Code": "Active",
+    "Name": "Đang hoạt động",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000001302"
+    },
+    "Type": "JobStatus",
+    "Code": "Draft",
+    "Name": "Bản nháp",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000001303"
+    },
+    "Type": "JobStatus",
+    "Code": "Closed",
+    "Name": "Đã đóng",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000901"
+    },
+    "Type": "AssetStatus",
+    "Code": "Available",
+    "Name": "Sẵn dùng",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000902"
+    },
+    "Type": "AssetStatus",
+    "Code": "Assigned",
+    "Name": "Đã bàn giao",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000903"
+    },
+    "Type": "AssetStatus",
+    "Code": "Maintenance",
+    "Name": "Đang bảo trì",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000904"
+    },
+    "Type": "AssetStatus",
+    "Code": "Broken",
+    "Name": "Đã hỏng",
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000905"
+    },
+    "Type": "AssetStatus",
+    "Code": "Lost",
+    "Name": "Đã mất",
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000001401"
+    },
+    "Type": "AssetCondition",
+    "Code": "New",
+    "Name": "Mới 100%",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000001402"
+    },
+    "Type": "AssetCondition",
+    "Code": "Good",
+    "Name": "Đang dùng tốt",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000001403"
+    },
+    "Type": "AssetCondition",
+    "Code": "Old",
+    "Name": "Cũ / Xước nhẹ",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "Type": "Language",
+    "Code": "vi-VN",
+    "Name": "Tiếng Việt",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "Type": "Language",
+    "Code": "en-US",
+    "Name": "English",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "Type": "TimeZone",
+    "Code": "SE Asia Standard Time",
+    "Name": "(GMT+07:00) Bangkok, Hanoi, Jakarta",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "Type": "TimeZone",
+    "Code": "Asia/Ho_Chi_Minh",
+    "Name": "(GMT+07:00) Hồ Chí Minh",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "Type": "TimeZone",
+    "Code": "UTC",
+    "Name": "Universal Coordinated Time (UTC)",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "Type": "Currency",
+    "Code": "VND",
+    "Name": "Việt Nam Đồng (VNĐ)",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "Type": "Currency",
+    "Code": "USD",
+    "Name": "US Dollar ($)",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "Type": "ThousandSeparator",
+    "Code": ",",
+    "Name": "Dấu phẩy (,)",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "Type": "ThousandSeparator",
+    "Code": ".",
+    "Name": "Dấu chấm (.)",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "Type": "ThousandSeparator",
+    "Code": " ",
+    "Name": "Khoảng trắng ( )",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "Type": "DecimalSeparator",
+    "Code": ".",
+    "Name": "Dấu chấm (.)",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "Type": "DecimalSeparator",
+    "Code": ",",
+    "Name": "Dấu phẩy (,)",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "Type": "CodeSeparator",
+    "Code": "",
+    "Name": "Không có",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "Type": "CodeSeparator",
+    "Code": "-",
+    "Name": "Gạch ngang (-)",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "Type": "CodeSeparator",
+    "Code": "/",
+    "Name": "Gạch chéo (/)",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "Type": "CodeSeparator",
+    "Code": ".",
+    "Name": "Dấu chấm (.)",
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "Type": "CodeSeparator",
+    "Code": "_",
+    "Name": "Gạch dưới (_)",
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "Type": "CodeDateFormat",
+    "Code": "yyyy",
+    "Name": "Năm (2026)",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "Type": "CodeDateFormat",
+    "Code": "yy",
+    "Name": "Năm rút gọn (26)",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "Type": "CodeDateFormat",
+    "Code": "yyyyMM",
+    "Name": "Năm Tháng (202602)",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "Type": "CodeDateFormat",
+    "Code": "yyMM",
+    "Name": "Năm Tháng rút gọn (2602)",
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "Type": "CodeDateFormat",
+    "Code": "yyyyMMdd",
+    "Name": "Ngày Tháng Năm (20260221)",
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000301"
+    },
+    "Type": "DocumentType",
+    "Code": "CCCD",
+    "Name": "CMND / CCCD",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000302"
+    },
+    "Type": "DocumentType",
+    "Code": "DegreeUniversity",
+    "Name": "Bằng Đại học / Sau Đại học",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000303"
+    },
+    "Type": "DocumentType",
+    "Code": "Certificate",
+    "Name": "Chứng chỉ / Chứng nhận",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000304"
+    },
+    "Type": "DocumentType",
+    "Code": "HealthCertificate",
+    "Name": "Giấy khám sức khỏe",
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000305"
+    },
+    "Type": "DocumentType",
+    "Code": "CV",
+    "Name": "Sơ yếu lý lịch",
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000306"
+    },
+    "Type": "DocumentType",
+    "Code": "BirthCertificate",
+    "Name": "Giấy khai sinh",
+    "Order": 6,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000307"
+    },
+    "Type": "DocumentType",
+    "Code": "MarriageCertificate",
+    "Name": "Giấy đăng ký kết hôn",
+    "Order": 7,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000308"
+    },
+    "Type": "DocumentType",
+    "Code": "HouseholdBook",
+    "Name": "Sổ hộ khẩu",
+    "Order": 8,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000309"
+    },
+    "Type": "DocumentType",
+    "Code": "Other",
+    "Name": "Tài liệu khác",
+    "Order": 9,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000311"
+    },
+    "Type": "DocumentStatus",
+    "Code": "Pending",
+    "Name": "Chờ duyệt",
+    "Color": "warning",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000312"
+    },
+    "Type": "DocumentStatus",
+    "Code": "Verified",
+    "Name": "Đã xác thực",
+    "Color": "success",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65dae2f30000000000000313"
+    },
+    "Type": "DocumentStatus",
+    "Code": "Rejected",
+    "Name": "Từ chối",
+    "Color": "danger",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "Type": "PayrollStatus",
+    "Code": "Draft",
+    "Name": "Dự thảo",
+    "LookupID": 1,
+    "Order": 1,
+    "Color": "warning",
+    "IsActive": true
+  },
+  {
+    "Type": "PayrollStatus",
+    "Code": "Pending",
+    "Name": "Chờ duyệt",
+    "LookupID": 2,
+    "Order": 2,
+    "Color": "warning",
+    "IsActive": true
+  },
+  {
+    "Type": "PayrollStatus",
+    "Code": "Approved",
+    "Name": "Đã duyệt",
+    "LookupID": 3,
+    "Order": 3,
+    "Color": "primary",
+    "IsActive": true
+  },
+  {
+    "Type": "PayrollStatus",
+    "Code": "Closed",
+    "Name": "Đã chốt",
+    "LookupID": 4,
+    "Order": 4,
+    "Color": "success",
+    "IsActive": true
+  },
+  {
+    "Type": "PayrollStatus",
+    "Code": "Disputed",
+    "Name": "Khiếu nại",
+    "LookupID": 5,
+    "Order": 5,
+    "Color": "danger",
+    "IsActive": true
+  },
+  {
+    "Type": "PayrollStatus",
+    "Code": "ReviewRequired",
+    "Name": "Cần kiểm tra",
+    "LookupID": 6,
+    "Order": 6,
+    "Color": "info",
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000001901"
+    },
+    "Type": "Ethnicity",
+    "Code": "Kinh",
+    "Name": "Kinh",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000001902"
+    },
+    "Type": "Ethnicity",
+    "Code": "Tay",
+    "Name": "Tày",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000001903"
+    },
+    "Type": "Ethnicity",
+    "Code": "Thai",
+    "Name": "Thái",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000002001"
+    },
+    "Type": "Religion",
+    "Code": "None",
+    "Name": "Không",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000002002"
+    },
+    "Type": "Religion",
+    "Code": "Buddha",
+    "Name": "Phật giáo",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000002003"
+    },
+    "Type": "Religion",
+    "Code": "Christian",
+    "Name": "Công giáo",
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000002101"
+    },
+    "Type": "Nationality",
+    "Code": "VN",
+    "Name": "Việt Nam",
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000002102"
+    },
+    "Type": "Nationality",
+    "Code": "US",
+    "Name": "Mỹ",
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000002103"
+    },
+    "Type": "Nationality",
+    "Code": "JP",
+    "Name": "Nhật Bản",
+    "Order": 3,
+    "IsActive": true
+  }
 ]

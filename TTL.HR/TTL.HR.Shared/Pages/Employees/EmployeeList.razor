@@ -50,7 +50,7 @@
 							<option value="">Tất cả địa điểm</option>
 							@foreach (var wp in CachedWorkplaces)
 							{
-								<option value="@wp.Name">@wp.Name</option>
+								<option value="@wp.LookupID">@wp.Name</option>
 							}
 						</select>
 					</div>
@@ -129,7 +129,7 @@
 									<div class="card-body p-8">
 										<!-- Card Header: Status & Actions -->
 										<div class="d-flex flex-stack mb-5">
-											<div class="badge @(emp.StatusName == "Chính thức" ? "badge-light-success" : emp.StatusName == "Nghỉ việc" || emp.StatusName == "Đã thôi việc" ? "badge-light-danger" : "badge-light-warning") fw-boldest fs-9 px-3 py-2 rounded-pill shadow-xs">@emp.StatusName</div>
+											<div class="badge badge-light-@(string.IsNullOrEmpty(emp.StatusColor) ? "warning" : emp.StatusColor) fw-boldest fs-9 px-3 py-2 rounded-pill shadow-xs">@emp.StatusName</div>
 
 											<div class="dropdown">
 												<button class="btn btn-icon btn-sm btn-light btn-active-light-primary rounded-circle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -249,7 +249,7 @@
 									<td>@emp.JoinDate?.ToString("dd/MM/yyyy")</td>
 									<td>@emp.Workplace</td>
 									<td class="text-center">
-										<div class="badge @(emp.StatusName == "Chính thức" ? "badge-light-success" : emp.StatusName == "Nghỉ việc" || emp.StatusName == "Đã thôi việc" ? "badge-light-danger" : "badge-light-warning") fw-bolder">@emp.StatusName</div>
+										<div class="badge badge-light-@(string.IsNullOrEmpty(emp.StatusColor) ? "warning" : emp.StatusColor) fw-bolder">@emp.StatusName</div>
 									</td>
 									<td class="text-end">
 										<div class="d-flex justify-content-end flex-shrink-0">
@@ -344,6 +344,7 @@
     Positions="@CachedPositions"
     Managers="@CachedEmployees"
     Roles="@CachedRoles"
+    Workplaces="@CachedWorkplaces"
     OnSave="SaveChanges"
     OnScanCCCD="ScanCCCD"
     OnViewContract="ViewCurrentContract"

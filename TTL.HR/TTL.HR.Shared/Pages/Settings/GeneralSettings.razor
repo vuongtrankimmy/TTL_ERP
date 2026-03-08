@@ -214,9 +214,14 @@
                                 <label class="col-lg-3 col-form-label fw-bold fs-7">Múi giờ hệ thống</label>
                                 <div class="col-lg-9">
                                     <select class="form-select form-select-solid fs-7 fw-bold" @bind="Model.TimeZone">
-                                        <option value="Asia/Ho_Chi_Minh">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
-                                        <option value="SE Asia Standard Time">(GMT+07:00) SE Asia</option>
-                                        <option value="UTC">Universal Coordinated Time (UTC)</option>
+                                        @foreach(var tz in TimeZoneLookups)
+                                        {
+                                            <option value="@tz.Code">@tz.Name</option>
+                                        }
+                                        @if(!TimeZoneLookups.Any())
+                                        {
+                                            <option value="SE Asia Standard Time">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -225,8 +230,15 @@
                                     <label class="col-lg-6 col-form-label fw-bold fs-7 ps-5">Ngôn ngữ mặc định</label>
                                     <div class="col-lg-6">
                                         <select class="form-select form-select-solid fs-7 fw-bold" @bind="Model.DefaultLanguage">
-                                            <option value="vi-VN">Tiếng Việt</option>
-                                            <option value="en-US">English</option>
+                                            @foreach(var lang in LanguageLookups)
+                                            {
+                                                <option value="@lang.Code">@lang.Name</option>
+                                            }
+                                            @if(!LanguageLookups.Any())
+                                            {
+                                                <option value="vi-VN">Tiếng Việt</option>
+                                                <option value="en-US">English</option>
+                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -234,8 +246,15 @@
                                     <label class="col-lg-4 col-form-label fw-bold fs-7">Tiền tệ</label>
                                     <div class="col-lg-8">
                                         <select class="form-select form-select-solid fs-7 fw-bold" @bind="Model.Currency">
-                                            <option value="VND">Việt Nam Đồng (VNĐ)</option>
-                                            <option value="USD">US Dollar ($)</option>
+                                            @foreach(var cur in CurrencyLookups)
+                                            {
+                                                <option value="@cur.Code">@cur.Name</option>
+                                            }
+                                            @if(!CurrencyLookups.Any())
+                                            {
+                                                <option value="VND">Tiếng Việt (VNĐ)</option>
+                                                <option value="USD">English ($)</option>
+                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -262,16 +281,31 @@
                                 <div class="col-lg-9 row g-4">
                                     <div class="col-md-6">
                                         <span class="text-muted fs-8 d-block mb-2">Dấu phân cách hàng nghìn</span>
-                                        <select class="form-select form-select-solid fs-7">
-                                            <option value="comma">Dấu phẩy (,)</option>
-                                            <option value="dot">Dấu chấm (.)</option>
+                                        <select class="form-select form-select-solid fs-7" @bind="Model.ThousandSeparator">
+                                            @foreach(var sep in ThousandSeparatorLookups)
+                                            {
+                                                <option value="@sep.Code">@sep.Name</option>
+                                            }
+                                            @if(!ThousandSeparatorLookups.Any())
+                                            {
+                                                <option value=",">Dấu phẩy (,)</option>
+                                                <option value=".">Dấu chấm (.)</option>
+                                                <option value=" ">Khoảng trắng ( )</option>
+                                            }
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <span class="text-muted fs-8 d-block mb-2">Dấu phân cách thập phân</span>
-                                        <select class="form-select form-select-solid fs-7">
-                                            <option value="dot">Dấu chấm (.)</option>
-                                            <option value="comma">Dấu phẩy (,)</option>
+                                        <select class="form-select form-select-solid fs-7" @bind="Model.DecimalSeparator">
+                                            @foreach(var sep in DecimalSeparatorLookups)
+                                            {
+                                                <option value="@sep.Code">@sep.Name</option>
+                                            }
+                                            @if(!DecimalSeparatorLookups.Any())
+                                            {
+                                                <option value=".">Dấu chấm (.)</option>
+                                                <option value=",">Dấu phẩy (,)</option>
+                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -280,9 +314,9 @@
                                 <div class="col-12 bg-light-info rounded p-5 border border-dashed border-info">
                                     <h5 class="fw-bolder text-info mb-3">Xem trước định dạng</h5>
                                     <div class="d-flex flex-wrap gap-5">
-                                        <div class="bg-white px-4 py-2 rounded shadow-xs fs-8">Ngày: <b>25/12/2024</b></div>
-                                        <div class="bg-white px-4 py-2 rounded shadow-xs fs-8">Tiền tệ: <b>25,000,000 VNĐ</b></div>
-                                        <div class="bg-white px-4 py-2 rounded shadow-xs fs-8">Múi giờ: <b>Asia/Ho_Chi_Minh (GMT+7)</b></div>
+                                        <div class="bg-white px-4 py-2 rounded shadow-xs fs-8">Ngày: <b>@DateTime.Now.ToString(Model.DateFormat)</b></div>
+                                        <div class="bg-white px-4 py-2 rounded shadow-xs fs-8">Tiền tệ: <b>25@(Model.ThousandSeparator)000@(Model.ThousandSeparator)000 @(Model.Currency == "VND" ? "VNĐ" : "$")</b></div>
+                                        <div class="bg-white px-4 py-2 rounded shadow-xs fs-8">Múi giờ: <b>@Model.TimeZone</b></div>
                                     </div>
                                 </div>
                             </div>
@@ -350,7 +384,7 @@
                                     {
                                         var isSelected = Model.WorkDays?.Contains(key) ?? false;
                                         <button type="button" class="btn btn-sm @(isSelected ? "btn-light-primary" : "btn-light") fw-bolder" 
-                                                @onclick='() => { if(isSelected) Model.WorkDays.Remove(key); else Model.WorkDays.Add(key); }'>
+                                                @onclick='() => { if(isSelected) Model.WorkDays?.Remove(key); else Model.WorkDays?.Add(key); }'>
                                             @label
                                         </button>
                                     }
@@ -608,15 +642,22 @@
                                 </table>
                             </div>
                             
-                            <div class="p-4 bg-light-warning rounded-3 mt-8 d-flex align-items-start border border-dashed border-warning">
-                                <i class="bi bi-info-circle text-warning fs-3 me-3 mt-1"></i>
-                                <div class="fs-8 text-warning-emphasis fw-bold">
-                                    Giải thích: Thuế TNCN được tính theo công thức lũy tiến từng phần. <br/>
-                                    Công thức: Thuế = (Thu nhập tính thuế * Thuế suất) - Số trừ cố định. <br/>
-                                    Ví dụ Bậc 2: Thu nhập từ 5.000.000 đến 10.000.000, Thuế suất 10%, Số trừ 250.000. <br/>
-                                    Cấu hình: Ngưỡng > 5.000.000, Thuế suất 0.1, Số trừ 250.000.
+                            <div class="row mb-10">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Ghi chú & Giải thích</label>
+                                <div class="col-lg-9">
+                                    <textarea class="form-control form-control-solid fs-7" rows="4" @bind="Model.PitExplanation" placeholder="Giải thích cách tính thuế..."></textarea>
                                 </div>
                             </div>
+
+                            @if (!string.IsNullOrEmpty(Model.PitExplanation))
+                            {
+                                <div class="p-4 bg-light-warning rounded-3 mt-8 d-flex align-items-start border border-dashed border-warning">
+                                    <i class="bi bi-info-circle text-warning fs-3 me-3 mt-1"></i>
+                                    <div class="fs-8 text-warning-emphasis fw-bold">
+                                        @((MarkupString)Model.PitExplanation.Replace("\n", "<br/>"))
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 }
@@ -901,11 +942,18 @@
                                                 <div class="col-md-6">
                                                     <label class="form-label fw-bold text-gray-700 fs-8 text-uppercase">Ký tự phân cách</label>
                                                     <select class="form-select form-select-solid bg-light" @bind="SelectedConfig.Separator">
-                                                        <option value="">Không có</option>
-                                                        <option value="-">Gạch ngang (-)</option>
-                                                        <option value="/">Gạch chéo (/)</option>
-                                                        <option value=".">Dấu chấm (.)</option>
-                                                        <option value="_">Gạch dưới (_)</option>
+                                                        @foreach(var sep in CodeSeparatorLookups)
+                                                        {
+                                                            <option value="@sep.Code">@sep.Name</option>
+                                                        }
+                                                        @if(!CodeSeparatorLookups.Any())
+                                                        {
+                                                            <option value="">Không có</option>
+                                                            <option value="-">Gạch ngang (-)</option>
+                                                            <option value="/">Gạch chéo (/)</option>
+                                                            <option value=".">Dấu chấm (.)</option>
+                                                            <option value="_">Gạch dưới (_)</option>
+                                                        }
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
@@ -915,11 +963,18 @@
                                                             <input class="form-check-input w-20px h-20px" type="checkbox" @bind="SelectedConfig.IncludeDate" />
                                                         </div>
                                                         <select class="form-select form-select-solid bg-light" @bind="SelectedConfig.DateFormat" disabled="@(!SelectedConfig.IncludeDate)">
-                                                            <option value="yyyy">Năm (2026)</option>
-                                                            <option value="yy">Năm rút gọn (26)</option>
-                                                            <option value="yyyyMM">Năm Tháng (202602)</option>
-                                                            <option value="yyMM">Năm Tháng rút gọn (2602)</option>
-                                                            <option value="yyyyMMdd">Ngày Tháng Năm (20260221)</option>
+                                                            @foreach(var fmt in CodeDateFormatLookups)
+                                                            {
+                                                                <option value="@fmt.Code">@fmt.Name</option>
+                                                            }
+                                                            @if(!CodeDateFormatLookups.Any())
+                                                            {
+                                                                <option value="yyyy">Năm (2026)</option>
+                                                                <option value="yy">Năm rút gọn (26)</option>
+                                                                <option value="yyyyMM">Năm Tháng (202602)</option>
+                                                                <option value="yyMM">Năm Tháng rút gọn (2602)</option>
+                                                                <option value="yyyyMMdd">Ngày Tháng Năm (20260221)</option>
+                                                            }
                                                         </select>
                                                     </div>
                                                 </div>

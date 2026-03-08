@@ -9,6 +9,8 @@ using TTL.HR.Application.Modules.Assets.Interfaces;
 using TTL.HR.Application.Modules.Assets.Models;
 using TTL.HR.Application.Modules.HumanResource.Interfaces;
 using TTL.HR.Application.Modules.HumanResource.Models;
+using TTL.HR.Application.Modules.Common.Interfaces;
+using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Shared.Pages.Assets
 {
@@ -18,12 +20,15 @@ namespace TTL.HR.Shared.Pages.Assets
         [Inject] public NavigationManager Navigation { get; set; } = default!;
         [Inject] public IAssetService AssetService { get; set; } = default!;
         [Inject] public IEmployeeService EmployeeService { get; set; } = default!;
+        [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
 
         private List<AllocationViewModel> ActiveAllocations = new();
         private List<AllocationViewModel> HistoryAllocations = new();
         private List<EmployeeModel> Employees = new();
         private List<AssetModel> AvailableAssets = new();
+        private List<LookupModel> Conditions = new();
+        private List<LookupModel> StatusLookups = new();
         
         private bool _isLoading = true;
 
@@ -55,13 +60,18 @@ namespace TTL.HR.Shared.Pages.Assets
             _isLoading = true;
             try
             {
-                var assetsTask = AssetService.GetAssetsAsync();
+                var assetsTask = AssetService.GetAssetsAsync("Available", 200);
                 var employeesTask = EmployeeService.GetEmployeesAsync();
+                var conditionsTask = MasterDataService.GetCachedLookupsAsync("AssetCondition");
+                var statusTask = MasterDataService.GetCachedLookupsAsync("AssetStatus");
 
-                await Task.WhenAll(assetsTask, employeesTask);
+                await Task.WhenAll(assetsTask, employeesTask, conditionsTask, statusTask);
 
-                var assets = await assetsTask;
+                var availableAssets = await assetsTask;
                 var employeeDtos = await employeesTask;
+                Conditions = await conditionsTask;
+                StatusLookups = await statusTask;
+
                 Employees = employeeDtos.Select(e => new EmployeeModel
                 {
                     Id = e.Id,
@@ -76,9 +86,9 @@ namespace TTL.HR.Shared.Pages.Assets
                     StatusName = e.StatusName
                 }).ToList();
 
-                if (assets != null)
+                if (availableAssets != null)
                 {
-                    AvailableAssets = assets.Where(a => a.Status == "Available").ToList();
+                    AvailableAssets = availableAssets.ToList();
                 }
 
                 // Fetch Active Allocations
@@ -168,7 +178,7 @@ namespace TTL.HR.Shared.Pages.Assets
         {
             if (string.IsNullOrEmpty(NewAllocation.AssetId) || string.IsNullOrEmpty(NewAllocation.EmployeeId)) return;
 
-            var success = await AssetService.AssignAssetAsync(NewAllocation.AssetId, NewAllocation.EmployeeId, "Tốt", NewAllocation.Note);
+            var success = await AssetService.AssignAssetAsync(NewAllocation.AssetId, NewAllocation.EmployeeId, NewAllocation.Condition, NewAllocation.Note);
             if (success)
             {
                 await JS.InvokeVoidAsync("toastr.success", "Cấp phát tài sản thành công!");
@@ -235,6 +245,7 @@ namespace TTL.HR.Shared.Pages.Assets
             [Required(ErrorMessage = "Vui lòng chọn tài sản")]
             public string AssetId { get; set; } = "";
             public DateTime AssignedDate { get; set; }
+            public string Condition { get; set; } = "Good";
             public string Note { get; set; } = "";
         }
     }

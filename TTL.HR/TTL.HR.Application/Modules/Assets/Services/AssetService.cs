@@ -14,9 +14,12 @@ namespace TTL.HR.Application.Modules.Assets.Services
     {
         private readonly HttpClient _httpClient;
         public AssetService(HttpClient httpClient) => _httpClient = httpClient;
-        public async Task<IEnumerable<AssetModel>> GetAssetsAsync()
+        public async Task<IEnumerable<AssetModel>> GetAssetsAsync(string? status = null, int pageSize = 100)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<AssetModel>>>(ApiEndpoints.Assets.Base);
+            var url = $"{ApiEndpoints.Assets.Base}?Page=1&PageSize={pageSize}";
+            if (!string.IsNullOrEmpty(status)) url += $"&Status={status}";
+            
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<AssetModel>>>(url);
             return response?.Data?.Items ?? new List<AssetModel>();
         }
 
@@ -63,12 +66,14 @@ namespace TTL.HR.Application.Modules.Assets.Services
 
         public async Task<bool> CreateAssetAsync(AssetModel asset)
         {
+            if (string.IsNullOrEmpty(asset.CategoryId)) asset.CategoryId = asset.Category;
             var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Assets.Base, asset);
             return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> UpdateAssetAsync(string id, AssetModel asset)
         {
+            if (string.IsNullOrEmpty(asset.CategoryId)) asset.CategoryId = asset.Category;
             var response = await _httpClient.PutAsJsonAsync($"{ApiEndpoints.Assets.Base}/{id}", asset);
             return response.IsSuccessStatusCode;
         }
@@ -77,6 +82,11 @@ namespace TTL.HR.Application.Modules.Assets.Services
         {
             var response = await _httpClient.DeleteAsync($"{ApiEndpoints.Assets.Base}/{id}");
             return response.IsSuccessStatusCode;
+        }
+        public async Task<IEnumerable<AssetCategoryDto>> GetCategoriesAsync()
+        {
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<IEnumerable<AssetCategoryDto>>>($"{ApiEndpoints.Assets.Base}/categories");
+            return response?.Data ?? new List<AssetCategoryDto>();
         }
     }
 }
