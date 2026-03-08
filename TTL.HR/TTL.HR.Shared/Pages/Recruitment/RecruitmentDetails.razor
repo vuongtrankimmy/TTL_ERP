@@ -156,10 +156,10 @@
                                                             @app.Status <i class="ki-outline ki-down fs-8 ms-1"></i>
                                                         </button>
                                                         <ul class="dropdown-menu shadow-sm">
-                                                            <li><button class="dropdown-item py-2 fs-7" @onclick='() => UpdateStatus(app, "Tiếp nhận")'>Tiếp nhận</button></li>
+                                                            <li><button class="dropdown-item py-2 fs-7" @onclick='() => UpdateStatus(app, "Applied", 101)'>Tiếp nhận</button></li>
                                                             <li><button class="dropdown-item py-2 fs-7 text-warning fw-bold" @onclick='() => OpenScheduleModal(app)'>Đặt lịch phỏng vấn</button></li>
-                                                            <li><button class="dropdown-item py-2 fs-7 text-success fw-bold" @onclick='() => UpdateStatus(app, "Đã tuyển")'>Đã tuyển</button></li>
-                                                            <li><button class="dropdown-item py-2 fs-7 text-danger fw-bold" @onclick='() => UpdateStatus(app, "Từ chối")'>Từ chối</button></li>
+                                                            <li><button class="dropdown-item py-2 fs-7 text-success fw-bold" @onclick='() => UpdateStatus(app, "Hired", 105)'>Đã tuyển</button></li>
+                                                            <li><button class="dropdown-item py-2 fs-7 text-danger fw-bold" @onclick='() => UpdateStatus(app, "Rejected", 106)'>Từ chối</button></li>
                                                         </ul>
                                                     </div>
                                                 </td>

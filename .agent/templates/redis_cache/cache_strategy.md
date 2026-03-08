@@ -1,0 +1,1 @@
+Use Redis for caching frequently accessed queries.

@@ -42,6 +42,22 @@
                             </div>
                         </div>
 
+                        @if (_isEdit)
+                        {
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-6">Trạng thái tin</label>
+                                <div class="col-lg-9">
+                                    <InputSelect class="form-select form-select-solid fw-bold" @bind-Value="Model.StatusId">
+                                        <option value="82">Bản nháp (Draft)</option>
+                                        <option value="81">Đang đăng (Published)</option>
+                                        <option value="84">Tạm dừng (On Hold)</option>
+                                        <option value="83">Đã đóng (Closed)</option>
+                                        <option value="85">Hoàn tất (Completed)</option>
+                                    </InputSelect>
+                                </div>
+                            </div>
+                        }
+
                         <div class="row mb-6">
                             <label class="col-lg-3 col-form-label required fw-bold fs-6">Hình thức & Số lượng</label>
                             <div class="col-lg-4 mb-3 mb-lg-0">

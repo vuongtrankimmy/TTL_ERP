@@ -7,6 +7,7 @@ using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Common.Interfaces;
 using TTL.HR.Application.Modules.Common.Models;
 using TTL.HR.Application.Modules.Common.Constants;
+using System.Collections.Concurrent;
 
 namespace TTL.HR.Application.Modules.Common.Services
 {
@@ -16,13 +17,31 @@ namespace TTL.HR.Application.Modules.Common.Services
         public ApiRepository(HttpClient httpClient) => _httpClient = httpClient;
         public async Task<List<T>> GetAllAsync(string endpoint)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<T>>>(endpoint);
-            return response?.Data ?? new List<T>();
+            try
+            {
+                var response = await _httpClient.GetAsync(endpoint);
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<T>>>();
+                    return apiResponse?.Data ?? new List<T>();
+                }
+            }
+            catch { }
+            return new List<T>();
         }
         public async Task<T?> GetByIdAsync(string endpoint, string id)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<T>>($"{endpoint}/{id}");
-            return response?.Data;
+            try
+            {
+                var response = await _httpClient.GetAsync($"{endpoint}/{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<T>>();
+                    return apiResponse?.Data;
+                }
+            }
+            catch { }
+            return null;
         }
         public async Task<T> CreateAsync(string endpoint, T entity)
         {
@@ -37,38 +56,65 @@ namespace TTL.HR.Application.Modules.Common.Services
     public class MasterDataService : IMasterDataService
     {
         private readonly HttpClient _httpClient;
-        private static readonly Dictionary<string, List<LookupModel>> _cache = new();
-        private static readonly Dictionary<string, List<CountryModel>> _countryCache = new();
+        private static readonly ConcurrentDictionary<string, List<LookupModel>> _cache = new();
+        private static readonly ConcurrentDictionary<string, List<CountryModel>> _countryCache = new();
+        
         public MasterDataService(HttpClient httpClient) => _httpClient = httpClient;
+        
         public async Task<List<LookupModel>> GetLookupsAsync(string type, string? lang = null)
         {
-            var url = $"{ApiEndpoints.Lookups.Base}?type={type}";
-            if (!string.IsNullOrEmpty(lang)) url += $"&LanguageCode={lang}";
+            try
+            {
+                var url = $"{ApiEndpoints.Lookups.Base}?type={type}";
+                if (!string.IsNullOrEmpty(lang)) url += $"&LanguageCode={lang}";
 
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<LookupModel>>>(url);
-            return response?.Data ?? new List<LookupModel>();
+                var response = await _httpClient.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    return apiResponse?.Data ?? new List<LookupModel>();
+                }
+            }
+            catch { }
+            return new List<LookupModel>();
         }
+
         public async Task<List<LookupModel>> GetCachedLookupsAsync(string type, string? lang = null)
         {
             var cacheKey = $"{type}_{lang ?? "default"}";
-            if (!_cache.ContainsKey(cacheKey)) _cache[cacheKey] = await GetLookupsAsync(type, lang);
-            return _cache[cacheKey];
+            if (_cache.TryGetValue(cacheKey, out var cached)) return cached;
+            
+            var data = await GetLookupsAsync(type, lang);
+            _cache.TryAdd(cacheKey, data);
+            return data;
         }
 
         public async Task<List<CountryModel>> GetCountriesAsync(string? lang = null)
         {
-            var url = $"{ApiEndpoints.System.Countries}";
-            if (!string.IsNullOrEmpty(lang)) url += $"?lang={lang}";
+            try
+            {
+                var url = $"{ApiEndpoints.System.Countries}";
+                if (!string.IsNullOrEmpty(lang)) url += $"?lang={lang}";
 
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<CountryModel>>>(url);
-            return response?.Data ?? new List<CountryModel>();
+                var response = await _httpClient.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<CountryModel>>>();
+                    return apiResponse?.Data ?? new List<CountryModel>();
+                }
+            }
+            catch { }
+            return new List<CountryModel>();
         }
 
         public async Task<List<CountryModel>> GetCachedCountriesAsync(string? lang = null)
         {
             var cacheKey = lang ?? "default";
-            if (!_countryCache.ContainsKey(cacheKey)) _countryCache[cacheKey] = await GetCountriesAsync(lang);
-            return _countryCache[cacheKey];
+            if (_countryCache.TryGetValue(cacheKey, out var cached)) return cached;
+            
+            var data = await GetCountriesAsync(lang);
+            _countryCache.TryAdd(cacheKey, data);
+            return data;
         }
     }
 

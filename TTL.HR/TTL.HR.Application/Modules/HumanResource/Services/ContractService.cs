@@ -23,14 +23,23 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         // Templates
         public async Task<PagedResult<ContractTemplateModel>> GetTemplatesAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, int? typeId = null, string? lang = null)
         {
-            var query = $"{ApiEndpoints.Contracts.Templates}?page={page}&pageSize={pageSize}";
-            if (!string.IsNullOrEmpty(searchTerm)) query += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
-            if (!string.IsNullOrEmpty(status) && status != "All") query += $"&status={status}";
-            if (typeId.HasValue) query += $"&typeId={typeId}";
-            if (!string.IsNullOrEmpty(lang)) query += $"&LanguageCode={lang}";
+            try
+            {
+                var query = $"{ApiEndpoints.Contracts.Templates}?page={page}&pageSize={pageSize}";
+                if (!string.IsNullOrEmpty(searchTerm)) query += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
+                if (!string.IsNullOrEmpty(status) && status != "All") query += $"&status={status}";
+                if (typeId.HasValue) query += $"&typeId={typeId.Value}";
+                if (!string.IsNullOrEmpty(lang)) query += $"&LanguageCode={lang}";
 
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<ContractTemplateModel>>>(query);
-            return response?.Data ?? new PagedResult<ContractTemplateModel>();
+                var response = await _httpClient.GetAsync(query);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<PagedResult<ContractTemplateModel>>>();
+                    return result?.Data ?? new PagedResult<ContractTemplateModel>();
+                }
+            }
+            catch { }
+            return new PagedResult<ContractTemplateModel>();
         }
 
         public async Task<ContractTemplatesSummaryModel> GetTemplateSummaryAsync()
@@ -80,23 +89,42 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         // Employee Contracts
         public async Task<PagedResult<EmployeeContractModel>> GetEmployeeContractsAsync(int page = 1, int pageSize = 10, string? searchTerm = null, string? status = null, int? typeId = null, string? employeeId = null, string? lang = null)
         {
-            var query = $"{ApiEndpoints.Contracts.Base}?page={page}&pageSize={pageSize}";
-            if (!string.IsNullOrEmpty(searchTerm)) query += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
-            if (!string.IsNullOrEmpty(status) && status != "All") query += $"&status={status}";
-            if (typeId.HasValue) query += $"&typeId={typeId}";
-            if (!string.IsNullOrEmpty(employeeId)) query += $"&employeeId={employeeId}";
-            if (!string.IsNullOrEmpty(lang)) query += $"&LanguageCode={lang}";
+            try
+            {
+                var query = $"{ApiEndpoints.Contracts.Base}?page={page}&pageSize={pageSize}";
+                if (!string.IsNullOrEmpty(searchTerm)) query += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
+                if (!string.IsNullOrEmpty(status) && status != "All") query += $"&status={status}";
+                if (typeId.HasValue) query += $"&typeId={typeId.Value}";
+                if (!string.IsNullOrEmpty(employeeId)) query += $"&employeeId={employeeId}";
+                if (!string.IsNullOrEmpty(lang)) query += $"&LanguageCode={lang}";
 
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<EmployeeContractModel>>>(query);
-            return response?.Data ?? new PagedResult<EmployeeContractModel>();
+                var response = await _httpClient.GetAsync(query);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<PagedResult<EmployeeContractModel>>>();
+                    return result?.Data ?? new PagedResult<EmployeeContractModel>();
+                }
+            }
+            catch { }
+            return new PagedResult<EmployeeContractModel>();
         }
 
         public async Task<EmployeeContractModel?> GetEmployeeContractAsync(string id, string? lang = null)
         {
-            var url = $"{ApiEndpoints.Contracts.Base}/{id}";
-            if (!string.IsNullOrEmpty(lang)) url += $"?LanguageCode={lang}";
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<EmployeeContractModel>>(url);
-            return response?.Data;
+            try
+            {
+                var url = $"{ApiEndpoints.Contracts.Base}/{id}";
+                if (!string.IsNullOrEmpty(lang)) url += $"?LanguageCode={lang}";
+                
+                var response = await _httpClient.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<EmployeeContractModel>>();
+                    return result?.Data;
+                }
+            }
+            catch { }
+            return null;
         }
 
         public async Task<EmployeeContract?> CreateEmployeeContractAsync(EmployeeContract contract)

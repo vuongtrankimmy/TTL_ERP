@@ -20,17 +20,24 @@ namespace TTL.HR.Application.Modules.Recruitment.Models
         // Aliases for UI
         public string Name => FullName;
         public DateTime AppliedDate => CreatedAt;
-        public string StatusBadge => $"badge-light-{StatusColor}";
-        public string StatusColor => Status switch
+        public string? StatusColor { get; set; }
+        public string StatusBadge => $"badge-light-{GetStatusColor()}";
+
+        private string GetStatusColor()
         {
-            "Applied" => "info",
-            "Screening" => "primary",
-            "Interview" => "warning",
-            "Offered" => "success",
-            "Hired" => "success",
-            "Rejected" => "danger",
-            _ => "secondary"
-        };
+            if (!string.IsNullOrEmpty(StatusColor)) return StatusColor;
+
+            return StatusId switch
+            {
+                101 => "info",      // Applied
+                102 => "primary",   // Screening
+                103 => "warning",   // Interview
+                104 => "success",   // Offered
+                105 => "success",   // Hired
+                106 => "danger",    // Rejected
+                _ => "secondary"
+            };
+        }
         
         public int DaysInStage { get; set; }
         public bool HasInterviewScheduled { get; set; }
@@ -109,16 +116,25 @@ namespace TTL.HR.Application.Modules.Recruitment.Models
         
         public int? StatusId { get; set; }
         public string Status { get; set; } = "Draft";
-        public string StatusClass => Status switch
+        public string? StatusColor { get; set; }
+
+        public string StatusClass
         {
-            "Draft" => "badge-light-secondary",
-            "Published" => "badge-light-primary",
-            "Active" => "badge-light-primary",
-            "Closing Soon" => "badge-light-warning",
-            "Closed" => "badge-light-danger",
-            "Completed" => "badge-light-success",
-            _ => "badge-light-secondary"
-        };
+            get
+            {
+                if (!string.IsNullOrEmpty(StatusColor)) return $"badge-light-{StatusColor}";
+
+                return StatusId switch
+                {
+                    82 => "badge-light-secondary", // Draft
+                    81 => "badge-light-primary",   // Published
+                    84 => "badge-light-warning",   // OnHold
+                    83 => "badge-light-danger",    // Closed
+                    85 => "badge-light-success",   // Completed
+                    _ => "badge-light-secondary"
+                };
+            }
+        }
         
         public string Description { get; set; } = string.Empty;
         public string Requirements { get; set; } = string.Empty;

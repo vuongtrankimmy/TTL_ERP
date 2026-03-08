@@ -48,6 +48,10 @@ namespace TTL.HR.Shared.Pages.Employees
         private List<RoleModel> availableRoles = new();
         private List<BankDto> activeBanks = new();
         private bool _isProcessing = false;
+        private bool _isLoading = false;
+        private bool _isLoadingData = false;
+        private string? _loadingError;
+        private string? _currentLoadingStage;
         private Dictionary<string, string> errorsMap = new();
 
         private EmployeeModel newEmployee = new()
@@ -58,141 +62,262 @@ namespace TTL.HR.Shared.Pages.Employees
         };
 
         private List<EmployeeDocumentModel> uploadedDocuments = new();
+        private bool _isDataLoaded = false;
+        private bool _isInitialized = false;
 
         protected override async Task OnInitializedAsync()
         {
-            // Initial Settings & Language
-            await SettingsService.InitializeAsync();
-            var lang = SettingsService.CachedSettings?.DefaultLanguage ?? "vi-VN";
-
-            genderLookups = await MasterDataService.GetCachedLookupsAsync("Gender", lang);
-            maritalStatusLookups = await MasterDataService.GetCachedLookupsAsync("MaritalStatus", lang);
-            employeeStatusLookups = await MasterDataService.GetCachedLookupsAsync("EmployeeStatus", lang);
-            contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType", lang);
-            workplaceLookups = await MasterDataService.GetCachedLookupsAsync("Workplace", lang);
-            departments = await DepartmentService.GetDepartmentsAsync();
-            positions = await PositionService.GetPositionsAsync();
-            availableRoles = await PermissionService.GetRolesAsync();
-            var employees = await EmployeeService.GetEmployeesAsync();
-            allEmployees = employees;
-
-            nationalityLookups = await MasterDataService.GetCachedCountriesAsync(lang);
-            ethnicityLookups = await MasterDataService.GetCachedLookupsAsync("Ethnicity", lang);
-            religionLookups = await MasterDataService.GetCachedLookupsAsync("Religion", lang);
-
-            try
+            _isInitialized = true;
+            try 
             {
-                var bankResult = await BankService.GetBanksAsync(new GetBanksRequest { Page = 1, PageSize = 1000 });
-                activeBanks = bankResult?.Items?.Where(b => b.IsActive).OrderByDescending(b => b.Priority).ThenBy(b => b.Code).ToList() ?? new();
+                await SettingsService.InitializeAsync();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading banks: {ex.Message}");
+                Console.WriteLine($"Error initializing settings: {ex.Message}");
             }
+        }
 
-            if (IsEditMode)
+        private string? _lastLoadedId = null;
+        protected override async Task OnParametersSetAsync()
+        {
+            // If already rendered, handle ID changes (e.g. Navigating from Edit NV001 to Edit NV002)
+            if (_isFirstRenderDone && IsEditMode && Id != _lastLoadedId)
             {
-                var employee = await EmployeeService.GetEmployeeAsync(Id);
-                if (employee != null)
+                _lastLoadedId = Id;
+                await LoadAllDataAsync();
+            }
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _isFirstRenderDone = true;
+                _lastLoadedId = Id;
+                await LoadAllDataAsync();
+            }
+        }
+
+        private async Task LoadAllDataAsync()
+        {
+            if (_isLoadingData) return;
+            
+            _isLoadingData = true;
+            try 
+            {
+                await InvokeAsync(() => {
+                    _isLoading = true;
+                    _loadingError = null;
+                    StateHasChanged();
+                });
+
+                // Safe JS logging - only if render is done
+                if (_isFirstRenderDone) {
+                    try { await JSRuntime.InvokeVoidAsync("console.log", $"[EmployeeAdd] Loading data. Mode: {(IsEditMode ? "Edit" : "Id=" + Id)}"); } catch {}
+                }
+
+                var lang = SettingsService.CachedSettings?.DefaultLanguage ?? "vi-VN";
+                Console.WriteLine($"[EmployeeAdd] Starting LoadAllData. Mode: {(IsEditMode ? "Edit" : "Add")}, ID: {Id}");
+
+                _currentLoadingStage = "Đang tải danh mục hệ thống...";
+                await InvokeAsync(StateHasChanged);
+
+                // Step 1: Lookups (Essential)
+                try 
                 {
-                    newEmployee = employee;
-                    
-                    // Map Backend/Compatibility properties
-                    if (string.IsNullOrEmpty(newEmployee.Name) && !string.IsNullOrEmpty(newEmployee.FullName))
-                        newEmployee.Name = newEmployee.FullName;
-                    
-                    if (string.IsNullOrEmpty(newEmployee.DeptId) && !string.IsNullOrEmpty(newEmployee.DepartmentId))
-                        newEmployee.DeptId = newEmployee.DepartmentId;
-                    
-                    if (string.IsNullOrEmpty(newEmployee.Avatar) && !string.IsNullOrEmpty(newEmployee.AvatarUrl))
-                        newEmployee.Avatar = newEmployee.AvatarUrl;
+                    genderLookups = await MasterDataService.GetCachedLookupsAsync("Gender", lang) ?? new();
+                    maritalStatusLookups = await MasterDataService.GetCachedLookupsAsync("MaritalStatus", lang) ?? new();
+                    employeeStatusLookups = await MasterDataService.GetCachedLookupsAsync("EmployeeStatus", lang) ?? new();
+                    contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType", lang) ?? new();
+                    workplaceLookups = await MasterDataService.GetCachedLookupsAsync("Workplace", lang) ?? new();
+                    nationalityLookups = await MasterDataService.GetCachedCountriesAsync(lang) ?? new();
+                    ethnicityLookups = await MasterDataService.GetCachedLookupsAsync("Ethnicity", lang) ?? new();
+                    religionLookups = await MasterDataService.GetCachedLookupsAsync("Religion", lang) ?? new();
+                }
+                catch (Exception ex) { Console.WriteLine($"Step 1 failed: {ex.Message}"); }
 
-                    if (newEmployee.PersonalDetails != null)
-                    {
-                        if (newEmployee.DOB == null) newEmployee.DOB = newEmployee.PersonalDetails.DOB;
-                        if (string.IsNullOrEmpty(newEmployee.Gender)) newEmployee.Gender = newEmployee.PersonalDetails.Gender;
-                        if (string.IsNullOrEmpty(newEmployee.Address)) newEmployee.Address = newEmployee.PersonalDetails.Address;
-                        if (string.IsNullOrEmpty(newEmployee.Hometown)) newEmployee.Hometown = newEmployee.PersonalDetails.Hometown;
-                        if (string.IsNullOrEmpty(newEmployee.IdCard)) newEmployee.IdCard = newEmployee.PersonalDetails.IdCardNumber;
-                        if (newEmployee.CccdIssueDate == null) newEmployee.CccdIssueDate = newEmployee.PersonalDetails.IdCardIssueDate;
-                        if (string.IsNullOrEmpty(newEmployee.CccdIssuePlace)) newEmployee.CccdIssuePlace = newEmployee.PersonalDetails.IdCardPlace;
-                        if (string.IsNullOrEmpty(newEmployee.Nationality)) newEmployee.Nationality = newEmployee.PersonalDetails.Nationality;
-                        if (string.IsNullOrEmpty(newEmployee.Ethnicity)) newEmployee.Ethnicity = newEmployee.PersonalDetails.Ethnicity;
-                        if (string.IsNullOrEmpty(newEmployee.Religion)) newEmployee.Religion = newEmployee.PersonalDetails.Religion;
-                        if (string.IsNullOrEmpty(newEmployee.MaritalStatus)) newEmployee.MaritalStatus = newEmployee.PersonalDetails.MaritalStatus;
-                        if (string.IsNullOrEmpty(newEmployee.PlaceOfOrigin)) newEmployee.PlaceOfOrigin = newEmployee.PersonalDetails.PlaceOfOrigin;
-                        if (string.IsNullOrEmpty(newEmployee.Residence)) newEmployee.Residence = newEmployee.PersonalDetails.Residence;
-                        if (string.IsNullOrEmpty(newEmployee.SocialInsuranceId)) newEmployee.SocialInsuranceId = newEmployee.PersonalDetails.SocialInsuranceId;
-                        if (string.IsNullOrEmpty(newEmployee.TaxId)) newEmployee.TaxId = newEmployee.PersonalDetails.TaxCode;
-                        if (string.IsNullOrEmpty(newEmployee.BankAccountNumber)) newEmployee.BankAccountNumber = newEmployee.PersonalDetails.BankAccount;
-                        if (string.IsNullOrEmpty(newEmployee.BankName)) newEmployee.BankName = newEmployee.PersonalDetails.BankName;
+                _currentLoadingStage = "Đang tải cơ cấu tổ chức...";
+                await InvokeAsync(StateHasChanged);
+
+                // Step 2: Org & Settings
+                try 
+                {
+                    departments = await DepartmentService.GetDepartmentsAsync() ?? new();
+                    positions = await PositionService.GetPositionsAsync() ?? new();
+                    availableRoles = await PermissionService.GetRolesAsync() ?? new();
+                    
+                    var banksResult = await BankService.GetBanksAsync(new GetBanksRequest { Page = 1, PageSize = 1000 });
+                    activeBanks = banksResult?.Items?.Where(b => b.IsActive).OrderByDescending(b => b.Priority).ThenBy(b => b.Code).ToList() ?? new();
+                }
+                catch (Exception ex) { 
+                    Console.WriteLine($"Step 2 failed: {ex.Message}");
+                    if (_isFirstRenderDone) {
+                        try { await JSRuntime.InvokeVoidAsync("console.warn", $"Step 2 failed: {ex.Message}"); } catch {}
                     }
+                }
 
-                    // The Salary might be mapped to SalaryDisplay, so ensure compatibility
-                    if (newEmployee.Salary.HasValue && string.IsNullOrEmpty(newEmployee.SalaryDisplay))
-                    {
-                        newEmployee.SalaryDisplay = newEmployee.Salary.Value.ToString("N0");
-                    }
-                    
-                    // Account state initialization
-                    newEmployee.Username = employee.Username;
-                    newEmployee.IsCreateAccount = employee.IsCreateAccount;
-                    newEmployee.IsAccountActive = employee.IsAccountActive;
-                    newEmployee.IsActive = employee.IsAccountActive; // Primary toggle in UI
+                _isDataLoaded = true;
+                Console.WriteLine($"[EmployeeAdd] Step 1&2 Done. _isDataLoaded={_isDataLoaded}");
+                await InvokeAsync(StateHasChanged);
 
-                    if (employee.Roles != null && employee.Roles.Any())
+                // Step 3: Specific Employee
+                if (IsEditMode)
+                {
+                    _currentLoadingStage = "Đang tải chi tiết hồ sơ nhân viên...";
+                    await InvokeAsync(StateHasChanged);
+                    try
                     {
-                        var firstRole = employee.Roles.First();
-                        newEmployee.Role = firstRole switch
+                        Console.WriteLine($"[EmployeeAdd] Fetching employee {Id}...");
+                        if (_isFirstRenderDone) {
+                            try { await JSRuntime.InvokeVoidAsync("console.log", $"[EmployeeAdd] Fetching data for {Id}..."); } catch {}
+                        }
+                        
+                        // Add a timeout of 15 seconds to the fetch to prevent hanging forever
+                        var fetchTask = EmployeeService.GetEmployeeAsync(Id!);
+                        var timeoutTask = Task.Delay(15000);
+                        var completedTask = await Task.WhenAny(fetchTask, timeoutTask);
+                        
+                        if (completedTask == timeoutTask)
                         {
-                            "65fc5b5b0000000000000001" or "ADMIN" => "Admin",
-                            "65fc5b5b0000000000000002" or "HR_MGR" => "HR",
-                            "65fc5b5b0000000000000005" or "DEPT_MGR" => "Manager",
-                            "65fc5b5b0000000000000004" or "EMPLOYEE" => "User",
-                            _ => firstRole
-                        };
-                    }
-                    else if (string.IsNullOrEmpty(newEmployee.Role))
-                    {
-                        newEmployee.Role = "User";
-                    }
+                            throw new TimeoutException("Hết thời gian chờ phản hồi từ máy chủ (15s).");
+                        }
+                        
+                        var employee = await fetchTask;
+                        if (employee != null)
+                        {
+                            Console.WriteLine($"[EmployeeAdd] Employee {Id} data received. Mapping...");
+                            newEmployee = employee;
+                            
+                            // Essential Safeties - ensure lists are NEVER null
+                            newEmployee.Education ??= new();
+                            newEmployee.Experience ??= new();
+                            newEmployee.AuditLogs ??= new();
+                            newEmployee.ModulePermissions ??= new();
+                            newEmployee.Roles ??= new();
+                            newEmployee.PersonalDetails ??= new();
+                            newEmployee.EmergencyContact ??= new();
+                            newEmployee.AttendanceSummary ??= new();
+                            
+                            // Map compatibility
+                            if (string.IsNullOrEmpty(newEmployee.Name)) newEmployee.Name = newEmployee.FullName;
+                            if (string.IsNullOrEmpty(newEmployee.DeptId)) newEmployee.DeptId = newEmployee.DepartmentId;
+                            if (string.IsNullOrEmpty(newEmployee.Avatar)) newEmployee.Avatar = newEmployee.AvatarUrl;
+                            if (newEmployee.OfficialJoinDate == null) newEmployee.OfficialJoinDate = newEmployee.JoinDate;
 
-                    // Load Digital Profile (Documents)
-                    var profile = await EmployeeService.GetDigitalProfileAsync(Id!);
-                    if (profile != null)
+                            if (newEmployee.PersonalDetails == null) newEmployee.PersonalDetails = new();
+                            else
+                            {
+                                if (newEmployee.DOB == null) newEmployee.DOB = newEmployee.PersonalDetails.DOB;
+                                if (!newEmployee.GenderId.HasValue) newEmployee.GenderId = newEmployee.PersonalDetails.GenderId;
+                                if (string.IsNullOrEmpty(newEmployee.IdCard)) newEmployee.IdCard = newEmployee.PersonalDetails.IdCardNumber;
+                                if (newEmployee.CccdIssueDate == null) newEmployee.CccdIssueDate = newEmployee.PersonalDetails.IdCardIssueDate;
+                                if (string.IsNullOrEmpty(newEmployee.CccdIssuePlace)) newEmployee.CccdIssuePlace = newEmployee.PersonalDetails.IdCardPlace;
+                                if (string.IsNullOrEmpty(newEmployee.Nationality)) newEmployee.Nationality = newEmployee.PersonalDetails.Nationality;
+                                if (!newEmployee.NationalityId.HasValue) newEmployee.NationalityId = newEmployee.PersonalDetails.NationalityId;
+                                if (string.IsNullOrEmpty(newEmployee.Ethnicity)) newEmployee.Ethnicity = newEmployee.PersonalDetails.Ethnicity;
+                                if (!newEmployee.EthnicityId.HasValue) newEmployee.EthnicityId = newEmployee.PersonalDetails.EthnicityId;
+                                if (string.IsNullOrEmpty(newEmployee.Religion)) newEmployee.Religion = newEmployee.PersonalDetails.Religion;
+                                if (!newEmployee.ReligionId.HasValue) newEmployee.ReligionId = newEmployee.PersonalDetails.ReligionId;
+                                if (!newEmployee.MaritalStatusId.HasValue) newEmployee.MaritalStatusId = newEmployee.PersonalDetails.MaritalStatusId;
+                                if (string.IsNullOrEmpty(newEmployee.PlaceOfOrigin)) newEmployee.PlaceOfOrigin = newEmployee.PersonalDetails.PlaceOfOrigin;
+                                if (string.IsNullOrEmpty(newEmployee.Residence)) newEmployee.Residence = newEmployee.PersonalDetails.Residence;
+                                if (string.IsNullOrEmpty(newEmployee.Hometown)) newEmployee.Hometown = newEmployee.PersonalDetails.Hometown;
+                                if (string.IsNullOrEmpty(newEmployee.SocialInsuranceId)) newEmployee.SocialInsuranceId = newEmployee.PersonalDetails.SocialInsuranceId;
+                                if (string.IsNullOrEmpty(newEmployee.TaxId)) newEmployee.TaxId = newEmployee.PersonalDetails.TaxCode;
+                                if (string.IsNullOrEmpty(newEmployee.BankAccountNumber)) newEmployee.BankAccountNumber = newEmployee.PersonalDetails.BankAccount;
+                                if (string.IsNullOrEmpty(newEmployee.BankName)) newEmployee.BankName = newEmployee.PersonalDetails.BankName;
+                                newEmployee.PersonalDetails.Dependents ??= new();
+                            }
+
+                            if (newEmployee.EmergencyContact == null) newEmployee.EmergencyContact = new();
+                            else
+                            {
+                                if (string.IsNullOrEmpty(newEmployee.EmergencyContactName)) newEmployee.EmergencyContactName = newEmployee.EmergencyContact.Name;
+                                if (string.IsNullOrEmpty(newEmployee.EmergencyContactPhone)) newEmployee.EmergencyContactPhone = newEmployee.EmergencyContact.Phone;
+                                if (string.IsNullOrEmpty(newEmployee.EmergencyContactRelation)) newEmployee.EmergencyContactRelation = newEmployee.EmergencyContact.Relation;
+                            }
+
+                            newEmployee.Education ??= new();
+                            newEmployee.Experience ??= new();
+                            newEmployee.AuditLogs ??= new();
+                            newEmployee.ModulePermissions ??= new();
+                            newEmployee.Roles ??= new();
+                            newEmployee.AttendanceSummary ??= new();
+
+                            if (newEmployee.Salary.HasValue && string.IsNullOrEmpty(newEmployee.SalaryDisplay))
+                                newEmployee.SalaryDisplay = newEmployee.Salary.Value.ToString("N0");
+                            
+                            newEmployee.IsAccountActive = employee.IsAccountActive;
+                            newEmployee.IsActive = employee.IsAccountActive;
+
+                            if (employee.Roles != null && employee.Roles.Any())
+                            {
+                                var firstRole = employee.Roles.First();
+                                newEmployee.Role = firstRole switch
+                                {
+                                    "65fc5b5b0000000000000001" or "ADMIN" => "Admin",
+                                    "65fc5b5b0000000000000002" or "HR_MGR" => "HR",
+                                    "65fc5b5b0000000000000005" or "DEPT_MGR" => "Manager",
+                                    "65fc5b5b0000000000000004" or "EMPLOYEE" => "User",
+                                    _ => firstRole
+                                };
+                            }
+
+                            try {
+                                var profile = await EmployeeService.GetDigitalProfileAsync(Id!);
+                                if (profile != null) uploadedDocuments = profile.Documents ?? new();
+                            } catch { }
+                        }
+                        else
+                        {
+                            _loadingError = "Hồ sơ không tồn tại (404/Null).";
+                        }
+                    }
+                    catch (Exception ex)
                     {
-                        uploadedDocuments = profile.Documents ?? new List<EmployeeDocumentModel>();
+                        _loadingError = $"Lỗi dữ liệu: {ex.Message}";
                     }
                 }
                 else
                 {
-                    await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Không tìm thấy hồ sơ nhân viên này", "error");
-                    Navigation.NavigateTo("/employees");
+                    // New Mode Defaults
+                    if (!newEmployee.GenderId.HasValue) newEmployee.GenderId = genderLookups?.FirstOrDefault()?.LookupID;
+                    if (!newEmployee.StatusId.HasValue) newEmployee.StatusId = employeeStatusLookups?.FirstOrDefault()?.LookupID;
+                    if (string.IsNullOrEmpty(newEmployee.Nationality)) newEmployee.Nationality = "Việt Nam";
+                    if (string.IsNullOrEmpty(newEmployee.Role)) newEmployee.Role = "User";
+                }
+                
+                if (_isFirstRenderDone) {
+                    try { await JSRuntime.InvokeVoidAsync("console.log", "[EmployeeAdd] Data load sequence completed successfully."); } catch {}
                 }
             }
-            else
+            catch (Exception ex)
             {
-                // Ensure lookups are not null
-                if (genderLookups == null) genderLookups = new();
-                if (employeeStatusLookups == null) employeeStatusLookups = new();
-                if (contractTypeLookups == null) contractTypeLookups = new();
-                if (departments == null) departments = new();
-                if (positions == null) positions = new();
-                
-                // Set defaults if lists are not empty
-                if (string.IsNullOrEmpty(newEmployee.Gender)) newEmployee.Gender = genderLookups.FirstOrDefault()?.Name ?? "Nam";
-                if (!newEmployee.StatusId.HasValue || newEmployee.StatusId <= 0) newEmployee.StatusId = employeeStatusLookups.FirstOrDefault()?.LookupID;
-                if (!newEmployee.ContractTypeId.HasValue) newEmployee.ContractTypeId = contractTypeLookups.FirstOrDefault()?.LookupID;
-                if (string.IsNullOrEmpty(newEmployee.DeptId)) newEmployee.DeptId = departments.FirstOrDefault()?.Id ?? string.Empty;
-                if (string.IsNullOrEmpty(newEmployee.PositionId)) newEmployee.PositionId = positions.FirstOrDefault()?.Id ?? string.Empty;
-                if (!newEmployee.WorkplaceId.HasValue || newEmployee.WorkplaceId <= 0) newEmployee.WorkplaceId = workplaceLookups.FirstOrDefault()?.LookupID;
-                
-                if (string.IsNullOrEmpty(newEmployee.Nationality)) newEmployee.Nationality = nationalityLookups.FirstOrDefault()?.Name ?? "Việt Nam";
-                if (string.IsNullOrEmpty(newEmployee.Ethnicity)) newEmployee.Ethnicity = ethnicityLookups.FirstOrDefault()?.Name ?? "Kinh";
-                if (string.IsNullOrEmpty(newEmployee.Religion)) newEmployee.Religion = religionLookups.FirstOrDefault()?.Name ?? "Không";
+                _loadingError = $"Lỗi trang: {ex.Message}";
+                Console.WriteLine($"[EmployeeAdd] CRITICAL ERROR: {ex}");
+                if (_isFirstRenderDone) {
+                    try { await JSRuntime.InvokeVoidAsync("console.error", $"Critical Error in LoadAllData: {ex.Message}", ex.StackTrace); } catch {}
+                }
+            }
+            finally
+            {
+                Console.WriteLine($"[EmployeeAdd] LoadAllData Finally. ID: {Id}");
+                await InvokeAsync(() => {
+                    _isLoading = false;
+                    _isLoadingData = false;
+                    StateHasChanged();
+                });
+            }
+        }
 
-                // Defaults for Account
-                if (string.IsNullOrEmpty(newEmployee.Role)) newEmployee.Role = "User";
+        private bool _isFirstRenderDone = false;
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _isFirstRenderDone = true;
+                StateHasChanged();
             }
         }
 
@@ -539,9 +664,9 @@ namespace TTL.HR.Shared.Pages.Employees
             {
                 if (string.IsNullOrEmpty(newEmployee.DeptId)) errorsMap["DeptId"] = "Vui lòng chọn Phòng ban";
                 if (string.IsNullOrEmpty(newEmployee.PositionId)) errorsMap["PositionId"] = "Vui lòng chọn Chức vụ";
-                if (!newEmployee.StatusId.HasValue || newEmployee.StatusId <= 0) errorsMap["StatusId"] = "Vui lòng chọn Trạng thái";
-                if (!newEmployee.WorkplaceId.HasValue || newEmployee.WorkplaceId <= 0) errorsMap["WorkplaceId"] = "Vui lòng chọn Nơi làm việc";
-                if (!newEmployee.ContractTypeId.HasValue || newEmployee.ContractTypeId <= 0) errorsMap["ContractTypeId"] = "Vui lòng chọn Loại hợp đồng";
+                if (!newEmployee.StatusId.HasValue) errorsMap["StatusId"] = "Vui lòng chọn Trạng thái";
+                if (!newEmployee.WorkplaceId.HasValue) errorsMap["WorkplaceId"] = "Vui lòng chọn Nơi làm việc";
+                if (!newEmployee.ContractTypeId.HasValue) errorsMap["ContractTypeId"] = "Vui lòng chọn Loại hợp đồng";
             }
             
             if (!IsEmailValid)
@@ -624,7 +749,7 @@ namespace TTL.HR.Shared.Pages.Employees
                         DepartmentId = IsValidObjectId(newEmployee.DeptId) ? newEmployee.DeptId : null,
                         PositionId = IsValidObjectId(newEmployee.PositionId) ? newEmployee.PositionId : null,
                         ReportToId = IsValidObjectId(newEmployee.ReportToId) ? newEmployee.ReportToId : null,
-                        StatusId = newEmployee.StatusId > 0 ? newEmployee.StatusId : null,
+                        StatusId = newEmployee.StatusId,
                         ContractTypeId = newEmployee.ContractTypeId,
                         
                         JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Now,
@@ -706,7 +831,7 @@ namespace TTL.HR.Shared.Pages.Employees
                         DepartmentId = IsValidObjectId(newEmployee.DeptId) ? newEmployee.DeptId : null,
                         PositionId = IsValidObjectId(newEmployee.PositionId) ? newEmployee.PositionId : null,
                         ReportToId = IsValidObjectId(newEmployee.ReportToId) ? newEmployee.ReportToId : null,
-                        StatusId = newEmployee.StatusId > 0 ? newEmployee.StatusId : null,
+                        StatusId = newEmployee.StatusId,
                         ContractTypeId = newEmployee.ContractTypeId,
                         
                         JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Now,
@@ -989,6 +1114,12 @@ namespace TTL.HR.Shared.Pages.Employees
             if (string.IsNullOrWhiteSpace(id)) return false;
             if (id.Length != 24) return false;
             return System.Text.RegularExpressions.Regex.IsMatch(id, @"^[0-9a-fA-F]{24}$");
+        }
+
+        private int? ParseInt(string? value)
+        {
+            if (string.IsNullOrEmpty(value)) return null;
+            return int.TryParse(value, out var result) ? result : (int?)null;
         }
 
         private decimal? ParseSalary(string? salaryStr)

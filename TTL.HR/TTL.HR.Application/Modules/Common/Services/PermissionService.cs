@@ -19,23 +19,50 @@ namespace TTL.HR.Application.Modules.Common.Services
 
         public async Task<List<PermissionWithRolesDto>> GetPermissionsAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<PermissionWithRolesDto>>>(ApiEndpoints.Administration.Permissions);
-            return response?.Data ?? new List<PermissionWithRolesDto>();
+            try
+            {
+                var response = await _httpClient.GetAsync(ApiEndpoints.Administration.Permissions);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<PermissionWithRolesDto>>>();
+                    return result?.Data ?? new List<PermissionWithRolesDto>();
+                }
+            }
+            catch { }
+            return new List<PermissionWithRolesDto>();
         }
 
         public async Task<List<RoleModel>> GetRolesAsync(string? searchTerm = null)
         {
-            var url = ApiEndpoints.Administration.Roles;
-            if (!string.IsNullOrEmpty(searchTerm)) url += $"?SearchTerm={Uri.EscapeDataString(searchTerm)}";
-            
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<RoleModel>>>(url);
-            return response?.Data?.Items ?? new List<RoleModel>();
+            try
+            {
+                var url = ApiEndpoints.Administration.Roles;
+                if (!string.IsNullOrEmpty(searchTerm)) url += $"?SearchTerm={Uri.EscapeDataString(searchTerm)}";
+                
+                var response = await _httpClient.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<PagedResult<RoleModel>>>();
+                    return result?.Data?.Items ?? new List<RoleModel>();
+                }
+            }
+            catch { }
+            return new List<RoleModel>();
         }
 
         public async Task<RoleModel?> GetRoleByIdAsync(string id)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<RoleModel>>($"{ApiEndpoints.Administration.Roles}/{id}");
-            return response?.Data;
+            try
+            {
+                var response = await _httpClient.GetAsync($"{ApiEndpoints.Administration.Roles}/{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<RoleModel>>();
+                    return result?.Data;
+                }
+            }
+            catch { }
+            return null;
         }
 
         public async Task<(bool Success, string Message)> CreateRoleAsync(RoleModel role)

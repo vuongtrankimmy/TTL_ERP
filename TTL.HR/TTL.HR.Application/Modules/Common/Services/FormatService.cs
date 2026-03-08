@@ -94,18 +94,28 @@ namespace TTL.HR.Application.Modules.Common.Services
 
         public string FormatPhone(string? phone)
         {
-            var digits = CleanDigits(phone);
-            if (digits.Length == 10)
+            try 
             {
-                return string.Format("{0:0### ### ###}", long.Parse(digits));
+                var digits = CleanDigits(phone);
+                if (string.IsNullOrEmpty(digits)) return string.Empty;
+                
+                if (digits.Length == 10 && long.TryParse(digits, out var num))
+                {
+                    return string.Format("{0:0### ### ###}", num);
+                }
+                return digits;
             }
-            return digits;
+            catch { return phone ?? string.Empty; }
         }
 
         public string FormatAddress(string? address)
         {
             if (string.IsNullOrWhiteSpace(address)) return string.Empty;
-            return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(address.ToLower());
+            try 
+            {
+                return _vnCulture.TextInfo.ToTitleCase(address.ToLower());
+            }
+            catch { return address; }
         }
 
         public bool IsValidEmail(string? email)

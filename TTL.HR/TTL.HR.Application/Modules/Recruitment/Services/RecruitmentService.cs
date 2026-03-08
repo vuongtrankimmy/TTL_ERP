@@ -45,9 +45,9 @@ namespace TTL.HR.Application.Modules.Recruitment.Services
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> UpdateApplicantStatusAsync(string applicantId, string status, string? note = null)
+        public async Task<bool> UpdateApplicantStatusAsync(string applicantId, string? status, int? statusId = null, string? note = null)
         {
-            var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Recruitment.Candidates}/{applicantId}/status", new { Status = status, Note = note });
+            var response = await _httpClient.PutAsJsonAsync($"{ApiEndpoints.Recruitment.Candidates}/{applicantId}/status", new { Status = status, StatusId = statusId, Note = note });
             return response.IsSuccessStatusCode;
         }
 

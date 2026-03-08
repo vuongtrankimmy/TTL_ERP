@@ -62,8 +62,19 @@ namespace TTL.HR.Shared.Pages.Contracts
                 var currentLang = SettingsService.CachedSettings?.DefaultLanguage ?? "vi-VN";
                 if (ActiveTab.StartsWith("Templates") || ActiveTab == "All" || ActiveTab == "Active" || ActiveTab == "Draft")
                 {
-                    var status = ActiveTab == "Templates" || ActiveTab == "All" ? FilterStatusId?.ToString() : ActiveTab;
-                    TemplateData = await ContractService.GetTemplatesAsync(PageIndex, PageSize, SearchQuery, status, FilterTypeId, currentLang);
+                    int? statusId = null;
+                    string? statusName = null;
+                    
+                    if (ActiveTab == "Templates" || ActiveTab == "All")
+                    {
+                        statusId = FilterStatusId;
+                    }
+                    else
+                    {
+                        statusName = ActiveTab;
+                    }
+                    
+                    TemplateData = await ContractService.GetTemplatesAsync(PageIndex, PageSize, SearchQuery, statusName ?? statusId?.ToString(), FilterTypeId, currentLang);
                 }
                 else if (ActiveTab == "EmployeeContracts")
                 {

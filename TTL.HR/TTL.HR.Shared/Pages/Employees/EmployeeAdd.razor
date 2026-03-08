@@ -4,7 +4,59 @@
 
 <CccdScanner @ref="cccdScanner" />
 
-<div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
+
+<div class="card card-flush mb-6 shadow-sm border-0">
+    <div class="card-body p-0">
+        <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold px-10">
+            <li class="nav-item">
+                <a class="nav-link text-active-primary active py-5" data-bs-toggle="tab" href="#tab_personal">
+                    <i class="bi bi-person-circle fs-4 me-2"></i>THÔNG TIN CÁ NHÂN
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-active-primary py-5" data-bs-toggle="tab" href="#tab_job">
+                    <i class="bi bi-briefcase fs-4 me-2"></i>CÔNG VIỆC & LƯƠNG
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-active-primary py-5" data-bs-toggle="tab" href="#tab_competence">
+                    <i class="bi bi-mortarboard fs-4 me-2"></i>NĂNG LỰC & GIA ĐÌNH
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-active-primary py-5" data-bs-toggle="tab" href="#tab_account">
+                    <i class="bi bi-shield-lock fs-4 me-2"></i>TÀI KHOẢN & HỒ SƠ
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="tab-content border-0 p-0 m-0 position-relative">
+    @if (_isLoading)
+    {
+        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center z-index-3 bg-white bg-opacity-75 rounded-3 border border-gray-200" style="min-height: 400px; z-index: 1000;">
+            <div class="spinner-border text-primary w-60px h-60px border-4 mb-4" role="status"></div>
+            <div class="fw-bold fs-5 text-gray-700">@(_currentLoadingStage ?? "Đang tải hồ sơ nhân viên...")</div>
+            <div class="text-muted fs-8 mt-1 italic">Hệ thống đang đồng bộ dữ liệu với máy chủ CRM.</div>
+            @if (!string.IsNullOrEmpty(_loadingError))
+            {
+                <div class="alert alert-danger mt-4 mx-10 p-4 border-dashed">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill fs-3 text-danger me-3"></i>
+                        <div class="fw-bold">@_loadingError</div>
+                    </div>
+                    <button class="btn btn-sm btn-light-danger mt-3 w-100" @onclick="LoadAllDataAsync">Thử lại ngay</button>
+                    <a href="/employees" class="btn btn-sm btn-link mt-1 w-100">Quay lại danh sách</a>
+                </div>
+            }
+        </div>
+    }
+    
+    <!-- TAB 1: THÔNG TIN CÁ NHÂN -->
+    <div class="tab-pane fade show active" id="tab_personal" role="tabpanel">
+        <div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
+
     <!-- SECTION: THÔNG TIN CÁ NHÂN -->
     <div class="card card-flush py-4">
         <div class="card-header border-0">
@@ -199,58 +251,71 @@
         </div>
     </div>
 
-    <!-- SECTION: ĐỊA CHỈ & LIÊN LẠC -->
-    <div class="card card-flush py-4">
-        <div class="card-header border-0">
-            <div class="card-title">
-                <span class="symbol symbol-30px me-3">
-                    <i class="bi bi-geo-alt text-primary fs-2"></i>
-                </span>
-                <h2 class="fw-bold fs-5 text-uppercase m-0">Địa chỉ & Hộ khẩu</h2>
+    <!-- SECTION: ĐỊA CHỈ & LIÊN LẠC (Moved Emergency here) -->
+    <div class="row g-7 g-lg-10">
+        <div class="col-xl-8">
+            <div class="card card-flush py-4 h-100">
+                <div class="card-header border-0">
+                    <div class="card-title">
+                        <span class="symbol symbol-30px me-3">
+                            <i class="bi bi-geo-alt text-primary fs-2"></i>
+                        </span>
+                        <h2 class="fw-bold fs-5 text-uppercase m-0">Địa chỉ & Hộ khẩu</h2>
+                    </div>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="row g-9">
+                        <div class="col-md-4">
+                            <TTLInput Type="TTLInput.InputDataType.Address" Label="Quê quán" @bind-Value="newEmployee.Hometown" Placeholder="Ghi theo CCCD..." />
+                        </div>
+                        <div class="col-md-4">
+                            <TTLInput Type="TTLInput.InputDataType.Address" Label="Nơi sinh" @bind-Value="newEmployee.PlaceOfOrigin" Placeholder="Ghi theo CCCD..." />
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex flex-stack mb-2">
+                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-0">Nơi thường trú</label>
+                                <button type="button" class="btn btn-sm btn-light-info fw-bold py-1 px-3" @onclick="GetResidenceCoordinates">
+                                    <i class="bi bi-geo-alt-fill me-1"></i> Lấy tọa độ
+                                </button>
+                            </div>
+                            <TTLInput Type="TTLInput.InputDataType.Address" @bind-Value="newEmployee.Residence" Placeholder="Địa chỉ hiện tại..." />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card-body pt-0">
-            <div class="row g-9">
-                <div class="col-md-4">
-                    <TTLInput Type="TTLInput.InputDataType.Address"
-                              Label="Quê quán"
-                              @bind-Value="newEmployee.Hometown"
-                              Placeholder="Ghi theo CCCD..." />
-                </div>
-                <div class="col-md-4">
-                    <TTLInput Type="TTLInput.InputDataType.Address"
-                              Label="Nơi sinh"
-                              @bind-Value="newEmployee.PlaceOfOrigin"
-                              Placeholder="Ghi theo CCCD..." />
-                </div>
-                <div class="col-md-4">
-                    <div class="d-flex flex-stack mb-2">
-                        <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-0">Nơi thường trú</label>
-                        <button type="button" class="btn btn-sm btn-light-info fw-bold py-1 px-3" @onclick="GetResidenceCoordinates">
-                            <i class="bi bi-geo-alt-fill me-1"></i> Lấy tọa độ
-                        </button>
+        <div class="col-xl-4">
+            <div class="card card-flush py-4 h-100 border-warning border-dashed border-1 shadow-sm">
+                <div class="card-header border-0">
+                    <div class="card-title">
+                        <span class="symbol symbol-30px me-3">
+                            <i class="bi bi-exclamation-triangle-fill text-warning fs-2"></i>
+                        </span>
+                        <h2 class="fw-bold fs-5 text-uppercase m-0">Liên hệ khẩn cấp</h2>
                     </div>
-                    <TTLInput Type="TTLInput.InputDataType.Address"
-                              @bind-Value="newEmployee.Residence"
-                              Placeholder="Địa chỉ hiện tại..." />
-
-                    @if (newEmployee.Latitude != 0 && newEmployee.Longitude != 0)
-                    {
-                        <div class="mt-2 p-3 bg-light-success bg-opacity-50 rounded border border-success border-dashed">
-                            <i class="bi bi-pin-map-fill text-success me-2"></i>
-                            <span class="fs-9 fw-bold text-gray-800">
-                                @newEmployee.Latitude.ToString("F6"), @newEmployee.Longitude.ToString("F6")
-                            </span>
-                            <span class="badge badge-light-success fs-9 ms-2">Đã xác định</span>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="mb-6">
+                        <TTLInput Type="TTLInput.InputDataType.Name" Label="Họ tên người liên hệ" @bind-Value="newEmployee.EmergencyContactName" Placeholder="VD: Nguyễn Văn B" />
+                    </div>
+                    <div class="row g-4 mb-0">
+                        <div class="col-12">
+                            <TTLInput Type="TTLInput.InputDataType.Phone" Label="SĐT Khẩn cấp" @bind-Value="newEmployee.EmergencyContactPhone" Placeholder="090xxxxxxx" />
                         </div>
-                    }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SECTION: THÔNG TIN CÔNG VIỆC -->
-    <div class="card card-flush py-4">
+        </div>
+    </div>
+
+    <!-- TAB 2: CÔNG VIỆC & LƯƠNG -->
+    <div class="tab-pane fade" id="tab_job" role="tabpanel">
+        <div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
+            <!-- SECTION: THÔNG TIN CÔNG VIỆC -->
+            <div class="card card-flush py-4">
         <div class="card-header border-0">
             <div class="card-title">
                 <span class="symbol symbol-30px me-3">
@@ -370,7 +435,8 @@
     <!-- DOUBLE COLUMN: FINANCE & EMERGENCY -->
     <div class="row g-7 g-lg-10">
         <div class="col-xl-8">
-            <div class="card card-flush py-4 h-100">
+            <div class="card card-flush py-4">
+
                 <div class="card-header border-0">
                     <div class="card-title">
                         <span class="symbol symbol-30px me-3">
@@ -415,188 +481,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-4">
-            <div class="card card-flush py-4 h-100 border-warning border-dashed border-1">
-                <div class="card-header border-0">
-                    <div class="card-title">
-                        <span class="symbol symbol-30px me-3">
-                            <i class="bi bi-exclamation-triangle-fill text-warning fs-2"></i>
-                        </span>
-                        <h2 class="fw-bold fs-5 text-uppercase m-0">Liên hệ khẩn cấp</h2>
-                    </div>
-                </div>
-                <div class="card-body pt-0">
-                    <div class="mb-6">
-                        <TTLInput Type="TTLInput.InputDataType.Name"
-                                  Label="Họ tên người liên hệ"
-                                  @bind-Value="newEmployee.EmergencyContactName"
-                                  Placeholder="VD: Nguyễn Văn B"
-                                  IsInvalid='@errorsMap.ContainsKey("EmergencyContactName")'
-                                  ErrorMessage='@errorsMap.GetValueOrDefault("EmergencyContactName")'
-                                  Id="input_EmergencyContactName" />
-                    </div>
-                    <div class="row g-4 mb-0">
-                        <div class="col-5">
-                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">QH</label>
-                            <input type="text" class="form-control form-control-solid" @bind="newEmployee.EmergencyContactRelation" />
-                        </div>
-                        <div class="col-7">
-                            <TTLInput Type="TTLInput.InputDataType.Phone"
-                                      Label="SĐT Khẩn cấp"
-                                      @bind-Value="newEmployee.EmergencyContactPhone"
-                                      IsInvalid='@errorsMap.ContainsKey("EmergencyContactPhone")'
-                                      ErrorMessage='@errorsMap.GetValueOrDefault("EmergencyContactPhone")'
-                                      Id="input_EmergencyContactPhone" />
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
+</div>
 
-    <!-- SECTION: TÀI KHOẢN HỆ THỐNG (Chỉ hiển thị khi có Email) -->
-    @if (IsEmailValid)
-    {
-        <div class="card card-flush py-4 border-primary border-dashed border-1">
-        <div class="card-header border-0">
-            <div class="card-title">
-                <span class="symbol symbol-30px me-3">
-                    <i class="bi bi-shield-lock text-primary fs-2"></i>
-                </span>
-                <h2 class="fw-bold fs-5 text-uppercase m-0">Tài khoản đăng nhập hệ thống</h2>
-            </div>
-            <div class="card-toolbar">
-                <div class="form-check form-switch form-check-custom form-check-solid">
-                    <input class="form-check-input h-30px w-50px" type="checkbox" @bind="newEmployee.IsCreateAccount" id="createAccountToggle" />
-                    <label class="form-check-label fw-bolder text-gray-700 ms-3" for="createAccountToggle">
-                        TỰ ĐỘNG KHỞI TẠO TÀI KHOẢN
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="card-body pt-0 @(newEmployee.IsCreateAccount || !string.IsNullOrEmpty(newEmployee.Username) ? "" : "opacity-50")">
-            <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6 mb-8">
-                <i class="ki-outline ki-information-5 fs-2tx text-primary me-4"></i>
-                <div class="d-flex flex-stack flex-grow-1">
-                    <div class="fw-semibold">
-                        <div class="fs-6 text-gray-700">Khi kích hoạt, hệ thống sẽ tự động tạo tài khoản đăng nhập vào cơ sở dữ liệu Identity (TTL_Identity_DB).</div>
-                        <div class="fs-7 text-muted">Mặc định mật khẩu sẽ được tạo giống với Tên đăng nhập nếu không được nhập.</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row g-9">
-                <div class="col-md-3">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tên đăng nhập (Username)</label>
-                    <div class="position-relative d-flex align-items-center">
-                        <i class="bi bi-person-fill position-absolute ms-4 text-gray-400"></i>
-                        <input type="text" id="input_Username" class="form-control form-control-solid ps-12 pe-12 @(errorsMap.ContainsKey("Username") ? "is-invalid border-danger" : "")" 
-                               placeholder="VD: tantanloc" 
-                               @bind="newEmployee.Username" 
-                               disabled="@(!newEmployee.IsCreateAccount)" />
-                        
-                        @if (newEmployee.IsCreateAccount)
-                        {
-                            <button type="button" 
-                                    class="btn btn-icon btn-sm btn-active-color-primary position-absolute end-0 me-1" 
-                                    @onclick="GenerateUsername"
-                                    title="Tự động tạo tên đăng nhập">
-                                <i class="bi bi-magic fs-6 text-primary"></i>
-                            </button>
-                        }
-                    </div>
-                    @if (errorsMap.ContainsKey("Username"))
-                    {
-                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["Username"]</div>
-                    }
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mật khẩu (Password)</label>
-                    <div class="d-flex flex-column">
-                        @if (IsEditMode && newEmployee.IsCreateAccount && !string.IsNullOrEmpty(newEmployee.Username))
-                        {
-                            <button type="button" class="btn btn-light-primary btn-sm fw-bold h-45px" 
-                                    @onclick="RequestPasswordReset" 
-                                    disabled="@(_isProcessing || !IsEmailValid)">
-                                <i class="bi bi-envelope-at fs-4 me-2"></i>Gửi link đặt lại mật khẩu
-                            </button>
-                            <span class="fs-9 text-muted mt-1 italic text-center">Hệ thống sẽ gửi link qua Email cá nhân</span>
-                        }
-                        else
-                        {
-                            <div class="form-control form-control-solid bg-light-info border-info border-dashed d-flex align-items-center h-45px">
-                                <i class="bi bi-info-circle-fill text-info me-2"></i>
-                                <span class="fs-8 text-info fw-bold">Thiết Lập Qua Email (Link mời)</span>
-                            </div>
-                            <span class="fs-9 text-muted mt-1 italic text-center">Người dùng tự đặt mật khẩu khi nhận email</span>
-                        }
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Phân quyền & Vai trò</label>
-                    <div class="d-flex flex-column gap-2" style="max-height: 150px; overflow-y: auto; padding: 10px; border: 1px dashed #e1e1e1; border-radius: 5px;">
-                        @if (availableRoles != null && availableRoles.Any())
-                        {
-                            @foreach (var role in availableRoles)
-                            {
-                                <div class="form-check form-check-custom form-check-solid form-check-sm">
-                                    <input class="form-check-input" type="checkbox" value="@role.Id" 
-                                           checked="@(newEmployee.Roles?.Contains(role.Id) ?? false)"
-                                           @onchange='(e) => { 
-                                               var isChecked = (bool)e.Value; 
-                                               if (isChecked) { 
-                                                   if (!newEmployee.Roles.Contains(role.Id)) newEmployee.Roles.Add(role.Id); 
-                                               } else { 
-                                                   newEmployee.Roles.Remove(role.Id); 
-                                               }
-                                           }' 
-                                           id="role_@role.Id"
-                                           disabled="@(!newEmployee.IsCreateAccount)" />
-                                    <label class="form-check-label fs-8 fw-bold text-gray-700 ms-2" for="role_@role.Id">
-                                        @role.Name
-                                    </label>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <span class="fs-9 text-muted italic">Đang tải danh sách vai trò...</span>
-                        }
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Trạng thái tài khoản</label>
-                    <div class="form-check form-switch form-check-custom form-check-solid mt-2">
-                        <input class="form-check-input h-25px w-45px" type="checkbox" @bind="newEmployee.IsActive" id="accountActiveToggle" disabled="@(!newEmployee.IsCreateAccount)" />
-                        <label class="form-check-label fw-bold text-gray-600 ms-2" for="accountActiveToggle">
-                            @(newEmployee.IsActive ? "Đang hoạt động" : "Bị khóa")
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-    else
-    {
-        <!-- Thông báo khi chưa có email -->
-        <div class="card card-flush py-4 bg-light-warning border-warning border border-dashed">
-            <div class="card-body text-center py-10">
-                <div class="mb-5">
-                    <i class="bi bi-envelope-exclamation fs-3x text-warning"></i>
-                </div>
-                <h3 class="fw-bolder text-warning mb-1">Yêu cầu Email để khởi tạo tài khoản</h3>
-                <p class="text-gray-600 fs-7 mb-0">Hệ thống cần Email cá nhân hợp lệ để gửi thông tin xác thực và hướng dẫn kích hoạt tài khoản.</p>
-                <div class="mt-4">
-                    <span class="badge badge-light-danger fw-bold">CHỨC NĂNG TỰ ĐỘNG KHÓA</span>
-                </div>
-            </div>
-        </div>
-        @if (newEmployee.IsCreateAccount) { newEmployee.IsCreateAccount = false; }
-    }
-
-    <!-- SECTION: HỒ SƠ NĂNG LỰC & NGƯỜI PHỤ THUỘC -->
-    <div class="card card-flush py-4">
+    <!-- TAB 3: NĂNG LỰC & GIA ĐÌNH -->
+    <div class="tab-pane fade" id="tab_competence" role="tabpanel">
+        <div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
+            <!-- SECTION: HỒ SƠ NĂNG LỰC & NGƯỜI PHỤ THUỘC -->
+            <div class="card card-flush py-4">
         <div class="card-header border-0">
             <div class="card-title">
                 <span class="symbol symbol-30px me-3">
@@ -809,9 +702,66 @@
             </div>
         </div>
     </div>
+</div>
+</div>
 
-    <!-- SECTION: TÀI LIỆU ĐÍNH KÈM -->
-    <div class="card card-flush py-4">
+    <!-- TAB 4: TÀI KHOẢN & HỒ SƠ -->
+    <div class="tab-pane fade" id="tab_account" role="tabpanel">
+        <div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
+            <!-- SECTION: TÀI KHOẢN HỆ THỐNG -->
+            @if (IsEmailValid)
+            {
+                <div class="card card-flush py-4 border-primary border-dashed border-1 shadow-sm">
+                    <div class="card-header border-0">
+                        <div class="card-title">
+                            <span class="symbol symbol-30px me-3">
+                                <i class="bi bi-shield-lock text-primary fs-2"></i>
+                            </span>
+                            <h2 class="fw-bold fs-5 text-uppercase m-0">Tài khoản đăng nhập hệ thống</h2>
+                        </div>
+                        <div class="card-toolbar">
+                            <div class="form-check form-switch form-check-custom form-check-solid">
+                                <input class="form-check-input h-30px w-50px" type="checkbox" @bind="newEmployee.IsCreateAccount" id="createAccountToggle" />
+                                <label class="form-check-label fw-bolder text-gray-700 ms-3" for="createAccountToggle">TỰ ĐỘNG KHỞI TẠO TÀI KHOẢN</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0 @(newEmployee.IsCreateAccount || !string.IsNullOrEmpty(newEmployee.Username) ? "" : "opacity-50")">
+                        <div class="row g-9">
+                            <div class="col-md-3">
+                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tên đăng nhập</label>
+                                <input type="text" id="input_Username" class="form-control form-control-solid @(errorsMap.ContainsKey("Username") ? "is-invalid border-danger" : "")" 
+                                       placeholder="VD: tantanloc" @bind="newEmployee.Username" disabled="@(!newEmployee.IsCreateAccount)" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mật khẩu</label>
+                                <div class="form-control form-control-solid bg-light text-muted h-45px d-flex align-items-center">Thiết lập qua Email</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Vai trò</label>
+                                <select class="form-select form-select-solid" multiple @bind="newEmployee.Roles" disabled="@(!newEmployee.IsCreateAccount)">
+                                    @if (availableRoles != null)
+                                    {
+                                        @foreach (var role in availableRoles)
+                                        {
+                                            <option value="@role.Id">@role.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Trạng thái</label>
+                                <div class="form-check form-switch form-check-custom form-check-solid mt-2">
+                                    <input class="form-check-input h-25px w-45px" type="checkbox" @bind="newEmployee.IsActive" id="accountActiveToggle" disabled="@(!newEmployee.IsCreateAccount)" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- SECTION: TÀI LIỆU ĐÍNH KÈM -->
+            <div class="card card-flush py-4">
         <div class="card-header border-0">
             <div class="card-title">
                 <span class="symbol symbol-30px me-3">
@@ -993,6 +943,9 @@
             </div>
         </div>
     </div>
+</div>
+</div>
+</div>
 
     <!-- FOOTER -->
     <div class="d-flex align-items-center justify-content-between mt-10 p-8 border-top border-gray-200">
@@ -1015,7 +968,6 @@
             </button>
         </div>
     </div>
-</div>
 
 
 

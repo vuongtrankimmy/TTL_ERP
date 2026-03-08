@@ -18,15 +18,33 @@ namespace TTL.HR.Application.Modules.Common.Services
 
         public async Task<PagedResult<BankDto>> GetBanksAsync(GetBanksRequest request)
         {
-            var queryString = $"?page={request.Page}&pageSize={request.PageSize}&searchTerm={request.SearchTerm}";
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<BankDto>>>($"{ApiEndpoints.System.Banks}{queryString}");
-            return response?.Data ?? new PagedResult<BankDto>();
+            try
+            {
+                var queryString = $"?page={request.Page}&pageSize={request.PageSize}&searchTerm={request.SearchTerm}";
+                var response = await _httpClient.GetAsync($"{ApiEndpoints.System.Banks}{queryString}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<PagedResult<BankDto>>>();
+                    return apiResponse?.Data ?? new PagedResult<BankDto>();
+                }
+            }
+            catch { }
+            return new PagedResult<BankDto>();
         }
 
         public async Task<BankDto?> GetBankByIdAsync(string id)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<BankDto>>($"{ApiEndpoints.System.Banks}/{id}");
-            return response?.Data;
+            try
+            {
+                var response = await _httpClient.GetAsync($"{ApiEndpoints.System.Banks}/{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<BankDto>>();
+                    return apiResponse?.Data;
+                }
+            }
+            catch { }
+            return null;
         }
 
         public async Task<BankDto?> CreateBankAsync(CreateBankRequest request)

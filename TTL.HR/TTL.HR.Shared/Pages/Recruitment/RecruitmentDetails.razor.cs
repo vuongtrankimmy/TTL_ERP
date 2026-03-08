@@ -88,9 +88,9 @@ namespace TTL.HR.Shared.Pages.Recruitment
             }
         }
 
-        protected async Task UpdateStatus(ApplicantItem applicant, string newStatus, string? note = null)
+        protected async Task UpdateStatus(ApplicantItem applicant, string newStatus, int? newStatusId = null, string? note = null)
         {
-            if (newStatus == "Từ chối")
+            if (newStatus == "Từ chối" || newStatusId == 106)
             {
                 ApplicantToReject = applicant;
                 RejectionReason = "";
@@ -98,7 +98,7 @@ namespace TTL.HR.Shared.Pages.Recruitment
                 return;
             }
 
-            if (newStatus == "Đã tuyển")
+            if (newStatus == "Đã tuyển" || newStatusId == 105)
             {
                 ApplicantToSuccess = applicant;
                 SuccessNote = "";
@@ -106,12 +106,12 @@ namespace TTL.HR.Shared.Pages.Recruitment
                 return;
             }
 
-            await ApplyStatusChange(applicant, newStatus, note);
+            await ApplyStatusChange(applicant, newStatus, newStatusId, note);
         }
 
-        protected async Task ApplyStatusChange(ApplicantItem applicant, string newStatus, string? note = null)
+        protected async Task ApplyStatusChange(ApplicantItem applicant, string? newStatus, int? newStatusId = null, string? note = null)
         {
-            var success = await RecruitmentApp.UpdateApplicantStatusAsync(applicant.Id.ToString(), newStatus, note);
+            var success = await RecruitmentApp.UpdateApplicantStatusAsync(applicant.Id.ToString(), newStatus, newStatusId, note);
             if (success)
             {
                 await LoadData();
@@ -128,7 +128,7 @@ namespace TTL.HR.Shared.Pages.Recruitment
         {
             if (ApplicantToReject != null)
             {
-                await ApplyStatusChange(ApplicantToReject, "Từ chối", $"Lý do loại: {reason}");
+                await ApplyStatusChange(ApplicantToReject, "Rejected", 106, $"Lý do loại: {reason}");
                 IsRejectionModalOpen = false;
             }
         }
@@ -138,7 +138,7 @@ namespace TTL.HR.Shared.Pages.Recruitment
         {
             if (ApplicantToSuccess != null)
             {
-                await ApplyStatusChange(ApplicantToSuccess, "Đã tuyển", $"Ghi chú tuyển dụng: {note}");
+                await ApplyStatusChange(ApplicantToSuccess, "Hired", 105, $"Ghi chú tuyển dụng: {note}");
                 IsSuccessModalOpen = false;
             }
         }

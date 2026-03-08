@@ -1,0 +1,9 @@
+
+Service/
+ Controllers/
+ Services/
+ Repositories/
+ DTOs/
+ Domain/
+ Infrastructure/
+ Program.cs

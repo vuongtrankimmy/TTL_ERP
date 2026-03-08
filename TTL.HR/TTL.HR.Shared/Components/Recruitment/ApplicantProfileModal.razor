@@ -71,7 +71,7 @@
                             </div>
                         }
 
-                        @if (Applicant.Status == "Từ chối" && !string.IsNullOrEmpty(Applicant.RejectionReason))
+                        @if (Applicant.StatusId == 106 && !string.IsNullOrEmpty(Applicant.RejectionReason))
                         {
                             <div class="col-12 mb-7">
                                 <div class="bg-light-danger rounded border-danger border border-dashed p-6">
@@ -83,7 +83,7 @@
                             </div>
                         }
 
-                        @if (Applicant.Status == "Đã tuyển")
+                        @if (Applicant.StatusId == 105)
                         {
                             <div class="col-12 mb-7">
                                 <div class="bg-light-success rounded border-success border border-dashed p-6">
@@ -105,34 +105,34 @@
                                 <h5 class="fw-bolder mb-4 text-dark">Lịch sử trạng thái</h5>
                                 <div class="timeline-label ms-2">
                                     @{
-                                        var sortedHistory = Applicant.History.OrderByDescending(h => h.Date).ToList();
+                                        var sortedHistory = Applicant.History.OrderByDescending(h => h.ChangedAt).ToList();
                                         for (int i = 0; i < sortedHistory.Count; i++)
                                         {
                                             var hist = sortedHistory[i];
                                             var isLatest = i == 0;
-                                            var badgeColor = hist.Status switch
+                                            var badgeColor = hist.ToStatusId switch
                                             {
-                                                "Tiếp nhận" => "text-primary",
-                                                "Phỏng vấn" => "text-warning",
-                                                "Đã tuyển" => "text-success",
-                                                "Từ chối" => "text-danger",
+                                                101 => "text-primary",
+                                                103 => "text-warning",
+                                                105 => "text-success",
+                                                106 => "text-danger",
                                                 _ => "text-muted"
                                             };
 
                                             <div class="timeline-item">
-                                                <div class="timeline-label fw-bold text-gray-800 fs-8 w-60px">@hist.Date.ToString("dd/MM HH:mm")</div>
+                                                <div class="timeline-label fw-bold text-gray-800 fs-8 w-60px">@hist.ChangedAt.ToString("dd/MM HH:mm")</div>
                                                 <div class="timeline-badge">
                                                     <i class="fa fa-genderless @badgeColor @(isLatest ? "fs-1" : "fs-3")"></i>
                                                 </div>
                                                 <div class="timeline-content ps-3">
-                                                    <span class="fw-bold @(isLatest ? "text-gray-900 fs-6" : "text-gray-700 fs-7")">@hist.Status</span>
+                                                    <span class="fw-bold @(isLatest ? "text-gray-900 fs-6" : "text-gray-700 fs-7")">@hist.ToStatus</span>
                                                     @if (isLatest)
                                                     {
                                                         <span class="badge badge-light-success fs-9 px-2 py-1 ms-2">Mới nhất</span>
                                                     }
-                                                    @if (!string.IsNullOrEmpty(hist.Note))
+                                                    @if (!string.IsNullOrEmpty(hist.Comment))
                                                     {
-                                                        <div class="text-muted fs-8 fw-semibold mt-1">@hist.Note</div>
+                                                        <div class="text-muted fs-8 fw-semibold mt-1">@hist.Comment</div>
                                                     }
                                                 </div>
                                             </div>

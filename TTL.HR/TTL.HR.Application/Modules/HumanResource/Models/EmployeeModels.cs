@@ -111,9 +111,9 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string BankName { get; set; } = string.Empty;
         public int? MaritalStatusId { get; set; }
         public string MaritalStatus { get; set; } = string.Empty;
-        public string PlaceOfOrigin { get; set; } = string.Empty;
-        public string Residence { get; set; } = string.Empty;
-        public string SocialInsuranceId { get; set; } = string.Empty;
+        public string? PlaceOfOrigin { get; set; }
+        public string? Residence { get; set; }
+        public string? SocialInsuranceId { get; set; }
         public int NumberOfDependents => Dependents?.Count ?? 0;
         public List<DependentDetailDto>? Dependents { get; set; } = new();
         public DateTime? IdCardIssueDate { get; set; }

@@ -65,6 +65,7 @@ namespace TTL.HR.Shared.Pages.Employees
         private EmployeeModel selectedEmployee = new();
         private long totalCount = 0;
         private bool _isReadOnlyDetail = true;
+
         private int pageSize = 10;
         private int totalPages => (int)Math.Ceiling(totalCount / (double)pageSize);
 
@@ -359,10 +360,10 @@ namespace TTL.HR.Shared.Pages.Employees
                     await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Vui lòng chọn Chức vụ.", "warning");
                     return;
                 }
-                if (!selectedEmployee.StatusId.HasValue || selectedEmployee.StatusId <= 0)
+                if (!selectedEmployee.StatusId.HasValue)
                 {
-                    await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Vui lòng chọn Trạng thái nhân viên.", "warning");
-                    return;
+                     await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Vui lòng chọn Trạng thái nhân viên.", "warning");
+                     return;
                 }
                 if (string.IsNullOrEmpty(selectedEmployee.Email))
                 {
@@ -391,8 +392,8 @@ namespace TTL.HR.Shared.Pages.Employees
                     DepartmentId = selectedEmployee.DepartmentId,
                     PositionId = selectedEmployee.PositionId,
                     ReportToId = IsValidObjectId(selectedEmployee.ReportToId) ? selectedEmployee.ReportToId : null,
-                    StatusId = selectedEmployee.StatusId > 0 ? selectedEmployee.StatusId : (CachedStatuses.FirstOrDefault()?.LookupID),
-                    ContractTypeId = selectedEmployee.ContractTypeId.HasValue ? selectedEmployee.ContractTypeId : (CachedContractTypes.FirstOrDefault()?.LookupID),
+                    StatusId = selectedEmployee.StatusId ?? CachedStatuses.FirstOrDefault()?.LookupID,
+                    ContractTypeId = selectedEmployee.ContractTypeId ?? CachedContractTypes.FirstOrDefault()?.LookupID,
                     JoinDate = selectedEmployee.JoinDate ?? DateTime.UtcNow,
                     Salary = ParseSalary(selectedEmployee.SalaryDisplay),
                     ContractEndDate = selectedEmployee.ContractExpiry ?? selectedEmployee.ContractEndDate,
@@ -563,7 +564,7 @@ namespace TTL.HR.Shared.Pages.Employees
                     if (string.IsNullOrEmpty(selectedEmployee.Dept)) selectedEmployee.Dept = emp.Dept;
                     if (string.IsNullOrEmpty(selectedEmployee.Role)) selectedEmployee.Role = emp.Role;
                     
-                    if (selectedEmployee.StatusId <= 0) selectedEmployee.StatusId = emp.StatusId;
+                    if (!selectedEmployee.StatusId.HasValue) selectedEmployee.StatusId = emp.StatusId;
                     if (!selectedEmployee.ContractTypeId.HasValue) selectedEmployee.ContractTypeId = emp.ContractTypeId;
                     if (string.IsNullOrEmpty(selectedEmployee.Phone)) selectedEmployee.Phone = emp.Phone;
                     if (string.IsNullOrEmpty(selectedEmployee.Email)) selectedEmployee.Email = emp.Email;

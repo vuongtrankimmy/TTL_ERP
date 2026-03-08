@@ -16,7 +16,7 @@ namespace TTL.HR.Application.Modules.Recruitment
         
         Task<IEnumerable<ApplicantItem>> GetApplicantsAsync(string jobId);
         Task<bool> AddApplicantAsync(string jobId, ApplicantRequest applicant);
-        Task<bool> UpdateApplicantStatusAsync(string applicantId, string status, string? note = null);
+        Task<bool> UpdateApplicantStatusAsync(string applicantId, string? status, int? statusId = null, string? note = null);
         Task<bool> ScheduleInterviewAsync(string applicantId, InterviewScheduleModel schedule);
         Task<bool> DeleteApplicantAsync(string applicantId);
     }
@@ -87,9 +87,9 @@ namespace TTL.HR.Application.Modules.Recruitment
             return await _recruitmentService.AddApplicantAsync(jobId, applicant);
         }
 
-        public async Task<bool> UpdateApplicantStatusAsync(string applicantId, string status, string? note = null)
+        public async Task<bool> UpdateApplicantStatusAsync(string applicantId, string? status, int? statusId = null, string? note = null)
         {
-            return await _recruitmentService.UpdateApplicantStatusAsync(applicantId, status, note);
+            return await _recruitmentService.UpdateApplicantStatusAsync(applicantId, status, statusId, note);
         }
 
         public async Task<bool> ScheduleInterviewAsync(string applicantId, InterviewScheduleModel schedule)

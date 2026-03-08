@@ -17,28 +17,89 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         public EmployeeService(HttpClient httpClient) => _httpClient = httpClient;
         public async Task<List<EmployeeDto>> GetEmployeesAsync()
         {
-            // Fetch all (well, a large chunk) to avoid paging issues in modals
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<EmployeeDto>>>($"{ApiEndpoints.Employees.Base}?pageSize=9999");
-            return response?.Data?.Items ?? new List<EmployeeDto>();
+            try
+            {
+                var response = await _httpClient.GetAsync($"{ApiEndpoints.Employees.Base}?pageSize=9999");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var options = new System.Text.Json.JsonSerializerOptions 
+                    { 
+                        PropertyNameCaseInsensitive = true,
+                        NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
+                    };
+                    var result = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<PagedResult<EmployeeDto>>>(content, options);
+                    return result?.Data?.Items ?? new List<EmployeeDto>();
+                }
+            }
+            catch { }
+            return new List<EmployeeDto>();
         }
 
         public async Task<PagedResult<EmployeeDto>> GetEmployeesPaginatedAsync(int pageIndex, int pageSize, string? searchTerm = null, string? departmentId = null, string? status = null, string? workplace = null, string? sortBy = "name", bool sortDesc = false)
         {
-            var url = $"{ApiEndpoints.Employees.Base}?pageIndex={pageIndex}&pageSize={pageSize}";
-            if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
-            if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
-            if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
-            if (!string.IsNullOrEmpty(workplace)) url += $"&workplace={Uri.EscapeDataString(workplace)}";
-            if (!string.IsNullOrEmpty(sortBy)) url += $"&sortBy={sortBy}";
-            url += $"&sortDesc={sortDesc.ToString().ToLower()}";
+            try
+            {
+                var url = $"{ApiEndpoints.Employees.Base}?pageIndex={pageIndex}&pageSize={pageSize}";
+                if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
+                if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
+                if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
+                if (!string.IsNullOrEmpty(workplace)) url += $"&workplace={Uri.EscapeDataString(workplace)}";
+                if (!string.IsNullOrEmpty(sortBy)) url += $"&sortBy={sortBy}";
+                url += $"&sortDesc={sortDesc.ToString().ToLower()}";
 
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<EmployeeDto>>>(url);
-            return response?.Data ?? new PagedResult<EmployeeDto>();
+                var response = await _httpClient.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var options = new System.Text.Json.JsonSerializerOptions 
+                    { 
+                        PropertyNameCaseInsensitive = true,
+                        NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
+                    };
+                    var result = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<PagedResult<EmployeeDto>>>(content, options);
+                    return result?.Data ?? new PagedResult<EmployeeDto>();
+                }
+            }
+            catch { }
+            return new PagedResult<EmployeeDto>();
         }
         public async Task<EmployeeModel?> GetEmployeeAsync(string id)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<EmployeeModel>>($"{ApiEndpoints.Employees.Base}/{id}");
-            return response?.Data;
+            try
+            {
+                var response = await _httpClient.GetAsync($"{ApiEndpoints.Employees.Base}/{id}");
+                var content = await response.Content.ReadAsStringAsync();
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    try 
+                    {
+                        var options = new System.Text.Json.JsonSerializerOptions 
+                        { 
+                            PropertyNameCaseInsensitive = true,
+                            NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
+                        };
+                        var result = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<EmployeeModel>>(content, options);
+                        return result?.Data;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[EmployeeService] Deserialization error for employee {id}: {ex.Message}");
+                        // Return null but at least we have the log now
+                        return null; 
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"[EmployeeService] GetEmployee failed: {response.StatusCode} - {content}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EmployeeService] Connection error: {ex.Message}");
+            }
+            return null;
         }
 
         public async Task<EmployeeModel?> GetMyEmployeeAsync()
@@ -51,7 +112,11 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
 
                 if (!httpResponse.IsSuccessStatusCode) return null;
 
-                var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var options = new System.Text.Json.JsonSerializerOptions 
+                { 
+                    PropertyNameCaseInsensitive = true,
+                    NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
+                };
                 var response = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<EmployeeModel>>(body, options);
                 Console.WriteLine($"[GetMyEmployee] EmployeeId={response?.Data?.Id}, Name={response?.Data?.FullName}");
                 return response?.Data;
@@ -164,7 +229,11 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
                 var responseContent = await httpResponse.Content.ReadAsStringAsync();
                 Console.WriteLine($"[DigitalProfile] Raw: {responseContent}");
 
-                var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var options = new System.Text.Json.JsonSerializerOptions 
+                { 
+                    PropertyNameCaseInsensitive = true,
+                    NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
+                };
                 var response = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<DigitalProfileModel>>(responseContent, options);
                 return response?.Data;
             }

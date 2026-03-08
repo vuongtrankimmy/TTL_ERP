@@ -15,8 +15,17 @@ namespace TTL.HR.Application.Modules.Organization.Services
         public DepartmentService(HttpClient httpClient) => _httpClient = httpClient;
         public async Task<List<DepartmentModel>> GetDepartmentsAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<DepartmentModel>>>(ApiEndpoints.Organization.Departments);
-            return response?.Data ?? new List<DepartmentModel>();
+            try
+            {
+                var response = await _httpClient.GetAsync(ApiEndpoints.Organization.Departments);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<DepartmentModel>>>();
+                    return result?.Data ?? new List<DepartmentModel>();
+                }
+            }
+            catch { }
+            return new List<DepartmentModel>();
         }
         public async Task<DepartmentModel?> GetDepartmentAsync(string id)
         {
@@ -111,8 +120,17 @@ namespace TTL.HR.Application.Modules.Organization.Services
         public PositionService(HttpClient httpClient) => _httpClient = httpClient;
         public async Task<List<PositionModel>> GetPositionsAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<PositionModel>>>(ApiEndpoints.Organization.Positions);
-            return response?.Data ?? new List<PositionModel>();
+            try
+            {
+                var response = await _httpClient.GetAsync(ApiEndpoints.Organization.Positions);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<PositionModel>>>();
+                    return result?.Data ?? new List<PositionModel>();
+                }
+            }
+            catch { }
+            return new List<PositionModel>();
         }
         public async Task<PositionModel?> GetPositionAsync(string id)
         {

@@ -87,10 +87,11 @@ namespace TTL.HR.Shared.Pages.Recruitment
 
             KanbanBoard = new List<KanbanColumn>
             {
-                new() { Title = "Tiếp nhận", Status = "Tiếp nhận", ColorClass = "primary", Applicants = filtered.Where(a => a.Status == "Tiếp nhận" || a.Status == "Applied").ToList() },
-                new() { Title = "Phỏng vấn", Status = "Phỏng vấn", ColorClass = "warning", Applicants = filtered.Where(a => a.Status == "Phỏng vấn" || a.Status == "Interviewing").ToList() },
-                new() { Title = "Đề nghị", Status = "Đề nghị", ColorClass = "info", Applicants = filtered.Where(a => a.Status == "Đề nghị" || a.Status == "Offered").ToList() },
-                new() { Title = "Kết thúc", Status = "Kết thúc", ColorClass = "success", Applicants = filtered.Where(a => a.Status == "Đã tuyển" || a.Status == "Hired" || a.Status == "Từ chối" || a.Status == "Rejected").ToList() }
+                new() { Title = "Tiếp nhận", Status = "Applied", ColorClass = "info", Applicants = filtered.Where(a => a.StatusId == 101 || a.Status == "Tiếp nhận" || a.Status == "Applied").ToList() },
+                new() { Title = "Sơ loại", Status = "Screening", ColorClass = "primary", Applicants = filtered.Where(a => a.StatusId == 102 || a.Status == "Sơ loại" || a.Status == "Screening").ToList() },
+                new() { Title = "Phỏng vấn", Status = "Interview", ColorClass = "warning", Applicants = filtered.Where(a => a.StatusId == 103 || a.Status == "Phỏng vấn" || a.Status == "Interview").ToList() },
+                new() { Title = "Đề nghị", Status = "Offered", ColorClass = "info", Applicants = filtered.Where(a => a.StatusId == 104 || a.Status == "Đề nghị" || a.Status == "Offered").ToList() },
+                new() { Title = "Kết thúc", Status = "Final", ColorClass = "success", Applicants = filtered.Where(a => a.StatusId == 105 || a.StatusId == 106 || a.Status == "Đã tuyển" || a.Status == "Hired" || a.Status == "Từ chối" || a.Status == "Rejected").ToList() }
             };
             StateHasChanged();
         }
@@ -107,9 +108,9 @@ namespace TTL.HR.Shared.Pages.Recruitment
             await LoadData();
         }
 
-        protected async Task ApplyStatusChange(ApplicantItem applicant, string newStatus, string? note = null)
+        protected async Task ApplyStatusChange(ApplicantItem applicant, string? newStatus, int? newStatusId = null, string? note = null)
         {
-            var success = await RecruitmentApp.UpdateApplicantStatusAsync(applicant.Id, newStatus, note);
+            var success = await RecruitmentApp.UpdateApplicantStatusAsync(applicant.Id, newStatus, newStatusId, note);
             if (success)
             {
                 await LoadData();
@@ -167,7 +168,7 @@ namespace TTL.HR.Shared.Pages.Recruitment
         {
             if (ApplicantToReject != null)
             {
-                await ApplyStatusChange(ApplicantToReject, "Từ chối", $"Lý do loại: {reason}");
+                await ApplyStatusChange(ApplicantToReject, "Rejected", 106, $"Lý do loại: {reason}");
                 IsRejectionModalOpen = false;
             }
         }
@@ -176,7 +177,7 @@ namespace TTL.HR.Shared.Pages.Recruitment
         {
             if (ApplicantToSuccess != null)
             {
-                await ApplyStatusChange(ApplicantToSuccess, "Đã tuyển", $"Ghi chú tuyển dụng: {note}");
+                await ApplyStatusChange(ApplicantToSuccess, "Hired", 105, $"Ghi chú tuyển dụng: {note}");
                 IsSuccessModalOpen = false;
             }
         }
