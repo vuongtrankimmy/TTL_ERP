@@ -23,6 +23,7 @@ namespace TTL.HR.Shared.Pages.Organization
         private bool _showConfirmDeleteModal = false;
         private bool _isNewPosition = true;
         private bool _loadError = false;
+        private string _errorMessage = "";
         
         private string _searchTerm = "";
         private string _levelFilter = "All";
@@ -92,6 +93,7 @@ namespace TTL.HR.Shared.Pages.Organization
             catch (Exception ex)
             {
                 _loadError = true;
+                _errorMessage = ex.Message;
                 Console.WriteLine($"Error loading positions: {ex.Message}");
             }
             finally

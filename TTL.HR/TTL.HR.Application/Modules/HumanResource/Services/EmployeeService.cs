@@ -17,52 +17,48 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         public EmployeeService(HttpClient httpClient) => _httpClient = httpClient;
         public async Task<List<EmployeeDto>> GetEmployeesAsync()
         {
-            try
+            var response = await _httpClient.GetAsync($"{ApiEndpoints.Employees.Base}?pageSize=9999");
+            if (!response.IsSuccessStatusCode)
             {
-                var response = await _httpClient.GetAsync($"{ApiEndpoints.Employees.Base}?pageSize=9999");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    var options = new System.Text.Json.JsonSerializerOptions 
-                    { 
-                        PropertyNameCaseInsensitive = true,
-                        NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
-                    };
-                    var result = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<PagedResult<EmployeeDto>>>(content, options);
-                    return result?.Data?.Items ?? new List<EmployeeDto>();
-                }
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Không thể tải danh sách nhân viên: {(int)response.StatusCode} {response.ReasonPhrase}. {errorBody}");
             }
-            catch { }
-            return new List<EmployeeDto>();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var options = new System.Text.Json.JsonSerializerOptions 
+            { 
+                PropertyNameCaseInsensitive = true,
+                NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
+            };
+            var result = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<PagedResult<EmployeeDto>>>(content, options);
+            return result?.Data?.Items ?? new List<EmployeeDto>();
         }
 
         public async Task<PagedResult<EmployeeDto>> GetEmployeesPaginatedAsync(int pageIndex, int pageSize, string? searchTerm = null, string? departmentId = null, string? status = null, string? workplace = null, string? sortBy = "name", bool sortDesc = false)
         {
-            try
-            {
-                var url = $"{ApiEndpoints.Employees.Base}?pageIndex={pageIndex}&pageSize={pageSize}";
-                if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
-                if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
-                if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
-                if (!string.IsNullOrEmpty(workplace)) url += $"&workplace={Uri.EscapeDataString(workplace)}";
-                if (!string.IsNullOrEmpty(sortBy)) url += $"&sortBy={sortBy}";
-                url += $"&sortDesc={sortDesc.ToString().ToLower()}";
+            var url = $"{ApiEndpoints.Employees.Base}?pageIndex={pageIndex}&pageSize={pageSize}";
+            if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
+            if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
+            if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
+            if (!string.IsNullOrEmpty(workplace)) url += $"&workplace={Uri.EscapeDataString(workplace)}";
+            if (!string.IsNullOrEmpty(sortBy)) url += $"&sortBy={sortBy}";
+            url += $"&sortDesc={sortDesc.ToString().ToLower()}";
 
-                var response = await _httpClient.GetAsync(url);
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    var options = new System.Text.Json.JsonSerializerOptions 
-                    { 
-                        PropertyNameCaseInsensitive = true,
-                        NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
-                    };
-                    var result = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<PagedResult<EmployeeDto>>>(content, options);
-                    return result?.Data ?? new PagedResult<EmployeeDto>();
-                }
+            var response = await _httpClient.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Lỗi tải dữ liệu phân trang nhân viên: {(int)response.StatusCode}. {errorBody}");
             }
-            catch { }
-            return new PagedResult<EmployeeDto>();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var options = new System.Text.Json.JsonSerializerOptions 
+            { 
+                PropertyNameCaseInsensitive = true,
+                NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
+            };
+            var result = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<PagedResult<EmployeeDto>>>(content, options);
+            return result?.Data ?? new PagedResult<EmployeeDto>();
         }
         public async Task<EmployeeModel?> GetEmployeeAsync(string id)
         {
@@ -81,12 +77,18 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
                             NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
                         };
                         var result = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<EmployeeModel>>(content, options);
+                        
+                        if (result?.Data == null)
+                        {
+                            Console.WriteLine($"[EmployeeService] Warning: API returned success but Data is null for employee {id}. Raw: {content.Substring(0, Math.Min(content.Length, 200))}");
+                        }
+                        
                         return result?.Data;
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"[EmployeeService] Deserialization error for employee {id}: {ex.Message}");
-                        // Return null but at least we have the log now
+                        Console.WriteLine($"[EmployeeService] Raw JSON causing error: {content}");
                         return null; 
                     }
                 }
@@ -97,7 +99,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[EmployeeService] Connection error: {ex.Message}");
+                Console.WriteLine($"[EmployeeService] Connection error for employee {id}: {ex.Message}");
             }
             return null;
         }
@@ -333,21 +335,20 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
         }
         public async Task<EmployeeStatusCounts> GetStatusCountsAsync(string? searchTerm = null, string? departmentId = null, string? workplace = null)
         {
-            try
-            {
-                var url = $"{ApiEndpoints.Employees.Base}/counts?1=1";
-                if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
-                if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
-                if (!string.IsNullOrEmpty(workplace)) url += $"&workplace={Uri.EscapeDataString(workplace)}";
+            var url = $"{ApiEndpoints.Employees.Base}/counts?1=1";
+            if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
+            if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
+            if (!string.IsNullOrEmpty(workplace)) url += $"&workplace={Uri.EscapeDataString(workplace)}";
 
-                var response = await _httpClient.GetFromJsonAsync<ApiResponse<EmployeeStatusCounts>>(url);
-                return response?.Data ?? new EmployeeStatusCounts();
-            }
-            catch (Exception ex)
+            var response = await _httpClient.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
             {
-                Console.WriteLine($"[GetStatusCounts] Error: {ex.Message}");
-                return new EmployeeStatusCounts();
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Lỗi tải số liệu trạng thái: {(int)response.StatusCode}. {errorBody}");
             }
+
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<EmployeeStatusCounts>>();
+            return result?.Data ?? new EmployeeStatusCounts();
         }
         public async Task<string?> AccrueLeaveAsync(int month, int year)
         {
@@ -364,6 +365,24 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
                 return ex.Message;
             }
         }
+
+        public async Task<bool> SendCredentialsAsync(string employeeId, string channel, string? customMessage = null)
+        {
+            try
+            {
+                var url = ApiEndpoints.Notifications.SendCredentials(employeeId) + $"?channel={channel}";
+                if (!string.IsNullOrEmpty(customMessage)) url += $"&message={Uri.EscapeDataString(customMessage)}";
+                
+                var response = await _httpClient.PostAsync(url, null);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[SendCredentials] Exception: {ex.Message}");
+                return false;
+            }
+        }
+
         private static string GetMimeType(string fileName)
         {
             var ext = Path.GetExtension(fileName).ToLower();

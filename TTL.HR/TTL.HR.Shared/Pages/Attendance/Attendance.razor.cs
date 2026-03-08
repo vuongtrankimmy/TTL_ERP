@@ -199,27 +199,75 @@ namespace TTL.HR.Shared.Pages.Attendance
             {
                 await JS.InvokeVoidAsync("Swal.fire", new
                 {
-                    title = "Đang trích xuất dữ liệu",
-                    text = "Vui lòng chờ trong giây lát...",
+                    title = "Đang chuẩn bị trích xuất",
+                    html = "<div class='progress mt-3' style='height: 20px;'><div id='swal-progress-bar' class='progress-bar progress-bar-striped progress-bar-animated' role='progressbar' style='width: 0%'>0%</div></div><div id='swal-status-text' class='mt-2 text-muted fs-7'>Khởi tạo yêu cầu...</div>",
                     allowOutsideClick = false,
                     showConfirmButton = false,
-                    didOpen = new JSObjectReference() // This is a trick to get Swal to show the loading spinner if not using specialized lib
+                    didOpen = new JSObjectReference()
                 });
-                try { await JS.InvokeVoidAsync("Swal.showLoading"); } catch { }
 
-                var fileBytes = await AttendanceService.ExportTimesheetAsync(_currentMonth, _currentYear, _searchTerm, _selectedDepartmentId);
-
-                await JS.InvokeVoidAsync("Swal.close");
-
-                if (fileBytes != null && fileBytes.Length > 0)
+                var startResponse = await AttendanceService.ExportTimesheetStartAsync(_currentMonth, _currentYear, _searchTerm, _selectedDepartmentId);
+                if (!startResponse.Success || string.IsNullOrEmpty(startResponse.Data))
                 {
-                    var fileName = $"TTL_BangCong_{_currentMonth}_{_currentYear}_{DateTime.Now:yyyyMMdd_HHmm}.xlsx";
-                    await JS.InvokeVoidAsync("LayoutHelper.downloadFile", fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileBytes);
-                    await JS.InvokeVoidAsync("toastr.success", "Đã xuất file thành công!");
+                    await JS.InvokeVoidAsync("Swal.fire", "Lỗi", startResponse.Message ?? "Không thể khởi tạo tiến trình trích xuất", "error");
+                    return;
                 }
-                else
+
+                var jobId = startResponse.Data;
+                bool isFinished = false;
+                int retryCount = 0;
+
+                while (!isFinished && retryCount < 60) // Max 5 minutes (5s * 60)
                 {
-                    await JS.InvokeVoidAsync("Swal.fire", "Thông báo", "Không thể trích xuất dữ liệu. Vui lòng thử lại sau.", "error");
+                    await Task.Delay(2000); // Poll every 2 seconds
+                    var statusResponse = await AttendanceService.GetExportStatusAsync(jobId);
+                    
+                    if (statusResponse != null && statusResponse.Success && statusResponse.Data != null)
+                    {
+                        var info = statusResponse.Data;
+                        
+                        // Update Progress Bar in Swal
+                        await JS.InvokeVoidAsync("eval", $@"
+                            var bar = document.getElementById('swal-progress-bar');
+                            var text = document.getElementById('swal-status-text');
+                            if(bar) {{ bar.style.width = '{info.Percentage}%'; bar.innerText = '{info.Percentage}%'; }}
+                            if(text) {{ text.innerText = '{info.Status ?? "Đang xử lý..."}'; }}
+                        ");
+
+                        if (info.IsCompleted)
+                        {
+                            isFinished = true;
+                            await JS.InvokeVoidAsync("eval", "var text = document.getElementById('swal-status-text'); if(text) text.innerText = 'Đang tải file...';");
+                            
+                            var fileBytes = await AttendanceService.DownloadExportedFileAsync(jobId);
+                            await JS.InvokeVoidAsync("Swal.close");
+
+                            if (fileBytes != null && fileBytes.Length > 0)
+                            {
+                                var fileName = $"TTL_BangCong_{_currentMonth}_{_currentYear}_{DateTime.Now:yyyyMMdd_HHmm}.xlsx";
+                                await JS.InvokeVoidAsync("LayoutHelper.downloadFile", fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileBytes);
+                                await JS.InvokeVoidAsync("toastr.success", "Đã xuất file thành công!");
+                            }
+                            else
+                            {
+                                await JS.InvokeVoidAsync("Swal.fire", "Thông báo", "Lỗi khi tải file đã trích xuất.", "error");
+                            }
+                        }
+                        else if (info.IsFailed)
+                        {
+                            isFinished = true;
+                            await JS.InvokeVoidAsync("Swal.fire", "Lỗi", "Quá trình trích xuất thất bại: " + info.Error, "error");
+                        }
+                    }
+                    else
+                    {
+                        retryCount++;
+                    }
+                }
+
+                if (!isFinished)
+                {
+                    await JS.InvokeVoidAsync("Swal.fire", "Thông báo", "Yêu cầu quá thời gian xử lý. Vui lòng kiểm tra lại sau.", "warning");
                 }
             }
             catch (Exception ex)

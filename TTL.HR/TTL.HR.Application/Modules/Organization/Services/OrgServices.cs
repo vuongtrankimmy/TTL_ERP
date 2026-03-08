@@ -15,17 +15,15 @@ namespace TTL.HR.Application.Modules.Organization.Services
         public DepartmentService(HttpClient httpClient) => _httpClient = httpClient;
         public async Task<List<DepartmentModel>> GetDepartmentsAsync()
         {
-            try
+            var response = await _httpClient.GetAsync(ApiEndpoints.Organization.Departments);
+            if (!response.IsSuccessStatusCode)
             {
-                var response = await _httpClient.GetAsync(ApiEndpoints.Organization.Departments);
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<DepartmentModel>>>();
-                    return result?.Data ?? new List<DepartmentModel>();
-                }
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Không thể tải danh sách phòng ban: {(int)response.StatusCode}. {errorBody}");
             }
-            catch { }
-            return new List<DepartmentModel>();
+
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<DepartmentModel>>>();
+            return result?.Data ?? new List<DepartmentModel>();
         }
         public async Task<DepartmentModel?> GetDepartmentAsync(string id)
         {
@@ -120,17 +118,15 @@ namespace TTL.HR.Application.Modules.Organization.Services
         public PositionService(HttpClient httpClient) => _httpClient = httpClient;
         public async Task<List<PositionModel>> GetPositionsAsync()
         {
-            try
+            var response = await _httpClient.GetAsync(ApiEndpoints.Organization.Positions);
+            if (!response.IsSuccessStatusCode)
             {
-                var response = await _httpClient.GetAsync(ApiEndpoints.Organization.Positions);
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<PositionModel>>>();
-                    return result?.Data ?? new List<PositionModel>();
-                }
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Không thể tải danh sách chức danh: {(int)response.StatusCode}. {errorBody}");
             }
-            catch { }
-            return new List<PositionModel>();
+
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<PositionModel>>>();
+            return result?.Data ?? new List<PositionModel>();
         }
         public async Task<PositionModel?> GetPositionAsync(string id)
         {

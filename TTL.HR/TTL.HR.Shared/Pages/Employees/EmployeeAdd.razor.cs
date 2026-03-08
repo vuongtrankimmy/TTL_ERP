@@ -60,6 +60,12 @@ namespace TTL.HR.Shared.Pages.Employees
             JoinDate = DateTime.Now,
             DOB = new DateTime(1995, 1, 1)
         };
+        
+        private string[] BindRoles
+        {
+            get => newEmployee.Roles?.ToArray() ?? Array.Empty<string>();
+            set => newEmployee.Roles = value?.ToList() ?? new List<string>();
+        }
 
         private List<EmployeeDocumentModel> uploadedDocuments = new();
         private bool _isDataLoaded = false;
@@ -186,27 +192,86 @@ namespace TTL.HR.Shared.Pages.Employees
                         var employee = await fetchTask;
                         if (employee != null)
                         {
-                            Console.WriteLine($"[EmployeeAdd] Employee {Id} data received. Mapping...");
-                            newEmployee = employee;
+                            Console.WriteLine($"[EmployeeAdd] Employee {Id} data received. Mapping properties to maintain reference stability...");
                             
-                            // Essential Safeties - ensure lists are NEVER null
-                            newEmployee.Education ??= new();
-                            newEmployee.Experience ??= new();
-                            newEmployee.AuditLogs ??= new();
-                            newEmployee.ModulePermissions ??= new();
-                            newEmployee.Roles ??= new();
-                            newEmployee.PersonalDetails ??= new();
-                            newEmployee.EmergencyContact ??= new();
-                            newEmployee.AttendanceSummary ??= new();
+                            // Map properties individually to maintain object reference for Blazor binding
+                            newEmployee.Id = employee.Id;
+                            newEmployee.Code = employee.Code;
+                            newEmployee.FullName = employee.FullName;
+                            newEmployee.TimekeepingCode = employee.TimekeepingCode;
+                            newEmployee.Email = employee.Email;
+                            newEmployee.CompanyEmail = employee.CompanyEmail;
+                            newEmployee.Phone = employee.Phone;
+                            newEmployee.AvatarUrl = employee.AvatarUrl;
+                            newEmployee.StatusId = employee.StatusId;
+                            newEmployee.ContractTypeId = employee.ContractTypeId;
+                            newEmployee.JoinDate = employee.JoinDate;
+                            newEmployee.DepartmentId = employee.DepartmentId;
+                            newEmployee.PositionId = employee.PositionId;
+                            newEmployee.ReportToId = employee.ReportToId;
+                            newEmployee.WorkplaceId = employee.WorkplaceId;
+                            newEmployee.Salary = employee.Salary;
+                            newEmployee.ContractEndDate = employee.ContractEndDate;
+                            newEmployee.Username = employee.Username;
+                            newEmployee.IsAccountActive = employee.IsAccountActive;
+                            newEmployee.IsCreateAccount = employee.IsCreateAccount;
+                            newEmployee.Roles = employee.Roles ?? new();
+
+                            // Nested objects - merge/update
+                            if (employee.PersonalDetails != null)
+                            {
+                                newEmployee.PersonalDetails ??= new();
+                                var src = employee.PersonalDetails;
+                                var dest = newEmployee.PersonalDetails;
+                                dest.DOB = src.DOB;
+                                dest.GenderId = src.GenderId;
+                                dest.Gender = src.Gender;
+                                dest.Address = src.Address;
+                                dest.Hometown = src.Hometown;
+                                dest.IdCardNumber = src.IdCardNumber;
+                                dest.IdCard = src.IdCard;
+                                dest.IdCardIssueDate = src.IdCardIssueDate;
+                                dest.IdCardPlace = src.IdCardPlace;
+                                dest.TaxCode = src.TaxCode;
+                                dest.BankAccount = src.BankAccount;
+                                dest.BankName = src.BankName;
+                                dest.NationalityId = src.NationalityId;
+                                dest.Nationality = src.Nationality;
+                                dest.EthnicityId = src.EthnicityId;
+                                dest.Ethnicity = src.Ethnicity;
+                                dest.ReligionId = src.ReligionId;
+                                dest.Religion = src.Religion;
+                                dest.MaritalStatusId = src.MaritalStatusId;
+                                dest.MaritalStatus = src.MaritalStatus;
+                                dest.PlaceOfOrigin = src.PlaceOfOrigin;
+                                dest.Residence = src.Residence;
+                                dest.SocialInsuranceId = src.SocialInsuranceId;
+                                dest.Dependents = src.Dependents ?? new();
+                                dest.Latitude = src.Latitude;
+                                dest.Longitude = src.Longitude;
+                            }
+
+                            if (employee.EmergencyContact != null)
+                            {
+                                newEmployee.EmergencyContact ??= new();
+                                newEmployee.EmergencyContact.Name = employee.EmergencyContact.Name;
+                                newEmployee.EmergencyContact.Phone = employee.EmergencyContact.Phone;
+                                newEmployee.EmergencyContact.Relation = employee.EmergencyContact.Relation;
+                            }
+
+                            newEmployee.Education = employee.Education ?? new();
+                            newEmployee.Experience = employee.Experience ?? new();
+                            newEmployee.AuditLogs = employee.AuditLogs ?? new();
+                            newEmployee.ModulePermissions = employee.ModulePermissions ?? new();
+                            newEmployee.AttendanceSummary = employee.AttendanceSummary ?? new();
                             
-                            // Map compatibility
+                            // Map compatibility (Sync top-level props used in UI with nested/source props)
                             if (string.IsNullOrEmpty(newEmployee.Name)) newEmployee.Name = newEmployee.FullName;
                             if (string.IsNullOrEmpty(newEmployee.DeptId)) newEmployee.DeptId = newEmployee.DepartmentId;
                             if (string.IsNullOrEmpty(newEmployee.Avatar)) newEmployee.Avatar = newEmployee.AvatarUrl;
                             if (newEmployee.OfficialJoinDate == null) newEmployee.OfficialJoinDate = newEmployee.JoinDate;
 
-                            if (newEmployee.PersonalDetails == null) newEmployee.PersonalDetails = new();
-                            else
+                            if (newEmployee.PersonalDetails != null)
                             {
                                 if (newEmployee.DOB == null) newEmployee.DOB = newEmployee.PersonalDetails.DOB;
                                 if (!newEmployee.GenderId.HasValue) newEmployee.GenderId = newEmployee.PersonalDetails.GenderId;
@@ -227,23 +292,14 @@ namespace TTL.HR.Shared.Pages.Employees
                                 if (string.IsNullOrEmpty(newEmployee.TaxId)) newEmployee.TaxId = newEmployee.PersonalDetails.TaxCode;
                                 if (string.IsNullOrEmpty(newEmployee.BankAccountNumber)) newEmployee.BankAccountNumber = newEmployee.PersonalDetails.BankAccount;
                                 if (string.IsNullOrEmpty(newEmployee.BankName)) newEmployee.BankName = newEmployee.PersonalDetails.BankName;
-                                newEmployee.PersonalDetails.Dependents ??= new();
                             }
 
-                            if (newEmployee.EmergencyContact == null) newEmployee.EmergencyContact = new();
-                            else
+                            if (newEmployee.EmergencyContact != null)
                             {
                                 if (string.IsNullOrEmpty(newEmployee.EmergencyContactName)) newEmployee.EmergencyContactName = newEmployee.EmergencyContact.Name;
                                 if (string.IsNullOrEmpty(newEmployee.EmergencyContactPhone)) newEmployee.EmergencyContactPhone = newEmployee.EmergencyContact.Phone;
                                 if (string.IsNullOrEmpty(newEmployee.EmergencyContactRelation)) newEmployee.EmergencyContactRelation = newEmployee.EmergencyContact.Relation;
                             }
-
-                            newEmployee.Education ??= new();
-                            newEmployee.Experience ??= new();
-                            newEmployee.AuditLogs ??= new();
-                            newEmployee.ModulePermissions ??= new();
-                            newEmployee.Roles ??= new();
-                            newEmployee.AttendanceSummary ??= new();
 
                             if (newEmployee.Salary.HasValue && string.IsNullOrEmpty(newEmployee.SalaryDisplay))
                                 newEmployee.SalaryDisplay = newEmployee.Salary.Value.ToString("N0");
@@ -381,6 +437,74 @@ namespace TTL.HR.Shared.Pages.Employees
             else
             {
                 _ = JSRuntime.InvokeVoidAsync("toastr.warning", "Vui lòng nhập Số điện thoại, Email hoặc CCCD để tự động tạo Tên đăng nhập.");
+            }
+        }
+
+        private async Task SendCredentialsAction(string channel)
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                await JSRuntime.InvokeVoidAsync("toastr.info", "Vui lòng lưu hồ sơ nhân viên trước khi gửi thông tin tài khoản.");
+                return;
+            }
+
+            string target = channel switch
+            {
+                "EMAIL" => newEmployee.Email,
+                _ => newEmployee.Phone
+            };
+
+            if (string.IsNullOrEmpty(target))
+            {
+                await JSRuntime.InvokeVoidAsync("toastr.warning", $"Nhân viên chưa có {(channel == "EMAIL" ? "Email" : "Số điện thoại")} để gửi thông tin.");
+                return;
+            }
+
+            var confirmText = channel switch
+            {
+                "EMAIL" => $"Gửi thông tin tài khoản tới Email: {newEmployee.Email}?",
+                "ZALO" => $"Gửi thông báo qua Zalo tới SĐT: {newEmployee.Phone}?",
+                "SMS" => $"Gửi tin nhắn SMS tới SĐT: {newEmployee.Phone}?",
+                _ => "Gửi thông tin tài khoản?"
+            };
+
+            var confirmElement = await JSRuntime.InvokeAsync<System.Text.Json.JsonElement>("Swal.fire", new
+            {
+                title = "Xác nhận gửi",
+                text = confirmText,
+                icon = "question",
+                showCancelButton = true,
+                confirmButtonText = "Đồng ý, gửi ngay!",
+                cancelButtonText = "Hủy",
+                confirmButtonColor = channel == "ZALO" ? "#0068ff" : (channel == "EMAIL" ? "#009EF7" : "#50CD89")
+            });
+
+            if (confirmElement.TryGetProperty("isConfirmed", out var isConfirmed) && isConfirmed.GetBoolean())
+            {
+                _isProcessing = true;
+                StateHasChanged();
+
+                try
+                {
+                    var success = await EmployeeService.SendCredentialsAsync(Id, channel);
+                    if (success)
+                    {
+                        await JSRuntime.InvokeVoidAsync("Swal.fire", "Thành công", $"Thông tin đã được gửi qua kênh {channel}.", "success");
+                    }
+                    else
+                    {
+                        await JSRuntime.InvokeVoidAsync("Swal.fire", "Thất bại", "Không thể gửi tin nhắn. Vui lòng kiểm tra lại cấu hình thông báo.", "error");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", ex.Message, "error");
+                }
+                finally
+                {
+                    _isProcessing = false;
+                    StateHasChanged();
+                }
             }
         }
 

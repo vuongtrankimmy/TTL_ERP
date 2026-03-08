@@ -129,5 +129,10 @@ namespace TTL.HR.Application.Modules.Common.Constants
             public const string Countries = $"{CorePrefix}/countries";
         }
 
+        public static class Notifications
+        {
+            public const string Base = $"{CorePrefix}/Notifications";
+            public static string SendCredentials(string employeeId) => $"{Base}/send-credentials/{employeeId}";
+        }
     }
 }

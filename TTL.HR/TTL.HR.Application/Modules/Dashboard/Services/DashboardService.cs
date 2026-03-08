@@ -14,8 +14,24 @@ namespace TTL.HR.Application.Modules.Dashboard.Services
         public DashboardService(HttpClient httpClient) => _httpClient = httpClient;
         public async Task<DashboardOverviewModel> GetOverviewAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<DashboardOverviewModel>>(ApiEndpoints.Dashboard.Base);
-            return response?.Data ?? new DashboardOverviewModel();
+            var response = await _httpClient.GetAsync(ApiEndpoints.Dashboard.Base);
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorMessage;
+                try 
+                {
+                    var errorResult = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+                    errorMessage = errorResult?.Message ?? $"API Error ({(int)response.StatusCode}: {response.ReasonPhrase})";
+                }
+                catch
+                {
+                    errorMessage = $"Lỗi kết nối máy chủ ({(int)response.StatusCode}: {response.ReasonPhrase})";
+                }
+                throw new System.Exception(errorMessage);
+            }
+            
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<DashboardOverviewModel>>();
+            return result?.Data ?? new DashboardOverviewModel();
         }
     }
 }

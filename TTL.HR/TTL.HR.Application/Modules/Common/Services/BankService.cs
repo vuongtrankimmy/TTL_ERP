@@ -18,33 +18,29 @@ namespace TTL.HR.Application.Modules.Common.Services
 
         public async Task<PagedResult<BankDto>> GetBanksAsync(GetBanksRequest request)
         {
-            try
+            var queryString = $"?page={request.Page}&pageSize={request.PageSize}&searchTerm={request.SearchTerm}";
+            var response = await _httpClient.GetAsync($"{ApiEndpoints.System.Banks}{queryString}");
+            if (!response.IsSuccessStatusCode)
             {
-                var queryString = $"?page={request.Page}&pageSize={request.PageSize}&searchTerm={request.SearchTerm}";
-                var response = await _httpClient.GetAsync($"{ApiEndpoints.System.Banks}{queryString}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<PagedResult<BankDto>>>();
-                    return apiResponse?.Data ?? new PagedResult<BankDto>();
-                }
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Không thể tải danh sách ngân hàng: {(int)response.StatusCode}. {errorBody}");
             }
-            catch { }
-            return new PagedResult<BankDto>();
+
+            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<PagedResult<BankDto>>>();
+            return apiResponse?.Data ?? new PagedResult<BankDto>();
         }
 
         public async Task<BankDto?> GetBankByIdAsync(string id)
         {
-            try
+            var response = await _httpClient.GetAsync($"{ApiEndpoints.System.Banks}/{id}");
+            if (!response.IsSuccessStatusCode)
             {
-                var response = await _httpClient.GetAsync($"{ApiEndpoints.System.Banks}/{id}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<BankDto>>();
-                    return apiResponse?.Data;
-                }
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Không thể tải thông tin ngân hàng {id}: {(int)response.StatusCode}. {errorBody}");
             }
-            catch { }
-            return null;
+
+            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<BankDto>>();
+            return apiResponse?.Data;
         }
 
         public async Task<BankDto?> CreateBankAsync(CreateBankRequest request)

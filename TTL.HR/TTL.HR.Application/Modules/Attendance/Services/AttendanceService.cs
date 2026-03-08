@@ -294,5 +294,30 @@ namespace TTL.HR.Application.Modules.Attendance.Services
             }
             return null;
         }
+
+        public async Task<ApiResponse<string>> ExportTimesheetStartAsync(int month, int year, string? searchTerm = null, string? departmentId = null)
+        {
+            var url = $"{ApiEndpoints.Attendance.ExportTimesheet}/start";
+            var response = await _httpClient.PostAsJsonAsync(url, new { Month = month, Year = year, SearchTerm = searchTerm, DepartmentId = departmentId });
+            return await response.Content.ReadFromJsonAsync<ApiResponse<string>>() ?? new ApiResponse<string> { Success = false, Message = "Lỗi kết nối server" };
+        }
+
+        public async Task<ApiResponse<JobProgressInfo>> GetExportStatusAsync(string jobId)
+        {
+            var url = $"{ApiEndpoints.Attendance.ExportTimesheet}/status/{jobId}";
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<JobProgressInfo>>(url);
+            return response ?? new ApiResponse<JobProgressInfo> { Success = false, Message = "Lỗi kết nối server" };
+        }
+
+        public async Task<byte[]?> DownloadExportedFileAsync(string jobId)
+        {
+            var url = $"{ApiEndpoints.Attendance.ExportTimesheet}/download/{jobId}";
+            var response = await _httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsByteArrayAsync();
+            }
+            return null;
+        }
     }
 }

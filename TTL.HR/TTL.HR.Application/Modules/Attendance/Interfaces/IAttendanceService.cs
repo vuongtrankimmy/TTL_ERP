@@ -33,5 +33,8 @@ namespace TTL.HR.Application.Modules.Attendance.Interfaces
         Task<bool> DeleteShiftRequestAsync(string id);
         Task<bool> RecalculateAttendanceSummaryAsync(string employeeId, int month, int year);
         Task<byte[]?> ExportTimesheetAsync(int month, int year, string? searchTerm = null, string? departmentId = null);
+        Task<ApiResponse<string>> ExportTimesheetStartAsync(int month, int year, string? searchTerm = null, string? departmentId = null);
+        Task<ApiResponse<JobProgressInfo>> GetExportStatusAsync(string jobId);
+        Task<byte[]?> DownloadExportedFileAsync(string jobId);
     }
 }

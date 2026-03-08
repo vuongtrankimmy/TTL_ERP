@@ -735,11 +735,24 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mật khẩu</label>
-                                <div class="form-control form-control-solid bg-light text-muted h-45px d-flex align-items-center">Thiết lập qua Email</div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="form-control form-control-solid bg-light text-muted h-40px d-flex align-items-center fs-8 flex-grow-1">Thiết lập qua Email</div>
+                                    <div class="d-flex gap-1">
+                                        <button type="button" class="btn btn-icon btn-light-primary btn-sm h-35px w-35px" title="Gửi qua Email" @onclick='() => SendCredentialsAction("EMAIL")'>
+                                            <i class="bi bi-envelope fs-5"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-icon btn-light-success btn-sm h-35px w-35px" title="Gửi qua SMS" @onclick='() => SendCredentialsAction("SMS")'>
+                                            <i class="bi bi-chat-dots fs-5"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-icon btn-light-info btn-sm h-35px w-35px btn-zalo-bg" title="Gửi qua Zalo" @onclick='() => SendCredentialsAction("ZALO")'>
+                                            <img src="https://zalo-res.zdn.vn/zalo_ai/public/images/logo-zalo.png" style="width: 18px; filter: grayscale(1) brightness(1.5);" />
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Vai trò</label>
-                                <select class="form-select form-select-solid" multiple @bind="newEmployee.Roles" disabled="@(!newEmployee.IsCreateAccount)">
+                                <select class="form-select form-select-solid" multiple @bind="BindRoles" disabled="@(!newEmployee.IsCreateAccount)">
                                     @if (availableRoles != null)
                                     {
                                         @foreach (var role in availableRoles)

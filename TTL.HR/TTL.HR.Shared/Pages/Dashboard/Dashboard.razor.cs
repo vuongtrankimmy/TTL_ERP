@@ -16,6 +16,7 @@ namespace TTL.HR.Shared.Pages.Dashboard
         
         private DashboardOverviewModel? _overview;
         private bool _isLoading = true;
+        private string? _errorMessage;
 
         // Chart Data & Options
         private List<AttendanceData> _attendanceData = new();
@@ -75,6 +76,7 @@ namespace TTL.HR.Shared.Pages.Dashboard
         {
             try
             {
+                _errorMessage = null;
                 _overview = await DashboardService.GetOverviewAsync();
                 
                 // Fallback for demo/test: Ensure trend data exists if API returns zero (common on 1st of month)
@@ -97,18 +99,18 @@ namespace TTL.HR.Shared.Pages.Dashboard
             catch (System.Exception ex)
             {
                 _isLoading = false;
+                _errorMessage = ex.Message;
+                // Try to show as toast as well
+                try {
+                    await JS.InvokeVoidAsync("toastr.error", "Lỗi: " + ex.Message);
+                } catch { }
                 System.Console.WriteLine($"Dashboard Error: {ex.Message}");
             }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender && _overview == null && !_isLoading)
-            {
-                try {
-                    await JS.InvokeVoidAsync("toastr.error", "Không thể tải dữ liệu tổng quan. Vui lòng kiểm tra kết nối API.");
-                } catch { }
-            }
+            // Error handling is now in catch above, commenting out generic fallback
         }
 
         public class AttendanceData

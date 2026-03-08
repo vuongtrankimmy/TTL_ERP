@@ -20,14 +20,24 @@ namespace TTL.HR.Application.Modules.Leave.Services
             if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
             if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={searchTerm}";
 
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<LeaveRequestModel>>>(url);
-            return response?.Data ?? new PagedResult<LeaveRequestModel>();
+            var response = await _httpClient.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+                throw new Exception(errorResult?.Message ?? $"API Error {response.StatusCode}");
+            }
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<PagedResult<LeaveRequestModel>>>();
+            return result?.Data ?? new PagedResult<LeaveRequestModel>();
         }
 
         public async Task<LeaveStateSummaryModel> GetLeaveSummaryAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<LeaveStateSummaryModel>>($"{ApiEndpoints.Leave.Base}/summary");
-            return response?.Data ?? new LeaveStateSummaryModel();
+            var url = $"{ApiEndpoints.Leave.Base}/summary";
+            var response = await _httpClient.GetAsync(url);
+            if (!response.IsSuccessStatusCode) return new LeaveStateSummaryModel();
+            
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<LeaveStateSummaryModel>>();
+            return result?.Data ?? new LeaveStateSummaryModel();
         }
 
         public async Task<LeaveBalanceModel?> GetLeaveBalanceAsync(string employeeId, int year)

@@ -24,6 +24,7 @@ namespace TTL.HR.Shared.Pages.Organization
         private string _statusFilter = "All";
         private bool _isLoading = true;
         private bool _loadError = false;
+        private string _errorMessage = "";
         private int currentPage = 1;
         private int pageSize = 10;
         private DepartmentItem _editingDept = new();
@@ -53,6 +54,7 @@ namespace TTL.HR.Shared.Pages.Organization
             }
             catch (Exception ex)
             {
+                _errorMessage = ex.Message;
                 Console.WriteLine($"Error loading employees: {ex.Message}");
             }
         }
@@ -93,6 +95,7 @@ namespace TTL.HR.Shared.Pages.Organization
             catch (Exception ex)
             {
                 _loadError = true;
+                _errorMessage = ex.Message;
                 Console.WriteLine($"Error loading departments: {ex.Message}");
             }
             finally

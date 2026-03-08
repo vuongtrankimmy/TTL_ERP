@@ -23,5 +23,6 @@ namespace TTL.HR.Application.Modules.HumanResource.Interfaces
         Task<byte[]?> ExportEmployeesAsync(string? searchTerm = null, string? departmentId = null, string? status = null, string? workplace = null);
         Task<EmployeeStatusCounts> GetStatusCountsAsync(string? searchTerm = null, string? departmentId = null, string? workplace = null);
         Task<string?> AccrueLeaveAsync(int month, int year);
+        Task<bool> SendCredentialsAsync(string employeeId, string channel, string? customMessage = null);
     }
 }

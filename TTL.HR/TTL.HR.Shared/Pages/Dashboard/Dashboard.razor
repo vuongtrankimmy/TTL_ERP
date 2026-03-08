@@ -328,7 +328,30 @@ else if (_overview != null)
 else
 {
     <div class="p-10 text-center">
-        <div class="fs-4 fw-bold text-gray-600">Không thể kết nối với trung tâm dữ liệu. Vui lòng thử lại sau.</div>
+        <div class="mb-5">
+            <i class="ki-outline ki-shield-cross fs-5x text-danger opacity-25"></i>
+        </div>
+        <div class="fs-4 fw-bold text-gray-800 mb-2">Không thể kết nối với trung tâm dữ liệu</div>
+        <div class="fs-6 fw-semibold text-gray-500 mb-7">Vui lòng kiểm tra lại kết nối mạng hoặc liên hệ quản trị viên.</div>
+        
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <div class="notice d-flex bg-light-danger rounded border-danger border border-dashed p-6 mx-auto" style="max-width: 600px;">
+                <i class="ki-outline ki-information-5 fs-2tx text-danger me-4"></i>
+                <div class="d-flex flex-stack flex-grow-1">
+                    <div class="fw-semibold text-start">
+                        <h4 class="text-gray-900 fw-bold">Chi tiết lỗi:</h4>
+                        <div class="fs-6 text-gray-700 font-monospace">@_errorMessage</div>
+                    </div>
+                </div>
+            </div>
+        }
+        
+        <div class="mt-8">
+            <button class="btn btn-primary fw-bold" @onclick="OnInitializedAsync">
+                <i class="ki-outline ki-arrows-circle fs-2"></i> Thử lại ngay
+            </button>
+        </div>
     </div>
 }
 

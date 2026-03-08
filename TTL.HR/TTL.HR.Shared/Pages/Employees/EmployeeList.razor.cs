@@ -166,43 +166,54 @@ namespace TTL.HR.Shared.Pages.Employees
                 var countTask = EmployeeService.GetStatusCountsAsync(searchQuery, departmentId, filterWorkplace);
                 var pagedTask = EmployeeService.GetEmployeesPaginatedAsync(currentPage, pageSize, searchQuery, departmentId, filterStatus, filterWorkplace, sortBy, sortDesc);
                 
-                await Task.WhenAll(countTask, pagedTask);
-                
-                if (ct.IsCancellationRequested) return;
-
-                _counts = countTask.Result;
-                var pagedResult = pagedTask.Result;
-                
-                totalCount = pagedResult.TotalCount;
-                
-                employees = pagedResult.Items.Select(e => new EmployeeModel
+                try 
                 {
-                    Id = e.Id,
-                    Code = e.Code,
-                    Name = e.FullName,
-                    FullName = e.FullName,
-                    Email = e.Email,
-                    CompanyEmail = e.Email,
-                    Dept = e.DepartmentName,
-                    DeptId = e.DepartmentId,
-                    DepartmentId = e.DepartmentId,
-                    Role = e.PositionName,
-                    PositionId = e.PositionId,
-                    JoinDate = e.JoinDate,
-                    StatusId = e.StatusId,
-                    StatusName = e.StatusName,
-                    StatusCode = e.StatusCode,
-                    StatusColor = e.StatusColor,
-                    ContractTypeId = e.ContractTypeId,
-                    ContractTypeName = e.ContractTypeName,
-                    Avatar = e.AvatarUrl,
-                    AvatarUrl = e.AvatarUrl,
-                    Phone = e.Phone,
-                    DisplayInitials = GetInitials(e.FullName),
-                    IsActive = true,
-                    WorkplaceId = e.WorkplaceId,
-                    Workplace = e.Workplace
-                }).ToList();
+                    await Task.WhenAll(countTask, pagedTask);
+                    
+                    if (ct.IsCancellationRequested) return;
+
+                    _counts = countTask.Result;
+                    var pagedResult = pagedTask.Result;
+                    _loadFailed = false;
+                    _errorMessage = "";
+                    
+                    totalCount = pagedResult.TotalCount;
+                    
+                    employees = pagedResult.Items.Select(e => new EmployeeModel
+                    {
+                        Id = e.Id,
+                        Code = e.Code,
+                        Name = e.FullName,
+                        FullName = e.FullName,
+                        Email = e.Email,
+                        CompanyEmail = e.Email,
+                        Dept = e.DepartmentName,
+                        DeptId = e.DepartmentId,
+                        DepartmentId = e.DepartmentId,
+                        Role = e.PositionName,
+                        PositionId = e.PositionId,
+                        JoinDate = e.JoinDate,
+                        StatusId = e.StatusId,
+                        StatusName = e.StatusName,
+                        StatusCode = e.StatusCode,
+                        StatusColor = e.StatusColor,
+                        ContractTypeId = e.ContractTypeId,
+                        ContractTypeName = e.ContractTypeName,
+                        Avatar = e.AvatarUrl,
+                        AvatarUrl = e.AvatarUrl,
+                        Phone = e.Phone,
+                        DisplayInitials = GetInitials(e.FullName),
+                        IsActive = true,
+                        WorkplaceId = e.WorkplaceId,
+                        Workplace = e.Workplace
+                    }).ToList();
+                }
+                catch (Exception ex)
+                {
+                    _loadFailed = true;
+                    _errorMessage = ex.Message;
+                    Console.WriteLine($"[EmployeeList] Load Error: {ex.Message}");
+                }
             }
             catch (OperationCanceledException) { }
             catch (Exception ex)
