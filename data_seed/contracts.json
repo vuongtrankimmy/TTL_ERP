@@ -1,13 +1,13 @@
-﻿[
+[
     {
         "_id": {
             "$oid": "65dae2f30000000000000101"
         },
         "ContractNumber": "001/2024/HDLD-TTL",
         "EmployeeId": "65bf0c300000000000000001",
-        "EmployeeName": "Pháº¡m Minh HÃ¹ng",
+        "EmployeeName": "Phạm Minh Hùng",
         "ContractTemplateId": "65dae2f30000000000000004",
-        "TypeId": "65dae2f30000000000000205",
+        "TypeId": 5,
         "StartDate": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -18,9 +18,9 @@
         "SignedDate": {
             "$date": "2023-12-30T00:00:00Z"
         },
-        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
+        "SignedAddress": "TP. Hồ Chí Minh",
         "FilePath": "/contracts/001_2024_A.pdf",
-        "Note": "Há»£p Ä‘á»“ng khÃ´ng thá»i háº¡n",
+        "Note": "Hợp đồng không thời hạn",
         "IsDeleted": false
     },
     {
@@ -29,9 +29,9 @@
         },
         "ContractNumber": "NDA-001/2024",
         "EmployeeId": "65bf0c300000000000000001",
-        "EmployeeName": "Pháº¡m Minh HÃ¹ng",
+        "EmployeeName": "Phạm Minh Hùng",
         "ContractTemplateId": "65dae2f30000000000000006",
-        "TypeId": "65dae2f30000000000000207",
+        "TypeId": 7,
         "StartDate": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -42,9 +42,9 @@
         "SignedDate": {
             "$date": "2023-12-30T00:00:00Z"
         },
-        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
+        "SignedAddress": "TP. Hồ Chí Minh",
         "FilePath": "/contracts/NDA_001_A.pdf",
-        "Note": "Cam káº¿t báº£o máº­t",
+        "Note": "Cam kết bảo mật",
         "IsDeleted": false
     },
     {
@@ -53,9 +53,9 @@
         },
         "ContractNumber": "002/2024/HDTV-TTL",
         "EmployeeId": "65bf0c300000000000000002",
-        "EmployeeName": "Nguyá»…n Thá»‹ Mai",
+        "EmployeeName": "Nguyễn Thị Mai",
         "ContractTemplateId": "65dae2f30000000000000001",
-        "TypeId": "65dae2f30000000000000201",
+        "TypeId": 1,
         "StartDate": {
             "$date": "2024-02-15T00:00:00Z"
         },
@@ -68,9 +68,9 @@
         "SignedDate": {
             "$date": "2024-02-10T00:00:00Z"
         },
-        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
+        "SignedAddress": "TP. Hồ Chí Minh",
         "FilePath": "/contracts/002_2024_B.pdf",
-        "Note": "Thá»­ viá»‡c 2 thÃ¡ng",
+        "Note": "Thử việc 2 tháng",
         "IsDeleted": false
     },
     {
@@ -78,10 +78,10 @@
             "$oid": "65dae2f30000000000000104"
         },
         "ContractNumber": "003/2024/HDLD-TTL",
-        "EmployeeId": "65dae2f30000000000000003",
-        "EmployeeName": "LÃª VÄƒn C",
+        "EmployeeId": "65bf0c300000000000000003",
+        "EmployeeName": "Lê Văn Tuấn",
         "ContractTemplateId": "65dae2f30000000000000002",
-        "TypeId": "65dae2f30000000000000202",
+        "TypeId": 2,
         "StartDate": {
             "$date": "2024-03-01T00:00:00Z"
         },
@@ -94,9 +94,9 @@
         "SignedDate": {
             "$date": "2024-02-25T00:00:00Z"
         },
-        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
+        "SignedAddress": "TP. Hồ Chí Minh",
         "FilePath": "/contracts/003_2024_C.pdf",
-        "Note": "Há»£p Ä‘á»“ng 1 nÄƒm",
+        "Note": "Hợp đồng 1 năm",
         "IsDeleted": false
     },
     {
@@ -104,10 +104,10 @@
             "$oid": "65dae2f30000000000000105"
         },
         "ContractNumber": "004/2023/HDLD-TTL",
-        "EmployeeId": "65dae2f30000000000000004",
-        "EmployeeName": "Pháº¡m VÄƒn D",
+        "EmployeeId": "65bf0c300000000000000004",
+        "EmployeeName": "Trần Thanh Bình",
         "ContractTemplateId": "65dae2f30000000000000003",
-        "TypeId": "65dae2f30000000000000204",
+        "TypeId": 4,
         "StartDate": {
             "$date": "2023-01-01T00:00:00Z"
         },
@@ -120,9 +120,9 @@
         "SignedDate": {
             "$date": "2022-12-25T00:00:00Z"
         },
-        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
+        "SignedAddress": "TP. Hồ Chí Minh",
         "FilePath": "/contracts/004_2023_D.pdf",
-        "Note": "Há»£p Ä‘á»“ng 3 nÄƒm",
+        "Note": "Hợp đồng 3 năm",
         "IsDeleted": false
     },
     {
@@ -130,10 +130,10 @@
             "$oid": "65dae2f30000000000000106"
         },
         "ContractNumber": "PL-001/2024/HDLD-TTL",
-        "EmployeeId": "65dae2f30000000000000004",
-        "EmployeeName": "Pháº¡m VÄƒn D",
+        "EmployeeId": "65bf0c300000000000000004",
+        "EmployeeName": "Trần Thanh Bình",
         "ContractTemplateId": "65dae2f30000000000000008",
-        "TypeId": "65dae2f30000000000000209",
+        "TypeId": 9,
         "StartDate": {
             "$date": "2024-01-01T00:00:00Z"
         },
@@ -144,9 +144,9 @@
         "SignedDate": {
             "$date": "2023-12-28T00:00:00Z"
         },
-        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
+        "SignedAddress": "TP. Hồ Chí Minh",
         "FilePath": "/contracts/PL001_D.pdf",
-        "Note": "Äiá»u chá»‰nh tÄƒng lÆ°Æ¡ng",
+        "Note": "Điều chỉnh tăng lương",
         "IsDeleted": false
     },
     {
@@ -154,10 +154,10 @@
             "$oid": "65dae2f30000000000000107"
         },
         "ContractNumber": "005/2024/HDCTV-TTL",
-        "EmployeeId": "65dae2f30000000000000005",
-        "EmployeeName": "HoÃ ng Thá»‹ E",
+        "EmployeeId": "65bf0c300000000000000005",
+        "EmployeeName": "Hoàng Thu Phương",
         "ContractTemplateId": "65dae2f30000000000000007",
-        "TypeId": "65dae2f30000000000000208",
+        "TypeId": 8,
         "StartDate": {
             "$date": "2024-04-01T00:00:00Z"
         },
@@ -170,9 +170,9 @@
         "SignedDate": {
             "$date": "2024-03-25T00:00:00Z"
         },
-        "SignedAddress": "TP. Há»“ ChÃ­ Minh",
+        "SignedAddress": "TP. Hồ Chí Minh",
         "FilePath": "",
-        "Note": "Cá»™ng tÃ¡c viÃªn 6 thÃ¡ng",
+        "Note": "Cộng tác viên 6 tháng",
         "IsDeleted": false
     }
 ]

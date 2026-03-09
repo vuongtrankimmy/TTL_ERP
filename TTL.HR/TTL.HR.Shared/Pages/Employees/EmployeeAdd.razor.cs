@@ -50,6 +50,7 @@ namespace TTL.HR.Shared.Pages.Employees
         private bool _isProcessing = false;
         private bool _isLoading = false;
         private bool _isLoadingData = false;
+        private bool _showPassword = false;
         private string? _loadingError;
         private string? _currentLoadingStage;
         private Dictionary<string, string> errorsMap = new();
@@ -65,6 +66,22 @@ namespace TTL.HR.Shared.Pages.Employees
         {
             get => newEmployee.Roles?.ToArray() ?? Array.Empty<string>();
             set => newEmployee.Roles = value?.ToList() ?? new List<string>();
+        }
+
+        private void ToggleRole(string roleId)
+        {
+            if (!newEmployee.IsCreateAccount) return;
+            if (newEmployee.Roles == null) newEmployee.Roles = new List<string>();
+            
+            if (newEmployee.Roles.Contains(roleId))
+            {
+                newEmployee.Roles.Remove(roleId);
+            }
+            else
+            {
+                newEmployee.Roles.Add(roleId);
+            }
+            StateHasChanged();
         }
 
         private List<EmployeeDocumentModel> uploadedDocuments = new();
@@ -132,14 +149,14 @@ namespace TTL.HR.Shared.Pages.Employees
                 // Step 1: Lookups (Essential)
                 try 
                 {
-                    genderLookups = await MasterDataService.GetCachedLookupsAsync("Gender", lang) ?? new();
-                    maritalStatusLookups = await MasterDataService.GetCachedLookupsAsync("MaritalStatus", lang) ?? new();
-                    employeeStatusLookups = await MasterDataService.GetCachedLookupsAsync("EmployeeStatus", lang) ?? new();
-                    contractTypeLookups = await MasterDataService.GetCachedLookupsAsync("ContractType", lang) ?? new();
-                    workplaceLookups = await MasterDataService.GetCachedLookupsAsync("Workplace", lang) ?? new();
-                    nationalityLookups = await MasterDataService.GetCachedCountriesAsync(lang) ?? new();
-                    ethnicityLookups = await MasterDataService.GetCachedLookupsAsync("Ethnicity", lang) ?? new();
-                    religionLookups = await MasterDataService.GetCachedLookupsAsync("Religion", lang) ?? new();
+                    genderLookups = (await MasterDataService.GetCachedLookupsAsync("Gender", lang) ?? new()).DistinctBy(l => l.LookupID).ToList();
+                    maritalStatusLookups = (await MasterDataService.GetCachedLookupsAsync("MaritalStatus", lang) ?? new()).DistinctBy(l => l.LookupID).ToList();
+                    employeeStatusLookups = (await MasterDataService.GetCachedLookupsAsync("EmployeeStatus", lang) ?? new()).DistinctBy(l => l.LookupID).ToList();
+                    contractTypeLookups = (await MasterDataService.GetCachedLookupsAsync("ContractType", lang) ?? new()).DistinctBy(l => l.LookupID).ToList();
+                    workplaceLookups = (await MasterDataService.GetCachedLookupsAsync("Workplace", lang) ?? new()).DistinctBy(l => l.LookupID).ToList();
+                    nationalityLookups = (await MasterDataService.GetCachedCountriesAsync(lang) ?? new()).OrderBy(c => c.Name).ToList();
+                    ethnicityLookups = (await MasterDataService.GetCachedLookupsAsync("Ethnicity", lang) ?? new()).DistinctBy(l => l.LookupID).ToList();
+                    religionLookups = (await MasterDataService.GetCachedLookupsAsync("Religion", lang) ?? new()).DistinctBy(l => l.LookupID).ToList();
                 }
                 catch (Exception ex) { Console.WriteLine($"Step 1 failed: {ex.Message}"); }
 
@@ -215,6 +232,7 @@ namespace TTL.HR.Shared.Pages.Employees
                             newEmployee.Username = employee.Username;
                             newEmployee.IsAccountActive = employee.IsAccountActive;
                             newEmployee.IsCreateAccount = employee.IsCreateAccount;
+                            newEmployee.IsTrainer = employee.IsTrainer;
                             newEmployee.Roles = employee.Roles ?? new();
 
                             // Nested objects - merge/update
@@ -350,11 +368,23 @@ namespace TTL.HR.Shared.Pages.Employees
             }
             catch (Exception ex)
             {
-                _loadingError = $"Lỗi trang: {ex.Message}";
-                Console.WriteLine($"[EmployeeAdd] CRITICAL ERROR: {ex}");
-                if (_isFirstRenderDone) {
-                    try { await JSRuntime.InvokeVoidAsync("console.error", $"Critical Error in LoadAllData: {ex.Message}", ex.StackTrace); } catch {}
-                }
+                _loadingError = $"Lỗi tải trang: {ex.Message}";
+                Console.WriteLine($"[EmployeeAdd] CRITICAL ERROR IN LOAD: {ex}");
+                
+                await JSRuntime.InvokeVoidAsync("Swal.fire", new 
+                {
+                    title = "Lỗi tải dữ liệu",
+                    html = $@"<div class='text-start'>
+                                <p>Không thể tải thông tin nhân viên hoặc các danh mục hỗ trợ:</p>
+                                <hr/>
+                                <p><b>Thông điệp:</b> {ex.Message}</p>
+                                <pre class='bg-light p-2 border' style='font-size: 10px; max-height: 150px; overflow-y: auto;'>{ex.StackTrace}</pre>
+                             </div>",
+                    icon = "error",
+                    confirmButtonText = "Quay lại",
+                    width = "600px"
+                });
+                Navigation.NavigateTo("/employees");
             }
             finally
             {
@@ -882,6 +912,7 @@ namespace TTL.HR.Shared.Pages.Employees
                         WorkplaceId = newEmployee.WorkplaceId,
                         IsAccountActive = newEmployee.IsActive,
                         IsCreateAccount = newEmployee.IsCreateAccount,
+                        IsTrainer = newEmployee.IsTrainer,
                         Username = newEmployee.Username,
                         Password = newEmployee.Password,
                         Role = newEmployee.Role,
@@ -962,6 +993,7 @@ namespace TTL.HR.Shared.Pages.Employees
                         Salary = ParseSalary(newEmployee.SalaryDisplay),
                         ContractEndDate = newEmployee.ContractExpiry ?? newEmployee.ContractEndDate,
                         WorkplaceId = newEmployee.WorkplaceId,
+                        IsTrainer = newEmployee.IsTrainer,
                         
                         PersonalDetails = new PersonalDetailsCommandDto
                         {
@@ -1032,7 +1064,19 @@ namespace TTL.HR.Shared.Pages.Employees
             }
             catch (Exception ex)
             {
-                await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi gửi yêu cầu", ex.Message, "error");
+                await JSRuntime.InvokeVoidAsync("Swal.fire", new
+                {
+                    title = "Lỗi hệ thống nghiêm trọng",
+                    html = $@"<div class='text-start'>
+                                <p><b>Thông điệp:</b> {ex.Message}</p>
+                                <hr/>
+                                <p><b>Chi tiết kỹ thuật (Stack Trace):</b></p>
+                                <pre class='bg-light p-3 border rounded' style='font-size: 10px; max-height: 200px; overflow-y: auto;'>{ex.StackTrace}</pre>
+                             </div>",
+                    icon = "error",
+                    width = "600px"
+                });
+                Console.WriteLine($"[EmployeeAdd] Error in HandleSaveEmployee: {ex}");
             }
             finally
             {
@@ -1090,7 +1134,26 @@ namespace TTL.HR.Shared.Pages.Employees
                 }
             }
             
-            await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", errorMsg, "error");
+            if (errorsMap.Any())
+            {
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi dữ liệu", errorMsg, "error");
+            }
+            else
+            {
+                // Unrecognized or complex error, show detail
+                await JSRuntime.InvokeVoidAsync("Swal.fire", new
+                {
+                    title = "Lấy phản hồi từ máy chủ",
+                    html = $@"<div class='text-start'>
+                                <p>Có lỗi xảy ra khi thực hiện yêu cầu:</p>
+                                <div class='bg-light p-3 border rounded' style='font-size: 11px; max-height: 250px; overflow-y: auto;'>
+                                    {errorMsg}
+                                </div>
+                             </div>",
+                    icon = "error",
+                    width = "600px"
+                });
+            }
             
             if (errorsMap.Any())
             {
@@ -1123,6 +1186,7 @@ namespace TTL.HR.Shared.Pages.Employees
             public List<EducationDetailDto> Education { get; set; } = new();
             public List<ExperienceDetailDto> Experience { get; set; } = new();
             public bool IsCreateAccount { get; set; }
+            public bool IsTrainer { get; set; }
             public string Username { get; set; } = string.Empty;
             public string Password { get; set; } = string.Empty;
             public string Role { get; set; } = string.Empty;
@@ -1224,6 +1288,7 @@ namespace TTL.HR.Shared.Pages.Employees
                     Relation = dto.EmergencyContact.Relation,
                     Phone = dto.EmergencyContact.Phone
                 },
+                IsTrainer = dto.IsTrainer,
                 IsCreateAccount = dto.IsCreateAccount,
                 Username = dto.Username,
                 Password = dto.Password,

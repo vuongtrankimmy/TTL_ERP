@@ -108,6 +108,7 @@
                                     <th class="min-w-200px">TRƯỞNG PHÒNG</th>
                                     <th class="min-w-150px">NHÂN SỰ</th>
                                     <th class="min-w-125px">TRẠNG THÁI</th>
+                                    <th class="min-w-80px text-center">STT</th>
                                     <th class="text-end min-w-100px pe-7">THAO TÁC</th>
                                 </tr>
                             </thead>
@@ -177,6 +178,9 @@
                                                 <span class="bullet bullet-dot @(dept.IsActive ? "bg-success" : "bg-danger") me-2"></span>
                                                 @(dept.IsActive ? "Hoạt động" : "Dừng")
                                             </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-gray-600 fw-bold fs-7">@dept.SortOrder</span>
                                         </td>
                                         <td class="text-end pe-7" @onclick:stopPropagation="true">
                                             <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 hover-scale shadow-xs border" @onclick="() => editDepartment(dept)">
@@ -257,6 +261,10 @@
                 <div class="col-md-6">
                     <label class="required fs-7 fw-bold mb-2">Định biên (Capacity)</label>
                     <input type="number" class="form-control form-control-solid fs-7" @bind="_editingDept.Capacity" />
+                </div>
+                <div class="col-md-6">
+                    <label class="required fs-7 fw-bold mb-2">Thứ tự hiển thị (Sort Order)</label>
+                    <input type="number" class="form-control form-control-solid fs-7" @bind="_editingDept.SortOrder" />
                 </div>
             </div>
 

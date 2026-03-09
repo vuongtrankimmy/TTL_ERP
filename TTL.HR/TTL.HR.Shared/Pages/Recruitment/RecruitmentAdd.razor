@@ -19,26 +19,60 @@
             <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card">
                 <EditForm Model="@Model" OnValidSubmit="SaveRecruitment">
                     <div class="card-body border-top p-9">
+                        @if (_validationErrors.Any())
+                        {
+                            <div class="alert alert-danger d-flex align-items-center p-5 mb-10">
+                                <i class="ki-outline ki-shield-cross fs-2hx text-danger me-4"></i>
+                                <div class="d-flex flex-column">
+                                    <h4 class="mb-1 text-danger">Có lỗi trong thông tin tuyển dụng</h4>
+                                    <ul class="mb-0 text-danger">
+                                        @foreach (var err in _validationErrors.Where(e => e.Key != "DebugInfo"))
+                                        {
+                                            <li><strong>@(err.Key == "General" ? "" : err.Key + ": ")</strong>@err.Value</li>
+                                        }
+                                    </ul>
+                                    @if (_validationErrors.ContainsKey("DebugInfo"))
+                                    {
+                                        <div class="mt-4 p-4 bg-light-danger rounded border border-danger border-dashed">
+                                            <div class="fw-bold mb-2">Thông tin kỹ thuật (Stack Trace):</div>
+                                            <pre class="fs-9 text-danger scroll-y mh-200px">@_validationErrors["DebugInfo"]</pre>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
                         <div class="row mb-6">
                             <label class="col-lg-3 col-form-label required fw-bold fs-6">Tiêu đề tuyển dụng</label>
                             <div class="col-lg-9">
-                                <InputText class="form-control form-control-solid" @bind-Value="Model.Title" placeholder="Ví dụ: Senior .NET Developer" />
+                                <InputText id="recruitment_title" class="@($"form-control form-control-solid {(_validationErrors.ContainsKey("Title") ? "is-invalid" : "")}")" @bind-Value="Model.Title" placeholder="Ví dụ: Senior .NET Developer" />
+                                @if (_validationErrors.ContainsKey("Title"))
+                                {
+                                    <div class="invalid-feedback">@_validationErrors["Title"]</div>
+                                }
                             </div>
                         </div>
                         
                         <div class="row mb-6">
                             <label class="col-lg-3 col-form-label required fw-bold fs-6">Mã tin & Phòng ban</label>
                             <div class="col-lg-4 mb-3 mb-lg-0">
-                                <InputText class="form-control form-control-solid" @bind-Value="Model.Code" placeholder="Mã tin (VD: DEV-001)" />
+                                <InputText id="recruitment_code" class="@($"form-control form-control-solid {(_validationErrors.ContainsKey("Code") ? "is-invalid" : "")}")" @bind-Value="Model.Code" placeholder="Mã tin (VD: DEV-001)" />
+                                @if (_validationErrors.ContainsKey("Code"))
+                                {
+                                    <div class="invalid-feedback">@_validationErrors["Code"]</div>
+                                }
                             </div>
                             <div class="col-lg-5">
-                                <InputSelect class="form-select form-select-solid fw-bold" @bind-Value="Model.DepartmentName">
+                                <InputSelect id="recruitment_dept" class="@($"form-select form-select-solid fw-bold {(_validationErrors.ContainsKey("Department") ? "is-invalid" : "")}")" @bind-Value="Model.DepartmentId">
                                     <option value="">Chọn phòng ban...</option>
-                                    <option value="IT">Kỹ thuật (IT)</option>
-                                    <option value="HR">Nhân sự (HR)</option>
-                                    <option value="Sales">Kinh doanh (Sales)</option>
-                                    <option value="Marketing">Marketing</option>
+                                    @foreach (var dept in _departments)
+                                    {
+                                        <option value="@dept.Id">@dept.Name</option>
+                                    }
                                 </InputSelect>
+                                @if (_validationErrors.ContainsKey("Department"))
+                                {
+                                    <div class="invalid-feedback">@_validationErrors["Department"]</div>
+                                }
                             </div>
                         </div>
 
@@ -81,8 +115,12 @@
                             <div class="col-lg-9 fv-row">
                                 <div class="position-relative">
                                     <i class="ki-outline ki-calendar fs-2 position-absolute top-50 translate-middle-y ms-4"></i>
-                                    <InputDate class="form-control form-control-solid ps-12" @bind-Value="Model.EndDate" />
+                                    <InputDate id="recruitment_enddate" class="@($"form-control form-control-solid ps-12 {(_validationErrors.ContainsKey("EndDate") ? "is-invalid" : "")}")" @bind-Value="Model.EndDate" />
                                 </div>
+                                @if (_validationErrors.ContainsKey("EndDate"))
+                                {
+                                    <div class="invalid-feedback d-block">@_validationErrors["EndDate"]</div>
+                                }
                             </div>
                         </div>
 

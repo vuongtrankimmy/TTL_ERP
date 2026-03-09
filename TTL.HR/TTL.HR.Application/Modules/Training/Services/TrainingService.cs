@@ -44,16 +44,84 @@ namespace TTL.HR.Application.Modules.Training.Services
             }
         }
 
-        public async Task<bool> CreateCourseAsync(CourseModel course)
+        public async Task<ApiResponse<string>> CreateCourseAsync(CourseModel course)
         {
-            var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Training.Courses, course);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Training.Courses, course);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<ApiResponse<string>>() ?? new ApiResponse<string> { Success = true };
+                }
+
+                // Try to parse detailed error response
+                return await ParseErrorResponse<string>(response);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<string> { Success = false, Message = $"Lỗi hệ thống: {ex.Message}" };
+            }
         }
 
-        public async Task<bool> UpdateCourseAsync(string id, CourseModel course)
+        private async Task<ApiResponse<T>> ParseErrorResponse<T>(HttpResponseMessage response)
         {
-            var response = await _httpClient.PutAsJsonAsync($"{ApiEndpoints.Training.Courses}/{id}", course);
-            return response.IsSuccessStatusCode;
+            var content = await response.Content.ReadAsStringAsync();
+            try
+            {
+                // 1. Try standard ApiResponse
+                var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<T>>(content, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (apiResponse != null && (!string.IsNullOrEmpty(apiResponse.Message) || (apiResponse.Errors != null && apiResponse.Errors.Any())))
+                {
+                    return apiResponse;
+                }
+
+                // 2. Try standard .NET ValidationProblemDetails
+                var problem = System.Text.Json.JsonSerializer.Deserialize<ValidationProblemDetails>(content, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (problem != null && problem.Errors != null && problem.Errors.Any())
+                {
+                    var errors = new List<string>();
+                    foreach (var kvp in problem.Errors)
+                    {
+                        foreach (var err in kvp.Value)
+                        {
+                            errors.Add($"{kvp.Key}: {err}");
+                        }
+                    }
+                    return new ApiResponse<T> { Success = false, Message = "Dữ liệu không hợp lệ", Errors = errors };
+                }
+            }
+            catch (Exception)
+            {
+                // Fallback to raw content or status code
+            }
+
+            return new ApiResponse<T> { Success = false, Message = $"Lỗi: {response.StatusCode} - {content}" };
+        }
+
+        // Add this class at the end or in a separate file
+        private class ValidationProblemDetails
+        {
+            public Dictionary<string, string[]>? Errors { get; set; }
+        }
+
+        public async Task<ApiResponse<bool>> UpdateCourseAsync(string id, CourseModel course)
+        {
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync($"{ApiEndpoints.Training.Courses}/{id}", course);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<ApiResponse<bool>>() ?? new ApiResponse<bool> { Success = true, Data = true };
+                }
+
+                return await ParseErrorResponse<bool>(response);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<bool> { Success = false, Message = $"Lỗi hệ thống: {ex.Message}" };
+            }
         }
 
         public async Task<bool> DeleteCourseAsync(string id)

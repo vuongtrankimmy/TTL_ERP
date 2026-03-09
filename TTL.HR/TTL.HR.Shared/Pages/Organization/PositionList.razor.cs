@@ -79,6 +79,7 @@ namespace TTL.HR.Shared.Pages.Organization
                     JobDescription = p.Description ?? "",
                     Requirements = p.Requirements != null ? string.Join("\n", p.Requirements) : "",
                     Benefits = p.Benefits != null ? string.Join("\n", p.Benefits) : "",
+                    SortOrder = p.SortOrder,
                     IsActive = p.Status == "Active",
                     Icon = "ki-outline ki-briefcase",
                     IconBg = "bg-light-primary",
@@ -149,6 +150,7 @@ namespace TTL.HR.Shared.Pages.Organization
                 JobDescription = pos.JobDescription,
                 Requirements = pos.Requirements,
                 Benefits = pos.Benefits,
+                SortOrder = pos.SortOrder,
                 IsActive = pos.IsActive,
                 Icon = pos.Icon,
                 IconBg = pos.IconBg,
@@ -190,6 +192,7 @@ namespace TTL.HR.Shared.Pages.Organization
                         Responsibilities = ToList(_editingPos.JobDescription),
                         BaseSalaryRangeMin = _editingPos.SalaryMin,
                         BaseSalaryRangeMax = _editingPos.SalaryMax,
+                        SortOrder = _editingPos.SortOrder,
                         Status = _editingPos.IsActive ? "Active" : "Inactive"
                     });
                     success = result != null;
@@ -210,6 +213,7 @@ namespace TTL.HR.Shared.Pages.Organization
                         BaseSalaryRangeMin = _editingPos.SalaryMin,
                         BaseSalaryRangeMax = _editingPos.SalaryMax,
                         IsActive = _editingPos.IsActive,
+                        SortOrder = _editingPos.SortOrder,
                         Status = _editingPos.IsActive ? "Active" : "Inactive"
                     });
                     success = result != null;
@@ -217,19 +221,36 @@ namespace TTL.HR.Shared.Pages.Organization
 
                 if (success)
                 {
-                    await JS.InvokeVoidAsync("toastr.success", _isNewPosition ? "Thêm chức danh thành công" : "Cập nhật chức danh thành công");
                     await LoadData();
                     closeEditDrawer();
                 }
                 else
                 {
-                    await JS.InvokeVoidAsync("toastr.error", "Lỗi: Không thể lưu thông tin. Vui lòng kiểm tra lại mã hoặc quyền hạn.");
+                    await JS.InvokeVoidAsync("Swal.fire", new
+                    {
+                        title = "Không thể lưu dữ liệu",
+                        text = "Máy chủ từ chối yêu cầu. Vui lòng kiểm tra lại thông tin nhập vào (Mã chức danh/vị trí có thể đã tồn tại).",
+                        icon = "error",
+                        confirmButtonText = "Đã hiểu"
+                    });
                 }
             }
             catch (Exception ex)
             {
-                await JS.InvokeVoidAsync("toastr.error", $"Lỗi hệ thống: {ex.Message}");
-                Console.WriteLine($"Error saving position: {ex.Message}");
+                await JS.InvokeVoidAsync("Swal.fire", new
+                {
+                    title = "Lỗi hệ thống nghiêm trọng",
+                    html = $@"<div class='text-start'>
+                                <p><b>Thông điệp:</b> {ex.Message}</p>
+                                <hr/>
+                                <p><b>Chi tiết kỹ thuật (Stack Trace):</b></p>
+                                <pre class='bg-light p-3 border rounded' style='font-size: 10px; max-height: 200px; overflow-y: auto;'>{ex.StackTrace}</pre>
+                             </div>",
+                    icon = "error",
+                    width = "600px",
+                    confirmButtonText = "Đóng"
+                });
+                Console.WriteLine($"Error saving position: {ex}");
             }
             finally
             {
@@ -266,7 +287,16 @@ namespace TTL.HR.Shared.Pages.Organization
                 }
                 catch (Exception ex)
                 {
-                    await JS.InvokeVoidAsync("toastr.error", $"Lỗi hệ thống: {ex.Message}");
+                    await JS.InvokeVoidAsync("Swal.fire", new
+                    {
+                        title = "Lỗi khi xóa",
+                        html = $@"<div class='text-start'>
+                                    <p><b>Thông điệp:</b> {ex.Message}</p>
+                                    <pre class='bg-light p-2 border' style='font-size: 10px;'>{ex.StackTrace}</pre>
+                                 </div>",
+                        icon = "error",
+                        confirmButtonText = "Đóng"
+                    });
                     Console.WriteLine($"Error deleting position: {ex.Message}");
                 }
                 finally
@@ -317,7 +347,16 @@ namespace TTL.HR.Shared.Pages.Organization
             }
             catch (Exception ex)
             {
-                await JS.InvokeVoidAsync("toastr.error", $"Lỗi: {ex.Message}");
+                Console.WriteLine($"Error assigning employees: {ex.Message}");
+                await JS.InvokeVoidAsync("Swal.fire", new
+                {
+                    title = "Lỗi gán nhân sự",
+                    html = $@"<div class='text-start'>
+                                <p>{ex.Message}</p>
+                                <pre class='bg-light p-2 border' style='font-size: 10px;'>{ex.StackTrace}</pre>
+                             </div>",
+                    icon = "error"
+                });
             }
             finally
             {
@@ -342,6 +381,7 @@ namespace TTL.HR.Shared.Pages.Organization
             public string JobDescription { get; set; } = "";
             public string Requirements { get; set; } = "";
             public string Benefits { get; set; } = "";
+            public int SortOrder { get; set; }
             public bool IsActive { get; set; } = true;
             public string Icon { get; set; } = "ki-outline ki-briefcase";
             public string IconBg { get; set; } = "bg-light-primary";

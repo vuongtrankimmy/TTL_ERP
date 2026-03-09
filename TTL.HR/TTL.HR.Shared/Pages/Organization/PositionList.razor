@@ -108,6 +108,7 @@
                                     <th class="min-w-100px text-center">CẤP BẬC</th>
                                     <th class="min-w-100px text-center">NHÂN SỰ</th>
                                     <th class="min-w-200px">MỨC LƯƠNG CƠ SỞ</th>
+                                    <th class="min-w-80px text-center">STT</th>
                                     <th class="text-end min-w-100px pe-7">THAO TÁC</th>
                                 </tr>
                             </thead>
@@ -139,6 +140,7 @@
                                             <span class="text-gray-800 fw-bolder fs-7">@pos.ActiveEmployees</span>
                                         </td>
                                         <td><span class="text-gray-800 fw-bold fs-7">@pos.SalaryRange</span></td>
+                                        <td class="text-center"><span class="text-gray-600 fw-bold fs-7">@pos.SortOrder</span></td>
                                         <td class="text-end pe-7" @onclick:stopPropagation="true">
                                             <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 hover-scale shadow-xs border" @onclick="() => editPosition(pos)">
                                                 <i class="ki-outline ki-pencil fs-6"></i>
@@ -231,6 +233,11 @@
                         <input type="number" class="form-control form-control-solid fs-7" placeholder="Đến..." @bind="_editingPos.SalaryMax" />
                     </div>
                 </div>
+            </div>
+
+            <div class="mb-8">
+                <label class="fs-7 fw-bold mb-2">Thứ tự hiển thị (Sort Order)</label>
+                <input type="number" class="form-control form-control-solid fs-7 w-100" @bind="_editingPos.SortOrder" />
             </div>
 
             <div class="mb-8">

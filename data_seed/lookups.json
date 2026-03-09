@@ -6,6 +6,7 @@
     "Type": "ContractType",
     "Code": "Probation",
     "Name": "Hợp đồng thử việc",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -16,6 +17,7 @@
     "Type": "ContractType",
     "Code": "Official_12M",
     "Name": "Hợp đồng 12 tháng",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -26,6 +28,7 @@
     "Type": "ContractType",
     "Code": "Official_24M",
     "Name": "Hợp đồng 24 tháng",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -36,6 +39,7 @@
     "Type": "ContractType",
     "Code": "Official_36M",
     "Name": "Hợp đồng 36 tháng",
+	"LookupID": 4,
     "Order": 4,
     "IsActive": true
   },
@@ -46,6 +50,7 @@
     "Type": "ContractType",
     "Code": "Indefinite",
     "Name": "Hợp đồng không xác định thời hạn",
+	"LookupID": 5,
     "Order": 5,
     "IsActive": true
   },
@@ -56,6 +61,7 @@
     "Type": "ContractType",
     "Code": "Internship",
     "Name": "Hợp đồng thực tập",
+	"LookupID": 6,
     "Order": 6,
     "IsActive": true
   },
@@ -66,6 +72,7 @@
     "Type": "ContractType",
     "Code": "NDA",
     "Name": "Thỏa thuận bảo mật (NDA)",
+	"LookupID": 7,
     "Order": 7,
     "IsActive": true
   },
@@ -76,6 +83,7 @@
     "Type": "ContractType",
     "Code": "Collaborator",
     "Name": "Hợp đồng cộng tác viên",
+	"LookupID": 8,
     "Order": 8,
     "IsActive": true
   },
@@ -86,6 +94,7 @@
     "Type": "ContractType",
     "Code": "Appendix",
     "Name": "Phụ lục hợp đồng",
+	"LookupID": 9,
     "Order": 9,
     "IsActive": true
   },
@@ -96,6 +105,7 @@
     "Type": "ContractType",
     "Code": "Commitment",
     "Name": "Bản cam kết",
+	"LookupID": 10,
     "Order": 10,
     "IsActive": true
   },
@@ -106,6 +116,7 @@
     "Type": "ContractStatus",
     "Code": "Draft",
     "Name": "Dự thảo",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -116,6 +127,7 @@
     "Type": "ContractStatus",
     "Code": "Signed",
     "Name": "Đã ký kết",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -126,6 +138,7 @@
     "Type": "ContractStatus",
     "Code": "Active",
     "Name": "Đang hiệu lực",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -136,6 +149,7 @@
     "Type": "ContractStatus",
     "Code": "Completed",
     "Name": "Đã hoàn thành",
+	"LookupID": 4,
     "Order": 4,
     "IsActive": true
   },
@@ -146,6 +160,7 @@
     "Type": "ContractStatus",
     "Code": "Terminated",
     "Name": "Đã chấm dứt",
+	"LookupID": 5,
     "Order": 5,
     "IsActive": true
   },
@@ -156,6 +171,7 @@
     "Type": "ContractStatus",
     "Code": "Expired",
     "Name": "Hết hạn",
+	"LookupID": 6,
     "Order": 6,
     "IsActive": true
   },
@@ -166,6 +182,7 @@
     "Type": "TemplateStatus",
     "Code": "Active",
     "Name": "Đang sử dụng",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -176,6 +193,7 @@
     "Type": "TemplateStatus",
     "Code": "Draft",
     "Name": "Bản nháp",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -186,6 +204,7 @@
     "Type": "TemplateStatus",
     "Code": "Inactive",
     "Name": "Ngừng sử dụng",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -196,6 +215,7 @@
     "Type": "EmployeeStatus",
     "Code": "Active",
     "Name": "Chính thức",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -206,6 +226,7 @@
     "Type": "EmployeeStatus",
     "Code": "Probation",
     "Name": "Thử việc",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -216,6 +237,7 @@
     "Type": "EmployeeStatus",
     "Code": "MaternityLeave",
     "Name": "Nghỉ thai sản",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -226,6 +248,7 @@
     "Type": "EmployeeStatus",
     "Code": "Resigned",
     "Name": "Đã thôi việc",
+	"LookupID": 4,
     "Order": 4,
     "IsActive": true
   },
@@ -236,6 +259,7 @@
     "Type": "Workplace",
     "Code": "HCM_OFFICE",
     "Name": "Văn phòng Hồ Chí Minh",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -246,6 +270,7 @@
     "Type": "Workplace",
     "Code": "HN_OFFICE",
     "Name": "Văn phòng Hà Nội",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -256,6 +281,7 @@
     "Type": "Workplace",
     "Code": "BD_WAREHOUSE",
     "Name": "Kho Bình Dương",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -266,6 +292,7 @@
     "Type": "Workplace",
     "Code": "LA_FACTORY",
     "Name": "Nhà máy Long An",
+	"LookupID": 4,
     "Order": 4,
     "IsActive": true
   },
@@ -276,6 +303,7 @@
     "Type": "AttendanceStatus",
     "Code": "Normal",
     "Name": "Đi làm bình thường",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true,
     "Color": "info"
@@ -287,6 +315,7 @@
     "Type": "AttendanceStatus",
     "Code": "Late",
     "Name": "Đi trễ",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true,
     "Color": "warning"
@@ -298,6 +327,7 @@
     "Type": "AttendanceStatus",
     "Code": "EarlyLeave",
     "Name": "Về sớm",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true,
     "Color": "warning"
@@ -309,6 +339,7 @@
     "Type": "AttendanceStatus",
     "Code": "LateAndEarly",
     "Name": "Trễ & Sớm",
+	"LookupID": 4,
     "Order": 4,
     "IsActive": true,
     "Color": "warning"
@@ -320,6 +351,7 @@
     "Type": "AttendanceStatus",
     "Code": "Absent",
     "Name": "Nghỉ không phép",
+	"LookupID": 5,
     "Order": 5,
     "IsActive": true,
     "Color": "danger"
@@ -331,6 +363,7 @@
     "Type": "AttendanceStatus",
     "Code": "MissingCheckIn",
     "Name": "Quên vân tay vào",
+	"LookupID": 6,
     "Order": 6,
     "IsActive": true,
     "Color": "danger"
@@ -342,6 +375,7 @@
     "Type": "AttendanceStatus",
     "Code": "MissingCheckOut",
     "Name": "Quên vân tay ra",
+	"LookupID": 7,
     "Order": 7,
     "IsActive": true,
     "Color": "danger"
@@ -353,6 +387,7 @@
     "Type": "AttendanceStatus",
     "Code": "Holiday",
     "Name": "Nghỉ lễ",
+	"LookupID": 8,
     "Order": 8,
     "IsActive": true,
     "Color": "primary"
@@ -364,6 +399,7 @@
     "Type": "AttendanceStatus",
     "Code": "Leave",
     "Name": "Nghỉ có phép",
+	"LookupID": 9,
     "Order": 9,
     "IsActive": true,
     "Color": "primary"
@@ -375,6 +411,7 @@
     "Type": "AttendanceStatus",
     "Code": "Weekend",
     "Name": "Nghỉ cuối tuần",
+	"LookupID": 10,
     "Order": 10,
     "IsActive": true,
     "Color": "secondary"
@@ -386,6 +423,7 @@
     "Type": "LeaveStatus",
     "Code": "Pending",
     "Name": "Chờ duyệt",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true,
     "Color": "warning"
@@ -397,6 +435,7 @@
     "Type": "LeaveStatus",
     "Code": "Approved",
     "Name": "Đã duyệt",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true,
     "Color": "success"
@@ -408,6 +447,7 @@
     "Type": "LeaveStatus",
     "Code": "Rejected",
     "Name": "Từ chối",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true,
     "Color": "danger"
@@ -419,6 +459,7 @@
     "Type": "LeaveStatus",
     "Code": "Cancelled",
     "Name": "Đã hủy",
+	"LookupID": 4,
     "Order": 4,
     "IsActive": true,
     "Color": "secondary"
@@ -430,6 +471,7 @@
     "Type": "LeaveStatus",
     "Code": "PartiallyApproved",
     "Name": "Chờ duyệt cấp 2",
+	"LookupID": 5,
     "Order": 5,
     "IsActive": true,
     "Color": "primary"
@@ -441,6 +483,7 @@
     "Type": "LeaveStatus",
     "Code": "Draft",
     "Name": "Bản nháp",
+	"LookupID": 6,
     "Order": 6,
     "IsActive": true,
     "Color": "secondary"
@@ -452,6 +495,7 @@
     "Type": "LeaveStatus",
     "Code": "Invalid",
     "Name": "Không hợp lệ",
+	"LookupID": 7,
     "Order": 7,
     "IsActive": true,
     "Color": "danger"
@@ -463,6 +507,7 @@
     "Type": "LeaveStatus",
     "Code": "Withdrawn",
     "Name": "Đã rút đơn",
+	"LookupID": 8,
     "Order": 8,
     "IsActive": true,
     "Color": "secondary"
@@ -474,6 +519,7 @@
     "Type": "JobStatus",
     "Code": "Active",
     "Name": "Đang hoạt động",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -484,6 +530,7 @@
     "Type": "JobStatus",
     "Code": "Draft",
     "Name": "Bản nháp",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -494,6 +541,7 @@
     "Type": "JobStatus",
     "Code": "Closed",
     "Name": "Đã đóng",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -504,6 +552,7 @@
     "Type": "AssetStatus",
     "Code": "Available",
     "Name": "Sẵn dùng",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -514,6 +563,7 @@
     "Type": "AssetStatus",
     "Code": "Assigned",
     "Name": "Đã bàn giao",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -524,6 +574,7 @@
     "Type": "AssetStatus",
     "Code": "Maintenance",
     "Name": "Đang bảo trì",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -534,6 +585,7 @@
     "Type": "AssetStatus",
     "Code": "Broken",
     "Name": "Đã hỏng",
+	"LookupID": 4,
     "Order": 4,
     "IsActive": true
   },
@@ -544,6 +596,7 @@
     "Type": "AssetStatus",
     "Code": "Lost",
     "Name": "Đã mất",
+	"LookupID": 5,
     "Order": 5,
     "IsActive": true
   },
@@ -554,6 +607,7 @@
     "Type": "AssetCondition",
     "Code": "New",
     "Name": "Mới 100%",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -564,6 +618,7 @@
     "Type": "AssetCondition",
     "Code": "Good",
     "Name": "Đang dùng tốt",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -574,6 +629,7 @@
     "Type": "AssetCondition",
     "Code": "Old",
     "Name": "Cũ / Xước nhẹ",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -581,6 +637,7 @@
     "Type": "Language",
     "Code": "vi-VN",
     "Name": "Tiếng Việt",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -588,6 +645,7 @@
     "Type": "Language",
     "Code": "en-US",
     "Name": "English",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -595,6 +653,7 @@
     "Type": "TimeZone",
     "Code": "SE Asia Standard Time",
     "Name": "(GMT+07:00) Bangkok, Hanoi, Jakarta",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -602,6 +661,7 @@
     "Type": "TimeZone",
     "Code": "Asia/Ho_Chi_Minh",
     "Name": "(GMT+07:00) Hồ Chí Minh",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -609,6 +669,7 @@
     "Type": "TimeZone",
     "Code": "UTC",
     "Name": "Universal Coordinated Time (UTC)",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -616,6 +677,7 @@
     "Type": "Currency",
     "Code": "VND",
     "Name": "Việt Nam Đồng (VNĐ)",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -623,6 +685,7 @@
     "Type": "Currency",
     "Code": "USD",
     "Name": "US Dollar ($)",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -630,6 +693,7 @@
     "Type": "ThousandSeparator",
     "Code": ",",
     "Name": "Dấu phẩy (,)",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -637,6 +701,7 @@
     "Type": "ThousandSeparator",
     "Code": ".",
     "Name": "Dấu chấm (.)",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -644,6 +709,7 @@
     "Type": "ThousandSeparator",
     "Code": " ",
     "Name": "Khoảng trắng ( )",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -651,6 +717,7 @@
     "Type": "DecimalSeparator",
     "Code": ".",
     "Name": "Dấu chấm (.)",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -658,6 +725,7 @@
     "Type": "DecimalSeparator",
     "Code": ",",
     "Name": "Dấu phẩy (,)",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -665,6 +733,7 @@
     "Type": "CodeSeparator",
     "Code": "",
     "Name": "Không có",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -672,6 +741,7 @@
     "Type": "CodeSeparator",
     "Code": "-",
     "Name": "Gạch ngang (-)",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -679,6 +749,7 @@
     "Type": "CodeSeparator",
     "Code": "/",
     "Name": "Gạch chéo (/)",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -686,6 +757,7 @@
     "Type": "CodeSeparator",
     "Code": ".",
     "Name": "Dấu chấm (.)",
+	"LookupID": 4,
     "Order": 4,
     "IsActive": true
   },
@@ -693,6 +765,7 @@
     "Type": "CodeSeparator",
     "Code": "_",
     "Name": "Gạch dưới (_)",
+	"LookupID": 5,
     "Order": 5,
     "IsActive": true
   },
@@ -700,6 +773,7 @@
     "Type": "CodeDateFormat",
     "Code": "yyyy",
     "Name": "Năm (2026)",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -707,6 +781,7 @@
     "Type": "CodeDateFormat",
     "Code": "yy",
     "Name": "Năm rút gọn (26)",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -714,6 +789,7 @@
     "Type": "CodeDateFormat",
     "Code": "yyyyMM",
     "Name": "Năm Tháng (202602)",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -721,6 +797,7 @@
     "Type": "CodeDateFormat",
     "Code": "yyMM",
     "Name": "Năm Tháng rút gọn (2602)",
+	"LookupID": 4,
     "Order": 4,
     "IsActive": true
   },
@@ -728,6 +805,7 @@
     "Type": "CodeDateFormat",
     "Code": "yyyyMMdd",
     "Name": "Ngày Tháng Năm (20260221)",
+	"LookupID": 5,
     "Order": 5,
     "IsActive": true
   },
@@ -738,6 +816,7 @@
     "Type": "DocumentType",
     "Code": "CCCD",
     "Name": "CMND / CCCD",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -748,6 +827,7 @@
     "Type": "DocumentType",
     "Code": "DegreeUniversity",
     "Name": "Bằng Đại học / Sau Đại học",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -758,6 +838,7 @@
     "Type": "DocumentType",
     "Code": "Certificate",
     "Name": "Chứng chỉ / Chứng nhận",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -768,6 +849,7 @@
     "Type": "DocumentType",
     "Code": "HealthCertificate",
     "Name": "Giấy khám sức khỏe",
+	"LookupID": 4,
     "Order": 4,
     "IsActive": true
   },
@@ -778,6 +860,7 @@
     "Type": "DocumentType",
     "Code": "CV",
     "Name": "Sơ yếu lý lịch",
+	"LookupID": 5,
     "Order": 5,
     "IsActive": true
   },
@@ -788,6 +871,7 @@
     "Type": "DocumentType",
     "Code": "BirthCertificate",
     "Name": "Giấy khai sinh",
+	"LookupID": 6,
     "Order": 6,
     "IsActive": true
   },
@@ -915,6 +999,7 @@
     "Type": "Ethnicity",
     "Code": "Kinh",
     "Name": "Kinh",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -925,6 +1010,7 @@
     "Type": "Ethnicity",
     "Code": "Tay",
     "Name": "Tày",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -935,6 +1021,7 @@
     "Type": "Ethnicity",
     "Code": "Thai",
     "Name": "Thái",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -945,6 +1032,7 @@
     "Type": "Religion",
     "Code": "None",
     "Name": "Không",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -955,6 +1043,7 @@
     "Type": "Religion",
     "Code": "Buddha",
     "Name": "Phật giáo",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -965,6 +1054,7 @@
     "Type": "Religion",
     "Code": "Christian",
     "Name": "Công giáo",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   },
@@ -975,6 +1065,7 @@
     "Type": "Nationality",
     "Code": "VN",
     "Name": "Việt Nam",
+	"LookupID": 1,
     "Order": 1,
     "IsActive": true
   },
@@ -985,6 +1076,7 @@
     "Type": "Nationality",
     "Code": "US",
     "Name": "Mỹ",
+	"LookupID": 2,
     "Order": 2,
     "IsActive": true
   },
@@ -995,6 +1087,7 @@
     "Type": "Nationality",
     "Code": "JP",
     "Name": "Nhật Bản",
+	"LookupID": 3,
     "Order": 3,
     "IsActive": true
   }

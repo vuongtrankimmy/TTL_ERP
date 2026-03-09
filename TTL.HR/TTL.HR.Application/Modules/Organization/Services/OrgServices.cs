@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -44,7 +45,9 @@ namespace TTL.HR.Application.Modules.Organization.Services
                 var result = await response.Content.ReadFromJsonAsync<ApiResponse<DepartmentModel>>();
                 return result?.Data;
             }
-            return null;
+            
+            var errorBody = await response.Content.ReadAsStringAsync();
+            throw new System.Exception($"Lỗi API ({response.StatusCode}): {errorBody}");
         }
 
         public async Task<DepartmentModel?> UpdateDepartmentAsync(string id, UpdateDepartmentRequest request)
@@ -55,28 +58,43 @@ namespace TTL.HR.Application.Modules.Organization.Services
                 var result = await response.Content.ReadFromJsonAsync<ApiResponse<DepartmentModel>>();
                 return result?.Data;
             }
-            return null;
+            
+            var errorBody = await response.Content.ReadAsStringAsync();
+            throw new System.Exception($"Lỗi API ({response.StatusCode}): {errorBody}");
         }
 
         public async Task<bool> DeleteDepartmentAsync(string id)
         {
             var response = await _httpClient.DeleteAsync($"{ApiEndpoints.Organization.Departments}/{id}");
-            return response.IsSuccessStatusCode;
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new System.Exception($"Lỗi API ({response.StatusCode}): {errorBody}");
+            }
+            return true;
         }
 
         public async Task<bool> AssignEmployeesAsync(string departmentId, List<string> employeeIds)
         {
             var payload = new { departmentId, employeeIds };
             var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Organization.Departments}/{departmentId}/assign", payload);
-            return response.IsSuccessStatusCode;
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new System.Exception($"Lỗi API ({response.StatusCode}): {errorBody}");
+            }
+            return true;
         }
 
         public async Task<List<OrgNode>> GetOrganizationStructureAsync()
         {
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<OrganizationNode>>>(ApiEndpoints.Organization.Structure);
-            if (response?.Data == null) return new List<OrgNode>();
-
-            return MapToOrgNodes(response.Data);
+            var nodes = response?.Data ?? new List<OrganizationNode>();
+            
+            System.Console.WriteLine($"[OrgService] Loaded {nodes.Count} org nodes from API");
+            
+            var result = nodes.Select(n => MapToOrgNode(n)).ToList();
+            return result;
         }
 
         private List<OrgNode> MapToOrgNodes(List<OrganizationNode> nodes)
@@ -94,16 +112,25 @@ namespace TTL.HR.Application.Modules.Organization.Services
             var orgNode = new OrgNode
             {
                 Id = node.Id,
-                Name = node.ManagerName,
-                Role = node.Name, // Department Name
-                Avatar = node.ManagerAvatar ?? "assets/media/avatars/blank.png",
-                Type = "Department",
-                IsManager = true,
+                Type = node.Type,
+                Name = node.Type == "Department" ? node.ManagerName : node.Name,
+                Role = node.Type == "Department" ? node.Name : "Chức danh / Vị trí",
+                Avatar = node.ManagerAvatar ?? (node.Type == "Department" ? "assets/media/avatars/blank.png" : "assets/media/misc/group.png"),
+                IsManager = node.Type == "Department" || node.Type == "Employee",
                 EmployeeCount = node.EmployeeCount,
+                SortOrder = node.SortOrder,
                 Children = new List<OrgNode>()
             };
 
-            foreach (var child in node.Children)
+            if (node.Type == "Employee")
+            {
+                orgNode.Name = node.Name;
+                orgNode.Role = node.Code; // Or job role
+                orgNode.EmployeeCode = node.Code;
+            }
+
+            var sortedChildren = node.Children?.OrderBy(n => n.SortOrder).ToList() ?? new List<OrganizationNode>();
+            foreach (var child in sortedChildren)
             {
                 orgNode.Children.Add(MapToOrgNode(child));
             }
@@ -141,7 +168,9 @@ namespace TTL.HR.Application.Modules.Organization.Services
                 var result = await response.Content.ReadFromJsonAsync<ApiResponse<PositionModel>>();
                 return result?.Data;
             }
-            return null;
+            
+            var errorBody = await response.Content.ReadAsStringAsync();
+            throw new System.Exception($"Lỗi API ({response.StatusCode}): {errorBody}");
         }
 
         public async Task<PositionModel?> UpdatePositionAsync(string id, UpdatePositionRequest request)
@@ -152,20 +181,32 @@ namespace TTL.HR.Application.Modules.Organization.Services
                 var result = await response.Content.ReadFromJsonAsync<ApiResponse<PositionModel>>();
                 return result?.Data;
             }
-            return null;
+            
+            var errorBody = await response.Content.ReadAsStringAsync();
+            throw new System.Exception($"Lỗi API ({response.StatusCode}): {errorBody}");
         }
 
         public async Task<bool> DeletePositionAsync(string id)
         {
             var response = await _httpClient.DeleteAsync($"{ApiEndpoints.Organization.Positions}/{id}");
-            return response.IsSuccessStatusCode;
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new System.Exception($"Lỗi API ({response.StatusCode}): {errorBody}");
+            }
+            return true;
         }
 
         public async Task<bool> AssignEmployeesAsync(string positionId, List<string> employeeIds, decimal? salary = null)
         {
             var payload = new { positionId, employeeIds, salary };
             var response = await _httpClient.PostAsJsonAsync($"{ApiEndpoints.Organization.Positions}/{positionId}/assign", payload);
-            return response.IsSuccessStatusCode;
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new System.Exception($"Lỗi API ({response.StatusCode}): {errorBody}");
+            }
+            return true;
         }
     }
 }

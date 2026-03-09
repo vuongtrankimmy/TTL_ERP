@@ -1,10 +1,10 @@
-﻿[
+[
     {
         "_id": {
             "$oid": "65bf0c300000000000000001"
         },
         "Code": "GD-001",
-        "FullName": "Pháº¡m Minh HÃ¹ng",
+        "FullName": "Phạm Minh Hùng",
         "Email": "hung.pham@orga-x.com",
         "CompanyEmail": "hung.pham@orga-x.com",
         "Phone": "0909000001",
@@ -13,7 +13,7 @@
         "PositionId": "65bf0b2f0000000000000001",
         "ReportToId": null,
         "StatusId": 1,
-        "ContractTypeId": "65dae2f30000000000000202",
+        "ContractTypeId": 2,
         "JoinDate": {
             "$date": "2020-01-01T00:00:00Z"
         },
@@ -23,12 +23,12 @@
             },
             "Gender": "Male",
             "Address": "Vincom Center, Q1, TP.HCM",
-            "Hometown": "HÃ  Ná»™i",
+            "Hometown": "Hà Nội",
             "IdCardNumber": "001080000123",
             "IdCardIssueDate": {
                 "$date": "2021-10-10T00:00:00Z"
             },
-            "IdCardPlace": "Cá»¥c CS QLHC vá» TTXH",
+            "IdCardPlace": "Cục CS QLHC về TTXH",
             "TaxCode": "8023456789",
             "BankAccount": "19034567890123",
             "BankName": "Techcombank"
@@ -48,7 +48,7 @@
             "$oid": "65bf0c300000000000000002"
         },
         "Code": "NS-001",
-        "FullName": "Nguyá»…n Thá»‹ Mai",
+        "FullName": "Nguyễn Thị Mai",
         "Email": "mai.nguyen@orga-x.com",
         "CompanyEmail": "mai.nguyen@orga-x.com",
         "Phone": "0909000002",
@@ -57,7 +57,7 @@
         "PositionId": "65bf0b2f0000000000000002",
         "ReportToId": "65bf0c300000000000000001",
         "StatusId": 1,
-        "ContractTypeId": "65dae2f30000000000000202",
+        "ContractTypeId": 2,
         "JoinDate": {
             "$date": "2021-03-15T00:00:00Z"
         },
@@ -66,13 +66,13 @@
                 "$date": "1988-11-20T00:00:00Z"
             },
             "Gender": "Female",
-            "Address": "PhÃº Nhuáº­n, TP.HCM",
+            "Address": "Phú Nhuận, TP.HCM",
             "Hometown": "TP.HCM",
             "IdCardNumber": "079088000456",
             "IdCardIssueDate": {
                 "$date": "2022-05-12T00:00:00Z"
             },
-            "IdCardPlace": "Cá»¥c CS QLHC vá» TTXH",
+            "IdCardPlace": "Cục CS QLHC về TTXH",
             "TaxCode": "8023456790",
             "BankAccount": "0071000123456",
             "BankName": "Vietcombank"
@@ -92,7 +92,7 @@
             "$oid": "65bf0c300000000000000003"
         },
         "Code": "IT-001",
-        "FullName": "LÃª VÄƒn Tuáº¥n",
+        "FullName": "Lê Văn Tuấn",
         "Email": "tuan.le@orga-x.com",
         "CompanyEmail": "tuan.le@orga-x.com",
         "Phone": "0909000003",
@@ -101,7 +101,7 @@
         "PositionId": "65bf0b2f0000000000000003",
         "ReportToId": "65bf0c300000000000000001",
         "StatusId": 1,
-        "ContractTypeId": "65dae2f30000000000000202",
+        "ContractTypeId": 2,
         "JoinDate": {
             "$date": "2021-05-20T00:00:00Z"
         },
@@ -111,7 +111,7 @@
             },
             "Gender": "Male",
             "Address": "Q7, TP.HCM",
-            "Hometown": "ÄÃ  Náºµng",
+            "Hometown": "Đà Nẵng",
             "IdCardNumber": "048090000789",
             "TaxCode": "8023456791",
             "BankAccount": "1012345678",
@@ -132,7 +132,7 @@
             "$oid": "65bf0c300000000000000004"
         },
         "Code": "IT-002",
-        "FullName": "Tráº§n Thanh BÃ¬nh",
+        "FullName": "Trần Thanh Bình",
         "Email": "binh.tran@orga-x.com",
         "CompanyEmail": "binh.tran@orga-x.com",
         "Phone": "0909000004",
@@ -141,7 +141,7 @@
         "PositionId": "65bf0b2f0000000000000004",
         "ReportToId": "65bf0c300000000000000003",
         "StatusId": 1,
-        "ContractTypeId": "65dae2f30000000000000202",
+        "ContractTypeId": 2,
         "JoinDate": {
             "$date": "2022-02-10T00:00:00Z"
         },
@@ -150,8 +150,8 @@
                 "$date": "1994-08-15T00:00:00Z"
             },
             "Gender": "Male",
-            "Address": "GÃ² Váº¥p, TP.HCM",
-            "Hometown": "BÃ¬nh Äá»‹nh",
+            "Address": "Gò Vấp, TP.HCM",
+            "Hometown": "Bình Định",
             "IdCardNumber": "052094000123",
             "TaxCode": "8023456792"
         },
@@ -170,7 +170,7 @@
             "$oid": "65bf0c300000000000000005"
         },
         "Code": "IT-003",
-        "FullName": "HoÃ ng Thu PhÆ°Æ¡ng",
+        "FullName": "Hoàng Thu Phương",
         "Email": "phuong.hoang@orga-x.com",
         "CompanyEmail": "phuong.hoang@orga-x.com",
         "Phone": "0909000005",
@@ -179,7 +179,7 @@
         "PositionId": "65bf0b2f0000000000000005",
         "ReportToId": "65bf0c300000000000000003",
         "StatusId": 2,
-        "ContractTypeId": "65dae2f30000000000000206",
+        "ContractTypeId": 6,
         "JoinDate": {
             "$date": "2024-01-05T00:00:00Z"
         },
@@ -188,8 +188,8 @@
                 "$date": "2002-12-01T00:00:00Z"
             },
             "Gender": "Female",
-            "Address": "Thá»§ Äá»©c, TP.HCM",
-            "Hometown": "Nghá»‡ An",
+            "Address": "Thủ Đức, TP.HCM",
+            "Hometown": "Nghệ An",
             "IdCardNumber": "040002000555"
         },
         "Username": "dev_junior_1",

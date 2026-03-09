@@ -85,6 +85,7 @@ namespace TTL.HR.Shared.Pages.Organization
                     EmployeeCount = d.EmployeeCount,
                     IsActive = d.IsActive,
                     Capacity = d.Capacity > 0 ? d.Capacity : 10,
+                    SortOrder = d.SortOrder,
                     ParentId = d.ParentId,
                     Icon = "ki-outline ki-briefcase",
                     IconBg = "bg-light-primary",
@@ -133,6 +134,7 @@ namespace TTL.HR.Shared.Pages.Organization
                 ManagerAvatar = dept.ManagerAvatar,
                 EmployeeCount = dept.EmployeeCount,
                 Capacity = dept.Capacity,
+                SortOrder = dept.SortOrder,
                 ParentId = dept.ParentId,
                 IsActive = dept.IsActive,
                 Icon = dept.Icon,
@@ -180,6 +182,7 @@ namespace TTL.HR.Shared.Pages.Organization
                         Description = _editingDept.Block,
                         ManagerId = _editingDept.ManagerId,
                         Capacity = _editingDept.Capacity,
+                        SortOrder = _editingDept.SortOrder,
                         IsActive = _editingDept.IsActive,
                         ParentId = _editingDept.ParentId 
                     };
@@ -198,13 +201,13 @@ namespace TTL.HR.Shared.Pages.Organization
                         Description = _editingDept.Block,
                         ManagerId = _editingDept.ManagerId,
                         Capacity = _editingDept.Capacity,
+                        SortOrder = _editingDept.SortOrder,
                         IsActive = _editingDept.IsActive,
                         ParentId = _editingDept.ParentId
                     };
                     var result = await DepartmentService.UpdateDepartmentAsync(_editingDept.Id, updateRequest);
                     success = result != null;
                     if (success) await JS.InvokeVoidAsync("toastr.success", "Cập nhật phòng ban thành công");
-                    else await JS.InvokeVoidAsync("toastr.error", "Lỗi: Không thể cập nhật phòng ban.");
                 }
 
                 if (success)
@@ -212,11 +215,33 @@ namespace TTL.HR.Shared.Pages.Organization
                     await LoadDepartments();
                     closeEditDrawer();
                 }
+                else
+                {
+                    await JS.InvokeVoidAsync("Swal.fire", new
+                    {
+                        title = "Không thể lưu dữ liệu",
+                        text = "Máy chủ từ chối yêu cầu. Vui lòng kiểm tra lại thông tin nhập vào (Mã phòng ban có thể đã tồn tại).",
+                        icon = "error",
+                        confirmButtonText = "Đã hiểu"
+                    });
+                }
             }
             catch (Exception ex)
             {
-                 await JS.InvokeVoidAsync("toastr.error", "Lỗi hệ thống: " + ex.Message);
-                 Console.WriteLine($"Error saving department: {ex.Message}");
+                await JS.InvokeVoidAsync("Swal.fire", new
+                {
+                    title = "Lỗi hệ thống nghiêm trọng",
+                    html = $@"<div class='text-start'>
+                                <p><b>Thông điệp:</b> {ex.Message}</p>
+                                <hr/>
+                                <p><b>Chi tiết kỹ thuật (Stack Trace):</b></p>
+                                <pre class='bg-light p-3 border rounded' style='font-size: 10px; max-height: 200px; overflow-y: auto;'>{ex.StackTrace}</pre>
+                             </div>",
+                    icon = "error",
+                    width = "600px",
+                    confirmButtonText = "Đóng"
+                });
+                Console.WriteLine($"Error saving department: {ex}");
             }
             finally
             {
@@ -246,7 +271,16 @@ namespace TTL.HR.Shared.Pages.Organization
                 }
                 catch (Exception ex)
                 {
-                    await JS.InvokeVoidAsync("toastr.error", "Lỗi khi xóa phòng ban");
+                    await JS.InvokeVoidAsync("Swal.fire", new
+                    {
+                        title = "Lỗi khi xóa",
+                        html = $@"<div class='text-start'>
+                                    <p><b>Thông điệp:</b> {ex.Message}</p>
+                                    <pre class='bg-light p-2 border' style='font-size: 10px;'>{ex.StackTrace}</pre>
+                                 </div>",
+                        icon = "error",
+                        confirmButtonText = "Đóng"
+                    });
                     Console.WriteLine($"Error deleting department: {ex.Message}");
                 }
                 finally
@@ -310,7 +344,15 @@ namespace TTL.HR.Shared.Pages.Organization
             catch (Exception ex)
             {
                 Console.WriteLine($"Error assigning employees: {ex.Message}");
-                await JS.InvokeVoidAsync("toastr.error", "Lỗi mạng hoặc hệ thống.");
+                await JS.InvokeVoidAsync("Swal.fire", new
+                {
+                    title = "Lỗi gán nhân sự",
+                    html = $@"<div class='text-start'>
+                                <p>{ex.Message}</p>
+                                <pre class='bg-light p-2 border' style='font-size: 10px;'>{ex.StackTrace}</pre>
+                             </div>",
+                    icon = "error"
+                });
             }
             finally
             {
@@ -330,6 +372,7 @@ namespace TTL.HR.Shared.Pages.Organization
             public string? ManagerAvatar { get; set; }
             public int EmployeeCount { get; set; }
             public int Capacity { get; set; } = 10;
+            public int SortOrder { get; set; }
             public string? ParentId { get; set; }
             public int ActiveMembers { get; set; }
             public int PendingReviews { get; set; }

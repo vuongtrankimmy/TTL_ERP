@@ -124,10 +124,10 @@ namespace TTL.HR.Shared.Pages.Employees
 
                 if (!CachedDepartments.Any()) tasks.Add(DepartmentService.GetDepartmentsAsync().ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedDepartments = t.Result; }));
                 if (!CachedPositions.Any()) tasks.Add(PositionService.GetPositionsAsync().ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedPositions = t.Result; }));
-                if (!CachedStatuses.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("EmployeeStatus", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedStatuses = t.Result; }));
-                if (!CachedContractTypes.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("ContractType", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedContractTypes = t.Result; }));
-                if (!CachedWorkplaces.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("Workplace", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedWorkplaces = t.Result; }));
-                if (!CachedAttendanceStatuses.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("AttendanceStatus", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedAttendanceStatuses = t.Result; }));
+                if (!CachedStatuses.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("EmployeeStatus", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedStatuses = t.Result.DistinctBy(l => l.LookupID).ToList(); }));
+                if (!CachedContractTypes.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("ContractType", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedContractTypes = t.Result.DistinctBy(l => l.LookupID).ToList(); }));
+                if (!CachedWorkplaces.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("Workplace", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedWorkplaces = t.Result.DistinctBy(l => l.LookupID).ToList(); }));
+                if (!CachedAttendanceStatuses.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("AttendanceStatus", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedAttendanceStatuses = t.Result.DistinctBy(l => l.LookupID).ToList(); }));
                 if (!CachedRoles.Any()) tasks.Add(MasterDataService.GetCachedLookupsAsync("Role", lang).ContinueWith(t => { if (t.IsCompletedSuccessfully) CachedRoles = t.Result; }));
 
                 if (tasks.Any())
@@ -142,9 +142,24 @@ namespace TTL.HR.Shared.Pages.Employees
             catch (OperationCanceledException) { }
             catch (Exception ex)
             {
-                System.Console.WriteLine($"LoadDataAsync Error: {ex.Message}");
                 _loadFailed = true;
                 _errorMessage = ex.Message;
+                _isLoading = false;
+                StateHasChanged();
+
+                await JSRuntime.InvokeVoidAsync("Swal.fire", new
+                {
+                    title = "Lỗi tải dữ liệu",
+                    html = $@"<div class='text-start'>
+                                <p>Đã xảy ra lỗi khi tải danh sách nhân viên hoặc dữ liệu danh mục:</p>
+                                <hr/>
+                                <p><b>Thông điệp:</b> {ex.Message}</p>
+                                <pre class='bg-light p-2 border' style='font-size: 10px; max-height: 200px; overflow-y: auto;'>{ex.StackTrace}</pre>
+                             </div>",
+                    icon = "error",
+                    width = "600px"
+                });
+                System.Console.WriteLine($"LoadDataAsync Error: {ex}");
             }
             finally
             {
@@ -232,14 +247,14 @@ namespace TTL.HR.Shared.Pages.Employees
         private void UpdateUrl()
         {
             var query = new Dictionary<string, object?>();
-            if (!string.IsNullOrEmpty(searchQuery)) query["q"] = searchQuery;
-            if (!string.IsNullOrEmpty(filterDept)) query["dept"] = filterDept;
-            if (!string.IsNullOrEmpty(filterStatus)) query["status"] = filterStatus;
-            if (filterWorkplace != "") query["workplace"] = filterWorkplace;
-            if (currentPage > 1) query["page"] = currentPage;
-            if (sortBy != "name") query["sortBy"] = sortBy;
-            if (sortDesc) query["sortDesc"] = sortDesc;
-            if (_viewMode != "table") query["viewMode"] = _viewMode;
+            query["q"] = string.IsNullOrEmpty(searchQuery) ? null : searchQuery;
+            query["dept"] = string.IsNullOrEmpty(filterDept) ? null : filterDept;
+            query["status"] = string.IsNullOrEmpty(filterStatus) ? null : filterStatus;
+            query["workplace"] = string.IsNullOrEmpty(filterWorkplace) ? null : filterWorkplace;
+            query["page"] = currentPage <= 1 ? (int?)null : currentPage;
+            query["sortBy"] = sortBy == "name" ? null : sortBy;
+            query["sortDesc"] = !sortDesc ? (bool?)null : sortDesc;
+            query["viewMode"] = _viewMode == "table" ? null : _viewMode;
 
             var url = Nav.GetUriWithQueryParameters(query);
             Nav.NavigateTo(url);
@@ -497,7 +512,19 @@ namespace TTL.HR.Shared.Pages.Employees
             }
             catch (Exception ex)
             {
-                await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Không thể cập nhật hồ sơ: " + ex.Message, "error");
+                await JSRuntime.InvokeVoidAsync("Swal.fire", new
+                {
+                    title = "Lỗi cập nhật hồ sơ",
+                    html = $@"<div class='text-start'>
+                                <p>Hệ thống không thể lưu thay đổi cho nhân viên <b>{target.FullName}</b>:</p>
+                                <hr/>
+                                <p><b>Thông điệp:</b> {ex.Message}</p>
+                                <pre class='bg-light p-2 border' style='font-size: 10px; max-height: 150px; overflow-y: auto;'>{ex.StackTrace}</pre>
+                             </div>",
+                    icon = "error",
+                    width = "600px"
+                });
+                Console.WriteLine($"Error updating employee in list: {ex}");
             }
         }
 
@@ -783,36 +810,36 @@ namespace TTL.HR.Shared.Pages.Employees
                 // 4. Prepare data for replacement
                 var data = new Dictionary<string, string>
                 {
-                    {"Ten_Cong_Ty", settings?.CompanyName ?? "CÔNG TY TNHH TÂN TẤN LỘC"},
-                    {"Dia_Chi_Cong_Ty", settings?.CompanyAddress ?? "Số 123, Đường ABC, Quận XYZ, TP.HCM"},
-                    {"SDT_Cong_Ty", settings?.CompanyPhone ?? "028.1234.5678"},
-                    {"MST_Cong_Ty", settings?.TaxCode ?? "0312345678"},
-                    {"STK_Cong_Ty", "123456789 Tại VCB - TP.HCM"},
-                    {"Nguoi_Dai_Dien", settings?.ContactPersonName ?? "TRẦN VƯƠNG KIM MY"},
-                    {"Chuc_Vu_Nguoi_Dai_Dien", "Giám Đốc"},
-                    {"Ten_Nhan_Vien", target.FullName?.ToUpper() ?? ""},
-                    {"Ma_Nhan_Vien", target.Code},
-                    {"Ngay_Sinh", target.DOB?.ToString("dd/MM/yyyy") ?? ""},
-                    {"Quoc_Tich", target.Nationality ?? "Việt Nam"},
-                    {"Nghe_Nghiep", target.Role},
-                    {"Dia_Chi_Thuong_Tru", target.Address},
-                    {"So_CCCD", target.IdCard},
-                    {"So_So_Lao_Dong", ""},
-                    {"Ma_Hop_Dong", latestContract?.ContractNumber ?? $"HĐ/{DateTime.Now.Year}/{target.Code}"},
-                    {"Loai_Hop_Dong", target.ContractTypeName},
-                    {"Thoi_Han_Hop_Dong", "12"},
-                    {"Ngay_Bat_Dau", (latestContract?.StartDate ?? target.JoinDate)?.ToString("dd/MM/yyyy") ?? ""},
-                    {"Ngay_Ket_Thuc", (latestContract?.EndDate ?? target.ContractEndDate)?.ToString("dd/MM/yyyy") ?? ""},
-                    {"Dia_Diem_Lam_Viec", target.Workplace ?? "TP.HCM"},
-                    {"Phong_Ban", target.Dept},
-                    {"Chuc_Vu", target.Role},
-                    {"Thoi_Gian_Lam_Viec", "44 giờ/tuần (Thứ 2 - Thứ 7)"},
-                    {"Ngay_Ky", DateTime.Now.ToString("dd")},
-                    {"Thang_Ky", DateTime.Now.ToString("MM")},
-                    {"Nam_Ky", DateTime.Now.ToString("yyyy")},
-                    {"Dia_Diem_Ky", "TP.HCM"},
-                    {"Muc_Luong", (latestContract?.BasicSalary ?? target.Salary)?.ToString("N0") ?? "0"},
-                    {"Phu_Cap", (latestContract?.AllowanceTotal ?? 0).ToString("N0")},
+                    {"Company_Name", settings?.CompanyName ?? "CÔNG TY TNHH TÂN TẤN LỘC"},
+                    {"Company_Address", settings?.CompanyAddress ?? "Số 123, Đường ABC, Quận XYZ, TP.HCM"},
+                    {"Company_Phone", settings?.CompanyPhone ?? "028.1234.5678"},
+                    {"Company_TaxCode", settings?.TaxCode ?? "0312345678"},
+                    {"Company_BankAccount", "123456789 Tại VCB - TP.HCM"},
+                    {"Representative_Name", settings?.ContactPersonName ?? "TRẦN VƯƠNG KIM MY"},
+                    {"Representative_Position", "Giám Đốc"},
+                    {"Employee_Name", target.FullName?.ToUpper() ?? ""},
+                    {"Employee_Code", target.Code},
+                    {"Date_Of_Birth", target.DOB?.ToString("dd/MM/yyyy") ?? ""},
+                    {"Nationality", target.Nationality ?? "Việt Nam"},
+                    {"Job_Title", target.Role},
+                    {"Permanent_Address", target.Address},
+                    {"ID_Card_Number", target.IdCard},
+                    {"Labor_Book_Number", ""},
+                    {"Contract_Number", latestContract?.ContractNumber ?? $"HĐ/{DateTime.Now.Year}/{target.Code}"},
+                    {"Contract_Type", target.ContractTypeName},
+                    {"Contract_Duration", "12"},
+                    {"Start_Date", (latestContract?.StartDate ?? target.JoinDate)?.ToString("dd/MM/yyyy") ?? ""},
+                    {"End_Date", (latestContract?.EndDate ?? target.ContractEndDate)?.ToString("dd/MM/yyyy") ?? ""},
+                    {"Work_Place", target.Workplace ?? "TP.HCM"},
+                    {"Department_Name", target.Dept},
+                    {"Position_Name", target.Role},
+                    {"Working_Hours", "44 giờ/tuần (Thứ 2 - Thứ 7)"},
+                    {"Signing_Day", DateTime.Now.ToString("dd")},
+                    {"Signing_Month", DateTime.Now.ToString("MM")},
+                    {"Signing_Year", DateTime.Now.ToString("yyyy")},
+                    {"Signing_Place", "TP.HCM"},
+                    {"Basic_Salary", (latestContract?.BasicSalary ?? target.Salary)?.ToString("N0") ?? "0"},
+                    {"Allowance", (latestContract?.AllowanceTotal ?? 0).ToString("N0")},
                     {"FullName", target.FullName},
                     {"Code", target.Code},
                     {"Today", DateTime.Now.ToString("dd/MM/yyyy")}

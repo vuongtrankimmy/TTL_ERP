@@ -129,7 +129,7 @@
 									<div class="card-body p-8">
 										<!-- Card Header: Status & Actions -->
 										<div class="d-flex flex-stack mb-5">
-											<div class="badge badge-light-@(string.IsNullOrEmpty(emp.StatusColor) ? "warning" : emp.StatusColor) fw-boldest fs-9 px-3 py-2 rounded-pill shadow-xs">@emp.StatusName</div>
+											<div></div>
 
 											<div class="dropdown">
 												<button class="btn btn-icon btn-sm btn-light btn-active-light-primary rounded-circle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -214,7 +214,6 @@
 							<th class="min-w-150px cursor-pointer" @onclick='() => ToggleSort("role")'>Vị trí <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(sortBy == "role" ? "text-primary" : "text-muted")"></i></th>
 							<th class="min-w-125px cursor-pointer" @onclick='() => ToggleSort("joindate")'>Ngày vào làm <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(sortBy == "joindate" ? "text-primary" : "text-muted")"></i></th>
 							<th class="min-w-150px cursor-pointer" @onclick='() => ToggleSort("workplace")'>Nơi làm việc <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(sortBy == "workplace" ? "text-primary" : "text-muted")"></i></th>
-							<th class="min-w-125px text-center cursor-pointer" @onclick='() => ToggleSort("status")'>Trạng thái <i class="ki-outline ki-arrow-up-down fs-8 ms-1 @(sortBy == "status" ? "text-primary" : "text-muted")"></i></th>
 							<th class="text-end min-w-100px">Thao tác</th>
 						</tr>
 					</thead>
@@ -248,9 +247,6 @@
 									<td>@emp.Role</td>
 									<td>@emp.JoinDate?.ToString("dd/MM/yyyy")</td>
 									<td>@emp.Workplace</td>
-									<td class="text-center">
-										<div class="badge badge-light-@(string.IsNullOrEmpty(emp.StatusColor) ? "warning" : emp.StatusColor) fw-bolder">@emp.StatusName</div>
-									</td>
 									<td class="text-end">
 										<div class="d-flex justify-content-end flex-shrink-0">
 											<a href="javascript:;" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 kt_drawer_employee_detail_toggle" title="Xem chi tiết" @onclick="() => SelectEmployeeByObj(emp)">

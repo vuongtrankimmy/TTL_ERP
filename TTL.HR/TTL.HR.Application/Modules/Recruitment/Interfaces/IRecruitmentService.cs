@@ -9,8 +9,8 @@ namespace TTL.HR.Application.Modules.Recruitment.Interfaces
         Task<IEnumerable<JobDetail>> GetJobsAsync();
         Task<JobDetail?> GetJobAsync(string id);
         Task<JobDetail?> CreateJobAsync(JobDetail job);
-        Task UpdateJobAsync(string id, JobDetail job);
-        Task DeleteJobAsync(string id);
+        Task<bool> UpdateJobAsync(string id, JobDetail job);
+        Task<bool> DeleteJobAsync(string id);
 
         Task<IEnumerable<ApplicantItem>> GetApplicantsAsync(string jobId);
         Task<bool> AddApplicantAsync(string jobId, ApplicantRequest applicant);

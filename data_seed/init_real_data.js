@@ -49,7 +49,7 @@ async function main() {
                     Phone: "0901234567",
                     DepartmentId: itDeptId.toString(),
                     PositionId: "65bf0b2f0000000000000003", // Position: DeptManager
-                    StatusId: "65dae2f30000000000000501", // Status: Active
+                    StatusId: 1, // Status: Active
                     JoinDate: new Date("2020-01-01"),
                     Salary: 55000000,
                     Roles: ["65fc5b5b0000000000000005"], // Dept Manager role
@@ -80,7 +80,7 @@ async function main() {
                     DepartmentId: itDeptId.toString(),
                     PositionId: "65bf0b2f0000000000000004", // Position: IT Staff
                     ReportToId: itMgrId.toString(),
-                    StatusId: "65dae2f30000000000000501",
+                    StatusId: 1,
                     JoinDate: new Date("2024-01-01"),
                     Salary: 20000000,
                     Roles: ["65fc5b5b0000000000000004"], // Employee role
@@ -110,7 +110,7 @@ async function main() {
                     Phone: "0908887776",
                     DepartmentId: hrDeptId.toString(),
                     PositionId: "65bf0b2f0000000000000002", 
-                    StatusId: "65dae2f30000000000000501",
+                    StatusId: 1,
                     JoinDate: new Date("2022-06-01"),
                     Salary: 15000000,
                     IsAccountActive: true,

@@ -1,31 +1,60 @@
 @page "/employees/add"
 @page "/employees/edit/{Id}"
 
-
 <CccdScanner @ref="cccdScanner" />
+
+<div class="d-flex flex-stack mb-6">
+    <div class="d-flex align-items-center">
+        <button class="btn btn-icon btn-sm btn-light-primary me-4" @onclick='() => Navigation.NavigateTo("/employees")' title="Quay lại">
+            <i class="ki-outline ki-arrow-left fs-2"></i>
+        </button>
+        <div class="d-flex flex-column">
+            <h1 class="fs-3 fw-bold text-gray-900 mb-1">
+                @(IsEditMode ? $"Chỉnh sửa hồ sơ: {newEmployee.FullName}" : "Thêm mới nhân viên")
+            </h1>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-light-primary fw-bold">ID: @(IsEditMode ? newEmployee.Code : "TỰ ĐỘNG SINH")</span>
+                @if (IsEditMode)
+                {
+                    <span class="badge @(newEmployee.IsActive ? "badge-light-success" : "badge-light-danger") fw-bold">
+                        @(newEmployee.IsActive ? "Đang hoạt động" : "Ngừng hoạt động")
+                    </span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="card card-flush mb-6 shadow-sm border-0">
     <div class="card-body p-0">
         <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold px-10">
             <li class="nav-item">
-                <a class="nav-link text-active-primary active py-5" data-bs-toggle="tab" href="#tab_personal">
-                    <i class="bi bi-person-circle fs-4 me-2"></i>THÔNG TIN CÁ NHÂN
+                <a class="nav-link text-active-primary active py-5 d-flex align-items-center" data-bs-toggle="tab" href="#tab_personal">
+                    <span class="symbol symbol-20px me-3">
+                        <i class="bi bi-person-circle fs-4 text-primary"></i>
+                    </span>THÔNG TIN CÁ NHÂN
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-active-primary py-5" data-bs-toggle="tab" href="#tab_job">
-                    <i class="bi bi-briefcase fs-4 me-2"></i>CÔNG VIỆC & LƯƠNG
+                <a class="nav-link text-active-primary py-5 d-flex align-items-center" data-bs-toggle="tab" href="#tab_job">
+                    <span class="symbol symbol-20px me-3">
+                        <i class="bi bi-briefcase fs-4 text-success"></i>
+                    </span>CÔNG VIỆC & LƯƠNG
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-active-primary py-5" data-bs-toggle="tab" href="#tab_competence">
-                    <i class="bi bi-mortarboard fs-4 me-2"></i>NĂNG LỰC & GIA ĐÌNH
+                <a class="nav-link text-active-primary py-5 d-flex align-items-center" data-bs-toggle="tab" href="#tab_competence">
+                    <span class="symbol symbol-20px me-3">
+                        <i class="bi bi-mortarboard fs-4 text-warning"></i>
+                    </span>NĂNG LỰC & GIA ĐÌNH
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-active-primary py-5" data-bs-toggle="tab" href="#tab_account">
-                    <i class="bi bi-shield-lock fs-4 me-2"></i>TÀI KHOẢN & HỒ SƠ
+                <a class="nav-link text-active-primary py-5 d-flex align-items-center" data-bs-toggle="tab" href="#tab_account">
+                    <span class="symbol symbol-20px me-3">
+                        <i class="bi bi-shield-lock-fill fs-4 text-danger"></i>
+                    </span>TÀI KHOẢN & HỒ SƠ
                 </a>
             </li>
         </ul>
@@ -415,17 +444,23 @@
                 <div class="col-md-3">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Mức lương cơ bản (VNĐ)</label>
                     <div class="position-relative d-flex align-items-center">
-                        <span class="position-absolute ms-4 fw-bold text-gray-400">₫</span>
-                        <input type="text" class="form-control form-control-solid ps-12 text-end fw-bold text-primary" placeholder="10.000.000" @bind="newEmployee.SalaryDisplay" />
+                        <span class="position-absolute ms-4 fw-bold text-gray-500">VNĐ</span>
+                        <input type="text" class="form-control form-control-solid ps-14 text-end fw-bold text-primary" placeholder="10.000.000" @bind="newEmployee.SalaryDisplay" />
                     </div>
                 </div>
             </div>
             <div class="row g-9 mt-4">
                 <div class="col-md-3">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mã chấm công (NV cũ)</label>
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mã máy chấm công (NV cũ)</label>
                     <div class="position-relative d-flex align-items-center">
-                        <i class="bi bi-person-badge position-absolute ms-4 text-gray-500"></i>
+                        <i class="bi bi-person-badge-fill position-absolute ms-4 text-gray-500"></i>
                         <input type="text" class="form-control form-control-solid ps-12" placeholder="VD: NV001" @bind="newEmployee.TimekeepingCode" />
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex align-items-end pb-2">
+                    <div class="form-check form-check-custom form-check-solid">
+                        <input class="form-check-input h-30px w-50px" type="checkbox" @bind="newEmployee.IsTrainer" id="isTrainerToggle" />
+                        <label class="form-check-label fw-bolder text-gray-700 ms-3" for="isTrainerToggle">LÀ GIẢNG VIÊN ĐÀO TẠO</label>
                     </div>
                 </div>
             </div>
@@ -719,10 +754,19 @@
                             </span>
                             <h2 class="fw-bold fs-5 text-uppercase m-0">Tài khoản đăng nhập hệ thống</h2>
                         </div>
-                        <div class="card-toolbar">
+                        <div class="card-toolbar gap-10">
                             <div class="form-check form-switch form-check-custom form-check-solid">
                                 <input class="form-check-input h-30px w-50px" type="checkbox" @bind="newEmployee.IsCreateAccount" id="createAccountToggle" />
                                 <label class="form-check-label fw-bolder text-gray-700 ms-3" for="createAccountToggle">TỰ ĐỘNG KHỞI TẠO TÀI KHOẢN</label>
+                            </div>
+                            <div class="d-flex align-items-center gap-3 border-start border-gray-300 ps-10">
+                                <label class="fs-7 fw-bolder text-gray-700 text-uppercase m-0">Trạng thái tài khoản:</label>
+                                <div class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input h-25px w-45px" type="checkbox" @bind="newEmployee.IsActive" id="accountActiveToggle" disabled="@(!newEmployee.IsCreateAccount)" />
+                                </div>
+                                <span class="badge @(newEmployee.IsActive ? "badge-light-success" : "badge-light-danger") fs-9 fw-bold">
+                                    @(newEmployee.IsActive ? "ĐANG HOẠT ĐỘNG" : "BỊ KHOÁ")
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -735,38 +779,64 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mật khẩu</label>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="form-control form-control-solid bg-light text-muted h-40px d-flex align-items-center fs-8 flex-grow-1">Thiết lập qua Email</div>
-                                    <div class="d-flex gap-1">
-                                        <button type="button" class="btn btn-icon btn-light-primary btn-sm h-35px w-35px" title="Gửi qua Email" @onclick='() => SendCredentialsAction("EMAIL")'>
-                                            <i class="bi bi-envelope fs-5"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-icon btn-light-success btn-sm h-35px w-35px" title="Gửi qua SMS" @onclick='() => SendCredentialsAction("SMS")'>
-                                            <i class="bi bi-chat-dots fs-5"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-icon btn-light-info btn-sm h-35px w-35px btn-zalo-bg" title="Gửi qua Zalo" @onclick='() => SendCredentialsAction("ZALO")'>
-                                            <img src="https://zalo-res.zdn.vn/zalo_ai/public/images/logo-zalo.png" style="width: 18px; filter: grayscale(1) brightness(1.5);" />
+                                @if (IsEditMode)
+                                {
+                                    <div class="position-relative">
+                                        <button type="button" class="btn btn-light-warning btn-sm fw-bold w-100 h-40px border border-warning border-dashed" @onclick="RequestPasswordReset">
+                                            <i class="bi bi-key-fill fs-5 me-2"></i> Gửi Link Đặt Lại
                                         </button>
                                     </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="form-control form-control-solid bg-light-info text-primary fw-bold h-40px d-flex align-items-center justify-content-center fs-8 flex-grow-1 border border-primary border-dashed">
+                                            THIẾT LẬP QUA EMAIL
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-1">
+                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase invisible">Gửi</label>
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <button type="button" class="btn btn-icon btn-light-primary btn-sm h-40px w-40px shadow-sm" title="Gửi qua Email" @onclick='() => SendCredentialsAction("EMAIL")'>
+                                        <i class="bi bi-envelope-at fs-5"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-icon btn-light-success btn-sm h-40px w-40px shadow-sm" title="Gửi qua SMS" @onclick='() => SendCredentialsAction("SMS")'>
+                                        <i class="bi bi-chat-dots fs-5"></i>
+                                    </button>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Vai trò</label>
-                                <select class="form-select form-select-solid" multiple @bind="BindRoles" disabled="@(!newEmployee.IsCreateAccount)">
+                            <div class="col-md-5">
+                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-3">Phân quyền vai trò</label>
+                                <div class="d-flex flex-wrap gap-2">
                                     @if (availableRoles != null)
                                     {
                                         @foreach (var role in availableRoles)
                                         {
-                                            <option value="@role.Id">@role.Name</option>
+                                            var isSelected = newEmployee.Roles?.Contains(role.Id) ?? false;
+                                            <div class="cursor-pointer badge badge-lg @(isSelected ? "badge-light-primary border border-primary" : "badge-light border border-gray-300") px-4 py-3"
+                                                 @onclick="() => ToggleRole(role.Id)"
+                                                 style="transition: all 0.2s ease-in-out; border-style: @(isSelected ? "solid" : "dashed") !important; @(!newEmployee.IsCreateAccount ? "opacity: 0.5; cursor: not-allowed;" : "")">
+                                                <div class="d-flex align-items-center">
+                                                    @if (isSelected)
+                                                    {
+                                                        <i class="ki-outline ki-shield-tick fs-5 me-2 text-primary"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="ki-outline ki-shield fs-5 me-2 text-gray-400"></i>
+                                                    }
+                                                    <span class="fw-bold @(isSelected ? "text-primary" : "text-gray-700") fs-7">@role.Name</span>
+                                                </div>
+                                            </div>
                                         }
                                     }
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Trạng thái</label>
-                                <div class="form-check form-switch form-check-custom form-check-solid mt-2">
-                                    <input class="form-check-input h-25px w-45px" type="checkbox" @bind="newEmployee.IsActive" id="accountActiveToggle" disabled="@(!newEmployee.IsCreateAccount)" />
                                 </div>
+                                @if (!newEmployee.IsCreateAccount)
+                                {
+                                    <div class="text-muted fs-9 mt-2 italic"> <i class="bi bi-info-circle fs-9 me-1"></i> Bật 'Tự động khởi tạo tài khoản' để phân quyền</div>
+                                }
                             </div>
                         </div>
                     </div>

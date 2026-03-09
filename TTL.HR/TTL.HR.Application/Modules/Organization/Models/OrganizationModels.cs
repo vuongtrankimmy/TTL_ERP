@@ -15,6 +15,7 @@ namespace TTL.HR.Application.Modules.Organization.Models
         public string? ManagerAvatar { get; set; }
         public int EmployeeCount { get; set; }
         public int Capacity { get; set; }
+        public int SortOrder { get; set; }
         public bool IsActive { get; set; } = true;
     }
 
@@ -46,6 +47,7 @@ namespace TTL.HR.Application.Modules.Organization.Models
 
         public string? ManagerId { get; set; }
         public int Capacity { get; set; }
+        public int SortOrder { get; set; }
         public bool IsActive { get; set; } = true;
     }
 
@@ -71,6 +73,7 @@ namespace TTL.HR.Application.Modules.Organization.Models
         public List<string>? Responsibilities { get; set; }
         public List<string>? Requirements { get; set; }
         public List<string>? Benefits { get; set; }
+        public int SortOrder { get; set; }
         public bool IsActive { get; set; } = true;
     }
 
@@ -87,6 +90,7 @@ namespace TTL.HR.Application.Modules.Organization.Models
         public List<string>? Responsibilities { get; set; }
         public List<string>? Requirements { get; set; }
         public List<string>? Benefits { get; set; }
+        public int SortOrder { get; set; }
     }
 
     public class UpdatePositionRequest : CreatePositionRequest
@@ -105,6 +109,8 @@ namespace TTL.HR.Application.Modules.Organization.Models
         public string ManagerName { get; set; } = string.Empty;
         public string? ManagerAvatar { get; set; }
         public int EmployeeCount { get; set; }
+        public int SortOrder { get; set; }
+        public string Type { get; set; } = "Department";
         public List<OrganizationNode> Children { get; set; } = new();
     }
 
@@ -117,6 +123,8 @@ namespace TTL.HR.Application.Modules.Organization.Models
         public string Type { get; set; } = string.Empty; // Department or Employee
         public string Status { get; set; } = string.Empty;
         public bool IsManager { get; set; }
+        public int SortOrder { get; set; }
+        public int EmployeeCount { get; set; }
         public List<OrgNode> Children { get; set; } = new List<OrgNode>();
 
         // Detail properties for UI
@@ -144,6 +152,5 @@ namespace TTL.HR.Application.Modules.Organization.Models
         public string EmergencyContactName { get; set; } = string.Empty;
         public string EmergencyContactRelation { get; set; } = string.Empty;
         public string EmergencyContactPhone { get; set; } = string.Empty;
-        public int EmployeeCount { get; set; }
     }
 }

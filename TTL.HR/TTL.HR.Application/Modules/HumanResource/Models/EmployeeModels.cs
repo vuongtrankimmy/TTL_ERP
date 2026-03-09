@@ -62,6 +62,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public bool IsActive { get; set; }
         public int NumberOfDependents { get; set; }
         public bool IsAccountActive { get; set; }
+        public bool IsTrainer { get; set; }
         public bool IsCreateAccount { get; set; }
         public int? NationalityId { get; set; }
         public string Nationality { get; set; } = string.Empty;
@@ -220,6 +221,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string Username { get; set; } = string.Empty;
         public int? WorkplaceId { get; set; }
         public string Workplace { get; set; } = string.Empty;
+        public bool IsTrainer { get; set; }
     }
 
     public class EmployeeDocumentModel

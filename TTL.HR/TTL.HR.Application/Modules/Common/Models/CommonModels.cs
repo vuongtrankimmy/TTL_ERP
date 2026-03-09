@@ -37,6 +37,9 @@ namespace TTL.HR.Application.Modules.Common.Models
         
         [JsonPropertyName("errors")]
         public List<string>? Errors { get; set; }
+
+        [JsonPropertyName("stackTrace")]
+        public string? StackTrace { get; set; }
     }
 
     public class PagedResult<T>

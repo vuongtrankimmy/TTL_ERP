@@ -14,12 +14,38 @@
             <div id="kt_account_profile_details" class="collapse show">
                 <EditForm Model="@_course" OnValidSubmit="SaveCourse">
                     <div class="card-body border-top p-9">
+                        @if (_validationErrors.Any())
+                        {
+                            <div class="alert alert-danger d-flex align-items-center p-5 mb-10">
+                                <i class="ki-outline ki-shield-cross fs-2hx text-danger me-4"></i>
+                                <div class="d-flex flex-column">
+                                    <h4 class="mb-1 text-danger">Vui lòng kiểm tra lại thông tin</h4>
+                                    <ul class="mb-0 text-danger">
+                                        @foreach (var err in _validationErrors.Where(e => e.Key != "DebugInfo"))
+                                        {
+                                            <li><strong>@(err.Key == "General" ? "" : err.Key + ": ")</strong>@err.Value</li>
+                                        }
+                                    </ul>
+                                    @if (_validationErrors.ContainsKey("DebugInfo"))
+                                    {
+                                        <div class="mt-4 p-4 bg-light-danger rounded border border-danger border-dashed">
+                                            <div class="fw-bold mb-2">Thông tin kỹ thuật (Stack Trace):</div>
+                                            <pre class="fs-9 text-danger scroll-y mh-200px">@_validationErrors["DebugInfo"]</pre>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label required fw-bold fs-6">Tên khóa học</label>
                             <div class="col-lg-8">
                                 <div class="row">
                                     <div class="col-lg-12 fv-row">
-                                        <input type="text" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Ví dụ: Kỹ năng giao tiếp nâng cao" @bind="_course.Title" />
+                                        <input type="text" id="course_title" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0 @(_validationErrors.ContainsKey("Title") ? "is-invalid" : "")" placeholder="Ví dụ: Kỹ năng giao tiếp nâng cao" @bind="_course.Title" />
+                                        @if (_validationErrors.ContainsKey("Title"))
+                                        {
+                                            <div class="fv-plugins-message-container invalid-feedback">@_validationErrors["Title"]</div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -27,7 +53,11 @@
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label required fw-bold fs-6">Mã khóa học</label>
                             <div class="col-lg-8 fv-row">
-                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: COM-2024" @bind="_course.Code" />
+                                <input type="text" id="course_code" class="form-control form-control-lg form-control-solid @(_validationErrors.ContainsKey("Code") ? "is-invalid" : "")" placeholder="Ví dụ: COM-2024" @bind="_course.Code" />
+                                @if (_validationErrors.ContainsKey("Code"))
+                                {
+                                    <div class="fv-plugins-message-container invalid-feedback">@_validationErrors["Code"]</div>
+                                }
                             </div>
                         </div>
                         <div class="row mb-6">
@@ -35,7 +65,54 @@
                                 <span class="required">Giảng viên / Đơn vị đào tạo</span>
                             </label>
                             <div class="col-lg-8 fv-row">
-                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: Nguyễn Văn A hoặc Trung tâm ABC" @bind="_course.TrainerName" />
+                                <div class="btn-group w-100 mb-4" role="group">
+                                    <input type="radio" class="btn-check" name="trainer_mode" id="trainer_internal" autocomplete="off" checked="@(_isInternalTrainer)" @onclick="() => ToggleTrainerMode(true)">
+                                    <label class="btn btn-outline btn-outline-dashed btn-active-light-primary @(_isInternalTrainer ? "active" : "") fw-bold px-5" for="trainer_internal">
+                                        <i class="ki-outline ki-profile-user fs-3 me-2"></i>GIẢNG VIÊN NỘI BỘ
+                                    </label>
+
+                                    <input type="radio" class="btn-check" name="trainer_mode" id="trainer_external" autocomplete="off" checked="@(!_isInternalTrainer)" @onclick="() => ToggleTrainerMode(false)">
+                                    <label class="btn btn-outline btn-outline-dashed btn-active-light-primary @(!_isInternalTrainer ? "active" : "") fw-bold px-5" for="trainer_external">
+                                        <i class="ki-outline ki-user-edit fs-3 me-2"></i>GIẢNG VIÊN / ĐƠN VỊ NGOÀI
+                                    </label>
+                                </div>
+
+                                @if (_isInternalTrainer)
+                                {
+                                    <div class="position-relative">
+                                        <select id="course_trainer_select" class="form-select form-select-lg form-select-solid @(_validationErrors.ContainsKey("TrainerName") ? "is-invalid" : "")" @bind="_course.TrainerName">
+                                            <option value="">-- Chọn giảng viên từ danh sách --</option>
+                                            @if (_trainers != null)
+                                            {
+                                                @foreach (var trainer in _trainers)
+                                                {
+                                                    var trainerVal = trainer.FullName; // Or $"{trainer.Code} - {trainer.FullName}" but TrainerName usually maps to FullName
+                                                    <option value="@trainerVal">@trainer.Code - @trainer.FullName</option>
+                                                }
+                                            }
+                                        </select>
+                                        @if (!string.IsNullOrEmpty(_course.TrainerName) && _trainers.Any(t => t.FullName.Equals(_course.TrainerName, StringComparison.OrdinalIgnoreCase)))
+                                        {
+                                            <div class="mt-2 text-primary fs-8 fw-bold anim-pulse">
+                                                <i class="bi bi-patch-check-fill text-primary me-1"></i> Nhân viên thuộc danh sách đào tạo
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="position-relative">
+                                        <InputText id="course_trainer_input" class="@($"form-control form-control-lg form-control-solid {(_validationErrors.ContainsKey("TrainerName") ? "is-invalid" : "")}")" @bind-Value="_course.TrainerName" placeholder="Nhập tên giảng viên hoặc đơn vị đào tạo bên ngoài..." />
+                                        <div class="mt-2 text-gray-500 fs-8 italic">
+                                            <i class="bi bi-info-circle me-1"></i> Giảng viên / Đơn vị ngoài hệ thống (Sẽ không có mã nhân viên)
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (_validationErrors.ContainsKey("TrainerName"))
+                                {
+                                    <div class="fv-plugins-message-container invalid-feedback">@_validationErrors["TrainerName"]</div>
+                                }
                             </div>
                         </div>
                         <div class="row mb-6">
@@ -43,31 +120,73 @@
                                 <span class="required">Danh mục & Trạng thái</span>
                             </label>
                             <div class="col-lg-4 fv-row">
-                                <select class="form-select form-select-solid form-select-lg fw-bold" @bind="_course.Category">
-                                    <option value="General">General</option>
-                                    <option value="Technical">Technical</option>
-                                    <option value="Soft Skills">Soft Skills</option>
-                                    <option value="Management">Management</option>
-                                    <option value="Onboarding">Onboarding</option>
+                                <select id="course_category" class="form-select form-select-solid form-select-lg fw-bold @(_validationErrors.ContainsKey("Category") ? "is-invalid" : "")" @bind="_course.Category">
+                                    @if (_categories != null && _categories.Any())
+                                    {
+                                        @foreach (var opt in _categories)
+                                        {
+                                            <option value="@opt.Code">@opt.Name</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="General">General</option>
+                                        <option value="Technical">Technical</option>
+                                        <option value="Soft Skills">Soft Skills</option>
+                                        <option value="Management">Management</option>
+                                        <option value="Onboarding">Onboarding</option>
+                                    }
                                 </select>
+                                @if (_validationErrors.ContainsKey("Category"))
+                                {
+                                    <div class="fv-plugins-message-container invalid-feedback">@_validationErrors["Category"]</div>
+                                }
                             </div>
                             <div class="col-lg-4 fv-row">
-                                <select class="form-select form-select-solid form-select-lg fw-bold" @bind="_course.Status">
-                                    <option value="Draft">Draft</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Closed">Closed</option>
-                                    <option value="Completed">Completed</option>
+                                <select id="course_status" class="form-select form-select-solid form-select-lg fw-bold @(_validationErrors.ContainsKey("Status") ? "is-invalid" : "")" @bind="_course.Status">
+                                    @if (_statuses != null && _statuses.Any())
+                                    {
+                                        @foreach (var opt in _statuses)
+                                        {
+                                            <option value="@opt.Code">@opt.Name</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="Draft">Draft</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Closed">Closed</option>
+                                        <option value="Completed">Completed</option>
+                                    }
                                 </select>
+                                @if (_validationErrors.ContainsKey("Status"))
+                                {
+                                    <div class="fv-plugins-message-container invalid-feedback">@_validationErrors["Status"]</div>
+                                }
                             </div>
                         </div>
                          <div class="row mb-6">
                             <label class="col-lg-4 col-form-label fw-bold fs-6">Cấp độ & Bắt buộc</label>
                             <div class="col-lg-4 fv-row">
-                                <select class="form-select form-select-solid form-select-lg fw-bold" @bind="_course.Level">
-                                    <option value="Beginner">Beginner</option>
-                                    <option value="Intermediate">Intermediate</option>
-                                    <option value="Advanced">Advanced</option>
+                                <select id="course_level" class="form-select form-select-solid form-select-lg fw-bold @(_validationErrors.ContainsKey("Level") ? "is-invalid" : "")" @bind="_course.Level">
+                                    @if (_levels != null && _levels.Any())
+                                    {
+                                        @foreach (var opt in _levels)
+                                        {
+                                            <option value="@opt.Code">@opt.Name</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="Beginner">Beginner</option>
+                                        <option value="Intermediate">Intermediate</option>
+                                        <option value="Advanced">Advanced</option>
+                                    }
                                 </select>
+                                @if (_validationErrors.ContainsKey("Level"))
+                                {
+                                    <div class="fv-plugins-message-container invalid-feedback">@_validationErrors["Level"]</div>
+                                }
                             </div>
                             <div class="col-lg-4 fv-row d-flex align-items-center">
                                 <div class="form-check form-check-custom form-check-solid">
@@ -81,35 +200,55 @@
                                 <span class="required">Thời gian đào tạo</span>
                             </label>
                             <div class="col-lg-4 fv-row">
-                                <input type="date" class="form-control form-control-lg form-control-solid" @bind="_course.StartDate" />
-                                <div class="form-text">Ngày bắt đầu</div>
+                                <input type="datetime-local" id="course_start" class="form-control form-control-lg form-control-solid @(_validationErrors.ContainsKey("StartDate") ? "is-invalid" : "")" @bind="_course.StartDate" />
+                                <div class="form-text">Ngày & Giờ bắt đầu</div>
+                                @if (_validationErrors.ContainsKey("StartDate"))
+                                {
+                                    <div class="fv-plugins-message-container invalid-feedback">@_validationErrors["StartDate"]</div>
+                                }
                             </div>
                             <div class="col-lg-4 fv-row">
-                                <input type="date" class="form-control form-control-lg form-control-solid" @bind="_course.EndDate" />
-                                <div class="form-text">Ngày kết thúc (không bắt buộc)</div>
+                                <input type="datetime-local" id="course_end" class="form-control form-control-lg form-control-solid @(_validationErrors.ContainsKey("EndDate") ? "is-invalid" : "")" @bind="_course.EndDate" />
+                                <div class="form-text">Ngày & Giờ kết thúc (Không bắt buộc)</div>
+                                @if (_validationErrors.ContainsKey("EndDate"))
+                                {
+                                    <div class="fv-plugins-message-container invalid-feedback">@_validationErrors["EndDate"]</div>
+                                }
                             </div>
                         </div>
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label fw-bold fs-6">Thời lượng & Địa điểm</label>
                             <div class="col-lg-4 fv-row">
-                                <input type="number" class="form-control form-control-lg form-control-solid" placeholder="Số giờ: 12" @bind="_course.DurationHours" />
+                                <input type="number" id="course_duration" class="form-control form-control-lg form-control-solid @(_validationErrors.ContainsKey("DurationHours") ? "is-invalid" : "")" placeholder="Số giờ: 12" @bind="_course.DurationHours" />
                                 <div class="form-text">Số giờ học</div>
+                                @if (_validationErrors.ContainsKey("DurationHours"))
+                                {
+                                    <div class="fv-plugins-message-container invalid-feedback">@_validationErrors["DurationHours"]</div>
+                                }
                             </div>
                             <div class="col-lg-4 fv-row">
-                                <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: Phòng họp 1 hoặc Zoom Link" @bind="_course.Location" />
+                                <input type="text" id="course_location" class="form-control form-control-lg form-control-solid" placeholder="Ví dụ: Phòng họp 1 hoặc Zoom Link" @bind="_course.Location" />
                                 <div class="form-text">Địa điểm / Link</div>
                             </div>
                         </div>
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label fw-bold fs-6">Số lượng học viên tối đa</label>
                             <div class="col-lg-8 fv-row">
-                                <input type="number" class="form-control form-control-lg form-control-solid" placeholder="30" @bind="_course.MaxParticipants" />
+                                <input type="number" id="course_max" class="form-control form-control-lg form-control-solid @(_validationErrors.ContainsKey("MaxParticipants") ? "is-invalid" : "")" placeholder="30" @bind="_course.MaxParticipants" />
+                                @if (_validationErrors.ContainsKey("MaxParticipants"))
+                                {
+                                    <div class="fv-plugins-message-container invalid-feedback">@_validationErrors["MaxParticipants"]</div>
+                                }
                             </div>
                         </div>
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label fw-bold fs-6">Nội dung chi tiết (Syllabus)</label>
                             <div class="col-lg-8 fv-row">
-                                <textarea class="form-control form-control-lg form-control-solid mb-3" rows="3" placeholder="Tóm tắt nội dung khóa học..." @bind="_course.Description"></textarea>
+                                <textarea id="course_description" class="form-control form-control-lg form-control-solid mb-3 @(_validationErrors.ContainsKey("Description") ? "is-invalid" : "")" rows="3" placeholder="Tóm tắt nội dung khóa học..." @bind="_course.Description"></textarea>
+                                @if (_validationErrors.ContainsKey("Description"))
+                                {
+                                    <div class="fv-plugins-message-container invalid-feedback">@_validationErrors["Description"]</div>
+                                }
                                 
                                 <div class="separator separator-dashed my-5"></div>
                                 <h5 class="fw-bold mb-3">Chương trình đào tạo</h5>

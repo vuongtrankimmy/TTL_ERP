@@ -79,20 +79,10 @@ namespace TTL.HR.Shared.Pages.Dashboard
                 _errorMessage = null;
                 _overview = await DashboardService.GetOverviewAsync();
                 
-                // Fallback for demo/test: Ensure trend data exists if API returns zero (common on 1st of month)
-                if (_overview.PayrollTrend == null || !_overview.PayrollTrend.Any() || _overview.PayrollTrend.All(x => x.Amount == 0))
-                {
-                    _overview.PayrollTrend = Enumerable.Range(0, 6).Reverse().Select(i => new PayrollTrendDto 
-                    { 
-                        Month = $"T{DateTime.Now.AddMonths(-i).Month}", 
-                        Amount = 2450000000m * (decimal)(0.8 + (0.2 * new System.Random().NextDouble())) 
-                    }).ToList();
-                }
-
                 PrepareChartData();
                 
-                // Critical: Allow DOM to settle before final render of charts
-                await Task.Delay(500);
+                // Allow DOM to settle
+                await Task.Delay(300);
                 _isLoading = false;
                 StateHasChanged();
             }

@@ -228,9 +228,23 @@
         <SkeletonLoading IsLoading="_isLoading" Type="SkeletonLoading.SkeletonType.Card" Rows="3" Columns="2">
             <div class="org-tree" id="orgTreeExport">
                 <ul>
-                    @if (rootNode != null)
+                    @if (rootNodes != null && rootNodes.Any())
                     {
-                        <OrgNodeView Node="rootNode" OnNodeClick="HandleNodeClick" IsReadOnly="@_isReadOnly" />
+                        @foreach (var root in rootNodes)
+                        {
+                            <OrgNodeView Node="root" OnNodeClick="HandleNodeClick" IsReadOnly="@_isReadOnly" />
+                        }
+                    }
+                    else if (!_isLoading)
+                    {
+                        <div class="d-flex flex-column flex-center w-100 py-10 my-10 border border-dashed rounded">
+                            <i class="ki-outline ki-folder-dotted fs-3x text-gray-400 mb-5"></i>
+                            <div class="fw-bolder fs-4 text-gray-600">Chưa có dữ liệu sơ đồ tổ chức</div>
+                            <div class="fw-bold text-gray-400 fs-7">Vui lòng kiểm tra lại dữ liệu phòng ban hoặc quyền truy cập</div>
+                            <button class="btn btn-sm btn-primary mt-5" @onclick="LoadData">
+                                <i class="ki-outline ki-arrows-circle fs-6 me-1"></i>Tải lại dữ liệu
+                            </button>
+                        </div>
                     }
                 </ul>
             </div>

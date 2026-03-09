@@ -20,6 +20,8 @@ namespace TTL.HR.Shared.Pages.Leave
         private bool _isLoading = true;
         private LeaveRequestItem? _selectedRequest;
         private LeaveRequestItem? _requestToProcess;
+        private LeaveBalanceModel? _currentBalance;
+        private string? _currentUserId;
 
         // Paging & Filter
         private int _pageIndex = 1;
@@ -27,6 +29,7 @@ namespace TTL.HR.Shared.Pages.Leave
         private long _totalCount = 0;
         private string? _searchTerm;
         private string _activeTab = "All";
+        private bool _assignedToMe = false;
         private string? _statusFilter;
         private LeaveStateSummaryModel _summary = new();
         
@@ -48,12 +51,22 @@ namespace TTL.HR.Shared.Pages.Leave
             try
             {
                 var user = await AuthService.GetCurrentUserAsync();
+                _currentUserId = user?.Id;
                 IsHR = user?.Role == "Admin" || user?.Role == "HR";
                 try { _leaveTypes = await LeaveService.GetLeaveTypesAsync(); } catch { }
                 if (IsHR)
                 {
                     try { _employees = await EmployeeService.GetEmployeesAsync() ?? new(); } catch { }
                 }
+                
+                // If there are items for approval, default to "Assigned" tab
+                _summary = await LeaveService.GetLeaveSummaryAsync();
+                if (_summary.AssignedToMeCount > 0)
+                {
+                    _activeTab = "Assigned";
+                    _assignedToMe = true;
+                }
+                
                 await LoadData();
             }
             catch (Exception ex)
@@ -67,13 +80,14 @@ namespace TTL.HR.Shared.Pages.Leave
             _isLoading = true;
             try
             {
-                var status = _activeTab == "All" ? null : _activeTab;
-                var result = await LeaveService.GetLeaveRequestsAsync(_pageIndex, _pageSize, status, _searchTerm);
+                var status = (_activeTab == "All" || _activeTab == "Assigned") ? null : _activeTab;
+                var result = await LeaveService.GetLeaveRequestsAsync(_pageIndex, _pageSize, status, _searchTerm, _assignedToMe);
                 if (result != null)
                 {
                     _leaveRequests = result.Items.Select(r => new LeaveRequestItem
                     {
                         Id = r.Id,
+                        EmployeeId = r.EmployeeId,
                         Name = r.EmployeeName,
                         EmployeeCode = r.EmployeeCode,
                         Department = r.Department,
@@ -85,7 +99,8 @@ namespace TTL.HR.Shared.Pages.Leave
                         Duration = $"{r.TotalDays} ngày",
                         Reason = r.Reason,
                         Status = TranslateStatus(r.Status),
-                        StatusColor = r.StatusBadgeClass
+                        StatusColor = r.StatusBadgeClass,
+                        PendingApproverId = r.PendingApproverId
                     }).ToList();
                     _totalCount = result.TotalCount;
                 }
@@ -120,6 +135,7 @@ namespace TTL.HR.Shared.Pages.Leave
         private async Task SetTab(string tab)
         {
             _activeTab = tab;
+            _assignedToMe = (tab == "Assigned");
             _pageIndex = 1;
             await LoadData();
         }
@@ -135,11 +151,18 @@ namespace TTL.HR.Shared.Pages.Leave
         private bool _showReasonInput = false;
         private string _actionType = ""; // "APPROVE" or "REJECT"
 
-        private void openDetail(LeaveRequestItem item)
+        private async Task openDetail(LeaveRequestItem item)
         {
             _selectedRequest = item;
             _showDetail = true;
             _showCreate = false;
+            
+            // Load actual balance
+            try {
+                _currentBalance = await LeaveService.GetLeaveBalanceAsync(item.EmployeeId, DateTime.Now.Year);
+            } catch {
+                _currentBalance = null;
+            }
         }
 
         private void closeDetail() => _showDetail = false;
@@ -157,6 +180,13 @@ namespace TTL.HR.Shared.Pages.Leave
 
         private async Task handleSubmitCreate()
         {
+            // Calculate total days automatically if not set
+            if (_createModel.TotalDays <= 0)
+            {
+                var days = (_createModel.EndDate - _createModel.StartDate).TotalDays + 1;
+                _createModel.TotalDays = Math.Max(0, days);
+            }
+
             if (string.IsNullOrEmpty(_createModel.LeaveTypeId))
             {
                 await JS.InvokeVoidAsync("toastr.warning", "Vui lòng chọn loại nghỉ");
@@ -241,28 +271,38 @@ namespace TTL.HR.Shared.Pages.Leave
         {
             if (_requestToProcess == null) return;
 
-            bool isApprove = _actionType == "APPROVE";
-            string status = isApprove ? "Approved" : "Rejected";
-            var response = await LeaveService.ProcessLeaveRequestAsync(_requestToProcess.Id, isApprove, reason);
-
-            if (response.Success)
+            try 
             {
-                await JS.InvokeVoidAsync("toastr.success", isApprove ? "Đã phê duyệt yêu cầu." : "Đã từ chối yêu cầu.");
-                _requestToProcess.Status = status == "Approved" ? "Đã phê duyệt" : "Đã từ chối";
-                _requestToProcess.StatusColor = status == "Approved" ? "badge-light-success" : "badge-light-danger";
-                _requestToProcess.ManagerNote = reason;
-                await LoadData();
-                if (_selectedRequest?.Id == _requestToProcess.Id)
+                bool isApprove = _actionType == "APPROVE";
+                string status = isApprove ? "Approved" : "Rejected";
+                var response = await LeaveService.ProcessLeaveRequestAsync(_requestToProcess.Id, isApprove, reason);
+
+                if (response.Success)
                 {
-                    closeDetail();
+                    await JS.InvokeVoidAsync("toastr.success", isApprove ? "Đã phê duyệt yêu cầu." : "Đã từ chối yêu cầu.");
+                    _requestToProcess.Status = status == "Approved" ? "Đã phê duyệt" : "Đã từ chối";
+                    _requestToProcess.StatusColor = status == "Approved" ? "badge-light-success" : "badge-light-danger";
+                    _requestToProcess.ManagerNote = reason;
+                    await LoadData();
+                    if (_selectedRequest?.Id == _requestToProcess.Id)
+                    {
+                        closeDetail();
+                    }
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", $"Thao tác thất bại: {response.Message}");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                await JS.InvokeVoidAsync("toastr.error", $"Thao tác thất bại: {response.Message}");
+                await JS.InvokeVoidAsync("toastr.error", $"Lỗi hệ thống: {ex.Message}");
+                Console.WriteLine($"[LeaveRequests] Process error: {ex}");
             }
-
-            closeModal();
+            finally
+            {
+                closeModal();
+            }
         }
 
         private void closeModal()
@@ -271,11 +311,19 @@ namespace TTL.HR.Shared.Pages.Leave
             _requestToProcess = null;
         }
 
+        private bool CanApprove(LeaveRequestItem? item)
+        {
+            if (item == null || string.IsNullOrEmpty(_currentUserId)) return false;
+            if (IsHR) return true;
+            return !string.IsNullOrEmpty(item.PendingApproverId) && item.PendingApproverId == _currentUserId;
+        }
+
         private List<LeaveRequestItem> _leaveRequests = new();
 
         private class LeaveRequestItem
         {
             public string Id { get; set; } = "";
+            public string EmployeeId { get; set; } = "";
             public string Name { get; set; } = "";
             public string EmployeeCode { get; set; } = "";
             public string Department { get; set; } = "";
@@ -289,10 +337,12 @@ namespace TTL.HR.Shared.Pages.Leave
             public string Status { get; set; } = "";
             public string StatusColor { get; set; } = "";
             public string? ManagerNote { get; set; }
+            public string? PendingApproverId { get; set; }
         }
         private string TranslateStatus(string? status) => status switch
         {
             "Pending" => "Chờ duyệt",
+            "PartiallyApproved" => "Duyệt cấp 1",
             "Approved" => "Đã duyệt",
             "Rejected" => "Từ chối",
             "Cancelled" => "Đã hủy",

@@ -12,6 +12,7 @@ namespace TTL.HR.Application.Modules.Training.Models
         public string Category { get; set; } = "General";
         public string Level { get; set; } = "Beginner";
         public string TrainerName { get; set; } = "";
+        public string? TrainerId { get; set; }
         public decimal DurationHours { get; set; }
         public int MaxParticipants { get; set; }
         public bool IsMandatory { get; set; }

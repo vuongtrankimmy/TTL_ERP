@@ -24,6 +24,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string Workplace { get; set; } = string.Empty;
         public bool IsAccountActive { get; set; }
         public bool IsCreateAccount { get; set; }
+        public bool IsTrainer { get; set; }
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;

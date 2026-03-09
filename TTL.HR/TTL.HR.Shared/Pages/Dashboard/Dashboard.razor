@@ -59,7 +59,7 @@ else if (_overview != null)
                         <span class="text-gray-400 pt-1 fw-semibold fs-6">Quỹ lương dự tính (@_overview.PayrollStats.Period)</span>
                     </div>
                     <div class="card-toolbar">
-                        <a href="/payroll/list" class="btn btn-sm btn-light-success fw-bold">Chi tiết lương</a>
+                        <a href="/payroll/periods" class="btn btn-sm btn-light-success fw-bold">Chi tiết lương</a>
                     </div>
                 </div>
                 <div class="card-body pb-0 ps-4">
@@ -128,7 +128,7 @@ else if (_overview != null)
                     <div class="separator separator-dashed border-danger opacity-25 mb-4"></div>
                     <div class="d-flex flex-stack">
                         <div class="fs-7 fw-bold text-gray-800">Cơ cấu: @_overview.PendingApprovals.Count(p => p.Type == "Leave") Nghỉ phép...</div>
-                        <a href="/leave/approvals" class="btn btn-danger btn-sm px-4 py-2 fs-8 fw-bold">Xử lý ngay</a>
+                        <a href="/leave/requests" class="btn btn-danger btn-sm px-4 py-2 fs-8 fw-bold">Xử lý ngay</a>
                     </div>
                 </div>
             </div>
@@ -318,6 +318,109 @@ else if (_overview != null)
                                             XValue="@(e => e.DepartmentName)"
                                             YValue="@(e => (decimal)e.EmployeeCount)" />
                         </ApexChart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Row - Attendance & Department Distribution-->
+
+    <!--begin::Row - New Modules: Trainings & Approvals-->
+    <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
+        <!--begin::Col - Upcoming Trainings-->
+        <div class="col-xl-6">
+            <div class="card card-flush h-xl-100 shadow-sm border-0">
+                <div class="card-header pt-7">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bold text-gray-800">Lịch đào tạo sắp tới</span>
+                        <span class="text-gray-400 mt-1 fw-semibold fs-7">Các khóa học đang và sắp diễn ra</span>
+                    </h3>
+                </div>
+                <div class="card-body pt-5">
+                    @if (_overview.UpcomingTrainings == null || !_overview.UpcomingTrainings.Any())
+                    {
+                        <div class="text-center py-10 text-muted fs-7">Không có lịch đào tạo mới.</div>
+                    }
+                    else
+                    {
+                        @foreach (var training in _overview.UpcomingTrainings)
+                        {
+                            <div class="d-flex align-items-center mb-7">
+                                <div class="symbol symbol-50px me-5">
+                                    <span class="symbol-label bg-light-primary">
+                                        <i class="ki-outline ki-book-open fs-2x text-primary"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <a href="/training" class="text-gray-800 text-hover-primary fw-bold fs-6">@training.Title</a>
+                                    <span class="text-muted d-block fw-semibold">Giảng viên: @training.Trainer | @training.DurationHours giờ</span>
+                                </div>
+                                <span class="badge badge-light-primary fs-8 fw-bold">@training.Status</span>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!--begin::Col - Pending Approvals Detail-->
+        <div class="col-xl-6">
+            <div class="card card-flush h-xl-100 shadow-sm border-0">
+                <div class="card-header pt-7">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bold text-gray-800">Yêu cầu chờ được duyệt</span>
+                        <span class="text-gray-400 mt-1 fw-semibold fs-7">Danh sách các đơn từ, yêu cầu cần xử lý</span>
+                    </h3>
+                </div>
+                <div class="card-body pt-5">
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                            <thead>
+                                <tr class="fw-bold text-muted">
+                                    <th class="min-w-150px">Yêu cầu</th>
+                                    <th class="min-w-100px text-end">Ngày gửi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (_overview.PendingApprovals == null || !_overview.PendingApprovals.Any())
+                                {
+                                    <tr>
+                                        <td colspan="2" class="text-center py-10 text-muted fs-7">Tất cả yêu cầu đã được xử lý.</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    @foreach (var approval in _overview.PendingApprovals)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-35px me-3">
+                                                        <span class="symbol-label bg-light-@(approval.Type == "Leave" ? "warning" : "primary")">
+                                                            <i class="ki-outline ki-@(approval.Type == "Leave" ? "calendar-8" : "user-tick") fs-4 text-@(approval.Type == "Leave" ? "warning" : "primary")"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-flex flex-column">
+                                                        @if (approval.Type == "Leave")
+                                                        {
+                                                            <a href="/leave/requests" class="text-gray-800 text-hover-primary fw-bold fs-7">@approval.Title</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-gray-800 fw-bold fs-7">@approval.Title</span>
+                                                        }
+                                                        <span class="text-muted fs-8">Loại: @(approval.Type == "Leave" ? "Nghỉ phép" : "Tuyển dụng")</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="text-gray-600 fw-bold fs-7">@approval.Date.ToString("dd/MM/yyyy")</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

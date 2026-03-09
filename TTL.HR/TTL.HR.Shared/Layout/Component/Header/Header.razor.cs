@@ -39,31 +39,45 @@ namespace TTL.HR.Shared.Layout.Component.Header
             _breadcrumbs = segments.Select(s => new BreadcrumbItem { Title = GetTitle(s) }).ToList();
         }
 
-        private string GetTitle(string segment) => segment.ToLower() switch
+        private string GetTitle(string segment)
         {
-            "dashboard" => "Dashboard",
-            "organization" => "Tổ chức",
-            "structure" => "Sơ đồ tổ chức",
-            "departments" => "Danh sách phòng ban",
-            "positions" => "Chức vụ",
-            "employees" => "Danh sách nhân viên",
-            "contracts" => "Hợp đồng lao động",
-            "attendance" => "Chấm công",
-            "timesheet" => "Bảng chấm công tổng hợp",
-            "schedule" => "Lịch làm việc",
-            "leave" => "Nghỉ phép & Công tác",
-            "leave-trip" => "Nghỉ phép & Công tác",
-            "approval" => "Phê duyệt đổi ca",
-            "approvals" => "Phê duyệt đơn nghỉ",
-            "payroll" => "Lương & Phúc lợi",
-            "list" => "Bảng lương nhân viên",
-            "benefits" => "Phúc lợi",
-            "permissions" => "Phân quyền",
-            "settings" => "Cấu hình",
-            "general" => "Chung",
-            "payroll-config" => "Tham số tính lương",
-            _ => char.ToUpper(segment[0]) + segment.Substring(1)
-        };
+            if (string.IsNullOrEmpty(segment)) return "Dashboard";
+            
+            // Check if segment is an ID (GUID or ObjectId)
+            if (segment.Length >= 24 && System.Text.RegularExpressions.Regex.IsMatch(segment, @"^[a-fA-F0-9-]+$"))
+            {
+                return "Thông tin chi tiết";
+            }
+
+            return segment.ToLower() switch
+            {
+                "dashboard" => "Dashboard",
+                "organization" => "Tổ chức",
+                "structure" => "Sơ đồ tổ chức",
+                "departments" => "Danh sách phòng ban",
+                "positions" => "Chức vụ",
+                "employees" => "Danh sách nhân viên",
+                "add" => "Thêm mới nhân viên",
+                "edit" => "Chỉnh sửa",
+                "contracts" => "Hợp đồng lao động",
+                "attendance" => "Chấm công",
+                "timesheet" => "Bảng chấm công tổng hợp",
+                "schedule" => "Lịch làm việc",
+                "leave" => "Nghỉ phép & Công tác",
+                "leave-trip" => "Nghỉ phép & Công tác",
+                "approval" => "Phê duyệt đổi ca",
+                "approvals" => "Phê duyệt đơn nghỉ",
+                "payroll" => "Lương & Phúc lợi",
+                "list" => "Bảng lương nhân viên",
+                "benefits" => "Phúc lợi",
+                "permissions" => "Phân quyền",
+                "settings" => "Cấu hình",
+                "general" => "Chung",
+                "payroll-config" => "Tham số tính lương",
+                "banks" => "Danh sách ngân hàng",
+                _ => char.ToUpper(segment[0]) + segment.Substring(1)
+            };
+        }
 
         public void Dispose()
         {

@@ -18,7 +18,7 @@ namespace TTL.HR.Shared.Pages.Organization
 
         private List<TTL.HR.Application.Modules.Common.Models.LookupModel> contractTypeLookups = new();
         private string searchQuery = "";
-        private OrgNode? rootNode;
+        private List<OrgNode> rootNodes = new();
         private OrgNode? selectedNode;
         private int AllEmployeesCount = 0;
         private bool _isLoading = true;
@@ -45,17 +45,17 @@ namespace TTL.HR.Shared.Pages.Organization
                 var structure = await DepartmentService.GetOrganizationStructureAsync();
                 if (structure != null && structure.Count > 0)
                 {
-                    rootNode = structure[0]; // Assuming single root for now
-                    AllEmployeesCount = SumEmployees(rootNode);
+                    rootNodes = structure;
+                    AllEmployeesCount = rootNodes.Sum(r => SumEmployees(r));
+                    selectedNode = rootNodes.FirstOrDefault();
                 }
                 else
                 {
-                    // Fallback to empty or default if API fails/returns empty
-                    rootNode = null;
+                    rootNodes = new List<OrgNode>();
+                    selectedNode = null;
                 }
                 
                 RefreshFlatList();
-                selectedNode = rootNode;
             }
             catch (Exception ex)
             {
@@ -70,8 +70,11 @@ namespace TTL.HR.Shared.Pages.Organization
         private void RefreshFlatList()
         {
             flatNodeList.Clear();
-            if (rootNode != null)
-                FlattenNodes(rootNode);
+            if (rootNodes != null)
+            {
+                foreach (var root in rootNodes)
+                    FlattenNodes(root);
+            }
         }
 
         private void FlattenNodes(OrgNode node)
@@ -84,7 +87,7 @@ namespace TTL.HR.Shared.Pages.Organization
         private int SumEmployees(OrgNode? node)
         {
             if (node == null) return 0;
-            int count = node.EmployeeCount;
+            int count = node.Type == "Employee" ? 1 : 0;
             foreach (var child in node.Children) count += SumEmployees(child);
             return count;
         }
@@ -106,11 +109,11 @@ namespace TTL.HR.Shared.Pages.Organization
         private void ToggleAddModal() 
         { 
             newNode = new OrgNode { 
-                Id = (rootNode != null ? CountNodes(rootNode) + 1 : 1).ToString(),
+                Id = (rootNodes.Any() ? rootNodes.Sum(r => CountNodes(r)) + 1 : 1).ToString(),
                 Avatar = "assets/media/avatars/300-10.jpg",
                 Type = "Employee"
             };
-            newNodeParentId = selectedNode?.Id ?? rootNode?.Id;
+            newNodeParentId = selectedNode?.Id ?? rootNodes.FirstOrDefault()?.Id ?? "";
             showAddModal = !showAddModal; 
         }
 
@@ -120,7 +123,7 @@ namespace TTL.HR.Shared.Pages.Organization
             if (parent != null)
             {
                 parent.Children.Add(newNode);
-                AllEmployeesCount = CountNodes(rootNode);
+                AllEmployeesCount = rootNodes.Sum(r => CountNodes(r));
                 RefreshFlatList();
                 showAddModal = false;
                 StateHasChanged();

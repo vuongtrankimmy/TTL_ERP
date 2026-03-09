@@ -170,10 +170,10 @@ async function main() {
         const db = client.db(dbName);
         const lookups = await db.collection('lookups').find({ Type: { $in: ["ContractType", "TemplateStatus"] } }).toArray();
 
-        const getLookupId = (type, code) => lookups.find(l => l.Type === type && l.Code === code)?._id.toString();
+        const getLookupID = (type, code) => lookups.find(l => l.Type === type && l.Code === code)?.LookupID;
 
-        const definiteTypeId = getLookupId("ContractType", "Definite");
-        const activeStatusId = getLookupId("TemplateStatus", "Active");
+        const definiteTypeId = getLookupID("ContractType", "Definite");
+        const activeStatusId = getLookupID("TemplateStatus", "Active");
 
         const templates = [
             {

@@ -29,6 +29,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
         public int? WorkplaceId { get; set; }
         public string Workplace { get; set; } = string.Empty;
         public bool IsAccountActive { get; set; }
+        public bool IsTrainer { get; set; }
 
         public PersonalInfo PersonalDetails { get; set; } = new();
         public EmergencyContact EmergencyContact { get; set; } = new();

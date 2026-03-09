@@ -26,11 +26,35 @@ namespace TTL.HR.Application.Modules.Recruitment.Services
         public async Task<JobDetail?> CreateJobAsync(JobDetail job)
         {
             var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Recruitment.Jobs, job);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+                throw new System.Exception(errorResult?.Message ?? $"API Error {response.StatusCode}");
+            }
+            
             var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<JobDetail>>();
             return apiResponse?.Data;
         }
-        public async Task UpdateJobAsync(string id, JobDetail job) => await _httpClient.PutAsJsonAsync($"{ApiEndpoints.Recruitment.Jobs}/{id}", job);
-        public async Task DeleteJobAsync(string id) => await _httpClient.DeleteAsync($"{ApiEndpoints.Recruitment.Jobs}/{id}");
+        public async Task<bool> UpdateJobAsync(string id, JobDetail job)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"{ApiEndpoints.Recruitment.Jobs}/{id}", job);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+                throw new System.Exception(errorResult?.Message ?? $"API Error {response.StatusCode}");
+            }
+            return true;
+        }
+        public async Task<bool> DeleteJobAsync(string id)
+        {
+            var response = await _httpClient.DeleteAsync($"{ApiEndpoints.Recruitment.Jobs}/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+                throw new System.Exception(errorResult?.Message ?? $"API Error {response.StatusCode}");
+            }
+            return true;
+        }
 
         public async Task<IEnumerable<ApplicantItem>> GetApplicantsAsync(string jobId)
         {

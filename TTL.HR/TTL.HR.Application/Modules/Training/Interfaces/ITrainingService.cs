@@ -10,8 +10,8 @@ namespace TTL.HR.Application.Modules.Training.Interfaces
     {
         Task<IEnumerable<CourseModel>> GetCoursesAsync();
         Task<CourseModel?> GetCourseAsync(string id);
-        Task<bool> CreateCourseAsync(CourseModel course);
-        Task<bool> UpdateCourseAsync(string id, CourseModel course);
+        Task<ApiResponse<string>> CreateCourseAsync(CourseModel course);
+        Task<ApiResponse<bool>> UpdateCourseAsync(string id, CourseModel course);
         Task<bool> DeleteCourseAsync(string id);
         Task<bool> RegisterCourseAsync(string courseId);
         Task<IEnumerable<ParticipantModel>> GetParticipantsAsync(string courseId);

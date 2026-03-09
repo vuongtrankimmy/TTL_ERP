@@ -51,28 +51,12 @@ namespace TTL.HR.Application.Modules.Recruitment
 
         public async Task<bool> UpdateJobPostingAsync(string id, JobDetail job)
         {
-            try 
-            {
-                await _recruitmentService.UpdateJobAsync(id, job);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            return await _recruitmentService.UpdateJobAsync(id, job);
         }
 
         public async Task<bool> DeleteJobPostingAsync(string id)
         {
-            try 
-            {
-                await _recruitmentService.DeleteJobAsync(id);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            return await _recruitmentService.DeleteJobAsync(id);
         }
 
         public async Task<IEnumerable<ApplicantItem>> GetApplicantsAsync(string jobId)
