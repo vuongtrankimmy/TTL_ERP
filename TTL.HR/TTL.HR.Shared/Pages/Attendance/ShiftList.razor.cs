@@ -62,6 +62,9 @@ namespace TTL.HR.Shared.Pages.Attendance
         private DateTime _assignEndDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
         private bool _isAssigning = false;
 
+        private string _quickAddSearch = "";
+        private List<TTL.HR.Application.Modules.HumanResource.Models.EmployeeDto> _quickAddResults = new();
+
         private List<string> _predefinedColors = new() { 
             "primary", "success", "info", "warning", "danger", "dark",
             "#F1416C", "#7239EA", "#50CD89", "#FFC700", "#009EF7", "#3F4254", // Metronic Hex equivalents
@@ -96,7 +99,8 @@ namespace TTL.HR.Shared.Pages.Attendance
             _isLoading = true;
             try
             {
-                var shifts = await AttendanceService.GetWorkShiftsAsync();
+                var now = DateTime.Today;
+                var shifts = await AttendanceService.GetWorkShiftsAsync(Month ?? now.Month, Year ?? now.Year);
                 _shifts = shifts.ToList();
             }
             finally
@@ -116,16 +120,37 @@ namespace TTL.HR.Shared.Pages.Attendance
                     Code = shift.Code,
                     StartTime = shift.StartTime,
                     EndTime = shift.EndTime,
-                    Color = shift.Color
+                    BreakStartTime = shift.BreakStartTime,
+                    BreakEndTime = shift.BreakEndTime,
+                    IsOvernight = shift.IsOvernight,
+                    IsFlexible = shift.IsFlexible,
+                    Color = shift.Color,
+                    WorkingDays = shift.WorkingDays != null ? new List<DayOfWeek>(shift.WorkingDays) : new List<DayOfWeek>(),
+                    StartDate = shift.StartDate,
+                    EndDate = shift.EndDate
                 };
             }
             else
             {
+                var now = DateTime.Today;
+                var startDate = new DateTime(now.Year, now.Month, 1);
+                var endDate = startDate.AddMonths(1).AddDays(-1);
+
                 _editingModel = new WorkShiftModel
                 {
                     Color = "primary",
                     StartTime = "08:00",
-                    EndTime = "17:00"
+                    EndTime = "17:00",
+                    BreakStartTime = "12:00",
+                    BreakEndTime = "13:00",
+                    IsOvernight = false,
+                    IsFlexible = false,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    WorkingDays = new List<DayOfWeek> { 
+                        DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, 
+                        DayOfWeek.Thursday, DayOfWeek.Friday 
+                    }
                 };
             }
             _showDialog = true;
@@ -175,6 +200,14 @@ namespace TTL.HR.Shared.Pages.Attendance
             {
                 _isSaving = false;
             }
+        }
+
+        private void ToggleWorkingDay(DayOfWeek day)
+        {
+            if (_editingModel.WorkingDays.Contains(day))
+                _editingModel.WorkingDays.Remove(day);
+            else
+                _editingModel.WorkingDays.Add(day);
         }
 
         // --- DELETE MODAL LOGIC ---
@@ -333,6 +366,109 @@ namespace TTL.HR.Shared.Pages.Attendance
         private void GoToScheduler(WorkShiftModel shift)
         {
             NavigationManager.NavigateTo($"/attendance/scheduler?shiftId={shift.Id}");
+        }
+
+        private void GoToAllocation(WorkShiftModel shift)
+        {
+            NavigationManager.NavigateTo($"/attendance/allocation?ShiftId={shift.Id}");
+        }
+
+        private async Task RemoveAssignment(EmployeeScheduleDto emp)
+        {
+            if (_selectedShiftForDetail == null) return;
+            
+            bool confirmed = await JS.InvokeAsync<bool>("confirm", $"Bạn có chắc muốn gỡ nhân viên {emp.EmployeeName} khỏi ca {_selectedShiftForDetail.Name} trong tháng này?");
+            if (!confirmed) return;
+
+            var now = DateTime.Today;
+            var m = Month ?? now.Month;
+            var y = Year ?? now.Year;
+            var startDate = new DateTime(y, m, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+
+            var assignModel = new AssignWorkScheduleModel
+            {
+                ShiftId = _selectedShiftForDetail.Id,
+                EmployeeIds = new List<string> { emp.EmployeeId },
+                StartDate = startDate,
+                EndDate = endDate,
+                IsDelete = true,
+                DaysOfWeek = new List<DayOfWeek> { 
+                    DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, 
+                    DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday 
+                }
+            };
+
+            var success = await AttendanceService.AssignScheduleAsync(assignModel);
+            if (success)
+            {
+                await JS.InvokeVoidAsync("toastr.success", $"Đã gỡ nhân viên {emp.EmployeeName} khỏi ca");
+                await OpenAssignedObjects(_selectedShiftForDetail);
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Có lỗi khi gỡ nhân viên");
+            }
+        }
+
+        private async Task OnAddSearchInput(ChangeEventArgs e)
+        {
+            _quickAddSearch = e.Value?.ToString() ?? "";
+            if (string.IsNullOrEmpty(_quickAddSearch))
+            {
+                _quickAddResults.Clear();
+                return;
+            }
+
+            if (!_allEmployees.Any())
+            {
+                _allEmployees = await EmployeeService.GetEmployeesAsync();
+            }
+
+            var assignedIds = _allAssignedEmployees.Select(a => a.EmployeeId).ToHashSet();
+            
+            _quickAddResults = _allEmployees
+                .Where(emp => !assignedIds.Contains(emp.Id) && 
+                             (emp.FullName.Contains(_quickAddSearch, StringComparison.OrdinalIgnoreCase) || 
+                              emp.Code.Contains(_quickAddSearch, StringComparison.OrdinalIgnoreCase)))
+                .Take(10)
+                .ToList();
+        }
+
+        private async Task QuickAddEmployee(TTL.HR.Application.Modules.HumanResource.Models.EmployeeDto emp)
+        {
+            if (_selectedShiftForDetail == null) return;
+
+            var now = DateTime.Today;
+            var m = Month ?? now.Month;
+            var y = Year ?? now.Year;
+            var startDate = new DateTime(y, m, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+
+            var assignModel = new AssignWorkScheduleModel
+            {
+                ShiftId = _selectedShiftForDetail.Id,
+                EmployeeIds = new List<string> { emp.Id },
+                StartDate = startDate,
+                EndDate = endDate,
+                DaysOfWeek = new List<DayOfWeek> { 
+                    DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, 
+                    DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday 
+                }
+            };
+
+            var success = await AttendanceService.AssignScheduleAsync(assignModel);
+            if (success)
+            {
+                await JS.InvokeVoidAsync("toastr.success", $"Đã gán nhân viên {emp.FullName} thành công");
+                _quickAddSearch = "";
+                _quickAddResults.Clear();
+                await OpenAssignedObjects(_selectedShiftForDetail);
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Có lỗi khi gán nhân viên");
+            }
         }
     }
 }

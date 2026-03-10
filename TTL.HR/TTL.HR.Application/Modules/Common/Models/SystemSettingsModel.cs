@@ -19,6 +19,12 @@ namespace TTL.HR.Application.Modules.Common.Models
         public decimal Deduction { get; set; }
     }
 
+    public class UrlTitleMappingModel
+    {
+        public string Segment { get; set; } = string.Empty;
+        public string TitleKey { get; set; } = string.Empty;
+    }
+
     public class SystemSettingsModel
     {
         public string ActiveTab { get; set; } = string.Empty;
@@ -72,6 +78,7 @@ namespace TTL.HR.Application.Modules.Common.Models
         public int LateGracePeriodMinutes { get; set; } = 15;
         public List<string> WorkDays { get; set; } = new();
         public bool AllowFlexibleHours { get; set; } = false;
+        public int AutoApproveLeaveDaysThreshold { get; set; } = 3;
 
         // Holidays and Off-days
         public List<HolidayConfigModel> Holidays { get; set; } = new();
@@ -95,6 +102,18 @@ namespace TTL.HR.Application.Modules.Common.Models
         public double OvertimeRateWeekday { get; set; } = 1.5;
         public double OvertimeRateWeekend { get; set; } = 2.0;
         public double OvertimeRateHoliday { get; set; } = 3.0;
+        
+        // Overtime Formulas & Policy
+        public string OvertimeFormula { get; set; } = "(ActualHours - ShiftHours) * Rate";
+        public string OvertimeCalculationMethod { get; set; } = "ApprovedOnly"; // Auto, ApprovedOnly, Hybrid
+        public bool RequireOvertimeApproval { get; set; } = true;
+        public int MinOvertimeMinutes { get; set; } = 30;
+        public double OvertimeOvernightRate { get; set; } = 2.1;
+        public string OvertimeCode { get; set; } = @"
+// Variables: ActualHours, Rate, IsWeekend, IsHoliday
+decimal salary = (decimal)ActualHours * (decimal)Rate;
+return salary;
+";
         
         // Insurance Breakdown
         public double SocialInsurancePercentEmployee { get; set; } = 8.0;
@@ -129,5 +148,18 @@ namespace TTL.HR.Application.Modules.Common.Models
         // File Upload Config
         public int MaxFileSizeMb { get; set; } = 10;
         public string AllowedFileExtensions { get; set; } = ".jpg;.png;.pdf;.docx;.xlsx";
+        
+        // Navigation & Breadcrumbs
+        public List<UrlTitleMappingModel> UrlTitleMappings { get; set; } = new();
+        public List<NavItem> SidebarMenu { get; set; } = new();
+        public List<LanguageTranslationModel> Translations { get; set; } = new();
+    }
+
+    public class LanguageTranslationModel
+    {
+        public string Id { get; set; } = string.Empty;
+        public int NavigationID { get; set; }
+        public string LanguageCode { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
     }
 }

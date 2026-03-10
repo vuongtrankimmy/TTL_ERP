@@ -8,6 +8,7 @@ const client = new MongoClient(url);
 
 const SEED_FILES = [
     { file: 'lookups.json', col: 'lookups' },
+    { file: 'lookups_translate.json', col: 'lookups_translate' },
     { file: 'roles.json', col: 'roles' },
     { file: 'permissions.json', col: 'permissions' },
     { file: 'departments.json', col: 'departments' },

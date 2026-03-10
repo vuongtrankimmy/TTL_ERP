@@ -132,6 +132,9 @@ namespace TTL.HR.Application.Modules.Common.Constants
         public static class Notifications
         {
             public const string Base = $"{CorePrefix}/Notifications";
+            public const string My = $"{Base}/my";
+            public static string MarkAsRead(string id) => $"{Base}/{id}/read";
+            public const string MarkAllAsRead = $"{Base}/read-all";
             public static string SendCredentials(string employeeId) => $"{Base}/send-credentials/{employeeId}";
         }
     }

@@ -8,10 +8,12 @@ namespace TTL.HR.Application.Modules.Common.Services
     public class NavigationService : INavigationService
     {
         private readonly IAuthService _authService;
+        private readonly ISettingsService _settingsService;
 
-        public NavigationService(IAuthService authService)
+        public NavigationService(IAuthService authService, ISettingsService settingsService)
         {
             _authService = authService;
+            _settingsService = settingsService;
         }
 
         public async Task<bool> UserHasPermissionAsync(string? permission)
@@ -76,7 +78,92 @@ namespace TTL.HR.Application.Modules.Common.Services
 
         public async Task<List<NavItem>> GetMenuItemsAsync()
         {
-            var allItems = new List<NavItem>
+            var settings = await _settingsService.GetSettingsAsync();
+            var allItems = settings?.SidebarMenu;
+            var translations = settings?.Translations ?? new List<LanguageTranslationModel>();
+            var language = settings?.DefaultLanguage ?? "vi-VN";
+
+            if (allItems == null || allItems.Count == 0)
+            {
+                allItems = GetDefaultMenuItems();
+            }
+            else
+            {
+                // Ensure new menu items are present even if settings are loaded from DB
+                var shiftMgmt = allItems.FirstOrDefault(i => i.Title == "Menu_ShiftManagement");
+                if (shiftMgmt != null)
+                {
+                    if (!shiftMgmt.SubItems.Any(s => s.Title == "Menu_OvertimeRequests"))
+                    {
+                        shiftMgmt.SubItems.Add(new NavItem { Title = "Menu_OvertimeRequests", Href = "/attendance/overtime", Icon = "ki-outline ki-clock", Permission = "Permissions.ShiftRequests.View" });
+                    }
+                    if (!shiftMgmt.SubItems.Any(s => s.Title == "Menu_ShiftApproval"))
+                    {
+                        shiftMgmt.SubItems.Add(new NavItem { Title = "Menu_ShiftApproval", Href = "/attendance/approval", Icon = "ki-outline ki-check-square", Permission = "Permissions.ShiftRequests.View" });
+                    }
+                }
+            }
+
+            return await FilterMenuItemsAsync(allItems, translations, language);
+        }
+
+        private async Task<List<NavItem>> FilterMenuItemsAsync(List<NavItem> items, List<LanguageTranslationModel> translations, string language)
+        {
+            var filtered = new List<NavItem>();
+
+            foreach (var item in items)
+            {
+                if (item.IsActive && await UserHasPermissionAsync(item.Permission))
+                {
+                    var newItem = new NavItem
+                    {
+                        Id = item.Id,
+                        NumericId = item.NumericId,
+                        Title = Translate(item.NumericId, item.Title, translations, language),
+                        Icon = item.Icon,
+                        Href = item.Href,
+                        Permission = item.Permission,
+                        IsSection = item.IsSection,
+                        IsActive = item.IsActive,
+                        Order = item.Order
+                    };
+
+                    if (item.HasSubItems)
+                    {
+                        newItem.SubItems = await FilterMenuItemsAsync(item.SubItems, translations, language);
+                    }
+
+                    if (item.IsSection || !string.IsNullOrEmpty(newItem.Href) || newItem.HasSubItems)
+                    {
+                        filtered.Add(newItem);
+                    }
+                }
+            }
+
+            return filtered;
+        }
+
+        private string Translate(int navId, string? key, List<LanguageTranslationModel> translations, string languageCode)
+        {
+            if (navId <= 0 && string.IsNullOrEmpty(key)) return string.Empty;
+            
+            var translation = translations.FirstOrDefault(t => t.NavigationID == navId && t.LanguageCode == languageCode);
+            if (translation != null) return translation.Value;
+
+            // Fallback to English if not found in current language
+            if (languageCode != "en-US")
+            {
+                var enTranslation = translations.FirstOrDefault(t => t.NavigationID == navId && t.LanguageCode == "en-US");
+                if (enTranslation != null) return enTranslation.Value;
+            }
+
+            // Fallback to the key (TitleKey) if it looks like a resource key or the key itself
+            return !string.IsNullOrEmpty(key) ? key : $"Menu_{navId}";
+        }
+
+        private List<NavItem> GetDefaultMenuItems()
+        {
+            return new List<NavItem>
             {
                 new NavItem { Title = "Menu_Dashboards", Icon = "ki-outline ki-element-11", Href = "/dashboard" },
                 
@@ -121,6 +208,7 @@ namespace TTL.HR.Application.Modules.Common.Services
                     {
                         new NavItem { Title = "Menu_ShiftCatalog", Href = "/attendance/shifts", Icon = "ki-outline ki-category", Permission = "Permissions.Administration.Settings" },
                         new NavItem { Title = "Menu_WorkSchedule", Href = "/attendance/schedule", Icon = "ki-outline ki-calendar-edit", Permission = "Permissions.Attendance.Edit" },
+                        new NavItem { Title = "Menu_OvertimeRequests", Href = "/attendance/overtime", Icon = "ki-outline ki-clock", Permission = "Permissions.ShiftRequests.View" },
                         new NavItem { Title = "Menu_ShiftApproval", Href = "/attendance/approval", Icon = "ki-outline ki-check-square", Permission = "Permissions.ShiftRequests.View" }
                     }
                 },
@@ -177,40 +265,6 @@ namespace TTL.HR.Application.Modules.Common.Services
                 new NavItem { Title = "Menu_HRToolkit", Icon = "ki-outline ki-calculator", Href = "/tools/hr-toolkit" },
                 new NavItem { Title = "Menu_UserGuide", Icon = "ki-outline ki-book-open", Href = "/system/guide" }
             };
-
-            var filteredMenu = new List<NavItem>();
-
-            foreach (var item in allItems)
-            {
-                if (await UserHasPermissionAsync(item.Permission))
-                {
-                    var newItem = new NavItem
-                    {
-                        Title = item.Title,
-                        Icon = item.Icon,
-                        Href = item.Href,
-                        Permission = item.Permission,
-                        IsSection = item.IsSection
-                    };
-
-                    foreach (var subItem in item.SubItems)
-                    {
-                        if (await UserHasPermissionAsync(subItem.Permission))
-                        {
-                            newItem.SubItems.Add(subItem);
-                        }
-                    }
-
-                    // If it's a section or has subitems (or is a leaf item), add it
-                    if (item.IsSection || newItem.HasSubItems || !string.IsNullOrEmpty(newItem.Href))
-                    {
-                        filteredMenu.Add(newItem);
-                    }
-                }
-            }
-
-            return filteredMenu;
         }
-
     }
 }

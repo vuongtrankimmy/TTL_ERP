@@ -8,17 +8,17 @@
             <h3 class="fw-bolder my-2">Cài đặt hệ thống 
             <span class="fs-6 text-gray-400 fw-bold ms-1">Cấu hình chung toàn hệ thống HR</span></h3>
             <div class="d-flex my-2">
-                <button class="btn btn-light-primary btn-sm me-3 fw-bolder px-5" @onclick="LoadData" disabled="@_isSaving">
-                    <i class="bi bi-arrow-counterclockwise fs-5 me-1"></i>Hủy thay đổi
+                <button class="btn btn-light-primary me-3 fw-bold" @onclick="LoadData" disabled="@_isSaving">
+                    <i class="bi bi-arrow-counterclockwise fs-4 me-1"></i>Hủy thay đổi
                 </button>
-                <button class="btn btn-primary btn-sm fw-bolder px-8" @onclick="SaveSettings" disabled="@(_isSaving || _isLoading)">
+                <button class="btn btn-primary fw-bold" @onclick="SaveSettings" disabled="@(_isSaving || _isLoading)">
                     @if (_isSaving)
                     {
                         <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                     }
                     else
                     {
-                        <i class="bi bi-check-lg fs-5 me-1"></i>
+                        <i class="bi bi-check-lg fs-4 me-1"></i>
                     }
                     Lưu cấu hình
                 </button>
@@ -85,6 +85,12 @@
                                 <a class="menu-link py-4 @(activeTab == "code_generator" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("code_generator")'>
                                     <span class="menu-icon"><i class="bi bi-upc-scan fs-3"></i></span>
                                     <span class="menu-title fw-bold">Cấu hình sinh mã định danh</span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link py-4 @(activeTab == "navigation" ? "active" : "")" href="javascript:;" @onclick='() => SetActiveTab("navigation")'>
+                                    <span class="menu-icon"><i class="bi bi-list-ul fs-3"></i></span>
+                                    <span class="menu-title fw-bold">Cấu hình Menu & Điều hướng</span>
                                 </a>
                             </div>
                         </div>
@@ -393,10 +399,21 @@
                             <div class="row">
                                 <label class="col-lg-3 col-form-label fw-bold fs-7">Thời gian linh hoạt</label>
                                 <div class="col-lg-9">
-                                    <label class="form-check form-switch form-check-custom form-check-solid">
+                                    <label class="form-check form-switch form-check-custom form-check-solid mb-6">
                                         <input class="form-check-input w-45px h-25px" type="checkbox" @bind="Model.AllowFlexibleHours" />
                                         <span class="form-check-label fs-7 fw-bold text-gray-600">Cho phép nhân viên tự sắp xếp thời gian làm việc (Flexible)</span>
                                     </label>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-3 col-form-label fw-bold fs-7">Tự động duyệt nghỉ phép</label>
+                                <div class="col-lg-4">
+                                    <div class="input-group input-group-solid">
+                                        <span class="input-group-text fs-8">Dưới</span>
+                                        <input type="number" class="form-control fs-7" @bind="Model.AutoApproveLeaveDaysThreshold" />
+                                        <span class="input-group-text fs-8">Ngày</span>
+                                    </div>
+                                    <div class="form-text mt-2 fs-8">Các yêu cầu nghỉ phép dưới số ngày này sẽ được <span class="text-success fw-bold">tự động duyệt</span> bởi hệ thống.</div>
                                 </div>
                             </div>
                         </div>
@@ -1091,8 +1108,174 @@
                         }
                     </div>
                 }
+                @if (activeTab == "navigation")
+                {
+                    <div class="card card-flush shadow-sm border-0 mb-8">
+                        <div class="card-header pt-7">
+                            <h3 class="card-title fw-bolder text-gray-800">Cấu hình Menu & Điều hướng hệ thống</h3>
+                            <div class="card-toolbar">
+                                <button type="button" class="btn btn-sm btn-primary fw-bolder" @onclick="AddNavigationItem">
+                                    <i class="bi bi-plus-lg me-2"></i>Thêm Menu gốc
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body pt-5">
+                            <div class="table-responsive">
+                                <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4">
+                                    <thead>
+                                        <tr class="fw-bolder text-muted bg-light text-uppercase fs-9">
+                                            <th class="ps-4 min-w-250px rounded-start">Mục Menu (Key / Title)</th>
+                                            <th class="min-w-100px">Icon</th>
+                                            <th class="min-w-150px">Đường dẫn (Href)</th>
+                                            <th class="min-w-150px">Quyền (Permission)</th>
+                                            <th class="min-w-80px text-center">STT</th>
+                                            <th class="min-w-80px text-center">Section</th>
+                                            <th class="min-w-80px text-center">Hiện</th>
+                                            <th class="min-w-100px text-end pe-4 rounded-end">Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.SidebarMenu != null)
+                                        {
+                                            @foreach (var item in Model.SidebarMenu.OrderBy(x => x.Order))
+                                            {
+                                                @RenderNavItem(item, Model.SidebarMenu, 0)
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                             <div class="p-4 bg-light-primary rounded-3 mt-8 d-flex align-items-start border border-dashed border-primary mb-10">
+                                <i class="bi bi-info-circle text-primary fs-3 me-3 mt-1"></i>
+                                <div class="fs-8 text-primary-emphasis fw-bold">
+                                    Lưu ý: "Mục Menu" (NumericId) là số định danh duy nhất cho mỗi menu. Bản dịch phía dưới sẽ dựa trên <code>NavigationID</code> này. <br/>
+                                    Cột "Quyền" xác định ai có thể thấy menu này. Để trống nếu muốn tất cả mọi người đều thấy.
+                                </div>
+                            </div>
+
+                            <div class="separator separator-dashed my-10"></div>
+
+                            <div class="d-flex flex-stack mb-5">
+                                <h4 class="fw-bolder mb-0"><i class="bi bi-translate text-primary me-2"></i>Quản lý Đa ngôn ngữ (Translations)</h4>
+                                <button type="button" class="btn btn-sm btn-light-primary fw-bolder" @onclick="AddTranslation">
+                                    <i class="bi bi-plus-lg me-2"></i>Thêm Bản dịch
+                                </button>
+                            </div>
+
+                            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder mb-5">
+                                <li class="nav-item">
+                                    <a class="nav-link text-active-primary py-5 me-6 @(activeTranslationTab == "vi-VN" ? "active" : "")" href="javascript:;" @onclick='() => activeTranslationTab = "vi-VN"'>
+                                        <span class="symbol symbol-20px me-2">
+                                            <img src="/assets/media/flags/vietnam.svg" alt="vi" />
+                                        </span>
+                                        Tiếng Việt
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-active-primary py-5 me-6 @(activeTranslationTab == "en-US" ? "active" : "")" href="javascript:;" @onclick='() => activeTranslationTab = "en-US"'>
+                                        <span class="symbol symbol-20px me-2">
+                                            <img src="/assets/media/flags/united-states.svg" alt="en" />
+                                        </span>
+                                        English
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <div class="table-responsive">
+                                <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-1">
+                                    <thead>
+                                         <tr class="fw-bolder text-muted bg-light text-uppercase fs-9">
+                                            <th class="ps-4 min-w-100px rounded-start">Mã (NavigationID)</th>
+                                            <th class="min-w-400px">Giá trị hiển thị (Value)</th>
+                                            <th class="min-w-50px text-end pe-4 rounded-end">Hành động</th>
+                                        </tr>
+                                    </thead>
+                                     <tbody>
+                                        @if (Model.Translations != null)
+                                        {
+                                            @foreach (var trans in Model.Translations.Where(t => t.LanguageCode == activeTranslationTab).OrderBy(t => t.NavigationID))
+                                            {
+                                                <tr>
+                                                    <td class="ps-4">
+                                                        <input type="number" class="form-control form-control-solid form-control-sm fs-7 fw-bold w-125px" @bind="trans.NavigationID" placeholder="ID menu..." />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control form-control-solid form-control-sm fs-7" @bind="trans.Value" placeholder="Tên hiển thị..." />
+                                                    </td>
+                                                    <td class="text-end pe-4">
+                                                        <button type="button" class="btn btn-icon btn-light-danger btn-sm w-30px h-30px" @onclick="() => Model.Translations.Remove(trans)">
+                                                            <i class="bi bi-trash fs-5"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
         </SkeletonLoading>
     </div>
 </div>
+
+@code {
+    RenderFragment RenderNavItem(NavItem item, List<NavItem> parentList, int level) => __builder => {
+        <tr class="@(level > 0 ? "bg-light-light" : "")">
+            <td class="ps-4">
+                <div class="d-flex align-items-center">
+                    @for(int i=0; i<level; i++) { <div class="w-20px"></div> }
+                    <span class="badge badge-light-primary fw-bolder fs-9 me-2" title="NumericId: @item.NumericId">ID: @item.NumericId</span>
+                    @if (level > 0) { <i class="bi bi-arrow-return-right text-gray-400 me-2"></i> }
+                    <input type="text" class="form-control form-control-solid form-control-sm fs-7 fw-bold" @bind="item.Title" placeholder="Ghi chú..." />
+                </div>
+            </td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <i class="@item.Icon fs-4 me-2"></i>
+                    <input type="text" class="form-control form-control-solid form-control-sm fs-8 w-100px" @bind="item.Icon" placeholder="ki-outline..." />
+                </div>
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-solid form-control-sm fs-8" @bind="item.Href" placeholder="/dashboard..." />
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-solid form-control-sm fs-8" @bind="item.Permission" placeholder="Permissions..." />
+            </td>
+            <td>
+                <input type="number" class="form-control form-control-solid form-control-sm fs-8 text-center" @bind="item.Order" />
+            </td>
+            <td class="text-center">
+                <div class="form-check form-check-custom form-check-solid justify-content-center">
+                    <input class="form-check-input w-20px h-20px" type="checkbox" @bind="item.IsSection" />
+                </div>
+            </td>
+            <td class="text-center">
+                <div class="form-check form-check-sm form-check-custom form-check-solid justify-content-center">
+                    <input class="form-check-input w-20px h-20px" type="checkbox" @bind="item.IsActive" />
+                </div>
+            </td>
+            <td class="text-end pe-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-icon btn-light-primary btn-sm w-25px h-25px" @onclick="() => AddSubNavigationItem(item)" title="Thêm menu con">
+                        <i class="bi bi-plus fs-4"></i>
+                    </button>
+                    <button type="button" class="btn btn-icon btn-light-danger btn-sm w-25px h-25px" @onclick="() => RemoveNavigationItem(parentList, item)" title="Xóa">
+                        <i class="bi bi-trash fs-5"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+        @if (item.HasSubItems)
+        {
+            @foreach (var sub in item.SubItems.OrderBy(x => x.Order))
+            {
+                @RenderNavItem(sub, item.SubItems, level + 1)
+            }
+        }
+    };
+}

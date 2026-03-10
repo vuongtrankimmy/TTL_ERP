@@ -41,7 +41,7 @@
         <div class="row g-5 mb-8">
             <!-- TỔNG THỰC LĨNH -->
             <div class="col-md-3">
-                <div class="card card-flush bg-@(Periods.FirstOrDefault(p => !p.IsPlaceholder) != null ? GetStatusBg(Periods.FirstOrDefault(p => !p.IsPlaceholder)?.StatusColor, Periods.FirstOrDefault(p => !p.IsPlaceholder)?.Status) : "gray-900") h-100 shadow-sm border border-white border-opacity-10">
+                <div class="card card-flush bg-danger h-100 shadow-sm border border-white border-opacity-10">
                     <div class="card-header pt-5 overflow-hidden position-relative">
                         <div class="card-title d-flex flex-column z-index-1">
                              <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">@_totalNet.ToString("N0") <span class="fs-6 fw-normal">đ</span></span>

@@ -124,6 +124,9 @@
   <data name="Menu_ShiftApproval" xml:space="preserve">
     <value>Duyệt đổi ca</value>
   </data>
+  <data name="Menu_OvertimeRequests" xml:space="preserve">
+    <value>Overtime Approval</value>
+  </data>
   <data name="Menu_LeaveManagement" xml:space="preserve">
     <value>Quản lý nghỉ phép</value>
   </data>
@@ -207,5 +210,23 @@
   </data>
   <data name="Status_Active" xml:space="preserve">
     <value>Hoạt động</value>
+  </data>
+  <data name="Menu_Banks" xml:space="preserve">
+    <value>Quản lý Ngân hàng</value>
+  </data>
+  <data name="Label_Edit" xml:space="preserve">
+    <value>Chỉnh sửa</value>
+  </data>
+  <data name="Label_Home" xml:space="preserve">
+    <value>Trang chủ</value>
+  </data>
+  <data name="Label_Details" xml:space="preserve">
+    <value>Thông tin chi tiết</value>
+  </data>
+  <data name="Label_Recruitment" xml:space="preserve">
+    <value>Job Posting</value>
+  </data>
+  <data name="Menu_RecruitmentKanban" xml:space="preserve">
+    <value>Recruitment Kanban</value>
   </data>
 </root>

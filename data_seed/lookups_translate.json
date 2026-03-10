@@ -1,121 +1,121 @@
 [
   {
-    "LookupId": "65dae2f30000000000000301",
+    "LookupId": "65dae2f30000000000003101",
     "LanguageCode": "vi-VN",
     "Name": "CMND / CCCD"
   },
   {
-    "LookupId": "65dae2f30000000000000301",
+    "LookupId": "65dae2f30000000000003101",
     "LanguageCode": "en-US",
     "Name": "ID Card / CCCD"
   },
   {
-    "LookupId": "65dae2f30000000000000302",
+    "LookupId": "65dae2f30000000000003102",
     "LanguageCode": "vi-VN",
     "Name": "Bằng Đại học / Sau Đại học"
   },
   {
-    "LookupId": "65dae2f30000000000000302",
+    "LookupId": "65dae2f30000000000003102",
     "LanguageCode": "en-US",
     "Name": "University Degree / Post-graduate"
   },
   {
-    "LookupId": "65dae2f30000000000000303",
+    "LookupId": "65dae2f30000000000003103",
     "LanguageCode": "vi-VN",
     "Name": "Chứng chỉ / Chứng nhận"
   },
   {
-    "LookupId": "65dae2f30000000000000303",
+    "LookupId": "65dae2f30000000000003103",
     "LanguageCode": "en-US",
     "Name": "Certificate"
   },
   {
-    "LookupId": "65dae2f30000000000000304",
+    "LookupId": "65dae2f30000000000003104",
     "LanguageCode": "vi-VN",
     "Name": "Giấy khám sức khỏe"
   },
   {
-    "LookupId": "65dae2f30000000000000304",
+    "LookupId": "65dae2f30000000000003104",
     "LanguageCode": "en-US",
     "Name": "Health Certificate"
   },
   {
-    "LookupId": "65dae2f30000000000000305",
+    "LookupId": "65dae2f30000000000003105",
     "LanguageCode": "vi-VN",
     "Name": "Sơ yếu lý lịch"
   },
   {
-    "LookupId": "65dae2f30000000000000305",
+    "LookupId": "65dae2f30000000000003105",
     "LanguageCode": "en-US",
     "Name": "Curriculum Vitae"
   },
   {
-    "LookupId": "65dae2f30000000000000306",
+    "LookupId": "65dae2f30000000000003106",
     "LanguageCode": "vi-VN",
     "Name": "Giấy khai sinh"
   },
   {
-    "LookupId": "65dae2f30000000000000306",
+    "LookupId": "65dae2f30000000000003106",
     "LanguageCode": "en-US",
     "Name": "Birth Certificate"
   },
   {
-    "LookupId": "65dae2f30000000000000307",
+    "LookupId": "65dae2f30000000000003107",
     "LanguageCode": "vi-VN",
     "Name": "Giấy đăng ký kết hôn"
   },
   {
-    "LookupId": "65dae2f30000000000000307",
+    "LookupId": "65dae2f30000000000003107",
     "LanguageCode": "en-US",
     "Name": "Marriage Certificate"
   },
   {
-    "LookupId": "65dae2f30000000000000308",
+    "LookupId": "65dae2f30000000000003108",
     "LanguageCode": "vi-VN",
     "Name": "Sổ hộ khẩu"
   },
   {
-    "LookupId": "65dae2f30000000000000308",
+    "LookupId": "65dae2f30000000000003108",
     "LanguageCode": "en-US",
     "Name": "Household Registration Book"
   },
   {
-    "LookupId": "65dae2f30000000000000309",
+    "LookupId": "65dae2f30000000000003109",
     "LanguageCode": "vi-VN",
     "Name": "Tài liệu khác"
   },
   {
-    "LookupId": "65dae2f30000000000000309",
+    "LookupId": "65dae2f30000000000003109",
     "LanguageCode": "en-US",
     "Name": "Other Documents"
   },
   {
-    "LookupId": "65dae2f30000000000000311",
+    "LookupId": "65dae2f30000000000003201",
     "LanguageCode": "vi-VN",
     "Name": "Chờ duyệt"
   },
   {
-    "LookupId": "65dae2f30000000000000311",
+    "LookupId": "65dae2f30000000000003201",
     "LanguageCode": "en-US",
     "Name": "Pending"
   },
   {
-    "LookupId": "65dae2f30000000000000312",
+    "LookupId": "65dae2f30000000000003202",
     "LanguageCode": "vi-VN",
     "Name": "Đã xác thực"
   },
   {
-    "LookupId": "65dae2f30000000000000312",
+    "LookupId": "65dae2f30000000000003202",
     "LanguageCode": "en-US",
     "Name": "Verified"
   },
   {
-    "LookupId": "65dae2f30000000000000313",
+    "LookupId": "65dae2f30000000000003203",
     "LanguageCode": "vi-VN",
     "Name": "Từ chối"
   },
   {
-    "LookupId": "65dae2f30000000000000313",
+    "LookupId": "65dae2f30000000000003203",
     "LanguageCode": "en-US",
     "Name": "Rejected"
   },
@@ -170,99 +170,163 @@
     "Name": "Khiếu nại"
   },
   {
-    "LookupId": 1,
-    "Type": "PayrollStatus",
-    "Code": "Draft",
-    "Name": "Draft",
-    "LanguageCode": "en-US",
-    "IsActive": true
-  },
-  {
-    "LookupId": 1,
-    "Type": "PayrollStatus",
-    "Code": "Draft",
-    "Name": "Dự thảo",
+    "LookupId": "65dae2f30000000000002201",
     "LanguageCode": "vi-VN",
-    "IsActive": true
+    "Name": "Nam"
   },
   {
-    "LookupId": 2,
-    "Type": "PayrollStatus",
-    "Code": "Pending",
-    "Name": "Pending",
+    "LookupId": "65dae2f30000000000002201",
     "LanguageCode": "en-US",
-    "IsActive": true
+    "Name": "Male"
   },
   {
-    "LookupId": 2,
-    "Type": "PayrollStatus",
-    "Code": "Pending",
-    "Name": "Chờ duyệt",
+    "LookupId": "65dae2f30000000000002202",
     "LanguageCode": "vi-VN",
-    "IsActive": true
+    "Name": "Nữ"
   },
   {
-    "LookupId": 3,
-    "Type": "PayrollStatus",
-    "Code": "Approved",
-    "Name": "Approved",
+    "LookupId": "65dae2f30000000000002202",
     "LanguageCode": "en-US",
-    "IsActive": true
+    "Name": "Female"
   },
   {
-    "LookupId": 3,
-    "Type": "PayrollStatus",
-    "Code": "Approved",
-    "Name": "Đã duyệt",
+    "LookupId": "65dae2f30000000000002203",
     "LanguageCode": "vi-VN",
-    "IsActive": true
+    "Name": "Khác"
   },
   {
-    "LookupId": 4,
-    "Type": "PayrollStatus",
-    "Code": "Closed",
-    "Name": "Closed",
+    "LookupId": "65dae2f30000000000002203",
     "LanguageCode": "en-US",
-    "IsActive": true
+    "Name": "Other"
   },
   {
-    "LookupId": 4,
-    "Type": "PayrollStatus",
-    "Code": "Closed",
-    "Name": "Đã chốt",
+    "LookupId": "65dae2f30000000000002301",
     "LanguageCode": "vi-VN",
-    "IsActive": true
+    "Name": "Độc thân"
   },
   {
-    "LookupId": 5,
-    "Type": "PayrollStatus",
-    "Code": "Disputed",
-    "Name": "Disputed",
+    "LookupId": "65dae2f30000000000002301",
     "LanguageCode": "en-US",
-    "IsActive": true
+    "Name": "Single"
   },
   {
-    "LookupId": 5,
-    "Type": "PayrollStatus",
-    "Code": "Disputed",
-    "Name": "Khiếu nại",
+    "LookupId": "65dae2f30000000000002302",
     "LanguageCode": "vi-VN",
-    "IsActive": true
+    "Name": "Đã kết hôn"
   },
   {
-    "LookupId": 6,
-    "Type": "PayrollStatus",
-    "Code": "ReviewRequired",
-    "Name": "Review Required",
+    "LookupId": "65dae2f30000000000002302",
     "LanguageCode": "en-US",
-    "IsActive": true
+    "Name": "Married"
   },
   {
-    "LookupId": 6,
-    "Type": "PayrollStatus",
-    "Code": "ReviewRequired",
-    "Name": "Cần kiểm tra",
+    "LookupId": "65dae2f30000000000002303",
     "LanguageCode": "vi-VN",
-    "IsActive": true
+    "Name": "Ly hôn"
+  },
+  {
+    "LookupId": "65dae2f30000000000002303",
+    "LanguageCode": "en-US",
+    "Name": "Divorced"
+  },
+  {
+    "LookupId": "65dae2f30000000000002304",
+    "LanguageCode": "vi-VN",
+    "Name": "Góa"
+  },
+  {
+    "LookupId": "65dae2f30000000000002304",
+    "LanguageCode": "en-US",
+    "Name": "Widowed"
+  },
+  {
+    "LookupId": "65dae2f30000000000002401",
+    "LanguageCode": "vi-VN",
+    "Name": "Đang hoạt động"
+  },
+  {
+    "LookupId": "65dae2f30000000000002401",
+    "LanguageCode": "en-US",
+    "Name": "Published"
+  },
+  {
+    "LookupId": "65dae2f30000000000002402",
+    "LanguageCode": "vi-VN",
+    "Name": "Bản nháp"
+  },
+  {
+    "LookupId": "65dae2f30000000000002402",
+    "LanguageCode": "en-US",
+    "Name": "Draft"
+  },
+  {
+    "LookupId": "65dae2f30000000000002403",
+    "LanguageCode": "vi-VN",
+    "Name": "Đã đóng"
+  },
+  {
+    "LookupId": "65dae2f30000000000002403",
+    "LanguageCode": "en-US",
+    "Name": "Closed"
+  },
+  {
+    "LookupId": "65dae2f30000000000002404",
+    "LanguageCode": "vi-VN",
+    "Name": "Tạm dừng"
+  },
+  {
+    "LookupId": "65dae2f30000000000002404",
+    "LanguageCode": "en-US",
+    "Name": "On Hold"
+  },
+  {
+    "LookupId": "65dae2f30000000000002405",
+    "LanguageCode": "vi-VN",
+    "Name": "Hoàn tất"
+  },
+  {
+    "LookupId": "65dae2f30000000000002405",
+    "LanguageCode": "en-US",
+    "Name": "Completed"
+  },
+  {
+    "LookupId": "65dae2f30000000000002501",
+    "LanguageCode": "vi-VN",
+    "Name": "Toàn thời gian"
+  },
+  {
+    "LookupId": "65dae2f30000000000002501",
+    "LanguageCode": "en-US",
+    "Name": "Full-time"
+  },
+  {
+    "LookupId": "65dae2f30000000000002502",
+    "LanguageCode": "vi-VN",
+    "Name": "Bán thời gian"
+  },
+  {
+    "LookupId": "65dae2f30000000000002502",
+    "LanguageCode": "en-US",
+    "Name": "Part-time"
+  },
+  {
+    "LookupId": "65dae2f30000000000002503",
+    "LanguageCode": "vi-VN",
+    "Name": "Hợp đồng"
+  },
+  {
+    "LookupId": "65dae2f30000000000002503",
+    "LanguageCode": "en-US",
+    "Name": "Contract"
+  },
+  {
+    "LookupId": "65dae2f30000000000002504",
+    "LanguageCode": "vi-VN",
+    "Name": "Thực tập"
+  },
+  {
+    "LookupId": "65dae2f30000000000002504",
+    "LanguageCode": "en-US",
+    "Name": "Internship"
   }
 ]

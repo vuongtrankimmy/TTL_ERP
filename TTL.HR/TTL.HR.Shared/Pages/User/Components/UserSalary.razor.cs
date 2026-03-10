@@ -62,7 +62,7 @@ public partial class UserSalary
     private string GetStatusBgCard(PayrollModel item)
     {
         var color = GetStatusColor(item);
-        if (color == "secondary" || color == "info" || color == "warning") return "gray-900";
+        if (color == "secondary" || color == "info" || color == "warning") return "danger";
         return color;
     }
 }

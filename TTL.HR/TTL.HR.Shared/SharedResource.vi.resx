@@ -68,6 +68,9 @@
   <data name="Label_Logout" xml:space="preserve">
     <value>Đăng xuất</value>
   </data>
+  <data name="Label_ActivityLog" xml:space="preserve">
+    <value>Nhật ký hoạt động</value>
+  </data>
   <data name="Menu_Dashboards" xml:space="preserve">
     <value>Bảng điều khiển</value>
   </data>
@@ -152,6 +155,9 @@
   <data name="Menu_ShiftApproval" xml:space="preserve">
     <value>Duyệt đổi ca</value>
   </data>
+  <data name="Menu_OvertimeRequests" xml:space="preserve">
+    <value>Phê duyệt tăng ca</value>
+  </data>
   <data name="Menu_LeaveManagement" xml:space="preserve">
     <value>Quản lý nghỉ phép</value>
   </data>
@@ -218,10 +224,34 @@
   <data name="Menu_Banks" xml:space="preserve">
     <value>Quản lý Ngân hàng</value>
   </data>
+  <data name="Label_Edit" xml:space="preserve">
+    <value>Chỉnh sửa</value>
+  </data>
+  <data name="Label_Home" xml:space="preserve">
+    <value>Trang chủ</value>
+  </data>
+  <data name="Label_Details" xml:space="preserve">
+    <value>Thông tin chi tiết</value>
+  </data>
   <data name="Placeholder_SearchByNameOrCode" xml:space="preserve">
     <value>Tìm theo tên hoặc mã...</value>
   </data>
   <data name="Error_ApiConnection" xml:space="preserve">
     <value>Có lỗi xảy ra khi tải dữ liệu. Vui lòng kiểm tra kết nối API.</value>
+  </data>
+  <data name="Label_Recruitment" xml:space="preserve">
+    <value>Tin tuyển dụng</value>
+  </data>
+  <data name="Menu_RecruitmentKanban" xml:space="preserve">
+    <value>Bảng Kanban tuyển dụng</value>
+  </data>
+  <data name="Label_Notifications" xml:space="preserve">
+    <value>Thông báo</value>
+  </data>
+  <data name="Label_RecentAccess" xml:space="preserve">
+    <value>Truy cập gần đây</value>
+  </data>
+  <data name="Label_ViewAll" xml:space="preserve">
+    <value>Xem tất cả</value>
   </data>
 </root>

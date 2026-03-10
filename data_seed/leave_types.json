@@ -64,5 +64,16 @@
         "IsPaid": true,
         "Color": "purple",
         "IsActive": true
+    },
+    {
+        "_id": {
+            "$oid": "65ebf3a40000000000000107"
+        },
+        "Name": "Nghỉ không phép",
+        "Code": "UA",
+        "Description": "Nghỉ không xin phép",
+        "IsPaid": false,
+        "Color": "dark",
+        "IsActive": true
     }
 ]

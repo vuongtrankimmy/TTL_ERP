@@ -1,0 +1,7142 @@
+﻿[
+    {
+        "Timestamp":  "2026-02-02T08:03:31",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T17:47:01",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T08:11:32",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T17:08:32",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T08:14:40",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T17:25:31",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T08:08:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T17:03:43",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T08:14:37",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T17:46:24",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T07:51:29",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T20:00:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T07:58:40",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-02T17:06:30",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T08:02:15",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T17:18:14",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T07:46:33",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T17:52:22",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T08:14:34",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T17:04:49",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T07:58:29",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T17:02:45",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T08:03:58",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T18:51:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T07:55:34",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T17:16:39",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T08:06:43",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-03T17:32:02",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T08:05:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T18:36:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T07:56:48",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T17:56:43",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T07:54:31",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T17:35:57",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T08:13:29",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T17:02:07",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T07:50:21",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T19:42:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T07:55:46",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T17:29:35",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T07:50:56",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-04T19:11:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T08:04:42",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T17:10:08",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T07:54:53",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T18:37:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T07:47:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T17:46:55",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T07:57:05",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T17:15:41",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T07:49:50",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T17:37:40",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T07:59:19",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T20:01:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T08:01:35",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-05T17:50:57",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T08:00:34",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T17:48:35",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T08:05:06",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T17:17:37",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T08:08:51",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T17:00:43",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T07:51:53",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T17:02:36",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T07:47:49",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T17:17:14",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T07:55:23",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T17:53:21",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T08:00:19",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-06T17:02:03",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T08:11:53",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T17:32:22",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T07:55:46",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T17:47:54",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T08:12:31",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T17:41:17",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T07:56:43",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T17:13:31",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T07:46:02",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T17:57:40",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T07:55:10",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T17:46:25",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T07:59:24",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-07T17:59:54",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T07:46:48",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T17:16:23",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T07:58:58",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T17:37:05",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T08:10:22",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T17:04:29",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T08:10:34",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T17:10:32",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T08:13:27",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T17:34:01",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T07:47:47",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T18:23:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T07:47:11",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-09T17:00:25",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T07:54:41",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T17:14:29",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T08:08:33",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T17:48:33",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T08:13:48",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T17:59:39",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T07:56:32",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T17:13:57",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T08:01:43",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T17:55:05",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T08:08:05",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T17:35:08",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T08:05:45",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-10T17:22:19",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T07:53:31",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T17:34:05",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T08:06:31",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T17:37:20",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T07:55:56",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T20:08:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T08:02:32",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T17:44:45",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T08:01:46",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T17:32:40",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T07:59:58",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T17:26:31",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T08:00:09",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-11T20:53:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T08:02:45",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T17:54:06",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T07:45:11",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T17:43:25",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T08:00:41",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T19:40:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T08:07:11",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T17:59:44",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T08:14:48",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T17:30:51",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T08:13:43",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T17:28:10",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T07:56:02",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-12T18:26:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T08:11:20",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T17:51:39",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T07:52:10",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T20:39:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T08:03:42",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T17:27:33",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T07:54:03",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T20:52:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T07:56:34",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T17:04:01",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T07:52:56",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T17:37:46",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T08:09:21",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-13T19:17:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T08:07:06",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T18:56:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T07:55:28",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T20:20:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T07:58:40",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T17:38:25",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T07:57:54",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T17:22:27",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T08:04:06",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T17:32:07",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T08:14:20",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T17:49:39",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T07:55:52",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-14T17:54:33",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T08:01:31",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T17:39:57",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T07:59:01",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T17:35:47",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T07:56:32",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T19:13:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T07:58:23",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T20:14:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T08:03:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T17:51:30",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T07:50:56",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T17:22:50",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T07:52:14",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-16T17:56:48",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T07:56:15",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T17:38:53",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T07:55:07",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T17:26:13",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T08:08:39",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T17:17:39",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T08:13:36",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T18:09:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T08:06:17",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T17:51:07",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T08:08:47",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T17:27:45",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T08:11:06",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-17T17:36:41",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T08:05:52",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T17:06:32",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T07:58:45",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T17:36:19",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T08:01:18",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T17:39:46",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T08:04:47",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T17:57:53",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T08:10:05",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T17:00:18",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T08:05:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T17:25:24",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T08:09:28",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-18T17:49:27",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T07:47:05",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T17:52:48",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T08:01:39",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T17:05:21",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T08:04:33",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T17:03:27",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T08:07:19",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T17:27:45",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T08:02:37",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T17:06:14",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T08:12:56",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T17:17:38",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T08:02:42",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-19T17:36:10",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T08:01:33",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T17:57:41",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T08:10:21",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T17:14:32",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T08:13:30",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T19:05:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T07:56:56",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T17:10:42",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T07:56:46",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T17:23:33",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T08:02:55",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T17:09:56",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T08:08:16",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-20T17:18:38",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T08:03:13",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T17:10:31",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T07:53:47",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T17:15:11",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T08:12:01",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T17:27:47",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T08:03:25",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T19:16:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T07:54:04",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T17:39:51",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T08:12:33",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T17:14:07",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T07:53:27",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-21T17:42:58",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T08:01:15",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T17:24:39",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T08:12:49",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T20:10:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T07:47:23",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T17:44:58",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T08:13:43",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T17:18:18",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T07:48:48",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T17:19:17",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T08:14:41",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T17:42:30",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T08:09:14",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-23T17:10:38",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T08:07:30",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T17:41:54",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T08:04:47",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T17:35:10",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T07:45:48",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T17:12:23",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T08:02:14",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T17:18:48",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T08:11:02",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T17:20:52",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T08:04:54",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T17:53:43",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T07:48:16",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-24T17:11:50",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T08:10:27",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T17:14:01",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T08:01:23",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T20:23:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T07:58:01",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T17:59:37",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T07:49:39",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T17:23:45",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T07:50:38",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T18:30:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T07:59:40",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T18:03:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T08:05:16",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-25T17:20:10",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T07:54:08",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T19:52:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T07:57:51",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T17:48:30",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T08:02:35",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T17:39:38",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T07:56:12",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T17:05:58",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T08:03:02",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T17:52:42",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T08:06:31",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T17:06:23",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T08:05:55",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-26T17:43:50",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T08:01:20",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T17:04:15",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T07:58:23",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T17:37:36",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T07:53:29",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T17:11:48",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T08:00:41",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T17:07:29",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T07:59:02",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T17:21:26",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T08:07:05",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T17:42:07",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T08:02:14",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-27T17:41:37",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T08:05:13",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T17:26:09",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T07:47:40",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T17:28:29",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T07:47:25",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T17:42:44",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T07:59:43",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T17:40:35",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T08:10:58",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T17:25:23",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T07:48:50",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T18:53:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T07:47:04",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-02-28T17:49:17",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T08:02:20",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T19:01:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T08:08:20",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T17:58:15",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T08:00:02",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T17:47:04",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T07:50:22",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T17:55:23",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T07:54:45",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T17:22:15",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T07:49:55",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T18:25:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T08:07:55",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-02T17:57:07",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T08:01:43",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T19:40:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T07:48:09",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T17:46:37",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T08:06:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T17:42:26",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T07:53:31",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T17:06:27",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T07:53:26",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T17:36:46",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T07:56:23",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T17:33:32",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T08:00:48",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-03T17:26:37",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T08:14:05",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T17:15:02",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T07:52:16",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T17:47:03",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T07:49:48",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T17:24:56",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T07:57:29",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T17:54:14",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T08:02:29",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T17:27:11",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T08:08:50",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T18:18:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T08:05:30",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-04T17:28:42",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T08:13:15",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T17:04:06",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T08:12:08",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T17:47:18",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T07:47:02",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T17:52:33",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T08:08:07",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T17:36:02",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T07:53:41",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T17:39:02",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T08:08:04",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T17:46:24",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T07:58:25",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-05T17:27:45",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T07:47:54",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T17:18:05",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T07:56:17",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T17:55:04",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T07:46:47",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T19:24:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T08:02:48",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T17:17:36",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T08:14:54",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T17:34:26",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T07:47:49",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T19:21:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T07:54:18",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-06T17:07:23",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T07:59:21",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T17:03:24",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T07:49:04",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T19:51:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T08:02:04",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T17:49:06",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T07:51:26",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T17:07:38",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T08:12:47",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T17:20:17",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T08:06:32",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T17:10:48",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T08:04:34",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-07T17:10:25",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T08:09:12",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T17:28:05",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T08:10:27",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T17:44:57",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T08:04:14",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T17:16:27",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T07:57:45",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T17:38:07",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T07:53:36",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T17:19:26",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T08:00:41",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T17:45:47",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T07:56:38",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-09T17:32:27",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T08:04:13",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T17:47:38",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T08:05:47",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T17:34:39",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T07:50:51",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T18:55:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T07:50:47",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T17:51:03",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T07:51:43",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T17:57:52",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T07:58:24",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T17:57:22",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T07:52:34",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-10T17:09:22",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T08:03:33",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T17:00:42",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T07:49:22",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T17:25:37",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T08:11:33",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T19:22:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T08:10:30",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T17:38:34",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T07:54:35",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T18:55:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T07:49:25",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T18:45:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T07:46:57",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-11T17:17:05",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T08:08:56",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T17:03:53",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T07:45:02",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T17:47:29",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T08:00:27",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T18:16:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T07:47:54",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T17:05:09",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T07:52:32",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T17:00:23",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T07:55:28",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T19:34:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T08:08:26",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-12T17:40:08",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T07:49:13",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T17:04:36",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T08:10:23",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T17:18:02",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T07:50:10",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T17:41:52",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T08:12:34",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T17:53:08",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T07:47:09",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T17:08:51",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T08:13:42",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T17:05:28",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T07:53:21",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-13T17:04:39",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T08:07:51",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T19:41:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T08:04:14",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T17:10:55",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T07:58:22",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T20:58:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T07:55:48",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T18:11:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T08:02:11",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T17:21:23",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T08:06:35",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T17:59:28",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T08:05:51",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-14T18:35:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T08:02:20",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T17:44:55",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T08:10:44",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T19:39:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T07:54:36",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T17:26:33",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T07:48:23",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T17:44:02",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T07:52:38",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T19:36:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T07:54:17",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T17:01:36",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T07:54:14",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-16T17:27:10",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T08:05:29",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T17:39:40",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T08:06:19",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T17:59:20",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T07:50:56",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T17:52:11",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T07:55:04",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T17:50:55",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T07:45:53",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T20:51:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T07:51:10",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T17:37:12",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T08:14:01",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-17T17:21:13",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T07:45:32",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T19:14:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T08:05:13",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T19:45:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T07:55:09",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T17:09:50",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T07:55:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T20:42:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T08:14:11",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T17:42:34",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T08:08:40",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T17:12:23",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T07:54:43",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-18T17:21:52",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T07:46:24",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T17:23:42",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T08:12:01",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T17:06:54",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T08:01:52",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T17:46:44",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T08:06:49",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T20:34:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T08:12:21",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T17:55:07",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T08:03:26",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T17:08:42",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T07:54:02",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-19T17:20:56",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T08:07:16",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T19:27:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T08:13:29",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T17:11:08",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T08:02:42",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T17:09:36",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T07:54:17",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T17:32:07",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T07:59:21",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T17:02:25",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T08:07:09",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T19:16:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T08:11:12",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-20T17:53:06",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T08:12:24",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T19:22:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T07:50:14",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T18:53:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T08:10:43",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T17:02:23",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T07:52:52",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T17:20:17",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T07:55:23",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T17:17:05",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T08:05:42",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T17:06:51",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T07:53:15",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-21T17:37:30",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T07:54:24",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T17:04:35",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T08:09:37",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T17:57:14",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T08:04:41",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T17:38:49",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T08:05:09",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T17:52:29",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T07:56:25",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T17:29:48",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T07:53:38",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T17:22:41",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T08:00:38",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-23T17:13:45",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T07:55:43",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T17:08:43",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T08:03:15",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T17:01:46",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T08:14:57",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T17:58:56",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T08:14:49",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T17:51:43",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T08:07:35",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T17:28:48",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T07:45:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T17:01:28",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T07:51:12",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-24T17:46:39",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T07:52:11",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T19:37:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T08:11:08",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T18:43:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T08:00:58",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T17:50:56",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T08:05:32",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T17:50:03",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T08:13:24",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T17:43:46",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T08:01:23",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T17:54:51",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T07:49:46",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-25T18:22:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T08:09:19",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T17:51:53",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T08:02:55",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T17:59:52",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T08:05:10",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T17:09:45",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T08:03:47",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T17:50:42",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T08:08:57",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T18:32:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T08:04:20",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T19:53:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T07:51:56",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-26T17:26:34",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T08:11:52",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T17:41:02",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T08:13:46",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T17:17:24",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T07:46:26",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T20:32:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T08:08:48",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T17:39:58",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T07:45:40",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T17:02:44",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T07:50:06",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T20:15:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T08:00:01",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-27T17:25:45",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T07:46:44",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T19:31:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T08:13:03",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T17:46:15",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T07:53:24",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T19:54:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T07:53:16",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T17:15:52",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T07:46:18",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T17:42:12",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T08:02:13",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T17:39:26",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T08:02:35",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-28T17:30:15",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T07:49:41",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T19:26:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T08:07:06",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T17:12:04",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T08:06:31",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T17:42:04",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T08:11:45",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T17:36:10",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T07:49:12",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T18:32:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T08:06:29",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T17:51:45",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T07:49:45",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-30T17:35:51",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T08:13:09",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T20:46:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T07:45:12",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T17:14:12",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T07:51:53",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T17:25:12",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T07:50:36",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T17:09:13",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T07:58:58",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T17:24:42",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T08:12:31",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T17:50:13",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T08:01:35",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-03-31T17:43:45",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T08:02:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T17:54:48",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T07:47:53",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T17:40:24",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T08:07:41",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T17:26:38",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T07:51:31",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T17:43:48",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T08:13:56",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T17:35:33",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T07:58:47",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T19:05:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T08:14:51",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-01T17:18:47",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T08:10:02",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T17:10:47",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T08:08:04",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T17:58:31",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T08:02:52",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T19:07:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T08:03:10",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T17:08:57",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T07:56:08",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T17:08:19",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T07:49:58",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T17:51:10",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T07:56:16",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-02T17:48:16",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T07:48:29",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T17:40:24",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T08:10:54",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T17:23:30",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T08:04:56",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T17:20:55",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T07:58:10",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T17:17:09",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T07:51:57",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T17:33:40",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T07:52:20",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T17:04:36",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T08:01:57",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-03T19:35:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T07:53:04",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T17:45:46",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T07:51:29",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T17:33:23",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T07:57:49",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T17:19:44",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T08:04:28",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T17:57:41",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T08:08:49",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T19:19:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T08:08:54",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T17:02:12",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T08:05:44",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-04T17:58:54",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T07:58:42",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T17:07:45",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T07:46:46",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T17:26:32",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T07:57:58",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T17:40:13",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T07:52:35",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T17:43:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T07:57:24",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T17:11:55",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T08:14:30",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T17:37:28",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T07:47:49",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-06T17:36:34",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T07:45:56",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T17:42:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T07:45:21",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T17:09:22",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T07:46:20",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T17:04:24",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T07:45:43",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T17:15:15",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T08:08:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T17:38:29",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T07:45:12",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T17:30:28",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T07:59:28",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-07T17:55:49",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T07:54:16",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T17:04:06",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T07:57:36",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T17:22:28",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T07:54:42",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T20:41:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T07:52:07",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T17:03:57",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T08:12:41",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T17:21:39",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T07:53:14",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T17:01:25",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T07:51:15",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-08T17:43:44",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T08:05:18",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T20:30:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T08:10:25",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T17:00:23",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T08:05:10",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T17:50:14",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T08:04:03",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T17:25:14",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T07:51:33",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T20:45:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T07:51:12",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T17:47:36",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T07:46:31",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-09T17:50:10",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T08:10:28",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T19:53:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T08:11:21",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T17:52:16",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T07:47:19",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T18:18:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T07:54:11",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T17:40:50",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T07:52:12",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T18:26:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T07:58:49",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T17:42:09",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T07:55:30",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-10T17:43:56",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T07:52:37",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T17:29:44",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T08:04:05",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T20:51:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T07:50:42",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T17:11:06",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T08:06:21",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T17:34:29",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T07:57:42",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T19:02:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T07:53:40",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T17:17:17",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T07:58:35",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-11T17:45:08",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T07:51:32",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T17:38:36",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T08:01:19",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T17:27:48",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T07:51:18",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T18:36:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T08:03:33",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T17:21:29",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T08:11:49",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T17:56:32",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T08:12:46",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T17:16:18",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T07:52:20",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-13T18:33:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T08:04:34",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T20:46:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T07:50:22",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T20:15:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T08:04:50",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T19:46:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T08:07:11",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T17:59:56",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T08:05:30",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T17:35:04",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T07:51:57",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T17:49:24",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T07:56:55",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-14T17:36:17",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T07:48:16",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T19:42:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T07:59:53",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T17:16:46",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T08:03:46",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T20:35:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T07:53:19",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T17:17:20",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T08:00:38",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T19:25:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T07:45:53",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T17:33:56",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T08:02:39",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-15T17:34:08",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T08:02:02",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T17:13:29",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T07:55:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T17:44:54",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T07:52:41",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T17:16:46",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T08:13:26",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T17:24:14",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T07:53:02",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T17:52:49",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T07:56:57",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T17:41:44",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T08:11:53",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-16T17:15:46",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T08:04:58",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T17:49:22",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T08:11:02",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T17:41:25",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T08:11:48",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T17:49:54",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T07:48:13",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T17:02:23",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T08:00:43",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T17:52:49",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T08:06:31",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T17:35:41",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T07:53:08",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-17T19:31:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T08:03:15",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T17:19:23",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T08:10:49",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T17:45:45",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T08:08:36",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T18:27:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T07:50:52",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T17:40:31",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T08:08:57",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T17:00:27",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T07:51:04",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T17:08:14",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T07:54:52",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-18T17:05:39",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T07:56:57",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T17:12:33",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T07:50:19",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T17:21:49",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T08:07:48",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T17:21:34",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T08:10:48",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T17:49:48",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T07:48:02",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T18:04:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T08:05:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T20:35:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T08:07:37",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-20T17:50:12",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T07:50:09",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T17:22:10",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T08:01:46",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T17:58:39",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T07:52:01",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T19:56:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T07:54:30",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T17:29:56",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T08:06:48",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T17:08:18",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T08:04:26",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T17:56:30",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T07:46:42",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-21T17:43:03",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T07:45:53",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T17:12:14",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T07:53:24",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T17:09:23",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T08:10:37",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T17:40:53",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T08:01:42",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T17:50:34",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T07:47:25",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T17:31:31",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T08:08:13",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T17:59:47",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T08:00:47",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-22T17:00:28",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T07:56:12",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T17:16:50",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T08:10:14",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T17:31:49",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T08:02:52",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T17:46:27",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T08:08:31",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T19:13:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T08:01:32",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T20:26:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T07:56:36",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T18:15:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T08:04:45",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-23T19:32:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T07:48:53",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T17:18:38",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T07:51:38",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T20:45:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T08:00:32",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T17:22:19",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T07:46:03",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T17:14:05",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T08:13:17",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T17:19:30",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T07:48:56",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T19:02:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T07:58:45",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-24T17:11:52",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T08:02:35",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T17:29:02",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T08:08:02",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T17:48:17",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T07:59:32",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T17:06:29",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T08:09:35",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T17:17:28",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T08:01:35",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T17:01:51",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T08:09:48",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T17:49:38",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T08:13:40",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-25T17:41:46",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T07:46:37",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T17:37:02",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T08:02:55",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T17:19:17",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T08:12:44",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T17:48:49",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T08:09:04",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T17:08:53",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T08:02:46",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T19:21:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T07:46:30",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T17:45:26",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T07:59:54",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-27T17:29:18",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T07:50:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T17:39:13",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T07:56:24",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T17:06:32",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T07:52:40",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T17:42:28",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T08:01:48",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T17:52:53",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T08:13:55",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T17:18:04",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T07:55:40",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T17:03:06",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T08:11:50",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-28T17:46:31",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T07:48:07",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T18:20:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T07:47:57",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T17:09:07",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T08:08:51",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T17:27:41",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T08:14:43",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T17:35:30",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T07:45:13",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T17:41:28",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T07:55:28",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T17:46:39",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T07:45:03",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-29T17:29:04",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T07:57:51",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T17:15:34",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T08:03:22",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T17:12:56",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T07:53:40",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T17:07:06",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T08:08:58",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T17:05:56",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T08:08:04",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T17:45:36",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T07:48:33",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T20:20:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T07:49:03",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-04-30T19:38:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T07:55:37",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T17:45:43",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T08:04:56",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T17:42:03",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T07:53:45",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T17:18:04",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T08:09:14",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T17:02:21",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T07:54:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T19:21:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T07:55:43",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T17:43:04",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T08:01:50",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-01T19:39:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T07:51:17",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T17:58:50",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T07:52:11",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T17:41:12",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T08:08:30",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T17:36:58",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T08:08:51",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T17:20:09",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T07:45:53",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T17:24:11",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T08:11:13",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T19:58:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T07:57:19",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-02T17:58:27",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T07:55:46",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T17:30:58",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T08:07:34",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T17:14:06",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T07:58:57",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T18:31:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T08:04:15",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T17:24:41",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T07:51:43",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T20:46:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T08:10:18",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T20:58:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T08:02:26",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-04T17:36:14",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T07:52:56",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T17:35:32",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T07:58:38",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T18:09:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T07:46:24",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T18:08:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T07:47:56",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T19:57:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T08:09:11",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T20:44:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T07:49:51",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T19:01:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T08:00:17",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-05T20:27:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T07:52:34",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T17:42:06",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T07:48:31",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T17:44:54",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T07:51:22",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T17:50:11",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T07:45:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T17:32:01",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T07:47:15",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T18:35:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T08:05:33",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T17:10:29",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T08:13:28",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-06T17:32:16",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T08:13:50",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T17:31:16",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T07:45:01",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T17:58:53",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T08:14:15",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T17:31:25",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T08:07:38",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T20:28:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T08:05:31",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T17:03:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T08:09:21",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T19:15:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T07:51:11",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-07T17:39:41",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T08:05:16",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T17:43:50",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T08:02:39",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T17:27:01",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T07:46:10",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T19:03:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T07:53:43",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T17:41:25",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T07:53:15",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T17:48:56",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T08:11:40",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T17:03:02",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T07:45:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-08T17:37:12",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T07:53:07",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T17:01:33",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T08:07:22",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T20:09:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T07:50:09",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T20:55:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T07:51:51",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T17:54:29",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T08:03:10",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T17:49:39",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T08:12:56",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T18:38:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T07:45:38",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-09T19:02:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T08:07:46",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T19:21:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T08:04:17",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T20:08:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T07:58:38",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T17:54:36",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T07:51:45",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T17:02:55",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T08:02:54",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T17:05:20",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T07:47:11",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T17:18:58",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T08:14:06",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-11T17:36:05",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T08:02:35",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T19:50:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T08:07:30",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T17:15:55",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T07:52:20",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T17:23:45",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T07:56:13",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T17:26:45",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T07:56:22",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T17:00:06",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T07:57:43",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T17:44:57",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T07:49:12",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-12T17:31:26",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T08:14:11",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T17:03:29",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T07:47:20",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T19:19:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T07:52:13",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T17:38:17",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T08:07:51",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T17:38:45",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T07:58:43",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T17:42:56",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T07:55:41",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T17:20:25",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T08:06:36",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-13T17:32:21",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T08:05:05",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T17:15:48",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T08:11:26",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T17:33:57",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T08:00:03",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T17:38:47",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T07:47:16",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T20:45:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T07:58:54",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T18:07:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T08:13:13",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T17:54:24",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T08:08:47",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-14T17:12:19",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T08:08:02",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T17:20:32",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T08:13:58",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T17:27:38",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T08:12:39",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T19:38:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T07:46:02",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T20:40:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T07:49:43",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T19:31:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T08:00:14",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T17:39:11",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T07:50:57",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-15T17:35:33",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T08:14:51",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T17:50:55",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T07:55:23",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T20:56:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T07:57:21",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T17:55:23",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T07:49:46",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T17:06:14",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T07:56:09",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T17:46:12",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T07:55:58",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T17:19:40",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T07:45:56",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-16T17:09:49",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T07:52:05",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T17:05:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T07:58:36",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T17:39:09",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T08:12:47",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T17:50:38",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T08:08:21",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T17:42:58",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T07:56:41",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T17:15:45",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T07:58:03",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T17:52:43",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T08:08:18",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-18T20:52:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T08:06:16",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T17:22:42",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T07:55:32",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T19:40:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T08:07:29",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T18:46:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T08:14:54",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T19:55:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T07:54:03",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T17:51:39",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T08:05:44",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T17:34:34",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T08:08:42",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-19T17:34:06",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T08:04:29",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T17:52:34",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T07:59:30",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T17:10:46",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T08:00:57",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T18:24:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T08:09:34",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T17:37:07",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T07:57:35",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T17:34:12",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T08:06:43",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T17:59:28",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T08:01:49",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-20T17:19:55",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T07:55:24",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T17:03:58",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T07:45:24",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T17:50:06",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T08:08:43",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T18:13:00",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T08:14:47",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T17:13:17",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T08:09:19",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T20:03:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T07:51:47",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T17:37:53",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T08:09:45",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-21T17:30:53",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T08:05:18",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T17:04:22",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T08:10:25",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T18:22:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T07:51:40",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T17:30:03",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T08:06:10",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T17:35:10",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T07:57:16",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T19:04:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T07:53:30",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T19:10:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T07:51:03",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-22T17:15:44",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T08:12:17",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T17:12:47",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T08:09:12",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T19:24:00",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T07:49:23",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T17:33:32",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T07:49:48",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T17:25:22",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T08:02:17",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T17:31:16",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T07:56:39",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T17:10:48",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T07:58:04",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-23T20:07:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T08:10:52",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T17:23:14",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T08:13:41",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T17:26:33",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T08:13:25",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T17:33:37",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T07:48:33",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T17:46:43",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T07:49:20",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T17:27:11",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T07:58:15",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T17:31:43",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T08:09:58",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-25T20:13:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T07:51:21",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T17:22:00",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T08:10:04",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T17:46:20",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T08:03:58",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T17:00:41",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T07:58:21",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T17:52:17",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T07:54:49",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T18:35:00",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T07:59:45",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T17:49:13",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T08:10:23",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-26T20:07:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T07:46:22",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T17:49:09",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T07:58:29",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T17:17:10",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T07:51:34",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T17:03:57",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T08:13:12",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T17:28:51",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T08:14:02",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T17:22:44",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T08:07:23",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T20:48:00",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T07:47:07",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-27T17:28:54",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T08:11:29",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T17:59:14",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T07:54:38",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T17:09:55",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T07:53:17",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T17:57:19",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T07:46:33",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T17:27:43",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T07:49:51",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T17:51:13",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T07:53:35",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T17:27:36",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T08:07:41",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-28T17:44:57",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T08:10:13",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T17:46:38",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T07:48:10",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T17:41:08",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T08:04:35",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T17:07:54",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T07:56:23",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T20:14:00",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T08:14:17",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T17:58:24",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T08:03:52",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T17:49:27",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T07:57:39",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-29T17:52:06",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T07:51:58",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T17:49:12",
+        "EmployeeCode":  "GD-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T08:10:36",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T17:18:57",
+        "EmployeeCode":  "NS-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T08:02:46",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T17:48:47",
+        "EmployeeCode":  "IT-001",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T08:12:33",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T17:25:38",
+        "EmployeeCode":  "IT-002",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T07:45:37",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T17:32:52",
+        "EmployeeCode":  "IT-003",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T07:55:04",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T17:33:50",
+        "EmployeeCode":  "IT-004",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T07:55:20",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    },
+    {
+        "Timestamp":  "2026-05-30T18:52:00",
+        "EmployeeCode":  "IT-005",
+        "Device":  "Main Gate"
+    }
+]

@@ -124,15 +124,22 @@
                                          {
                                              <div class="position-absolute w-100 h-100 top-0 start-0 d-flex flex-column align-items-center justify-content-center z-index-2 bg-white bg-opacity-75">
                                                  <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
-                                                 <span class="text-gray-800 fw-bold">Đang xử lý tệp...</span>
+                                                  <span class="text-gray-800 fw-bold">@(_progressStatus != "" ? _progressStatus : "Đang xử lý tệp...")</span>
+                                                  @if (_progressPercentage > 0)
+                                                  {
+                                                      <div class="progress w-75 mt-3" style="height: 8px;">
+                                                          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: @((int)_progressPercentage)%"></div>
+                                                      </div>
+                                                      <span class="fs-8 text-muted mt-1">@((int)_progressPercentage)%</span>
+                                                  }
                                              </div>
                                          }
 
                                          <div class="text-center @(selectedFile != null ? "d-none" : "")">
                                              <i class="ki-outline ki-file-up fs-3x text-primary mb-3"></i>
                                              <div class="fs-6 fw-bold text-gray-700">Kéo thả tệp hoặc click để chọn</div>
-                                             <span class="text-muted fs-7">Hỗ trợ .xlsx, .xls, .csv, .txt, .json (Max 10MB)</span>
-                                             <InputFile OnChange="@OnInputFileChange" class="position-absolute opacity-0 w-100 h-100 top-0 start-0 cursor-pointer" accept=".xlsx,.xls,.csv,.txt,.json" disabled="@_isProcessing" />
+                                             <span class="text-muted fs-7">Hỗ trợ .xlsx, .xls, .csv, .txt, .json, .mdb (Max 10MB)</span>
+                                             <InputFile OnChange="@OnInputFileChange" class="position-absolute opacity-0 w-100 h-100 top-0 start-0 cursor-pointer" accept=".xlsx,.xls,.csv,.txt,.json,.mdb" disabled="@_isProcessing" />
                                          </div>
 
                                          @if (selectedFile != null)
@@ -162,14 +169,24 @@
                                             <table class="table table-bordered table-sm table-striped fs-8 mb-0 align-middle">
                                                 <thead class="position-sticky top-0 bg-light z-index-1">
                                                     <tr class="fw-bold text-gray-800 bg-light">
-                                                        @for (int i = 0; i < rawDataTable.First().Count; i++)
+                                                        @if (fileHeaders.Any())
                                                         {
-                                                            <th class="px-3 py-2 text-nowrap">Cột @(i + 1)</th>
+                                                            @foreach (var header in fileHeaders)
+                                                            {
+                                                                <th class="px-3 py-2 text-nowrap">@header</th>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @for (int i = 0; i < rawDataTable.First().Count; i++)
+                                                            {
+                                                                <th class="px-3 py-2 text-nowrap">Cột @(i + 1)</th>
+                                                            }
                                                         }
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach (var row in rawDataTable.Skip(1))
+                                                    @foreach (var row in (fileHeaders.Any() ? rawDataTable.Skip(1) : rawDataTable))
                                                     {
                                                         <tr>
                                                             @foreach (var cell in row)
@@ -242,7 +259,8 @@
                                     <h4 class="fs-6 fw-bold mb-3 text-gray-700">TXT & JSON:</h4>
                                     <ul class="fs-7 text-muted lh-lg">
                                         <li><strong>TXT:</strong> Phân tách bởi dấu phẩy, Tab hoặc dấu chấm phẩy. KhÔNG có tiêu đề. Ví dụ: <br><code>GD-001, 2026-02-21 08:00</code></li>
-                                        <li><strong>JSON:</strong> Mảng các đối tượng: <br><code>[{"EmployeeCode": "NV001", "Timestamp": "2026-02-21 08:00:15"}]</code></li>
+                                         <li><strong>JSON:</strong> Mảng các đối tượng: <br><code>[{"EmployeeCode": "NV001", "Timestamp": "2026-02-21 08:00:15"}]</code></li>
+                                         <li><strong>MDB:</strong> Truy xuất từ database máy vân tay (ZKTeco, WiseEye...). Quét bảng <code>T_data</code> hoặc <code>CHECKINOUT</code>.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -320,241 +338,228 @@
                             </div>
                         }
 
-                        @if (importResult.Errors.Any())
-                        {
-                            <div class="alert alert-dismissible bg-light-danger d-flex flex-column flex-sm-row p-5 mb-10 border border-danger border-dashed">
-                                <i class="ki-outline ki-information-5 fs-2hx text-danger me-4 mb-5 mb-sm-0"></i>
-                                <div class="d-flex flex-column pe-0 pe-sm-10">
-                                    <h4 class="fw-bold text-danger">Có vấn đề với dữ liệu:</h4>
-                                    <ul class="mb-0 fs-7 text-danger mt-2">
-                                        @foreach (var err in importResult.Errors.Take(10))
-                                        {
-                                            <li>@err</li>
-                                        }
-                                        @if (importResult.Errors.Count > 10)
-                                        {
-                                            <li class="fw-bold">... và @(importResult.Errors.Count - 10) lỗi khác</li>
-                                        }
-                                    </ul>
-                                </div>
-                                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                                    <i class="ki-outline ki-cross fs-1 text-danger"></i>
-                                </button>
-                            </div>
-                        }
-
-                        <div class="table-responsive border rounded custom-scrollbar bg-white" style="max-height: 550px; overflow-y: auto;">
-                            <table class="table table-hover table-row-dashed align-middle gs-6 gy-5 mb-0">
-                                <thead class="position-sticky top-0 bg-light z-index-2 shadow-sm">
-                                    <tr class="fw-bold fs-7 text-gray-800 border-bottom-2 border-gray-200 bg-light">
-                                        <th class="ps-4 min-w-150px">Nhân viên</th>
-                                        <th class="min-w-100px text-center">Ngày</th>
-                                        <th class="min-w-100px text-center">Giờ vào</th>
-                                        <th class="min-w-100px text-center">Giờ ra</th>
-                                        <th class="min-w-150px">Ca làm việc</th>
-                                        <th class="min-w-100px text-center">Tổng công</th>
-                                        <th class="min-w-120px text-center">Trạng thái</th>
-                                        <th class="text-end pe-4 min-w-100px">Ghi chú</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var empGroup in importResult.PreviewItems.GroupBy(r => r.EmployeeCode).OrderBy(g => g.Key))
+                        <!-- Tabs for Step 3 -->
+                        <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6 fw-bold border-bottom-0">
+                            <li class="nav-item">
+                                <a class="nav-link text-active-primary py-4 active" data-bs-toggle="tab" href="#kt_tab_processed">
+                                    <i class="ki-outline ki-calendar-8 fs-3 me-2"></i>Bảng tổng hợp công theo ngày
+                                    <span class="badge badge-light-primary ms-2 fs-8">@importResult.PreviewItems.Count</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-active-primary py-4" data-bs-toggle="tab" href="#kt_tab_raw">
+                                    <i class="ki-outline ki-file-sheet fs-3 me-2"></i>Dữ liệu thô gốc (Scans)
+                                    @if (importResult.RawItems.Any())
                                     {
-                                        <tr class="bg-light-primary">
-                                            <td colspan="8" class="fw-bold py-3 ps-4">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="symbol symbol-35px symbol-circle me-3">
-                                                        <div class="symbol-label bg-primary text-inverse-primary fw-bold">
-                                                            @(empGroup.First().EmployeeName?.Length > 0 ? empGroup.First().EmployeeName.Substring(0, 1).ToUpper() : "U")
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex flex-column">
-                                                        <span class="text-primary fs-6 fw-bold">@empGroup.First().EmployeeName</span>
-                                                        <span class="text-muted fs-8 fw-semibold">Mã NV: @empGroup.Key • @empGroup.Count() ngày công</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        @foreach (var item in empGroup.OrderBy(x => x.Date))
-                                        {
-                                            <tr class="hover-elevate-up transition-3ms">
-                                                <td class="ps-4">
-                                                    <div class="d-flex flex-column">
-                                                        <span class="text-gray-800 fw-bold fs-7">@item.EmployeeName</span>
-                                                        <span class="text-muted fs-8">@item.EmployeeCode</span>
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <span class="text-gray-700 fw-semibold fs-7">@FormatService.FormatDate(item.Date)</span>
-                                                </td>
-                                                <td class="text-center">
-                                                    @if (item.CheckIn.HasValue)
-                                                    {
-                                                        <span class="badge badge-light-success fs-7 fw-bold px-3 py-2 border border-success border-dashed">@FormatService.FormatTime(FormatService.ToLocalTime(item.CheckIn))</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="badge badge-light-secondary fs-8 fw-bold">--:--</span>
-                                                    }
-                                                </td>
-                                                <td class="text-center">
-                                                    @if (item.CheckOut.HasValue)
-                                                    {
-                                                        <span class="badge badge-light-info fs-7 fw-bold px-3 py-2 border border-info border-dashed">@FormatService.FormatTime(FormatService.ToLocalTime(item.CheckOut))</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="badge badge-light-secondary fs-8 fw-bold">--:--</span>
-                                                    }
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex flex-column">
-                                                        <span class="text-gray-800 fw-bold fs-7">@item.ShiftName</span>
-                                                        <span class="text-muted fs-8 fw-semibold text-uppercase">@item.ShiftCode</span>
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="d-flex flex-column align-items-center">
-                                                        <span class="text-dark fw-bolder fs-7">@FormatService.FormatNumber(item.WorkingHours, 1) h</span>
-                                                        @if (item.OvertimeHours > 0)
-                                                        {
-                                                            <span class="badge badge-light-primary fs-9 fw-bold mt-1">+@FormatService.FormatNumber(item.OvertimeHours, 1) OT</span>
-                                                        }
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    @{
-                                                        var statusClass = item.Status switch {
-                                                            "Normal" => "success",
-                                                            "Late" => "warning",
-                                                            "EarlyLeave" => "warning",
-                                                            "Late & Early" => "danger",
-                                                            "Absent" => "danger",
-                                                            "Missing Check-in" => "danger",
-                                                            "Mã NV không hợp lệ" => "danger",
-                                                            _ => "secondary"
-                                                        };
-                                                        var statusText = item.Status switch {
-                                                            "Normal" => "Bình thường",
-                                                            "Late" => "Đi trễ",
-                                                            "EarlyLeave" => "Về sớm",
-                                                            "Late & Early" => "Trễ & Sớm",
-                                                            "Absent" => "Vắng mặt",
-                                                            "Missing Check-in" => "Thiếu Check-in",
-                                                            "Mã NV không hợp lệ" => "Mã NV lỗi",
-                                                            _ => item.Status
-                                                        };
-                                                    }
-                                                    <span class="badge badge-light-@statusClass fs-8 fw-bold px-3 py-2 rounded-pill">@statusText</span>
-                                                </td>
-                                                <td class="text-end pe-4">
-                                                    @if (item.LateMinutes > 0) { <div class="text-warning fs-8 fw-bold"><i class="ki-outline ki-time text-warning fs-9 me-1"></i>Trễ: @item.LateMinutes ph</div> }
-                                                    @if (item.EarlyLeaveMinutes > 0) { <div class="text-danger fs-8 fw-bold mt-1"><i class="ki-outline ki-time text-danger fs-9 me-1"></i>Sớm: @item.EarlyLeaveMinutes ph</div> }
-                                                    @if (item.LateMinutes == 0 && item.EarlyLeaveMinutes == 0 && item.Status == "Normal") { <span class="badge badge-circle badge-light-success w-20px h-20px"><i class="ki-outline ki-check fs-9 text-success"></i></span> }
-                                                </td>
-                                            </tr>
-                                        }
+                                        <span class="badge badge-light-info ms-2 fs-8">@importResult.RawItems.Count</span>
                                     }
-                                </tbody>
-                            </table>
-                        </div>
+                                </a>
+                            </li>
+                        </ul>
 
-                        @if (importResult.RawItems.Any())
-                        {
-                            <div class="mt-10">
-                                <div class="d-flex align-items-center justify-content-between mb-4">
-                                    <h3 class="fw-bold text-dark mb-0">Dữ liệu thô gốc (@importResult.RawItems.Count bản ghi)</h3>
-                                    <button type="button" class="btn btn-sm btn-light-primary" @onclick="ToggleRawData">
-                                        <i class="ki-outline ki-@(showRawData ? "minus" : "plus") fs-3 me-1"></i>
-                                        @(showRawData ? "Thu gọn dữ liệu thô" : "Xem chi tiết dữ liệu thô")
-                                    </button>
+                        <div class="tab-content">
+                            <!-- Processed Tab -->
+                            <div class="tab-pane fade show active" id="kt_tab_processed" role="tabpanel">
+                                <div class="table-responsive border rounded custom-scrollbar bg-white shadow-sm" style="max-height: 550px; overflow-y: auto;">
+                                    <table class="table table-hover table-row-dashed align-middle gs-6 gy-5 mb-0">
+                                        <thead class="position-sticky top-0 bg-light z-index-2 shadow-sm">
+                                            <tr class="fw-bold fs-7 text-gray-800 border-bottom-2 border-gray-200 bg-light">
+                                                <th class="ps-4 min-w-150px">Nhân viên</th>
+                                                <th class="min-w-100px text-center">Ngày</th>
+                                                <th class="min-w-100px text-center">Giờ vào</th>
+                                                <th class="min-w-100px text-center">Giờ ra</th>
+                                                <th class="min-w-150px">Ca làm việc</th>
+                                                <th class="min-w-100px text-center">Tổng công</th>
+                                                <th class="min-w-120px text-center">Trạng thái</th>
+                                                <th class="text-end pe-4 min-w-100px">Ghi chú</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var empGroup in importResult.PreviewItems.GroupBy(r => r.EmployeeCode).OrderBy(g => g.Key))
+                                            {
+                                                <tr class="bg-light-primary">
+                                                    <td colspan="8" class="fw-bold py-3 ps-4">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="symbol symbol-35px symbol-circle me-3">
+                                                                <div class="symbol-label bg-primary text-inverse-primary fw-bold">
+                                                                    @(empGroup.First().EmployeeName?.Length > 0 ? empGroup.First().EmployeeName.Substring(0, 1).ToUpper() : "U")
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex flex-column">
+                                                                <span class="text-primary fs-6 fw-bold">@empGroup.First().EmployeeName</span>
+                                                                <span class="text-muted fs-8 fw-semibold">Mã NV: @empGroup.Key • @empGroup.Count() ngày công</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                @foreach (var item in empGroup.OrderBy(x => x.Date))
+                                                {
+                                                    <tr class="hover-elevate-up transition-3ms">
+                                                        <td class="ps-4">
+                                                            <div class="d-flex flex-column">
+                                                                <span class="text-gray-800 fw-bold fs-7">@item.EmployeeName</span>
+                                                                <span class="text-muted fs-8">@item.EmployeeCode</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span class="text-gray-700 fw-semibold fs-7 text-nowrap">@FormatService.FormatDate(item.Date)</span>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if (item.CheckIn.HasValue)
+                                                            {
+                                                                <span class="badge badge-light-success fs-7 fw-bold px-3 py-2 border border-success border-dashed">@FormatService.FormatTime(FormatService.ToLocalTime(item.CheckIn))</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge badge-light-secondary fs-8 fw-bold">--:--</span>
+                                                            }
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if (item.CheckOut.HasValue)
+                                                            {
+                                                                <span class="badge badge-light-info fs-7 fw-bold px-3 py-2 border border-info border-dashed">@FormatService.FormatTime(FormatService.ToLocalTime(item.CheckOut))</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge badge-light-secondary fs-8 fw-bold">--:--</span>
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex flex-column">
+                                                                <span class="text-gray-800 fw-bold fs-7">@item.ShiftName</span>
+                                                                <span class="text-muted fs-8 fw-semibold text-uppercase text-nowrap">@item.ShiftCode</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="d-flex flex-column align-items-center">
+                                                                <span class="text-dark fw-bolder fs-7">@FormatService.FormatNumber(item.WorkingHours, 1) h</span>
+                                                                @if (item.OvertimeHours > 0)
+                                                                {
+                                                                    <span class="badge badge-light-primary fs-9 fw-bold mt-1">+@FormatService.FormatNumber(item.OvertimeHours, 1) OT</span>
+                                                                }
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @{
+                                                                var statusClass = item.Status switch {
+                                                                    "Normal" => "success",
+                                                                    "Late" => "warning",
+                                                                    "EarlyLeave" => "warning",
+                                                                    "Late & Early" => "danger",
+                                                                    "Absent" => "danger",
+                                                                    "Missing Check-in" => "danger",
+                                                                    "Mã NV không hợp lệ" => "danger",
+                                                                    _ => "secondary"
+                                                                };
+                                                                var statusText = item.Status switch {
+                                                                    "Normal" => "Bình thường",
+                                                                    "Late" => "Đi trễ",
+                                                                    "EarlyLeave" => "Về sớm",
+                                                                    "Late & Early" => "Trễ & Sớm",
+                                                                    "Absent" => "Vắng mặt",
+                                                                    "Missing Check-in" => "Thiếu Check-in",
+                                                                    "Mã NV không hợp lệ" => "Mã NV lỗi",
+                                                                    _ => item.Status
+                                                                };
+                                                            }
+                                                            <span class="badge badge-light-@statusClass fs-8 fw-bold px-3 py-2 rounded-pill">@statusText</span>
+                                                        </td>
+                                                        <td class="text-end pe-4">
+                                                            @if (item.LateMinutes > 0) { <div class="text-warning fs-8 fw-bold"><i class="ki-outline ki-time text-warning fs-9 me-1"></i>Trễ: @item.LateMinutes ph</div> }
+                                                            @if (item.EarlyLeaveMinutes > 0) { <div class="text-danger fs-8 fw-bold mt-1"><i class="ki-outline ki-time text-danger fs-9 me-1"></i>Sớm: @item.EarlyLeaveMinutes ph</div> }
+                                                            @if (item.LateMinutes == 0 && item.EarlyLeaveMinutes == 0 && item.Status == "Normal") { <span class="badge badge-circle badge-light-success w-20px h-20px"><i class="ki-outline ki-check fs-9 text-success"></i></span> }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <p class="text-gray-500 mb-5">Hiển thị lịch sử tất cả các lần quét thẻ, được nhóm theo Mã nhân viên và Ngày để dễ dàng đối soát.</p>
-                                
-                                @if (showRawData)
+                            </div>
+
+                            <!-- Raw Scans Tab -->
+                            <div class="tab-pane fade" id="kt_tab_raw" role="tabpanel">
+                                @if (importResult.RawItems.Any())
                                 {
-                                    @if (importResult.FileHeaders != null && importResult.FileHeaders.Any() && importResult.RawItems.Any(r => r.RowData != null && r.RowData.Any()))
-                                    {
-                                        <div class="table-responsive border rounded animate__animated animate__fadeIn" style="max-height: 500px; overflow-y: auto;">
-                                            <table class="table table-hover table-bordered table-striped table-row-dashed align-middle gs-4 gy-3 mb-0 fs-8">
-                                                <thead class="position-sticky top-0 bg-light z-index-1">
-                                                    <tr class="fw-bold fs-7 text-gray-800 text-uppercase">
+                                    <div class="table-responsive border rounded bg-white shadow-sm" style="max-height: 550px; overflow-y: auto;">
+                                        <table class="table table-hover table-row-dashed align-middle gs-4 gy-3 mb-0 fs-8">
+                                            <thead class="position-sticky top-0 bg-light z-index-2 shadow-sm">
+                                                <tr class="fw-bold fs-7 text-gray-800 text-uppercase bg-light">
+                                                    @if (importResult.FileHeaders.Any())
+                                                    {
                                                         @foreach (var header in importResult.FileHeaders)
                                                         {
-                                                            <th class="px-2">@header</th>
+                                                            <th class="px-3">@header</th>
                                                         }
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var empGroup in importResult.RawItems.GroupBy(r => r.EmployeeCode))
+                                                    }
+                                                    else
                                                     {
-                                                        <!-- Header Line for Employee -->
-                                                        <tr class="bg-light-primary text-primary">
-                                                            <td colspan="@(importResult.FileHeaders.Count + 1)" class="fw-bold py-2">
-                                                                <i class="ki-outline ki-user text-primary me-2"></i> NV: @empGroup.Key (@empGroup.Count() bản ghi thô)
-                                                            </td>
-                                                        </tr>
-                                                        <!-- Detailed Raw Scan Lines -->
-                                                        @foreach (var raw in empGroup.OrderBy(x => x.Timestamp))
-                                                        {
-                                                            <tr>
+                                                        <th class="ps-6">Mã Nhân Viên</th>
+                                                        <th>Thời Gian Quét</th>
+                                                        <th class="text-end pe-6">Nguồn</th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var empGroup in importResult.RawItems.GroupBy(r => r.EmployeeCode).OrderBy(g => g.Key))
+                                                {
+                                                    <tr class="bg-light-info text-info">
+                                                        <td colspan="@(importResult.FileHeaders.Any() ? importResult.FileHeaders.Count : 3)" class="fw-bolder py-3 ps-6">
+                                                            <i class="ki-outline ki-user text-info me-2 fs-5"></i> Nhân viên: @empGroup.Key (@empGroup.Count() lần quét thẻ)
+                                                        </td>
+                                                    </tr>
+                                                    @foreach (var raw in empGroup.OrderBy(x => x.Timestamp))
+                                                    {
+                                                        <tr class="hover-elevate-up transition-3ms">
+                                                            @if (importResult.FileHeaders.Any())
+                                                            {
                                                                 @foreach (var header in importResult.FileHeaders)
                                                                 {
-                                                                    <td class="px-2">
+                                                                    <td class="px-3 text-gray-700">
                                                                         @(raw.RowData != null && raw.RowData.ContainsKey(header) ? raw.RowData[header] : string.Empty)
                                                                     </td>
                                                                 }
-                                                            </tr>
-                                                        }
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <!-- Fallback when no headers exist -->
-                                        <div class="table-responsive border rounded animate__animated animate__fadeIn" style="max-height: 500px; overflow-y: auto;">
-                                            <table class="table table-hover table-striped table-row-dashed align-middle gs-4 gy-3 mb-0">
-                                                <thead class="position-sticky top-0 bg-light z-index-1">
-                                                    <tr class="fw-bold fs-7 text-gray-800 text-uppercase">
-                                                        <th class="w-200px">Mã Nhân Viên</th>
-                                                        <th>Thời Gian Quét (Giờ hệ thống)</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var group in importResult.RawItems.GroupBy(r => r.EmployeeCode))
-                                                    {
-                                                        <tr class="bg-light-primary text-primary">
-                                                            <td colspan="2" class="fw-bold py-2">
-                                                                <i class="ki-outline ki-user text-primary me-2"></i> NV: @group.Key (@group.Count() bản ghi)
-                                                            </td>
-                                                        </tr>
-                                                        @foreach (var raw in group.OrderBy(x => x.Timestamp))
-                                                        {
-                                                            <tr>
-                                                                <td class="ps-5">
-                                                                    <span class="badge badge-light fs-7 fw-bold">@raw.EmployeeCode</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="ps-10">
+                                                                    <span class="badge badge-light-dark fs-7 fw-bold px-3">@raw.EmployeeCode</span>
                                                                 </td>
                                                                 <td>
-                                                                     <span class="text-gray-800 fw-semibold">@FormatService.FormatDateTime(FormatService.ToLocalTime(raw.Timestamp))</span>
+                                                                     <div class="d-flex align-items-center">
+                                                                         <i class="ki-outline ki-time fs-5 text-gray-500 me-2"></i>
+                                                                         <span class="text-gray-800 fw-bold fs-7">@FormatService.FormatDateTime(FormatService.ToLocalTime(raw.Timestamp))</span>
+                                                                     </div>
                                                                 </td>
-                                                            </tr>
-                                                        }
+                                                                <td class="text-end pe-6 text-muted fs-8">@importSource</td>
+                                                            }
+                                                        </tr>
                                                     }
-                                                </tbody>
-                                            </table>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+                                        <i class="ki-outline ki-information fs-2tx text-warning me-4"></i>
+                                        <div class="d-flex flex-stack flex-grow-1">
+                                            <div class="fw-semibold">
+                                                <h4 class="text-gray-900 fw-bold">Không có dữ liệu thô!</h4>
+                                                <div class="fs-6 text-gray-700">Dữ liệu thô không được trích xuất từ định dạng này hoặc tệp trống.</div>
+                                            </div>
                                         </div>
-                                    }
+                                    </div>
                                 }
                             </div>
-                        }
+                        </div>
                     }
                     else if (currentStep == 4 && importResult != null)
                     {
                         <!-- Step 4: Result -->
                         <div class="text-center py-20">
-                            <div class="mb-10">
+                            <div class="mb-10 animate__animated animate__bounceIn">
                                 <i class="ki-outline ki-check-circle fs-5x text-success mb-5"></i>
                                 <h1 class="fw-bold text-dark mb-3">Nhập dữ liệu thành công!</h1>
                                 <p class="text-gray-500 fs-5">Hệ thống đã xử lý xong @importResult.SuccessCount bản ghi dữ liệu chấm công.</p>
@@ -562,19 +567,19 @@
 
                             <div class="row g-5 max-w-800px mx-auto mb-10">
                                 <div class="col-4">
-                                    <div class="bg-light-success px-4 py-8 rounded-2 border border-success border-dashed text-center h-100">
+                                    <div class="bg-light-success px-4 py-8 rounded-2 border border-success border-dashed text-center h-100 shadow-sm transition-3ms hover-elevate-up">
                                         <div class="fs-2hx fw-bold text-success mb-2">@FormatService.FormatNumber(importResult.SuccessCount)</div>
                                         <div class="text-success fw-bold fs-7">Thành công</div>
                                     </div>
                                 </div>
                                 <div class="col-4">
-                                    <div class="bg-light-danger px-4 py-8 rounded-2 border border-danger border-dashed text-center h-100">
+                                    <div class="bg-light-danger px-4 py-8 rounded-2 border border-danger border-dashed text-center h-100 shadow-sm transition-3ms hover-elevate-up">
                                         <div class="fs-2hx fw-bold text-danger mb-2">@FormatService.FormatNumber(importResult.FailureCount)</div>
                                         <div class="text-danger fw-bold fs-7">Lỗi dữ liệu</div>
                                     </div>
                                 </div>
                                 <div class="col-4">
-                                    <div class="bg-light-warning px-4 py-8 rounded-2 border border-warning border-dashed text-center h-100">
+                                    <div class="bg-light-warning px-4 py-8 rounded-2 border border-warning border-dashed text-center h-100 shadow-sm transition-3ms hover-elevate-up">
                                         <div class="fs-2hx fw-bold text-warning mb-2">@FormatService.FormatNumber(importResult.DuplicateCount)</div>
                                         <div class="text-warning fw-bold fs-7">Đã trùng / Bỏ qua</div>
                                     </div>
@@ -585,21 +590,62 @@
                             {
                                 <div class="text-start max-w-800px mx-auto mb-10">
                                     <h5 class="fw-bold text-danger mb-4">Các lỗi gặp phải:</h5>
-                                    <div class="bg-light-danger p-5 rounded max-h-300px scroll-y">
+                                    <div class="bg-light-danger p-5 rounded max-h-300px scroll-y border border-danger border-dashed text-gray-700">
                                         @foreach (var error in importResult.Errors)
                                         {
                                             <div class="d-flex align-items-center mb-2">
                                                 <i class="bullet bullet-dot bg-danger me-2"></i>
-                                                <span class="text-gray-700 fs-7">@error</span>
+                                                <span class="fs-7">@error</span>
                                             </div>
                                         }
                                     </div>
                                 </div>
                             }
 
-                            <div class="d-flex justify-content-center">
-                                <button class="btn btn-light me-4 px-10" @onclick="Reset">Import mới</button>
-                                <a href="/attendance/timesheet" class="btn btn-primary px-10">Kiểm tra Bảng công</a>
+                            @if (importResult.RawItems.Any())
+                            {
+                                <div class="text-start max-w-800px mx-auto mb-10">
+                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                        <h5 class="fw-bold text-dark mb-0">Dữ liệu thô đã nhập (@importResult.RawItems.Count bản ghi):</h5>
+                                        <button class="btn btn-sm btn-light-info" @onclick="ToggleRawData">
+                                            <i class="ki-outline ki-@(showRawData ? "minus" : "plus") fs-4"></i>
+                                            @(showRawData ? "Thu gọn" : "Xem chi tiết")
+                                        </button>
+                                    </div>
+                                    @if (showRawData)
+                                    {
+                                        <div class="table-responsive border rounded bg-white max-h-400px scroll-y animate__animated animate__fadeIn">
+                                            <table class="table table-row-dashed table-striped align-middle gs-4 gy-2 mb-0 fs-9">
+                                                <thead class="bg-light position-sticky top-0">
+                                                    <tr class="fw-bold text-gray-800">
+                                                        <th class="ps-4">Mã NV</th>
+                                                        <th>Thời gian quét</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var raw in importResult.RawItems.Take(500))
+                                                    {
+                                                        <tr>
+                                                            <td class="ps-4 fw-bold">@raw.EmployeeCode</td>
+                                                            <td>@FormatService.FormatDateTime(FormatService.ToLocalTime(raw.Timestamp))</td>
+                                                        </tr>
+                                                    }
+                                                    @if (importResult.RawItems.Count > 500)
+                                                    {
+                                                        <tr>
+                                                            <td colspan="2" class="text-center text-muted py-2 bg-light">... hiển thị 500 bản ghi đầu tiên ...</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            <div class="d-flex justify-content-center border-top pt-10">
+                                <button class="btn btn-secondary me-4 px-10" @onclick="Reset">Import mới</button>
+                                <a href="/attendance/timesheet" class="btn btn-primary px-10">Kiểm tra Bảng công <i class="ki-outline ki-arrow-right fs-3 ms-2"></i></a>
                             </div>
                         </div>
                     }

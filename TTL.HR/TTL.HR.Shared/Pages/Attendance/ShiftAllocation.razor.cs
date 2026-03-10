@@ -25,6 +25,9 @@ namespace TTL.HR.Shared.Pages.Attendance
         [Inject] private IJSRuntime JS { get; set; } = default!;
 
         [Parameter]
+        public string? Id { get; set; }
+
+        [Parameter]
         [SupplyParameterFromQuery]
         public string? ShiftId { get; set; }
 
@@ -53,7 +56,7 @@ namespace TTL.HR.Shared.Pages.Attendance
         private AssignWorkScheduleModel _assignModel = new();
         
         // Step 2: Selection State
-        private string _selectionMode = "Department"; // "Employee" or "Department"
+        private string _selectionMode = "Employee"; // "Employee" or "Department"
         private List<EmployeeDto> _employeeList = new();
         private int _pageIndex = 1;
         private int _pageSize = 10;
@@ -101,31 +104,43 @@ namespace TTL.HR.Shared.Pages.Attendance
                 if (_selectionMode == "Employee")
                 {
                     return _selectedIds
-                        .Select(id => _employeeCache.TryGetValue(id, out var e) ? e : new EmployeeDto { Id = id, FullName = "Nhân viên " + id })
+                        .Select(id => {
+                            var eId = id.Trim();
+                            return _employeeCache.TryGetValue(eId, out var e) ? e : new EmployeeDto { Id = eId, FullName = "Nhân viên " + eId };
+                        })
                         .ToList();
                 }
                 
-                return _employeeList.Where(e => !string.IsNullOrEmpty(e.DepartmentId) && _selectedDeptIds.Contains(e.DepartmentId)).ToList();
+                // In department mode, we aggregate all employees currently in cache that belong to the selected departments
+                return _employeeCache.Values
+                    .Where(e => !string.IsNullOrEmpty(e.DepartmentId) && _selectedDeptIds.Any(dId => dId.Trim().Equals(e.DepartmentId.Trim(), StringComparison.OrdinalIgnoreCase)))
+                    .ToList();
             }
         }
 
-        private List<EmployeeDto> NewlySelectedEmployees => SelectedEmployees.Where(e => !_initialSelectedIds.Contains(e.Id)).ToList();
-        private List<EmployeeDto> ExistingSelectedEmployees => SelectedEmployees.Where(e => _initialSelectedIds.Contains(e.Id)).ToList();
+        private List<EmployeeDto> NewlySelectedEmployees => SelectedEmployees.Where(e => !_initialSelectedIds.Any(id => id.Trim().Equals(e.Id.Trim(), StringComparison.OrdinalIgnoreCase))).ToList();
+        private List<EmployeeDto> ExistingSelectedEmployees => SelectedEmployees.Where(e => _initialSelectedIds.Any(id => id.Trim().Equals(e.Id.Trim(), StringComparison.OrdinalIgnoreCase))).ToList();
 
         private int SelectedEmployeeCount => SelectedEmployees.Count;
         private int NewEmployeeCount => NewlySelectedEmployees.Count;
 
-        private int SelectedObjectCount => _selectionMode == "Department" ? _selectedDeptIds.Count : _selectedIds.Count;
+        private int SelectedObjectCount => SummaryItems.Count;
 
-        private string SelectedObjectLabel => _selectionMode == "Department" ? "Phòng ban" : "Nhân viên";
+        private string SelectedObjectLabel => "Đối tượng";
         
         private int NewObjectCount => _selectionMode == "Department" 
-            ? _selectedDeptIds.Count(id => !_initialSelectedDeptIds.Contains(id)) 
+            ? _selectedDeptIds.Count(id => !_initialSelectedDeptIds.Any(oid => oid.Trim().Equals(id.Trim(), StringComparison.OrdinalIgnoreCase))) 
             : NewlySelectedEmployees.Count;
 
         private int ExistingObjectCount => _selectionMode == "Department" 
-            ? _selectedDeptIds.Count(id => _initialSelectedDeptIds.Contains(id)) 
+            ? _selectedDeptIds.Count(id => _initialSelectedDeptIds.Any(oid => oid.Trim().Equals(id.Trim(), StringComparison.OrdinalIgnoreCase))) 
             : ExistingSelectedEmployees.Count;
+
+        private List<SummaryItemModel> _successItems = new();
+        private bool _isSuccess = false;
+        private bool _showConflictModal = false;
+        private string _conflictMessage = "";
+        private HashSet<string> _finalIdsToAssign = new();
 
         private List<string> NewlySelectedNames 
         {
@@ -133,25 +148,14 @@ namespace TTL.HR.Shared.Pages.Attendance
             {
                 if (_selectionMode == "Department")
                 {
-                    return _departments.Where(d => _selectedDeptIds.Contains(d.Id) && !_initialSelectedDeptIds.Contains(d.Id))
+                    return _departments.Where(d => _selectedDeptIds.Any(sid => sid.Trim().Equals(d.Id.Trim(), StringComparison.OrdinalIgnoreCase)) 
+                                               && !_initialSelectedDeptIds.Any(oid => oid.Trim().Equals(d.Id.Trim(), StringComparison.OrdinalIgnoreCase)))
                                      .Select(d => d.Name).ToList();
                 }
                 return NewlySelectedEmployees.Select(e => e.FullName ?? "").ToList();
             }
         }
 
-        private List<string> ExistingSelectedNames
-        {
-            get
-            {
-                if (_selectionMode == "Department")
-                {
-                    return _departments.Where(d => _selectedDeptIds.Contains(d.Id) && _initialSelectedDeptIds.Contains(d.Id))
-                                     .Select(d => d.Name).ToList();
-                }
-                return ExistingSelectedEmployees.Select(e => e.FullName ?? "").ToList();
-            }
-        }
 
         private List<DateTime> GetPreviewDates()
         {
@@ -187,90 +191,392 @@ namespace TTL.HR.Shared.Pages.Attendance
         // Step 3: Review State
         private List<EmployeeScheduleDto> _readyToAssign = new();
         private List<EmployeeScheduleDto> _conflictToUpdate = new();
-        private bool _overwriteConflicts = true;
+        private bool _overwriteConflicts = true; // Mặc định ghi đè để lưu trạng thái mới nhất
 
         protected override async Task OnInitializedAsync()
         {
+            // Initial load moved to OnParametersSetAsync to handle URL changes
+        }
+
+        private string? _lastShiftId;
+        private int? _lastMonth;
+        private int? _lastYear;
+        protected override async Task OnParametersSetAsync()
+        {
+            if (ShiftId != _lastShiftId || Month != _lastMonth || Year != _lastYear)
+            {
+                _lastShiftId = ShiftId;
+                _lastMonth = Month;
+                _lastYear = Year;
+                _isInitialized = false; // Force re-init
+                await InitializePageAsync();
+            }
+        }
+
+        private bool _isInitialized = false;
+        private async Task InitializePageAsync()
+        {
+            if (_isInitialized) return;
+            _isInitialized = true;
             _isLoading = true;
             try
             {
-                _departments = await DepartmentService.GetDepartmentsAsync();
-                _statuses = await MasterDataService.GetCachedLookupsAsync("EmployeeStatus");
-                _workplaces = await MasterDataService.GetCachedLookupsAsync("Workplace");
-                _shifts = (await AttendanceService.GetWorkShiftsAsync()).ToList();
+                // 1. Initial lookup load (Global)
+                var deptData = await DepartmentService.GetDepartmentsAsync();
+                _departments = deptData?.ToList() ?? new List<DepartmentModel>();
+                
+                var statusData = await MasterDataService.GetCachedLookupsAsync("EmployeeStatus");
+                _statuses = statusData?.ToList() ?? new List<LookupModel>();
+                
+                var workplaceData = await MasterDataService.GetCachedLookupsAsync("Workplace");
+                _workplaces = workplaceData?.ToList() ?? new List<LookupModel>();
                 
                 var now = DateTime.Today;
-                var targetMonth = Month ?? now.Month;
-                var targetYear = Year ?? now.Year;
+                var startDate = now;
+                var endDate = new DateTime(now.Year, now.Month, 1).AddMonths(1).AddDays(-1);
 
-                // Initialize Model
-                _assignModel = new AssignWorkScheduleModel
+                if (Month.HasValue && Year.HasValue)
                 {
-                    StartDate = new DateTime(targetYear, targetMonth, 1),
-                    EndDate = new DateTime(targetYear, targetMonth, 1).AddMonths(1).AddDays(-1),
-                    ShiftId = !string.IsNullOrEmpty(ShiftId) ? ShiftId : (_shifts.FirstOrDefault()?.Id ?? ""),
-                    DaysOfWeek = new List<DayOfWeek> { 
-                        DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, 
-                        DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday 
-                    }
-                };
-
-                if (Mode == "clone") _overwriteConflicts = true;
-
-                _isFilteredByShift = !string.IsNullOrEmpty(ShiftId);
-                if (_isFilteredByShift)
-                {
-                    _assignModel.ShiftId = ShiftId;
-                    var selectedShift = _shifts.FirstOrDefault(s => s.Id == ShiftId);
-                    if (selectedShift != null)
+                    if (Month.Value != now.Month || Year.Value != now.Year)
                     {
-                        _shifts = new List<WorkShiftModel> { selectedShift };
+                        startDate = new DateTime(Year.Value, Month.Value, 1);
+                        endDate = startDate.AddMonths(1).AddDays(-1);
                     }
                 }
 
-                await LoadEmployeesAsync();
-                
+                _assignModel = new AssignWorkScheduleModel
+                {
+                    StartDate = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc),
+                    EndDate = DateTime.SpecifyKind(endDate.Date, DateTimeKind.Utc),
+                    // DaysOfWeek defaults to M-S in AssignWorkScheduleModel definition
+                    IsFlexible = true,
+                    BypassQueue = true
+                };
+
+                // 2. Load Shifts based on context - ENSURE ONLY ONE IF SHIFTID PRESENT
+                string? targetShiftId = Id ?? ShiftId;
+                if (!string.IsNullOrEmpty(targetShiftId))
+                {
+                    _isFilteredByShift = true;
+                    _overwriteConflicts = true;
+                    _assignModel.ShiftId = targetShiftId.Trim();
+
+                    // Fetch ONLY the specific shift
+                    var found = await AttendanceService.GetWorkShiftByIdAsync(targetShiftId);
+                    if (found == null)
+                    {
+                        var all = await AttendanceService.GetWorkShiftsAsync();
+                        found = all.FirstOrDefault(s => NormalizedMatch(s.Id, targetShiftId));
+                    }
+
+                    if (found != null)
+                    {
+                        _shifts = new List<WorkShiftModel> { found };
+                        _assignModel.ShiftId = found.Id;
+                        _assignModel.IsFlexible = found.IsFlexible;
+                        
+                        // Auto-fill DaysOfWeek from Shift configuration
+                        if (found.WorkingDays != null && found.WorkingDays.Any())
+                        {
+                            _assignModel.DaysOfWeek = new List<DayOfWeek>(found.WorkingDays);
+                        }
+
+                        // Auto-fill Application Period from Shift configuration if available
+                        if (found.StartDate.HasValue)
+                        {
+                            _assignModel.StartDate = DateTime.SpecifyKind(found.StartDate.Value.Date, DateTimeKind.Utc);
+                        }
+                        if (found.EndDate.HasValue)
+                        {
+                            _assignModel.EndDate = DateTime.SpecifyKind(found.EndDate.Value.Date, DateTimeKind.Utc);
+                        }
+                    }
+                    else
+                    {
+                        _shifts = new List<WorkShiftModel>();
+                    }
+                }
+                else
+                {
+                    _shifts = (await AttendanceService.GetWorkShiftsAsync()).ToList();
+                    var firstShift = _shifts.FirstOrDefault();
+                    _assignModel.ShiftId = firstShift?.Id ?? "";
+                    _assignModel.IsFlexible = firstShift?.IsFlexible ?? false;
+
+                    if (firstShift != null)
+                    {
+                        if (firstShift.WorkingDays != null && firstShift.WorkingDays.Any())
+                            _assignModel.DaysOfWeek = new List<DayOfWeek>(firstShift.WorkingDays);
+                        
+                        if (firstShift.StartDate.HasValue)
+                            _assignModel.StartDate = DateTime.SpecifyKind(firstShift.StartDate.Value.Date, DateTimeKind.Utc);
+                        
+                        if (firstShift.EndDate.HasValue)
+                            _assignModel.EndDate = DateTime.SpecifyKind(firstShift.EndDate.Value.Date, DateTimeKind.Utc);
+                    }
+                }
+
+                // 3. Sequential Sync
+                try 
+                {
+                    await LoadEmployeesAsync(true);
+                    if (!string.IsNullOrEmpty(targetShiftId))
+                    {
+                        await PreSelectExistingAssignments();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ShiftAllocation] Sync delayed: {ex.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error initialized: {ex.Message}");
+                Console.WriteLine($"[ShiftAllocation] Critical Init Failure: {ex.Message}");
             }
             finally
             {
                 _isLoading = false;
+                StateHasChanged();
             }
+        }
+
+        private void OnSelectionModeChanged(string mode)
+        {
+            _isSuccess = false;
+            _selectionMode = mode;
+            // Không xóa danh sách đã chọn để tránh mất trạng thái khi người dùng đổi tab xem
         }
 
         private void SelectShift(string shiftId)
         {
+            _isSuccess = false;
             _assignModel.ShiftId = shiftId;
+            var shift = _shifts.FirstOrDefault(s => s.Id == shiftId);
+            if (shift != null)
+            {
+                _assignModel.IsFlexible = shift.IsFlexible;
+                
+                // Auto-fill DaysOfWeek when switching shifts
+                if (shift.WorkingDays != null && shift.WorkingDays.Any())
+                {
+                    _assignModel.DaysOfWeek = new List<DayOfWeek>(shift.WorkingDays);
+                }
+
+                // Auto-fill Application Period when switching shifts
+                if (shift.StartDate.HasValue)
+                    _assignModel.StartDate = DateTime.SpecifyKind(shift.StartDate.Value.Date, DateTimeKind.Utc);
+
+                if (shift.EndDate.HasValue)
+                    _assignModel.EndDate = DateTime.SpecifyKind(shift.EndDate.Value.Date, DateTimeKind.Utc);
+            }
+            StateHasChanged();
         }
 
-
-        private async Task LoadEmployeesAsync()
+        private bool NormalizedMatch(string? id1, string? id2)
         {
-            // We set a large page size for allocation to make it easier to select many
-            var result = await EmployeeService.GetEmployeesPaginatedAsync(1, 1000, _searchTerm, _selectedDeptIdInner, _selectedStatusId, _selectedWorkplace);
-            _employeeList = result.Items.ToList();
+            if (string.IsNullOrEmpty(id1) || string.IsNullOrEmpty(id2)) return false;
+            return id1.Trim().Equals(id2.Trim(), StringComparison.OrdinalIgnoreCase);
+        }
 
-
-            _totalCount = _employeeList.Count;
-            
-            // Populating cache
-            foreach (var emp in _employeeList)
+        private async Task PreSelectExistingAssignments()
+        {
+            try
             {
-                if (!_employeeCache.ContainsKey(emp.Id))
-                    _employeeCache[emp.Id] = emp;
+                _selectedIds.Clear();
+                _initialSelectedIds.Clear();
+                _selectedDeptIds.Clear();
+                _initialSelectedDeptIds.Clear();
+
+                if (string.IsNullOrEmpty(_assignModel.ShiftId)) return;
+
+                // Sync assignments ONLY for the current selected shift
+                // EXPAND range to full month to ensure we find anyone assigned in the current cycle
+                var fetchStart = new DateTime(_assignModel.StartDate.Year, _assignModel.StartDate.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+                var fetchEnd = fetchStart.AddMonths(1).AddDays(-1);
+                
+                var schedules = (await AttendanceService.GetMonthlyWorkSchedulesAsync(fetchStart, fetchEnd, 5000)).ToList();
+                
+                string matchShiftId = _assignModel.ShiftId;
+                var currentShift = _shifts.FirstOrDefault(s => NormalizedMatch(s.Id, matchShiftId));
+                if (currentShift != null) _assignModel.IsFlexible = currentShift.IsFlexible;
+                
+                foreach (var empSch in schedules)
+                {
+                    // Check if this employee has THIS shift on ANY of the monitored days in the WHOLE MONTH
+                    var matchedSchedules = empSch.Schedules.Where(s => !string.IsNullOrEmpty(s.ShiftId) && NormalizedMatch(s.ShiftId, matchShiftId)).ToList();
+                    
+                    if (matchedSchedules.Any())
+                    {
+                        var eId = empSch.EmployeeId.Trim();
+                        _selectedIds.Add(eId);
+                        _initialSelectedIds.Add(eId);
+                        
+                        // Hydrate cache
+                        if (!_employeeCache.ContainsKey(eId))
+                        {
+                            _employeeCache[eId] = new EmployeeDto { 
+                                Id = eId, 
+                                FullName = empSch.EmployeeName, 
+                                Code = empSch.EmployeeCode,
+                                DepartmentId = empSch.DepartmentId,
+                                DepartmentName = empSch.Department,
+                                AvatarUrl = empSch.AvatarUrl
+                            };
+                        }
+                    }
+                }
+
+                // Restore Department selections if ALL employees found for a department have this shift
+                if (_departments != null && _departments.Any())
+                {
+                    foreach (var dept in _departments)
+                    {
+                        var deptId = dept.Id.Trim();
+                        // Find all employees that we know belong to this department (from cache or schedule list)
+                        var deptEmployees = _employeeCache.Values
+                            .Where(e => !string.IsNullOrEmpty(e.DepartmentId) && NormalizedMatch(e.DepartmentId, deptId))
+                            .Select(e => e.Id.Trim())
+                            .ToList();
+                            
+                        // If we have employees for this dept and all of them are assigned this shift, mark the dept as selected
+                        if (deptEmployees.Any() && deptEmployees.All(id => _selectedIds.Contains(id)))
+                        {
+                            _selectedDeptIds.Add(deptId);
+                            _initialSelectedDeptIds.Add(deptId);
+                        }
+                    }
+                    
+                    // If we have any department fully selected, default to Department mode for better UX
+                    if (_selectedDeptIds.Any()) 
+                    {
+                        _selectionMode = "Department";
+                    }
+                }
+                
+                StateHasChanged();
+            }
+            catch (Exception ex) 
+            { 
+                Console.WriteLine("[ShiftAllocation] Restoration failed: " + ex.Message); 
+            }
+        }
+
+        private async Task RemoveFromAllocation(string name, string id)
+        {
+            var targetId = id.Trim();
+            bool isInitial = false;
+            
+            // Xác định xem đối tượng này đã được gán sẵn trong DB chưa
+            if (_selectedDeptIds.Any(did => NormalizedMatch(did, targetId)))
+                isInitial = _initialSelectedDeptIds.Any(oid => NormalizedMatch(oid, targetId));
+            else
+                isInitial = _initialSelectedIds.Any(oid => NormalizedMatch(oid, targetId));
+
+            // Chỉ yêu cầu xác nhận và gọi API xóa nếu đã lưu trong DB
+            if (isInitial)
+            {
+                var confirm = await JS.InvokeAsync<bool>("confirm", $"Bạn có chắc chắn muốn gỡ bỏ {name} khỏi lịch gán này không? Thao tác này sẽ xóa lịch làm việc ĐÃ LƯU của đối tượng.");
+                if (!confirm) return;
             }
 
-            // Re-check all selected state
-            _isAllSelected = _employeeList.Any() && _employeeList.All(e => _selectedIds.Contains(e.Id));
-            
-            StateHasChanged();
+            try
+            {
+                var finalEmployeesToRemove = new List<string>();
+
+                if (_selectedDeptIds.Any(did => NormalizedMatch(did, targetId)))
+                {
+                    // 1. Gỡ Phòng ban
+                    _selectedDeptIds.RemoveWhere(did => NormalizedMatch(did, targetId));
+                    
+                    // 2. Gỡ toàn bộ nhân viên thuộc phòng đó khỏi danh sách chọn
+                    var deptEmps = _selectedIds
+                        .Where(eid => _employeeCache.TryGetValue(eid, out var e) && !string.IsNullOrEmpty(e.DepartmentId) && NormalizedMatch(e.DepartmentId, targetId))
+                        .ToList();
+                    
+                    foreach(var eid in deptEmps)
+                    {
+                        _selectedIds.Remove(eid);
+                        if (_initialSelectedIds.Any(oid => NormalizedMatch(oid, eid)))
+                        {
+                            finalEmployeesToRemove.Add(eid);
+                        }
+                    }
+                }
+                else
+                {
+                    // Gỡ Cá nhân
+                    _selectedIds.Remove(targetId);
+                    if (_initialSelectedIds.Any(oid => NormalizedMatch(oid, targetId)))
+                    {
+                        finalEmployeesToRemove.Add(targetId);
+                    }
+                }
+
+                // Chỉ gọi API xóa nếu là dữ liệu đã tồn tại
+                if (isInitial && finalEmployeesToRemove.Any())
+                {
+                    var cmd = new AssignWorkScheduleModel
+                    {
+                        ShiftId = _assignModel.ShiftId,
+                        StartDate = _assignModel.StartDate,
+                        EndDate = _assignModel.EndDate,
+                        EmployeeIds = finalEmployeesToRemove,
+                        IsDelete = true
+                    };
+                    
+                    await AttendanceService.AssignScheduleAsync(cmd);
+                    await JS.InvokeVoidAsync("toastr.info", $"Đã gỡ bỏ và cập nhật lịch làm việc của {name}");
+                }
+                
+                // Cập nhật lại danh sách ban đầu sau khi xóa cứng
+                if (isInitial)
+                {
+                    _initialSelectedDeptIds.RemoveWhere(oid => NormalizedMatch(oid, targetId));
+                    foreach(var eid in finalEmployeesToRemove) _initialSelectedIds.RemoveWhere(oid => NormalizedMatch(oid, eid));
+                }
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Không thể gỡ bỏ: " + ex.Message);
+            }
+        }
+
+        private async Task RefreshDataAsync() => await LoadEmployeesAsync(false);
+        private async Task OnSearchChanged() => await LoadEmployeesAsync(false);
+
+        private async Task LoadEmployeesAsync(bool fetchAll = false)
+        {
+            try
+            {
+                // Increase search window for full grouping on init
+                int size = fetchAll ? 5000 : 1000;
+                var result = await EmployeeService.GetEmployeesPaginatedAsync(1, size, _searchTerm, _selectedDeptIdInner, _selectedStatusId, _selectedWorkplace);
+                _employeeList = result?.Items?.ToList() ?? new List<EmployeeDto>();
+                _totalCount = result?.TotalCount ?? 0;
+                
+                foreach(var emp in _employeeList)
+                {
+                    if (emp != null && !string.IsNullOrEmpty(emp.Id))
+                    {
+                        // Update or add to cache to ensure DepartmentId is always present
+                        _employeeCache[emp.Id] = emp;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[LoadEmployees] Failed to fetch employee list: {ex.Message}");
+                _employeeList = new List<EmployeeDto>();
+                // This will be partially recovered by PreSelectExistingAssignments if data exists in DB
+            }
         }
 
         private void ToggleAllEmployees(bool selected)
         {
+            _isSuccess = false;
             _isAllSelected = selected;
             foreach (var emp in _employeeList)
             {
@@ -279,17 +585,68 @@ namespace TTL.HR.Shared.Pages.Attendance
             }
         }
 
-        private void ToggleEmployeeSelection(string empId)
+        private void ToggleEmployeeSelection(string empId, bool selected)
         {
-            if (_selectedIds.Contains(empId)) _selectedIds.Remove(empId);
-            else _selectedIds.Add(empId);
+            _isSuccess = false;
+            var eId = empId.Trim();
+            if (selected) _selectedIds.Add(eId);
+            else 
+            {
+                _selectedIds.Remove(eId);
+                // Nếu bỏ chọn cá nhân, thì phòng ban tương ứng cũng không còn là "Chọn tất cả"
+                if (_employeeCache.TryGetValue(eId, out var emp) && !string.IsNullOrEmpty(emp.DepartmentId))
+                {
+                    _selectedDeptIds.Remove(emp.DepartmentId.Trim());
+                }
+            }
+            
+            // Tự động kiểm tra xem đã chọn đủ người trong phòng ban chưa để đánh dấu tab phòng ban
+            CheckDepartmentCompletion(eId);
+            
             StateHasChanged();
         }
 
-        private void ToggleDepartmentSelection(string deptId)
+        private void CheckDepartmentCompletion(string empId)
         {
-            if (_selectedDeptIds.Contains(deptId)) _selectedDeptIds.Remove(deptId);
-            else _selectedDeptIds.Add(deptId);
+            if (_employeeCache.TryGetValue(empId, out var emp) && !string.IsNullOrEmpty(emp.DepartmentId))
+            {
+                var dId = emp.DepartmentId.Trim();
+                var deptEmps = _employeeCache.Values.Where(e => NormalizedMatch(e.DepartmentId, dId)).ToList();
+                if (deptEmps.Any() && deptEmps.All(e => _selectedIds.Contains(e.Id.Trim())))
+                {
+                    _selectedDeptIds.Add(dId);
+                }
+            }
+        }
+
+        private async Task ToggleDepartmentSelection(string deptId, bool selected)
+        {
+            _isSuccess = false;
+            var dId = deptId.Trim();
+            if (selected) 
+            {
+                _selectedDeptIds.Add(dId);
+                // Tự động chọn tất cả nhân viên thuộc phòng ban này để đồng bộ tab Nhân viên
+                var result = await EmployeeService.GetEmployeesPaginatedAsync(1, 5000, null, dId);
+                if (result?.Items != null)
+                {
+                    foreach(var emp in result.Items) 
+                    {
+                        var eId = emp.Id.Trim();
+                        _selectedIds.Add(eId);
+                        _employeeCache[eId] = emp;
+                    }
+                }
+            }
+            else 
+            {
+                _selectedDeptIds.Remove(dId);
+                // Bỏ chọn các nhân viên thuộc phòng ban này
+                var toRemove = _selectedIds
+                    .Where(eid => _employeeCache.TryGetValue(eid, out var e) && !string.IsNullOrEmpty(e.DepartmentId) && NormalizedMatch(e.DepartmentId, dId))
+                    .ToList();
+                foreach(var id in toRemove) _selectedIds.Remove(id);
+            }
             StateHasChanged();
         }
 
@@ -304,133 +661,160 @@ namespace TTL.HR.Shared.Pages.Attendance
             // No longer used, we are in single view
         }
 
-        private async Task GoToStep3()
+        private async Task ValidateAndPreviewAssignments()
         {
             if (string.IsNullOrEmpty(_assignModel.ShiftId))
             {
-                await JS.InvokeVoidAsync("toastr.warning", "Vui lòng chọn ca làm việc");
+                await JS.InvokeVoidAsync("toastr.warning", "Vui lòng chọn ca làm việc để tiếp tục.");
                 return;
             }
 
-            var finalIds = new HashSet<string>();
-            if (_selectionMode == "Employee")
-            {
-                foreach (var id in _selectedIds) finalIds.Add(id);
-            }
-            else
-            {
-                if (!_selectedDeptIds.Any())
-                {
-                    await JS.InvokeVoidAsync("toastr.warning", "Vui lòng chọn ít nhất một phòng ban");
-                    return;
-                }
-                foreach (var deptId in _selectedDeptIds)
-                {
-                    // Fetch all employees in this department for assignment
-                    var result = await EmployeeService.GetEmployeesPaginatedAsync(1, 2000, null, deptId);
-                    foreach (var emp in result.Items) finalIds.Add(emp.Id);
-                }
-            }
-
-            if (!finalIds.Any())
-            {
-                await JS.InvokeVoidAsync("toastr.warning", "Vui lòng chọn ít nhất một đối tượng áp dụng");
-                return;
-            }
-
+            _showConflictModal = false;
+            _isSuccess = false;
             _isSaving = true;
             StateHasChanged();
 
             try
             {
-                // Categorize
-                var existing = (await AttendanceService.GetMonthlyWorkSchedulesAsync(_assignModel.StartDate, _assignModel.EndDate)).ToList();
+                _finalIdsToAssign.Clear();
                 
-                _readyToAssign.Clear();
-                _conflictToUpdate.Clear();
-
-                foreach (var id in finalIds)
+                // 1. Resolve Selections based on active mode ONLY
+                if (_selectionMode == "Department")
                 {
-                    var sched = existing.FirstOrDefault(s => s.EmployeeId == id);
-                    bool conflict = false;
-                    if (sched != null)
+                    if (!_selectedDeptIds.Any() && !_selectedIds.Any())
                     {
-                        for (var d = _assignModel.StartDate.Date; d <= _assignModel.EndDate.Date; d = d.AddDays(1))
+                        await JS.InvokeVoidAsync("toastr.warning", "Vui lòng chọn ít nhất một phòng ban hoặc nhân viên.");
+                        _isSaving = false;
+                        return;
+                    }
+                    
+                    foreach (var id in _selectedIds)
+                    {
+                        if (!string.IsNullOrEmpty(id)) _finalIdsToAssign.Add(id.Trim());
+                    }
+                }
+                else // Employee Mode
+                {
+                    if (!_selectedIds.Any())
+                    {
+                        await JS.InvokeVoidAsync("toastr.warning", "Vui lòng chọn ít nhất một nhân viên.");
+                        _isSaving = false;
+                        return;
+                    }
+
+                    foreach (var id in _selectedIds)
+                    {
+                        if (!string.IsNullOrEmpty(id)) _finalIdsToAssign.Add(id.Trim());
+                    }
+                }
+
+                if (!_finalIdsToAssign.Any())
+                {
+                    await JS.InvokeVoidAsync("toastr.warning", "Không tìm thấy danh sách nhân viên để gán. Vui lòng kiểm tra lại lựa chọn.");
+                    _isSaving = false;
+                    return;
+                }
+
+                // 2. Normalize inputs
+                string targetShiftId = _assignModel.ShiftId.Trim();
+                var startDate = DateTime.SpecifyKind(_assignModel.StartDate.Date, DateTimeKind.Utc);
+                var endDate = DateTime.SpecifyKind(_assignModel.EndDate.Date, DateTimeKind.Utc);
+
+                // 3. CHECK FOR CONFLICTS
+                _conflictToUpdate.Clear();
+                try
+                {
+                    var currentSchedules = await AttendanceService.GetMonthlyWorkSchedulesAsync(startDate, endDate, 5000);
+                    if (currentSchedules != null)
+                    {
+                        foreach (var empSch in currentSchedules)
                         {
-                            if (_assignModel.DaysOfWeek.Contains(d.DayOfWeek))
+                            if (_finalIdsToAssign.Contains(empSch.EmployeeId.Trim()))
                             {
-                                // A conflict only occurs if the employee is already assigned to a DIFFERENT shift on this day.
-                                // Re-assigning the same shift is not a conflict.
-                                if (sched.Schedules.Any(s => s.Date.Date == d && !string.IsNullOrEmpty(s.ShiftId) && s.ShiftId != _assignModel.ShiftId))
-                                {
-                                    conflict = true;
-                                    break;
-                                }
+                                bool hasOtherShift = empSch.Schedules.Any(s => !string.IsNullOrEmpty(s.ShiftId) && !NormalizedMatch(s.ShiftId, targetShiftId));
+                                if (hasOtherShift) _conflictToUpdate.Add(empSch);
                             }
                         }
                     }
+                }
+                catch (Exception ex) { Console.WriteLine("Conflict check failed: " + ex.Message); }
 
-                    var emp = _employeeList.FirstOrDefault(e => e.Id == id);
-                    var dto = sched ?? new EmployeeScheduleDto 
-                    { 
-                        EmployeeId = id, 
-                        EmployeeName = emp?.FullName ?? ("Nhân viên " + id) 
-                    };
-
-                    if (conflict) _conflictToUpdate.Add(dto);
-                    else _readyToAssign.Add(dto);
+                if (_conflictToUpdate.Any())
+                {
+                    var names = string.Join(", ", _conflictToUpdate.Select(c => c.EmployeeName).Take(5));
+                    if (_conflictToUpdate.Count > 5) names += "...";
+                    
+                    _conflictMessage = $"Phát hiện xung đột: Có {_conflictToUpdate.Count} nhân viên ({names}) đã được gán ca khác trong khoảng thời gian này.";
+                    _showConflictModal = true;
+                    _isSaving = false;
+                    return;
                 }
 
-                _currentStep = 3; // Show confirmation modal
+                await SaveAssignmentAsync();
+            }
+            catch (Exception ex)
+            {
+                await JS.InvokeVoidAsync("toastr.error", "Lỗi kiểm tra gán: " + ex.Message);
+                _isSaving = false;
             }
             finally
             {
-                _isSaving = false;
+                StateHasChanged();
             }
         }
 
-        private async Task SaveAsync()
+        private async Task SaveAssignmentAsync()
         {
+            _showConflictModal = false;
             _isSaving = true;
+            StateHasChanged();
+
             try
             {
-                var ids = _readyToAssign.Select(e => e.EmployeeId).ToList();
-                if (_overwriteConflicts) ids.AddRange(_conflictToUpdate.Select(e => e.EmployeeId));
+                // Prepare Command
+                _assignModel.EmployeeIds = _finalIdsToAssign.ToList();
+                _assignModel.ShiftId = _assignModel.ShiftId.Trim();
+                _assignModel.StartDate = DateTime.SpecifyKind(_assignModel.StartDate.Date, DateTimeKind.Utc);
+                _assignModel.EndDate = DateTime.SpecifyKind(_assignModel.EndDate.Date, DateTimeKind.Utc);
+                _assignModel.BypassQueue = true;
 
-                if (string.IsNullOrEmpty(_assignModel.ShiftId))
-                {
-                    await JS.InvokeVoidAsync("toastr.error", "Mã ca làm việc không hợp lệ. Vui lòng chọn lại ca.");
-                    return;
-                }
-
-                _assignModel.EmployeeIds = ids ?? new List<string>();
-                
-                if (!_assignModel.EmployeeIds.Any())
-                {
-                    await JS.InvokeVoidAsync("toastr.warning", "Vui lòng chọn ít nhất một nhân viên để gán ca.");
-                    return;
-                }
+                // Persistence
                 var success = await AttendanceService.AssignScheduleAsync(_assignModel);
                 if (success)
                 {
-                    await JS.InvokeVoidAsync("toastr.success", "Phân bổ ca thành công!");
+                    _successItems = SummaryItems;
+                    _isSuccess = true;
                     _showPreview = true;
-                    _currentStep = 1;
-                    StateHasChanged();
+                    await JS.InvokeVoidAsync("toastr.success", "Đã lưu lịch làm việc xuống Database thành công!");
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("toastr.error", "Lỗi server! Không thể ghi dữ liệu xuống database.");
                 }
             }
             catch (Exception ex)
             {
-                await JS.InvokeVoidAsync("toastr.error", $"Lỗi: {ex.Message}");
+                await JS.InvokeVoidAsync("toastr.error", "Lỗi lưu gán ca: " + ex.Message);
             }
             finally
             {
                 _isSaving = false;
+                StateHasChanged();
             }
         }
 
         // UI Helpers
         
+        private void SelectAllDays(bool selected)
+        {
+            _assignModel.DaysOfWeek.Clear();
+            if (selected)
+            {
+                _assignModel.DaysOfWeek.AddRange(Enum.GetValues<DayOfWeek>());
+            }
+            StateHasChanged();
+        }
+
         private void ToggleDay(DayOfWeek d) {
             if (_assignModel.DaysOfWeek.Contains(d)) _assignModel.DaysOfWeek.Remove(d);
             else _assignModel.DaysOfWeek.Add(d);
@@ -439,6 +823,88 @@ namespace TTL.HR.Shared.Pages.Attendance
         private async Task GoBack()
         {
             await JS.InvokeVoidAsync("history.back");
+        }
+
+        private void FinishAndNavigate()
+        {
+            NavigationManager.NavigateTo("/attendance/shifts");
+        }
+
+        public class SummaryItemModel
+        {
+            public string Id { get; set; } = "";
+            public string Name { get; set; } = "";
+            public string Code { get; set; } = "";
+            public bool IsNew { get; set; }
+            public string GroupName { get; set; } = "";
+        }
+
+        private List<SummaryItemModel> SummaryItems
+        {
+            get
+            {
+                var list = new List<SummaryItemModel>();
+                
+                // 1. Nhóm các phòng ban đã chọn "Full"
+                foreach (var dId in _selectedDeptIds)
+                {
+                    var dept = _departments.FirstOrDefault(d => NormalizedMatch(d.Id, dId));
+                    list.Add(new SummaryItemModel
+                    {
+                        Id = dId,
+                        Name = dept?.Name ?? ("Phòng " + dId),
+                        Code = "Phòng ban",
+                        IsNew = !_initialSelectedDeptIds.Any(oid => NormalizedMatch(oid, dId)),
+                        GroupName = "DANH SÁCH PHÒNG BAN"
+                    });
+                }
+
+                // 2. Nhóm các nhân viên lẻ (thuộc các phòng chưa được chọn "Full")
+                var individualEmpIds = _selectedIds
+                    .Where(id => {
+                        if (!_employeeCache.TryGetValue(id, out var e)) return true;
+                        return string.IsNullOrEmpty(e.DepartmentId) || !_selectedDeptIds.Any(did => NormalizedMatch(did, e.DepartmentId));
+                    })
+                    .ToList();
+
+                foreach (var eId in individualEmpIds)
+                {
+                    if (_employeeCache.TryGetValue(eId, out var emp))
+                    {
+                        list.Add(new SummaryItemModel
+                        {
+                            Id = eId,
+                            Name = emp.FullName ?? ("NV " + eId),
+                            Code = emp.Code,
+                            IsNew = !_initialSelectedIds.Any(oid => NormalizedMatch(oid, eId)),
+                            GroupName = emp.DepartmentName ?? "CÁ NHÂN TỰ DO"
+                        });
+                    }
+                }
+
+                return list.OrderBy(i => i.GroupName == "DANH SÁCH PHÒNG BAN" ? 0 : 1)
+                           .ThenBy(i => i.GroupName)
+                           .ThenBy(i => i.Name)
+                           .ToList();
+            }
+        }
+
+        public async Task ResetToStep1()
+        {
+            _isLoading = true;
+            _showPreview = false;
+            _isSuccess = false;
+            _currentStep = 1;
+            
+            try
+            {
+                await PreSelectExistingAssignments();
+            }
+            finally
+            {
+                _isLoading = false;
+                StateHasChanged();
+            }
         }
     }
 }

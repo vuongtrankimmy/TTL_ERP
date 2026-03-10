@@ -159,7 +159,7 @@ namespace TTL.HR.Application.Modules.Attendance.Services
             return response?.Data ?? new PagedResult<AttendanceModel>();
         }
 
-        public async Task<ApiResponse<ImportAttendanceResultModel>> ImportAttendanceAsync(string? rawData, byte[]? fileBytes, string? fileName, string source, int codeCol = 1, int timeCol = 2, bool isPreview = false)
+        public async Task<ApiResponse<ImportAttendanceResultModel>> ImportAttendanceAsync(string? rawData, byte[]? fileBytes, string? fileName, string source, int codeCol = 1, int timeCol = 2, bool isPreview = false, string? jobId = null)
         {
             try
             {
@@ -169,11 +169,22 @@ namespace TTL.HR.Application.Modules.Attendance.Services
                 content.Add(new StringContent(codeCol.ToString()), "EmployeeCodeColumnIndex");
                 content.Add(new StringContent(timeCol.ToString()), "TimestampColumnIndex");
                 content.Add(new StringContent(isPreview.ToString()), "IsPreviewOnly");
+                if (!string.IsNullOrEmpty(jobId)) content.Add(new StringContent(jobId), "JobId");
 
                 if (fileBytes != null && !string.IsNullOrEmpty(fileName))
                 {
                     var fileContent = new ByteArrayContent(fileBytes);
-                    fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                    string ext = System.IO.Path.GetExtension(fileName).ToLower();
+                    string contentType = ext switch
+                    {
+                        ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        ".xls" => "application/vnd.ms-excel",
+                        ".csv" => "text/csv",
+                        ".txt" => "text/plain",
+                        ".json" => "application/json",
+                        _ => "application/octet-stream"
+                    };
+                    fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
                     content.Add(fileContent, "File", fileName);
                 }
 
@@ -187,9 +198,11 @@ namespace TTL.HR.Application.Modules.Attendance.Services
             }
         }
 
-        public async Task<IEnumerable<WorkShiftModel>> GetWorkShiftsAsync()
+        public async Task<IEnumerable<WorkShiftModel>> GetWorkShiftsAsync(int month = 0, int year = 0)
         {
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<IEnumerable<WorkShiftModel>>>(ApiEndpoints.Attendance.Shifts);
+            var url = ApiEndpoints.Attendance.Shifts;
+            if (month > 0 && year > 0) url += $"?month={month}&year={year}";
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<IEnumerable<WorkShiftModel>>>(url);
             return response?.Data ?? new List<WorkShiftModel>();
         }
         
@@ -318,6 +331,30 @@ namespace TTL.HR.Application.Modules.Attendance.Services
                 return await response.Content.ReadAsByteArrayAsync();
             }
             return null;
+        }
+
+        public async Task<PagedResult<OvertimeRequestModel>> GetOvertimeRequestsAsync(int page = 1, int pageSize = 10, string? status = null, string? searchTerm = null)
+        {
+            var url = $"{ApiEndpoints.Attendance.Base}/overtime?page={page}&pageSize={pageSize}";
+            if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
+            if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
+
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<OvertimeRequestModel>>>(url);
+            return response?.Data ?? new PagedResult<OvertimeRequestModel>();
+        }
+
+        public async Task<OvertimeSummaryModel> GetOvertimeSummaryAsync()
+        {
+            var url = $"{ApiEndpoints.Attendance.Base}/overtime/summary";
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<OvertimeSummaryModel>>(url);
+            return response?.Data ?? new OvertimeSummaryModel();
+        }
+
+        public async Task<bool> ProcessOvertimeRequestAsync(string id, bool approved, string? note = null)
+        {
+            var url = $"{ApiEndpoints.Attendance.Base}/overtime/{id}/process";
+            var response = await _httpClient.PostAsJsonAsync(url, new { Approved = approved, Note = note });
+            return response.IsSuccessStatusCode;
         }
     }
 }

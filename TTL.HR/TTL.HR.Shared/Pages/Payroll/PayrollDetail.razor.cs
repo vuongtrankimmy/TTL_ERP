@@ -227,6 +227,7 @@ namespace TTL.HR.Shared.Pages.Payroll
         private void OpenDetailDrawer(PayslipViewModel slip)
         {
             SelectedSlip = slip;
+            SelectedSlip.CalculateNet(); // Ensure fresh calculations on open
             IsDrawerOpen = true;
         }
 
@@ -360,7 +361,7 @@ namespace TTL.HR.Shared.Pages.Payroll
         private string GetStatusBg(string? color, string? status)
         {
             var c = GetStatusColor(color, status);
-            if (c == "secondary" || c == "warning" || string.IsNullOrEmpty(c)) return "gray-900";
+            if (c == "secondary" || c == "warning" || string.IsNullOrEmpty(c)) return "danger";
             return c;
         }
 

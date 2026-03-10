@@ -22,6 +22,7 @@ namespace TTL.HR.Shared.Pages.Settings
 
 
         private string activeTab = "company_profile";
+        private string activeTranslationTab = "vi-VN";
         private SystemSettingsModel Model = new();
         private List<CodeGeneratorConfigDto> CodeConfigs = new();
         private CodeGeneratorConfigDto? SelectedConfig;
@@ -320,7 +321,73 @@ namespace TTL.HR.Shared.Pages.Settings
 
         private void RemoveTaxStep(TaxStepModel step)
         {
-            Model.PitSteps?.Remove(step);
+            if (Model.PitSteps != null && Model.PitSteps.Contains(step))
+            {
+                Model.PitSteps.Remove(step);
+            }
+        }
+
+        private void AddNavigationItem()
+        {
+            if (Model.SidebarMenu == null) Model.SidebarMenu = new List<NavItem>();
+            int nextId = GetNextNumericId();
+            Model.SidebarMenu.Add(new NavItem
+            {
+                NumericId = nextId,
+                Title = "Menu_NewItem",
+                Icon = "ki-outline ki-abstract-26",
+                Order = Model.SidebarMenu.Count + 1,
+                IsActive = true
+            });
+        }
+
+        private void AddSubNavigationItem(NavItem parent)
+        {
+            if (parent.SubItems == null) parent.SubItems = new List<NavItem>();
+            int nextId = GetNextNumericId();
+            parent.SubItems.Add(new NavItem
+            {
+                NumericId = nextId,
+                Title = "Menu_NewSubItem",
+                Icon = "ki-outline ki-right",
+                Order = parent.SubItems.Count + 1,
+                IsActive = true
+            });
+        }
+
+        private void AddTranslation()
+        {
+            if (Model.Translations == null) Model.Translations = new List<LanguageTranslationModel>();
+            Model.Translations.Add(new LanguageTranslationModel
+            {
+                NavigationID = 0,
+                LanguageCode = activeTranslationTab,
+                Value = "Tên mới"
+            });
+        }
+
+        private int GetNextNumericId()
+        {
+            var allItems = new List<NavItem>();
+            if (Model.SidebarMenu != null)
+            {
+                FlattenMenuForId(Model.SidebarMenu, allItems);
+            }
+            return allItems.Any() ? allItems.Max(i => i.NumericId) + 1 : 1;
+        }
+
+        private void FlattenMenuForId(List<NavItem> items, List<NavItem> result)
+        {
+            foreach (var item in items)
+            {
+                result.Add(item);
+                if (item.HasSubItems) FlattenMenuForId(item.SubItems, result);
+            }
+        }
+
+        private void RemoveNavigationItem(List<NavItem> list, NavItem item)
+        {
+            list.Remove(item);
         }
     }
 }

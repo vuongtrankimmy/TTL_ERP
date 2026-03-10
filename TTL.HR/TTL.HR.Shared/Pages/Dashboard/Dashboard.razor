@@ -141,7 +141,7 @@ else if (_overview != null)
     <!--begin::Row - Asset Clearances & Contracts-->
     <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
         <!--begin::Col - Asset Clearance Warnings-->
-        <div class="col-xl-6">
+        <div class="col-xl-4">
             <div class="card card-flush h-xl-100 shadow-sm border-0 border-top border-warning border-3">
                 <div class="card-header pt-7">
                     <h3 class="card-title align-items-start flex-column">
@@ -200,7 +200,7 @@ else if (_overview != null)
         <!--end::Col-->
 
         <!--begin::Col - Contract Warnings-->
-        <div class="col-xl-6">
+        <div class="col-xl-4">
             <div class="card card-flush h-xl-100 shadow-sm border-0 border-top border-primary border-3">
                  <div class="card-header pt-7">
                     <h3 class="card-title align-items-start flex-column">
@@ -234,6 +234,64 @@ else if (_overview != null)
                                                     <span class="text-danger fw-bold fs-7">@contract.ExpiryDate.ToString("dd/MM/yyyy")</span>
                                                     <span class="badge badge-light-danger fs-9">Sắp hết hạn</span>
                                                 </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--begin::Col - Birthday Alerts-->
+        <div class="col-xl-4">
+            <div class="card card-flush h-xl-100 shadow-sm border-0 border-top border-info border-3">
+                <div class="card-header pt-7">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bold text-gray-800">Sắp tới sinh nhật</span>
+                        <span class="text-gray-400 mt-1 fw-semibold fs-7">Nhân viên đón tuổi mới trong 30 ngày tới</span>
+                    </h3>
+                </div>
+                <div class="card-body pt-2">
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-3">
+                            <tbody>
+                                @if (_overview.BirthdayAlerts == null || !_overview.BirthdayAlerts.Any())
+                                {
+                                    <tr>
+                                        <td colspan="2" class="text-center py-10 text-muted fs-7">Không có sinh nhật nào sắp tới.</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    @foreach (var alert in _overview.BirthdayAlerts.OrderBy(a => a.DaysUntilBirthday))
+                                    {
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-35px symbol-circle me-3">
+                                                        <span class="symbol-label bg-light-info text-info fw-bold">@alert.EmployeeName.Substring(0, 1)</span>
+                                                    </div>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-gray-800 fw-bold fs-7">@alert.EmployeeName</span>
+                                                        <span class="text-muted fs-8">@alert.DOB.ToString("dd/MM")</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                @if (alert.DaysUntilBirthday == 0)
+                                                {
+                                                    <span class="badge badge-light-success fw-bold p-2"><i class="bi bi-cake2-fill me-1"></i> Hôm nay</span>
+                                                }
+                                                else
+                                                {
+                                                    <div class="d-flex flex-column align-items-end">
+                                                        <span class="text-info fw-bold fs-7">Còn @alert.DaysUntilBirthday ngày</span>
+                                                        <span class="badge badge-light-info fs-9">Sắp tới</span>
+                                                    </div>
+                                                }
                                             </td>
                                         </tr>
                                     }

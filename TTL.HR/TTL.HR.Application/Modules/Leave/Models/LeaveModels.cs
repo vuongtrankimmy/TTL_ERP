@@ -71,15 +71,8 @@ namespace TTL.HR.Application.Modules.Leave.Models
         
         public bool IsPending => Status == "Pending" || Status == "PartiallyApproved" || Status == "Chờ phê duyệt" || Status == "Chờ duyệt";
         
-        public string StatusColor => Status switch
-        {
-            "Approved" => "success",
-            "PartiallyApproved" => "info",
-            "Rejected" => "danger",
-            "Pending" => "warning",
-            "Cancelled" => "secondary",
-            _ => "secondary"
-        };
+        [System.Text.Json.Serialization.JsonPropertyName("statusColor")]
+        public string StatusColor { get; set; } = "secondary";
 
         public string StatusBadgeClass => $"badge-light-{StatusColor}";
     }

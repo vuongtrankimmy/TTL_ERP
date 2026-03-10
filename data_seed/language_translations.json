@@ -1,0 +1,422 @@
+[
+    {
+        "Key": "Menu_Dashboards",
+        "LanguageCode": "vi-VN",
+        "Value": "Bảng điều khiển"
+    },
+    {
+        "Key": "Menu_Dashboards",
+        "LanguageCode": "en-US",
+        "Value": "Dashboards"
+    },
+    {
+        "Key": "Section_OrgAndPersonnel",
+        "LanguageCode": "vi-VN",
+        "Value": "TỔ CHỨC & NHÂN SỰ"
+    },
+    {
+        "Key": "Section_OrgAndPersonnel",
+        "LanguageCode": "en-US",
+        "Value": "ORG & PERSONNEL"
+    },
+    {
+        "Key": "Menu_CompanyStructure",
+        "LanguageCode": "vi-VN",
+        "Value": "Cấu trúc công ty"
+    },
+    {
+        "Key": "Menu_CompanyStructure",
+        "LanguageCode": "en-US",
+        "Value": "Company Structure"
+    },
+    {
+        "Key": "Menu_OrgChart",
+        "LanguageCode": "vi-VN",
+        "Value": "Sơ đồ tổ chức"
+    },
+    {
+        "Key": "Menu_OrgChart",
+        "LanguageCode": "en-US",
+        "Value": "Org Chart"
+    },
+    {
+        "Key": "Menu_Departments",
+        "LanguageCode": "vi-VN",
+        "Value": "Phòng ban / Sơ đồ"
+    },
+    {
+        "Key": "Menu_Departments",
+        "LanguageCode": "en-US",
+        "Value": "Departments"
+    },
+    {
+        "Key": "Menu_Positions",
+        "LanguageCode": "vi-VN",
+        "Value": "Chức danh / Vị trí"
+    },
+    {
+        "Key": "Menu_Positions",
+        "LanguageCode": "en-US",
+        "Value": "Positions"
+    },
+    {
+        "Key": "Menu_EmployeeManagement",
+        "LanguageCode": "vi-VN",
+        "Value": "Quản lý nhân sự"
+    },
+    {
+        "Key": "Menu_EmployeeManagement",
+        "LanguageCode": "en-US",
+        "Value": "Employee Management"
+    },
+    {
+        "Key": "Menu_EmployeeList",
+        "LanguageCode": "vi-VN",
+        "Value": "Danh sách nhân viên"
+    },
+    {
+        "Key": "Menu_EmployeeList",
+        "LanguageCode": "en-US",
+        "Value": "Employee List"
+    },
+    {
+        "Key": "Menu_Onboarding",
+        "LanguageCode": "vi-VN",
+        "Value": "Tiếp nhận nhân sự"
+    },
+    {
+        "Key": "Menu_Onboarding",
+        "LanguageCode": "en-US",
+        "Value": "Onboarding"
+    },
+    {
+        "Key": "Menu_Contracts",
+        "LanguageCode": "vi-VN",
+        "Value": "Hồ sơ hợp đồng"
+    },
+    {
+        "Key": "Menu_Contracts",
+        "LanguageCode": "en-US",
+        "Value": "Contracts"
+    },
+    {
+        "Key": "Section_HROperations",
+        "LanguageCode": "vi-VN",
+        "Value": "VẬN HÀNH NHÂN SỰ"
+    },
+    {
+        "Key": "Section_HROperations",
+        "LanguageCode": "en-US",
+        "Value": "HR OPERATIONS"
+    },
+    {
+        "Key": "Menu_Attendance",
+        "LanguageCode": "vi-VN",
+        "Value": "Chấm công & Phân ca"
+    },
+    {
+        "Key": "Menu_Attendance",
+        "LanguageCode": "en-US",
+        "Value": "Attendance"
+    },
+    {
+        "Key": "Menu_MonthlyTimesheet",
+        "LanguageCode": "vi-VN",
+        "Value": "Bảng công tháng"
+    },
+    {
+        "Key": "Menu_MonthlyTimesheet",
+        "LanguageCode": "en-US",
+        "Value": "Monthly Timesheet"
+    },
+    {
+        "Key": "Menu_AttendanceData",
+        "LanguageCode": "vi-VN",
+        "Value": "Dữ liệu chấm công"
+    },
+    {
+        "Key": "Menu_AttendanceData",
+        "LanguageCode": "en-US",
+        "Value": "Attendance Data"
+    },
+    {
+        "Key": "Menu_ImportData",
+        "LanguageCode": "vi-VN",
+        "Value": "Nhập dữ liệu máy"
+    },
+    {
+        "Key": "Menu_ImportData",
+        "LanguageCode": "en-US",
+        "Value": "Import Data"
+    },
+    {
+        "Key": "Menu_ShiftManagement",
+        "LanguageCode": "vi-VN",
+        "Value": "Ca làm việc"
+    },
+    {
+        "Key": "Menu_ShiftManagement",
+        "LanguageCode": "en-US",
+        "Value": "Shift Management"
+    },
+    {
+        "Key": "Menu_ShiftCatalog",
+        "LanguageCode": "vi-VN",
+        "Value": "Danh mục ca"
+    },
+    {
+        "Key": "Menu_ShiftCatalog",
+        "LanguageCode": "en-US",
+        "Value": "Shift Catalog"
+    },
+    {
+        "Key": "Menu_WorkSchedule",
+        "LanguageCode": "vi-VN",
+        "Value": "Lịch làm việc"
+    },
+    {
+        "Key": "Menu_WorkSchedule",
+        "LanguageCode": "en-US",
+        "Value": "Work Schedule"
+    },
+    {
+        "Key": "Menu_ShiftApproval",
+        "LanguageCode": "vi-VN",
+        "Value": "Duyệt đổi ca"
+    },
+    {
+        "Key": "Menu_ShiftApproval",
+        "LanguageCode": "en-US",
+        "Value": "Shift Approval"
+    },
+    {
+        "Key": "Menu_LeaveManagement",
+        "LanguageCode": "vi-VN",
+        "Value": "Nghỉ phép & Vắng mặt"
+    },
+    {
+        "Key": "Menu_LeaveManagement",
+        "LanguageCode": "en-US",
+        "Value": "Leave Management"
+    },
+    {
+        "Key": "Menu_LeaveRequests",
+        "LanguageCode": "vi-VN",
+        "Value": "Đơn nghỉ phép"
+    },
+    {
+        "Key": "Menu_LeaveRequests",
+        "LanguageCode": "en-US",
+        "Value": "Leave Requests"
+    },
+    {
+        "Key": "Menu_BusinessTrip",
+        "LanguageCode": "vi-VN",
+        "Value": "Đơn đi công tác"
+    },
+    {
+        "Key": "Menu_BusinessTrip",
+        "LanguageCode": "en-US",
+        "Value": "Business Trip"
+    },
+    {
+        "Key": "Menu_PayrollAndBenefits",
+        "LanguageCode": "vi-VN",
+        "Value": "Lương & Phúc lợi"
+    },
+    {
+        "Key": "Menu_PayrollAndBenefits",
+        "LanguageCode": "en-US",
+        "Value": "Payroll & Benefits"
+    },
+    {
+        "Key": "Menu_PayrollPeriods",
+        "LanguageCode": "vi-VN",
+        "Value": "Kỳ lương"
+    },
+    {
+        "Key": "Menu_PayrollPeriods",
+        "LanguageCode": "en-US",
+        "Value": "Payroll Periods"
+    },
+    {
+        "Key": "Menu_Benefits",
+        "LanguageCode": "vi-VN",
+        "Value": "Chế độ & Phúc lợi"
+    },
+    {
+        "Key": "Menu_Benefits",
+        "LanguageCode": "en-US",
+        "Value": "Benefits"
+    },
+    {
+        "Key": "Section_RecruitmentAndTraining",
+        "LanguageCode": "vi-VN",
+        "Value": "TUYỂN DỤNG & ĐÀO TẠO"
+    },
+    {
+        "Key": "Section_RecruitmentAndTraining",
+        "LanguageCode": "en-US",
+        "Value": "RECRUITMENT & TRAINING"
+    },
+    {
+        "Key": "Menu_Recruitment",
+        "LanguageCode": "vi-VN",
+        "Value": "Tuyển dụng"
+    },
+    {
+        "Key": "Menu_Recruitment",
+        "LanguageCode": "en-US",
+        "Value": "Recruitment"
+    },
+    {
+        "Key": "Menu_Training",
+        "LanguageCode": "vi-VN",
+        "Value": "Đào tạo"
+    },
+    {
+        "Key": "Menu_Training",
+        "LanguageCode": "en-US",
+        "Value": "Training"
+    },
+    {
+        "Key": "Section_AssetsAndEquipment",
+        "LanguageCode": "vi-VN",
+        "Value": "TÀI SẢN & THIẾT BỊ"
+    },
+    {
+        "Key": "Section_AssetsAndEquipment",
+        "LanguageCode": "en-US",
+        "Value": "ASSETS & EQUIPMENT"
+    },
+    {
+        "Key": "Menu_AssetManagement",
+        "LanguageCode": "vi-VN",
+        "Value": "Quản lý tài sản"
+    },
+    {
+        "Key": "Menu_AssetManagement",
+        "LanguageCode": "en-US",
+        "Value": "Asset Management"
+    },
+    {
+        "Key": "Menu_AssetInventory",
+        "LanguageCode": "vi-VN",
+        "Value": "Danh mục tài sản"
+    },
+    {
+        "Key": "Menu_AssetInventory",
+        "LanguageCode": "en-US",
+        "Value": "Asset Inventory"
+    },
+    {
+        "Key": "Menu_AssetAllocation",
+        "LanguageCode": "vi-VN",
+        "Value": "Cấp phát tài sản"
+    },
+    {
+        "Key": "Menu_AssetAllocation",
+        "LanguageCode": "en-US",
+        "Value": "Asset Allocation"
+    },
+    {
+        "Key": "Section_System",
+        "LanguageCode": "vi-VN",
+        "Value": "QUẢN TRỊ HỆ THỐNG"
+    },
+    {
+        "Key": "Section_System",
+        "LanguageCode": "en-US",
+        "Value": "SYSTEM ADMIN"
+    },
+    {
+        "Key": "Menu_AdminAndConfig",
+        "LanguageCode": "vi-VN",
+        "Value": "Cài đặt & Cấu hình"
+    },
+    {
+        "Key": "Menu_AdminAndConfig",
+        "LanguageCode": "en-US",
+        "Value": "Admin & Config"
+    },
+    {
+        "Key": "Menu_RolesAndGroups",
+        "LanguageCode": "vi-VN",
+        "Value": "Phân quyền & Nhóm"
+    },
+    {
+        "Key": "Menu_RolesAndGroups",
+        "LanguageCode": "en-US",
+        "Value": "Roles & Groups"
+    },
+    {
+        "Key": "Menu_Permissions",
+        "LanguageCode": "vi-VN",
+        "Value": "Danh mục quyền"
+    },
+    {
+        "Key": "Menu_Permissions",
+        "LanguageCode": "en-US",
+        "Value": "Permissions"
+    },
+    {
+        "Key": "Menu_GeneralSettings",
+        "LanguageCode": "vi-VN",
+        "Value": "Cấu hình chung"
+    },
+    {
+        "Key": "Menu_GeneralSettings",
+        "LanguageCode": "en-US",
+        "Value": "General Settings"
+    },
+    {
+        "Key": "Menu_Banks",
+        "LanguageCode": "vi-VN",
+        "Value": "Danh mục ngân hàng"
+    },
+    {
+        "Key": "Menu_Banks",
+        "LanguageCode": "en-US",
+        "Value": "Banks"
+    },
+    {
+        "Key": "Menu_PayrollConfig",
+        "LanguageCode": "vi-VN",
+        "Value": "Cấu hình bảng lương"
+    },
+    {
+        "Key": "Menu_PayrollConfig",
+        "LanguageCode": "en-US",
+        "Value": "Payroll Config"
+    },
+    {
+        "Key": "Section_Support",
+        "LanguageCode": "vi-VN",
+        "Value": "HỖ TRỢ & TIỆN ÍCH"
+    },
+    {
+        "Key": "Section_Support",
+        "LanguageCode": "en-US",
+        "Value": "SUPPORT & TOOLS"
+    },
+    {
+        "Key": "Menu_HRToolkit",
+        "LanguageCode": "vi-VN",
+        "Value": "Công cụ HR"
+    },
+    {
+        "Key": "Menu_HRToolkit",
+        "LanguageCode": "en-US",
+        "Value": "HR Toolkit"
+    },
+    {
+        "Key": "Menu_UserGuide",
+        "LanguageCode": "vi-VN",
+        "Value": "Hướng dẫn sử dụng"
+    },
+    {
+        "Key": "Menu_UserGuide",
+        "LanguageCode": "en-US",
+        "Value": "User Guide"
+    }
+]

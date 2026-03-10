@@ -19,6 +19,358 @@
     },
     "IsDeleted": false,
     "PitExplanation": "Giải thích: Thuế TNCN được tính theo công thức lũy tiến từng phần.\nCông thức: Thuế = (Thu nhập tính thuế * Thuế suất) - Số trừ cố định.\nVí dụ Bậc 2: Thu nhập từ 5.000.000 đến 10.000.000, Thuế suất 10%, Số trừ 250.000.\nCấu hình: Ngưỡng > 5.000.000, Thuế suất 0.1, Số trừ 250.000.",
+    "UrlTitleMappings": [
+      {
+        "Segment": "dashboard",
+        "TitleKey": "Menu_Dashboards"
+      },
+      {
+        "Segment": "organization",
+        "TitleKey": "Section_OrgAndPersonnel"
+      },
+      {
+        "Segment": "structure",
+        "TitleKey": "Menu_OrgChart"
+      },
+      {
+        "Segment": "departments",
+        "TitleKey": "Menu_Departments"
+      },
+      {
+        "Segment": "positions",
+        "TitleKey": "Menu_Positions"
+      },
+      {
+        "Segment": "employees",
+        "TitleKey": "Menu_EmployeeList"
+      },
+      {
+        "Segment": "add",
+        "TitleKey": "Menu_Onboarding"
+      },
+      {
+        "Segment": "edit",
+        "TitleKey": "Label_Edit"
+      },
+      {
+        "Segment": "contracts",
+        "TitleKey": "Menu_Contracts"
+      },
+      {
+        "Segment": "attendance",
+        "TitleKey": "Menu_Attendance"
+      },
+      {
+        "Segment": "timesheet",
+        "TitleKey": "Menu_MonthlyTimesheet"
+      },
+      {
+        "Segment": "schedule",
+        "TitleKey": "Menu_WorkSchedule"
+      },
+      {
+        "Segment": "leave",
+        "TitleKey": "Menu_LeaveManagement"
+      },
+      {
+        "Segment": "leave-trip",
+        "TitleKey": "Menu_BusinessTrip"
+      },
+      {
+        "Segment": "approval",
+        "TitleKey": "Menu_ShiftApproval"
+      },
+      {
+        "Segment": "approvals",
+        "TitleKey": "Menu_LeaveApprovals"
+      },
+      {
+        "Segment": "payroll",
+        "TitleKey": "Menu_PayrollAndBenefits"
+      },
+      {
+        "Segment": "periods",
+        "TitleKey": "Menu_PayrollPeriods"
+      },
+      {
+        "Segment": "benefits",
+        "TitleKey": "Menu_Benefits"
+      },
+      {
+        "Segment": "permissions",
+        "TitleKey": "Menu_Permissions"
+      },
+      {
+        "Segment": "administration",
+        "TitleKey": "Menu_AdminAndConfig"
+      },
+      {
+        "Segment": "roles",
+        "TitleKey": "Menu_RolesAndGroups"
+      },
+      {
+        "Segment": "settings",
+        "TitleKey": "Menu_AdminAndConfig"
+      },
+      {
+        "Segment": "general",
+        "TitleKey": "Menu_GeneralSettings"
+      },
+      {
+        "Segment": "payroll-config",
+        "TitleKey": "Menu_PayrollConfig"
+      },
+      {
+        "Segment": "recruitment",
+        "TitleKey": "Label_Recruitment"
+      },
+      {
+        "Segment": "kanban",
+        "TitleKey": "Menu_RecruitmentKanban"
+      },
+      {
+        "Segment": "details",
+        "TitleKey": "Label_Details"
+      },
+      {
+        "Segment": "banks",
+        "TitleKey": "Menu_Banks"
+      }
+    ],
+    "SidebarMenu": [
+      {
+        "Title": "Menu_Dashboards",
+        "Icon": "ki-outline ki-element-11",
+        "Href": "/dashboard",
+        "Order": 1
+      },
+      {
+        "Title": "Section_OrgAndPersonnel",
+        "IsSection": true,
+        "Order": 2
+      },
+      {
+        "Title": "Menu_CompanyStructure",
+        "Icon": "ki-outline ki-address-book",
+        "Order": 3,
+        "SubItems": [
+          {
+            "Title": "Menu_OrgChart",
+            "Href": "/organization/structure"
+          },
+          {
+            "Title": "Menu_Departments",
+            "Href": "/organization/departments",
+            "Permission": "Permissions.Administration.Settings"
+          },
+          {
+            "Title": "Menu_Positions",
+            "Href": "/organization/positions",
+            "Permission": "Permissions.Administration.Settings"
+          }
+        ]
+      },
+      {
+        "Title": "Menu_EmployeeManagement",
+        "Icon": "ki-outline ki-people",
+        "Order": 4,
+        "SubItems": [
+          {
+            "Title": "Menu_EmployeeList",
+            "Href": "/employees",
+            "Permission": "Permissions.Employees.View"
+          },
+          {
+            "Title": "Menu_Onboarding",
+            "Href": "/employees/add",
+            "Permission": "Permissions.Employees.Create"
+          },
+          {
+            "Title": "Menu_Contracts",
+            "Href": "/contracts",
+            "Permission": "Permissions.Contracts.View"
+          }
+        ]
+      },
+      {
+        "Title": "Section_HROperations",
+        "IsSection": true,
+        "Order": 5
+      },
+      {
+        "Title": "Menu_Attendance",
+        "Icon": "ki-outline ki-timer",
+        "Order": 6,
+        "SubItems": [
+          {
+            "Title": "Menu_MonthlyTimesheet",
+            "Href": "/attendance/timesheet",
+            "Permission": "Permissions.Attendance.View"
+          },
+          {
+            "Title": "Menu_AttendanceData",
+            "Href": "/attendance",
+            "Permission": "Permissions.Attendance.View"
+          },
+          {
+            "Title": "Menu_ImportData",
+            "Href": "/attendance/import",
+            "Permission": "Permissions.Attendance.Edit"
+          }
+        ]
+      },
+      {
+        "Title": "Menu_ShiftManagement",
+        "Icon": "ki-outline ki-calendar-8",
+        "Order": 7,
+        "SubItems": [
+          {
+            "Title": "Menu_ShiftCatalog",
+            "Href": "/attendance/shifts",
+            "Icon": "ki-outline ki-category",
+            "Permission": "Permissions.Administration.Settings"
+          },
+          {
+            "Title": "Menu_WorkSchedule",
+            "Href": "/attendance/schedule",
+            "Icon": "ki-outline ki-calendar-edit",
+            "Permission": "Permissions.Attendance.Edit"
+          },
+          {
+            "Title": "Menu_ShiftApproval",
+            "Href": "/attendance/approval",
+            "Icon": "ki-outline ki-check-square",
+            "Permission": "Permissions.ShiftRequests.View"
+          }
+        ]
+      },
+      {
+        "Title": "Menu_LeaveManagement",
+        "Icon": "ki-outline ki-calendar-8",
+        "Order": 8,
+        "SubItems": [
+          {
+            "Title": "Menu_LeaveRequests",
+            "Href": "/leave/requests",
+            "Permission": "Permissions.LeaveRequests.View"
+          },
+          {
+            "Title": "Menu_BusinessTrip",
+            "Href": "/attendance/leave-trip",
+            "Permission": "Permissions.LeaveRequests.View"
+          }
+        ]
+      },
+      {
+        "Title": "Menu_PayrollAndBenefits",
+        "Icon": "ki-outline ki-wallet",
+        "Order": 9,
+        "SubItems": [
+          {
+            "Title": "Menu_PayrollPeriods",
+            "Href": "/payroll/periods",
+            "Permission": "Permissions.Payroll.View"
+          },
+          {
+            "Title": "Menu_Benefits",
+            "Href": "/benefits",
+            "Permission": "Permissions.Benefits.View"
+          }
+        ]
+      },
+      {
+        "Title": "Section_RecruitmentAndTraining",
+        "IsSection": true,
+        "Order": 10
+      },
+      {
+        "Title": "Menu_Recruitment",
+        "Icon": "ki-outline ki-user-tick",
+        "Href": "/recruitment",
+        "Permission": "Permissions.Recruitment.View",
+        "Order": 11
+      },
+      {
+        "Title": "Menu_Training",
+        "Icon": "ki-outline ki-book-open",
+        "Href": "/training",
+        "Permission": "Permissions.Training.View",
+        "Order": 12
+      },
+      {
+        "Title": "Section_AssetsAndEquipment",
+        "IsSection": true,
+        "Order": 13
+      },
+      {
+        "Title": "Menu_AssetManagement",
+        "Icon": "ki-outline ki-monitor-mobile",
+        "Order": 14,
+        "SubItems": [
+          {
+            "Title": "Menu_AssetInventory",
+            "Href": "/assets/inventory",
+            "Permission": "Permissions.Assets.View"
+          },
+          {
+            "Title": "Menu_AssetAllocation",
+            "Href": "/assets/allocation",
+            "Permission": "Permissions.Assets.View"
+          }
+        ]
+      },
+      {
+        "Title": "Section_System",
+        "IsSection": true,
+        "Permission": "Permissions.Administration.Settings",
+        "Order": 15
+      },
+      {
+        "Title": "Menu_AdminAndConfig",
+        "Icon": "ki-outline ki-setting-2",
+        "Permission": "Permissions.Administration.Settings",
+        "Order": 16,
+        "SubItems": [
+          {
+            "Title": "Menu_RolesAndGroups",
+            "Href": "/administration/roles"
+          },
+          {
+            "Title": "Menu_Permissions",
+            "Href": "/permissions"
+          },
+          {
+            "Title": "Menu_GeneralSettings",
+            "Href": "/settings/general"
+          },
+          {
+            "Title": "Menu_Banks",
+            "Href": "/settings/banks"
+          },
+          {
+            "Title": "Menu_PayrollConfig",
+            "Href": "/settings/payroll-config"
+          }
+        ]
+      },
+      {
+        "Title": "Section_Support",
+        "IsSection": true,
+        "Order": 17
+      },
+      {
+        "Title": "Menu_HRToolkit",
+        "Icon": "ki-outline ki-calculator",
+        "Href": "/tools/hr-toolkit",
+        "Order": 18
+      },
+      {
+        "Title": "Menu_UserGuide",
+        "Icon": "ki-outline ki-book-open",
+        "Href": "/system/guide",
+        "Order": 19
+      }
+    ],
     "Key": "General"
   }
 ]

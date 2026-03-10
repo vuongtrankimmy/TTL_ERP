@@ -110,7 +110,7 @@ namespace TTL.HR.Application.Modules.Attendance.Models
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         public string Status { get; set; } = "Pending";
         
-        public bool IsPending => Status != "Approved" && Status != "2" && Status != "Rejected" && Status != "3" && Status != "Withdrawn" && Status != "Cancelled" && Status != "4";
+        public bool IsPending => Status != "Approved" && Status != "2" && Status != "Rejected" && Status != "3" && Status != "Withdrawn" && Status != "8" && Status != "Cancelled" && Status != "4";
         
         [System.Text.Json.Serialization.JsonPropertyName("comment")]
         public string? ManagerNote { get; set; }
@@ -128,15 +128,8 @@ namespace TTL.HR.Application.Modules.Attendance.Models
         [System.Text.Json.Serialization.JsonPropertyName("nextApproverId")]
         public string? NextApproverId { get; set; }
 
-        public string StatusColor => Status switch
-        {
-            "Approved" or "2" => "success",
-            "PartiallyApproved" => "info",
-            "Rejected" or "3" => "danger",
-            "Pending" or "1" => "warning",
-            "Withdrawn" or "4" => "secondary",
-            _ => "secondary"
-        };
+        [System.Text.Json.Serialization.JsonPropertyName("statusColor")]
+        public string StatusColor { get; set; } = "secondary";
     }
     public class EmployeeAttendanceDetailDto
     {
@@ -178,6 +171,9 @@ namespace TTL.HR.Application.Modules.Attendance.Models
             DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday 
         };
         public string? Note { get; set; }
+        public bool IsFlexible { get; set; }
+        public bool IsDelete { get; set; }
+        public bool BypassQueue { get; set; } = true;
     }
 
     public class WorkShiftModel
@@ -187,9 +183,17 @@ namespace TTL.HR.Application.Modules.Attendance.Models
         public string Code { get; set; } = "";
         public string? StartTime { get; set; }
         public string? EndTime { get; set; }
+        public string? BreakStartTime { get; set; }
+        public string? BreakEndTime { get; set; }
+        public bool IsOvernight { get; set; }
         public int BreakMinutes { get; set; } = 60;
         public double TotalHours { get; set; } = 8.0;
+        public bool IsFlexible { get; set; }
         public string Color { get; set; } = "primary";
+        public int AssignedCount { get; set; }
+        public List<DayOfWeek> WorkingDays { get; set; } = new();
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 
     // DTOs for API Response
@@ -199,6 +203,7 @@ namespace TTL.HR.Application.Modules.Attendance.Models
         public string EmployeeName { get; set; } = string.Empty;
         public string EmployeeCode { get; set; } = string.Empty;
         public string Department { get; set; } = string.Empty;
+        public string DepartmentId { get; set; } = string.Empty;
         public string Position { get; set; } = string.Empty;
         public string AvatarUrl { get; set; } = string.Empty;
         public List<ScheduleDayDto> Schedules { get; set; } = new();
@@ -214,6 +219,7 @@ namespace TTL.HR.Application.Modules.Attendance.Models
         public string? StartTime { get; set; }
         public string? EndTime { get; set; }
         public string Status { get; set; } = string.Empty;
+        public bool IsFlexible { get; set; }
     }
 
     public class CreateShiftRequestModel

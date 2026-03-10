@@ -8,17 +8,17 @@
             <h3 class="fw-bolder my-2">Vùng & Ngôn ngữ
             <span class="fs-6 text-gray-400 fw-bold ms-1">Tùy chỉnh hiển thị và định dạng cho hệ thống</span></h3>
             <div class="d-flex my-2">
-                <button class="btn btn-light-primary btn-sm me-3 fw-bolder px-5" @onclick="ResetToDefault" disabled="@_isSaving">
-                    <i class="bi bi-arrow-counterclockwise fs-5 me-1"></i>Mặc định
+                <button class="btn btn-light-primary me-3 fw-bold" @onclick="ResetToDefault" disabled="@_isSaving">
+                    <i class="bi bi-arrow-counterclockwise fs-4 me-1"></i>Mặc định
                 </button>
-                <button class="btn btn-primary btn-sm fw-bolder px-8" @onclick="SaveSettings" disabled="@(_isSaving || _isLoading)">
+                <button class="btn btn-primary fw-bold" @onclick="SaveSettings" disabled="@(_isSaving || _isLoading)">
                     @if (_isSaving)
                     {
                         <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                     }
                     else
                     {
-                        <i class="bi bi-check-lg fs-5 me-1"></i>
+                        <i class="bi bi-check-lg fs-4 me-1"></i>
                     }
                     Lưu thay đổi
                 </button>

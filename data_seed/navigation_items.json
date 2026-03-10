@@ -1,0 +1,363 @@
+[
+    {
+        "NumericId": 1,
+        "TitleKey": "Menu_Dashboards",
+        "Icon": "ki-outline ki-element-11",
+        "Href": "/dashboard",
+        "IsSection": false,
+        "IsActive": true,
+        "Order": 1
+    },
+    {
+        "NumericId": 2,
+        "TitleKey": "Section_OrgAndPersonnel",
+        "IsSection": true,
+        "IsActive": true,
+        "Order": 2
+    },
+    {
+        "NumericId": 3,
+        "TitleKey": "Menu_CompanyStructure",
+        "Icon": "ki-outline ki-address-book",
+        "IsSection": false,
+        "IsActive": true,
+        "Order": 3
+    },
+    {
+        "NumericId": 4,
+        "TitleKey": "Menu_OrgChart",
+        "Href": "/organization/structure",
+        "IsActive": true,
+        "Order": 1,
+        "ParentId": 3
+    },
+    {
+        "NumericId": 5,
+        "TitleKey": "Menu_Departments",
+        "Href": "/organization/departments",
+        "Permission": "Permissions.Administration.Settings",
+        "IsActive": true,
+        "Order": 2,
+        "ParentId": 3
+    },
+    {
+        "NumericId": 6,
+        "TitleKey": "Menu_Positions",
+        "Href": "/organization/positions",
+        "Permission": "Permissions.Administration.Settings",
+        "IsActive": true,
+        "Order": 3,
+        "ParentId": 3
+    },
+    {
+        "NumericId": 7,
+        "TitleKey": "Menu_EmployeeManagement",
+        "Icon": "ki-outline ki-people",
+        "IsSection": false,
+        "IsActive": true,
+        "Order": 4
+    },
+    {
+        "NumericId": 8,
+        "TitleKey": "Menu_EmployeeList",
+        "Href": "/employees",
+        "Permission": "Permissions.Employees.View",
+        "IsActive": true,
+        "Order": 1,
+        "ParentId": 7
+    },
+    {
+        "NumericId": 9,
+        "TitleKey": "Menu_Onboarding",
+        "Href": "/employees/add",
+        "Permission": "Permissions.Employees.Create",
+        "IsActive": true,
+        "Order": 2,
+        "ParentId": 7
+    },
+    {
+        "NumericId": 10,
+        "TitleKey": "Menu_Contracts",
+        "Href": "/contracts",
+        "Permission": "Permissions.Contracts.View",
+        "IsActive": true,
+        "Order": 3,
+        "ParentId": 7
+    },
+    {
+        "NumericId": 11,
+        "TitleKey": "Section_HROperations",
+        "IsSection": true,
+        "IsActive": true,
+        "Order": 5
+    },
+    {
+        "NumericId": 12,
+        "TitleKey": "Menu_Attendance",
+        "Icon": "ki-outline ki-timer",
+        "IsSection": false,
+        "IsActive": true,
+        "Order": 6
+    },
+    {
+        "NumericId": 13,
+        "TitleKey": "Menu_MonthlyTimesheet",
+        "Href": "/attendance/timesheet",
+        "Permission": "Permissions.Attendance.View",
+        "IsActive": true,
+        "Order": 1,
+        "ParentId": 12
+    },
+    {
+        "NumericId": 14,
+        "TitleKey": "Menu_AttendanceData",
+        "Href": "/attendance",
+        "Permission": "Permissions.Attendance.View",
+        "IsActive": true,
+        "Order": 2,
+        "ParentId": 12
+    },
+    {
+        "NumericId": 15,
+        "TitleKey": "Menu_ImportData",
+        "Href": "/attendance/import",
+        "Permission": "Permissions.Attendance.Edit",
+        "IsActive": true,
+        "Order": 3,
+        "ParentId": 12
+    },
+    {
+        "NumericId": 16,
+        "TitleKey": "Menu_ShiftManagement",
+        "Icon": "ki-outline ki-calendar-8",
+        "IsSection": false,
+        "IsActive": true,
+        "Order": 7
+    },
+    {
+        "NumericId": 17,
+        "TitleKey": "Menu_ShiftCatalog",
+        "Href": "/attendance/shifts",
+        "Permission": "Permissions.Administration.Settings",
+        "IsActive": true,
+        "Order": 1,
+        "ParentId": 16
+    },
+    {
+        "NumericId": 18,
+        "TitleKey": "Menu_WorkSchedule",
+        "Href": "/attendance/schedule",
+        "Permission": "Permissions.Attendance.Edit",
+        "IsActive": true,
+        "Order": 2,
+        "ParentId": 16
+    },
+    {
+        "NumericId": 19,
+        "TitleKey": "Menu_ShiftApproval",
+        "Href": "/attendance/approval",
+        "Permission": "Permissions.ShiftRequests.View",
+        "IsActive": true,
+        "Order": 3,
+        "ParentId": 16
+    },
+    {
+        "NumericId": 43,
+        "TitleKey": "Menu_ShiftAllocation",
+        "Href": "/attendance/allocation",
+        "Permission": "Permissions.Attendance.Edit",
+        "IsActive": true,
+        "Order": 4,
+        "ParentId": 16
+    },
+    {
+        "NumericId": 20,
+        "TitleKey": "Menu_LeaveManagement",
+        "Icon": "ki-outline ki-calendar-8",
+        "IsSection": false,
+        "IsActive": true,
+        "Order": 8
+    },
+    {
+        "NumericId": 21,
+        "TitleKey": "Menu_LeaveRequests",
+        "Href": "/leave/requests",
+        "Permission": "Permissions.LeaveRequests.View",
+        "IsActive": true,
+        "Order": 1,
+        "ParentId": 20
+    },
+    {
+        "NumericId": 22,
+        "TitleKey": "Menu_BusinessTrip",
+        "Href": "/attendance/leave-trip",
+        "Permission": "Permissions.LeaveRequests.View",
+        "IsActive": true,
+        "Order": 2,
+        "ParentId": 20
+    },
+    {
+        "NumericId": 23,
+        "TitleKey": "Menu_PayrollAndBenefits",
+        "Icon": "ki-outline ki-wallet",
+        "IsSection": false,
+        "IsActive": true,
+        "Order": 9
+    },
+    {
+        "NumericId": 24,
+        "TitleKey": "Menu_PayrollPeriods",
+        "Href": "/payroll/periods",
+        "Permission": "Permissions.Payroll.View",
+        "IsActive": true,
+        "Order": 1,
+        "ParentId": 23
+    },
+    {
+        "NumericId": 25,
+        "TitleKey": "Menu_Benefits",
+        "Href": "/benefits",
+        "Permission": "Permissions.Benefits.View",
+        "IsActive": true,
+        "Order": 2,
+        "ParentId": 23
+    },
+    {
+        "NumericId": 26,
+        "TitleKey": "Section_RecruitmentAndTraining",
+        "IsSection": true,
+        "IsActive": true,
+        "Order": 10
+    },
+    {
+        "NumericId": 27,
+        "TitleKey": "Menu_Recruitment",
+        "Icon": "ki-outline ki-user-tick",
+        "Href": "/recruitment",
+        "Permission": "Permissions.Recruitment.View",
+        "IsActive": true,
+        "Order": 11
+    },
+    {
+        "NumericId": 28,
+        "TitleKey": "Menu_Training",
+        "Icon": "ki-outline ki-book-open",
+        "Href": "/training",
+        "Permission": "Permissions.Training.View",
+        "IsActive": true,
+        "Order": 12
+    },
+    {
+        "NumericId": 29,
+        "TitleKey": "Section_AssetsAndEquipment",
+        "IsSection": true,
+        "IsActive": true,
+        "Order": 13
+    },
+    {
+        "NumericId": 30,
+        "TitleKey": "Menu_AssetManagement",
+        "Icon": "ki-outline ki-monitor-mobile",
+        "IsSection": false,
+        "IsActive": true,
+        "Order": 14
+    },
+    {
+        "NumericId": 31,
+        "TitleKey": "Menu_AssetInventory",
+        "Href": "/assets/inventory",
+        "Permission": "Permissions.Assets.View",
+        "IsActive": true,
+        "Order": 1,
+        "ParentId": 30
+    },
+    {
+        "NumericId": 32,
+        "TitleKey": "Menu_AssetAllocation",
+        "Href": "/assets/allocation",
+        "Permission": "Permissions.Assets.View",
+        "IsActive": true,
+        "Order": 2,
+        "ParentId": 30
+    },
+    {
+        "NumericId": 33,
+        "TitleKey": "Section_System",
+        "IsSection": true,
+        "Permission": "Permissions.Administration.Settings",
+        "IsActive": true,
+        "Order": 15
+    },
+    {
+        "NumericId": 34,
+        "TitleKey": "Menu_AdminAndConfig",
+        "Icon": "ki-outline ki-setting-2",
+        "Permission": "Permissions.Administration.Settings",
+        "IsSection": false,
+        "IsActive": true,
+        "Order": 16
+    },
+    {
+        "NumericId": 35,
+        "TitleKey": "Menu_RolesAndGroups",
+        "Href": "/administration/roles",
+        "IsActive": true,
+        "Order": 1,
+        "ParentId": 34
+    },
+    {
+        "NumericId": 36,
+        "TitleKey": "Menu_Permissions",
+        "Href": "/permissions",
+        "IsActive": true,
+        "Order": 2,
+        "ParentId": 34
+    },
+    {
+        "NumericId": 37,
+        "TitleKey": "Menu_GeneralSettings",
+        "Href": "/settings/general",
+        "IsActive": true,
+        "Order": 3,
+        "ParentId": 34
+    },
+    {
+        "NumericId": 38,
+        "TitleKey": "Menu_Banks",
+        "Href": "/settings/banks",
+        "IsActive": true,
+        "Order": 4,
+        "ParentId": 34
+    },
+    {
+        "NumericId": 39,
+        "TitleKey": "Menu_PayrollConfig",
+        "Href": "/settings/payroll-config",
+        "IsActive": true,
+        "Order": 5,
+        "ParentId": 34
+    },
+    {
+        "NumericId": 40,
+        "TitleKey": "Section_Support",
+        "IsSection": true,
+        "IsActive": true,
+        "Order": 17
+    },
+    {
+        "NumericId": 41,
+        "TitleKey": "Menu_HRToolkit",
+        "Icon": "ki-outline ki-calculator",
+        "Href": "/tools/hr-toolkit",
+        "IsActive": true,
+        "Order": 18
+    },
+    {
+        "NumericId": 42,
+        "TitleKey": "Menu_UserGuide",
+        "Icon": "ki-outline ki-book-open",
+        "Href": "/system/guide",
+        "IsActive": true,
+        "Order": 19
+    }
+]

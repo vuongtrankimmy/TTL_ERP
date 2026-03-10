@@ -30,13 +30,13 @@
 				<div class="page-title d-flex flex-column justify-content-center flex-wrap me-3 px-4">
 					<!--begin::Title-->
 					<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-						@(_breadcrumbs.LastOrDefault()?.Title ?? "Dashboard")
+						@L[_breadcrumbs.LastOrDefault()?.Title ?? "Dashboard"]
 					</h1>
 					<!--end::Title-->
 					<!--begin::Breadcrumb-->
 					<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
 						<li class="breadcrumb-item text-muted">
-							<a href="/" class="text-muted text-hover-primary">Trang chủ</a>
+							<a href="/" class="text-muted text-hover-primary">@L["Label_Home"]</a>
 						</li>
 						@if (_breadcrumbs != null)
 						{
@@ -45,7 +45,7 @@
 								<li class="breadcrumb-item">
 									<span class="bullet bg-gray-500 w-5px h-2px"></span>
 								</li>
-								<li class="breadcrumb-item text-muted">@crumb.Title</li>
+								<li class="breadcrumb-item text-muted">@L[crumb.Title]</li>
 							}
 						}
 					</ul>
@@ -65,20 +65,23 @@
 					<div class="d-flex flex-column bgi-no-repeat rounded-top" style="background-image:url('assets/media/misc/menu-header-bg.jpg')">
 						<!--begin::Title-->
 						<h3 class="text-white fw-semibold px-9 mt-10 mb-6">
-							Notifications
-							<span class="fs-8 opacity-75 ps-3">24 reports</span>
+							@L["Label_Notifications"]
+							<span class="fs-8 opacity-75 ps-3">@_notifications.Count() thông báo</span>
 						</h3>
 						<!--end::Title-->
 						<!--begin::Tabs-->
 						<ul class="nav nav-line-tabs nav-line-tabs-2x nav-stretch fw-semibold px-9">
 							<li class="nav-item">
-								<a class="nav-link text-white opacity-75 opacity-state-100 pb-4" data-bs-toggle="tab" href="#kt_topbar_notifications_1">Alerts</a>
+								<a class="nav-link text-white opacity-75 opacity-state-100 pb-4 @(_activeNotifyTab == "Notify" ? "active" : "")" href="javascript:;" @onclick='() => _activeNotifyTab = "Notify"'>Notify</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link text-white opacity-75 opacity-state-100 pb-4 active" data-bs-toggle="tab" href="#kt_topbar_notifications_2">Updates</a>
+								<a class="nav-link text-white opacity-75 opacity-state-100 pb-4 @(_activeNotifyTab == "Email" ? "active" : "")" href="javascript:;" @onclick='() => _activeNotifyTab = "Email"'>Email</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link text-white opacity-75 opacity-state-100 pb-4" data-bs-toggle="tab" href="#kt_topbar_notifications_3">Logs</a>
+								<a class="nav-link text-white opacity-75 opacity-state-100 pb-4 @(_activeNotifyTab == "SMS" ? "active" : "")" href="javascript:;" @onclick='() => _activeNotifyTab = "SMS"'>SMS</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-white opacity-75 opacity-state-100 pb-4 @(_activeNotifyTab == "System" ? "active" : "")" href="javascript:;" @onclick='() => _activeNotifyTab = "System"'>System</a>
 							</li>
 						</ul>
 						<!--end::Tabs-->
@@ -87,437 +90,56 @@
 					<!--begin::Tab content-->
 					<div class="tab-content">
 						<!--begin::Tab panel-->
-						<div class="tab-pane fade" id="kt_topbar_notifications_1" role="tabpanel">
+						<div class="tab-pane fade show active">
 							<!--begin::Items-->
 							<div class="scroll-y mh-325px my-5 px-8">
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center">
-										<!--begin::Symbol-->
-										<div class="symbol symbol-35px me-4">
-											<span class="symbol-label bg-light-primary">
-												<i class="ki-outline ki-abstract-28 fs-2 text-primary"></i>
-											</span>
-										</div>
-										<!--end::Symbol-->
-										<!--begin::Title-->
-										<div class="mb-0 me-2">
-											<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Project Alice</a>
-											<div class="text-gray-500 fs-7">Phase 1 development</div>
-										</div>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">1 hr</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center">
-										<!--begin::Symbol-->
-										<div class="symbol symbol-35px me-4">
-											<span class="symbol-label bg-light-danger">
-												<i class="ki-outline ki-information fs-2 text-danger"></i>
-											</span>
-										</div>
-										<!--end::Symbol-->
-										<!--begin::Title-->
-										<div class="mb-0 me-2">
-											<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">HR Confidential</a>
-											<div class="text-gray-500 fs-7">Confidential staff documents</div>
-										</div>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">2 hrs</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center">
-										<!--begin::Symbol-->
-										<div class="symbol symbol-35px me-4">
-											<span class="symbol-label bg-light-warning">
-												<i class="ki-outline ki-briefcase fs-2 text-warning"></i>
-											</span>
-										</div>
-										<!--end::Symbol-->
-										<!--begin::Title-->
-										<div class="mb-0 me-2">
-											<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Company HR</a>
-											<div class="text-gray-500 fs-7">Corporeate staff profiles</div>
-										</div>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">5 hrs</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center">
-										<!--begin::Symbol-->
-										<div class="symbol symbol-35px me-4">
-											<span class="symbol-label bg-light-success">
-												<i class="ki-outline ki-abstract-12 fs-2 text-success"></i>
-											</span>
-										</div>
-										<!--end::Symbol-->
-										<!--begin::Title-->
-										<div class="mb-0 me-2">
-											<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Project Redux</a>
-											<div class="text-gray-500 fs-7">New frontend admin theme</div>
-										</div>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">2 days</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center">
-										<!--begin::Symbol-->
-										<div class="symbol symbol-35px me-4">
-											<span class="symbol-label bg-light-primary">
-												<i class="ki-outline ki-colors-square fs-2 text-primary"></i>
-											</span>
-										</div>
-										<!--end::Symbol-->
-										<!--begin::Title-->
-										<div class="mb-0 me-2">
-											<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Project Breafing</a>
-											<div class="text-gray-500 fs-7">Product launch status update</div>
-										</div>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">21 Jan</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center">
-										<!--begin::Symbol-->
-										<div class="symbol symbol-35px me-4">
-											<span class="symbol-label bg-light-info">
-												<i class="ki-outline ki-picture fs-2 text-info"></i>
-											</span>
-										</div>
-										<!--end::Symbol-->
-										<!--begin::Title-->
-										<div class="mb-0 me-2">
-											<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Banner Assets</a>
-											<div class="text-gray-500 fs-7">Collection of banner images</div>
-										</div>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">21 Jan</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center">
-										<!--begin::Symbol-->
-										<div class="symbol symbol-35px me-4">
-											<span class="symbol-label bg-light-warning">
-												<i class="ki-outline ki-color-swatch fs-2 text-warning"></i>
-											</span>
-										</div>
-										<!--end::Symbol-->
-										<!--begin::Title-->
-										<div class="mb-0 me-2">
-											<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Icon Assets</a>
-											<div class="text-gray-500 fs-7">Collection of SVG icons</div>
-										</div>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">20 March</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
+                                @if (_notifications != null && _notifications.Any(n => n.Type == _activeNotifyTab))
+                                {
+                                    @foreach (var notify in _notifications.Where(n => n.Type == _activeNotifyTab).OrderByDescending(n => n.CreatedAt))
+                                    {
+                                        <!--begin::Item-->
+                                        <div class="d-flex flex-stack py-4 @(notify.IsRead ? "opacity-50" : "")" @onclick="() => MarkAsRead(notify)">
+                                            <!--begin::Section-->
+                                            <div class="d-flex align-items-center">
+                                                <!--begin::Symbol-->
+                                                <div class="symbol symbol-35px me-4">
+                                                    <span class="symbol-label @(GetNotifyBgClass(notify.Type))">
+                                                        <i class="@(notify.Icon ?? "ki-outline ki-notification-on") fs-2 @(GetNotifyTextClass(notify.Type))"></i>
+                                                    </span>
+                                                </div>
+                                                <!--end::Symbol-->
+                                                <!--begin::Title-->
+                                                <div class="mb-0 me-2">
+                                                    <a href="@(notify.Link ?? notify.ActionUrl ?? "javascript:;")" class="fs-6 text-gray-800 text-hover-primary fw-bold">@notify.Title</a>
+                                                    <div class="text-gray-500 fs-7 text-truncate w-200px">@notify.Message</div>
+                                                </div>
+                                                <!--end::Title-->
+                                            </div>
+                                            <!--end::Section-->
+                                            <!--begin::Label-->
+                                            <span class="badge badge-light fs-8">@GetTimeAgo(notify.CreatedAt)</span>
+                                            <!--end::Label-->
+                                        </div>
+                                        <!--end::Item-->
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="d-flex flex-column px-9 py-10">
+                                        <div class="text-center text-gray-600 fw-semibold pt-1">Không có thông báo mới</div>
+                                    </div>
+                                }
 							</div>
 							<!--end::Items-->
 							<!--begin::View more-->
 							<div class="py-3 text-center border-top">
-								<a href="pages/user-profile/activity.html" class="btn btn-color-gray-600 btn-active-color-primary">
-									View All
+								<a href="/notifications" class="btn btn-color-gray-600 btn-active-color-primary">
+									@L["Label_ViewAll"]
 									<i class="ki-outline ki-arrow-right fs-5"></i>
 								</a>
 							</div>
 							<!--end::View more-->
 						</div>
-						<!--end::Tab panel-->
-						<!--begin::Tab panel-->
-						<div class="tab-pane fade show active" id="kt_topbar_notifications_2" role="tabpanel">
-							<!--begin::Wrapper-->
-							<div class="d-flex flex-column px-9">
-								<!--begin::Section-->
-								<div class="pt-10 pb-0">
-									<!--begin::Title-->
-									<h3 class="text-gray-900 text-center fw-bold">Get Pro Access</h3>
-									<!--end::Title-->
-									<!--begin::Text-->
-									<div class="text-center text-gray-600 fw-semibold pt-1">Outlines keep you honest. They stoping you from amazing poorly about drive</div>
-									<!--end::Text-->
-									<!--begin::Action-->
-									<div class="text-center mt-5 mb-9">
-										<a href="#" class="btn btn-sm btn-primary px-6" data-bs-toggle="modal" data-bs-target="#kt_modal_upgrade_plan">Upgrade</a>
-									</div>
-									<!--end::Action-->
-								</div>
-								<!--end::Section-->
-								<!--begin::Illustration-->
-								<div class="text-center px-4">
-									<img class="mw-100 mh-200px" alt="image" src="assets/media/illustrations/sketchy-1/1.png" />
-								</div>
-								<!--end::Illustration-->
-							</div>
-							<!--end::Wrapper-->
-						</div>
-						<!--end::Tab panel-->
-						<!--begin::Tab panel-->
-						<div class="tab-pane fade" id="kt_topbar_notifications_3" role="tabpanel">
-							<!--begin::Items-->
-							<div class="scroll-y mh-325px my-5 px-8">
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-success me-4">200 OK</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">New order</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">Just now</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-danger me-4">500 ERR</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">New customer</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">2 hrs</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-success me-4">200 OK</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">Payment process</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">5 hrs</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-warning me-4">300 WRN</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">Search query</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">2 days</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-success me-4">200 OK</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">API connection</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">1 week</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-success me-4">200 OK</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">Database restore</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">Mar 5</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-warning me-4">300 WRN</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">System update</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">May 15</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-warning me-4">300 WRN</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">Server OS update</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">Apr 3</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-warning me-4">300 WRN</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">API rollback</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">Jun 30</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-danger me-4">500 ERR</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">Refund process</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">Jul 10</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-danger me-4">500 ERR</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">Withdrawal process</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">Sep 10</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-								<!--begin::Item-->
-								<div class="d-flex flex-stack py-4">
-									<!--begin::Section-->
-									<div class="d-flex align-items-center me-2">
-										<!--begin::Code-->
-										<span class="w-70px badge badge-light-danger me-4">500 ERR</span>
-										<!--end::Code-->
-										<!--begin::Title-->
-										<a href="#" class="text-gray-800 text-hover-primary fw-semibold">Mail tasks</a>
-										<!--end::Title-->
-									</div>
-									<!--end::Section-->
-									<!--begin::Label-->
-									<span class="badge badge-light fs-8">Dec 10</span>
-									<!--end::Label-->
-								</div>
-								<!--end::Item-->
-							</div>
-							<!--end::Items-->
-							<!--begin::View more-->
-							<div class="py-3 text-center border-top">
-								<a href="pages/user-profile/activity.html" class="btn btn-color-gray-600 btn-active-color-primary">
-									View All
-									<i class="ki-outline ki-arrow-right fs-5"></i>
-								</a>
-							</div>
-							<!--end::View more-->
-						</div>
-						<!--end::Tab panel-->
 					</div>
 					<!--end::Tab content-->
 				</div>
@@ -536,57 +158,41 @@
 					<!--begin::Heading-->
 					<div class="d-flex flex-column flex-center bgi-no-repeat rounded-top px-9 py-10" style="background-image:url('assets/media/misc/menu-header-bg.jpg')">
 						<!--begin::Title-->
-						<h3 class="text-white fw-semibold mb-3">Quick Links</h3>
+						<h3 class="text-white fw-semibold mb-3">@L["Label_RecentAccess"]</h3>
 						<!--end::Title-->
 						<!--begin::Status-->
-						<span class="badge bg-primary text-inverse-primary py-2 px-3">25 pending tasks</span>
+						<span class="badge bg-primary text-inverse-primary py-2 px-3">Top 5 tương tác gần nhất</span>
 						<!--end::Status-->
 					</div>
 					<!--end::Heading-->
 					<!--begin:Nav-->
 					<div class="row g-0">
-						<!--begin:Item-->
-						<div class="col-6">
-							<a href="apps/projects/budget.html" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-end border-bottom">
-								<i class="ki-outline ki-dollar fs-3x text-primary mb-2"></i>
-								<span class="fs-5 fw-semibold text-gray-800 mb-0">Accounting</span>
-								<span class="fs-7 text-gray-500">eCommerce</span>
-							</a>
-						</div>
-						<!--end:Item-->
-						<!--begin:Item-->
-						<div class="col-6">
-							<a href="apps/projects/settings.html" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-bottom">
-								<i class="ki-outline ki-sms fs-3x text-primary mb-2"></i>
-								<span class="fs-5 fw-semibold text-gray-800 mb-0">Administration</span>
-								<span class="fs-7 text-gray-500">Console</span>
-							</a>
-						</div>
-						<!--end:Item-->
-						<!--begin:Item-->
-						<div class="col-6">
-							<a href="apps/projects/list.html" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-end">
-								<i class="ki-outline ki-abstract-41 fs-3x text-primary mb-2"></i>
-								<span class="fs-5 fw-semibold text-gray-800 mb-0">Projects</span>
-								<span class="fs-7 text-gray-500">Pending Tasks</span>
-							</a>
-						</div>
-						<!--end:Item-->
-						<!--begin:Item-->
-						<div class="col-6">
-							<a href="apps/projects/users.html" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light">
-								<i class="ki-outline ki-briefcase fs-3x text-primary mb-2"></i>
-								<span class="fs-5 fw-semibold text-gray-800 mb-0">Customers</span>
-								<span class="fs-7 text-gray-500">Latest cases</span>
-							</a>
-						</div>
-						<!--end:Item-->
+                        @if (_recentMenus != null && _recentMenus.Any())
+                        {
+                            @foreach (var menu in _recentMenus)
+                            {
+                                <!--begin:Item-->
+                                <div class="col-6">
+                                    <a href="@menu.Href" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-end border-bottom text-center">
+                                        <i class="@(string.IsNullOrEmpty(menu.Icon) ? "ki-outline ki-abstract-26" : menu.Icon) fs-3x text-primary mb-2"></i>
+                                        <span class="fs-7 fw-semibold text-gray-800 mb-0">@L[menu.Title]</span>
+                                    </a>
+                                </div>
+                                <!--end:Item-->
+                            }
+                        }
+                        else
+                        {
+                            <div class="col-12 p-10 text-center">
+                                <span class="text-gray-500 fs-7">Chưa có dữ liệu tương tác gần đây</span>
+                            </div>
+                        }
 					</div>
 					<!--end:Nav-->
 					<!--begin::View more-->
 					<div class="py-2 text-center border-top">
-						<a href="pages/user-profile/activity.html" class="btn btn-color-gray-600 btn-active-color-primary">
-							View All
+						<a href="/" class="btn btn-color-gray-600 btn-active-color-primary">
+							Dashboard
 							<i class="ki-outline ki-arrow-right fs-5"></i>
 						</a>
 					</div>

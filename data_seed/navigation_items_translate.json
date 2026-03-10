@@ -1,0 +1,422 @@
+[
+    {
+        "NavigationID": 1,
+        "LanguageCode": "vi-VN",
+        "Value": "Bảng điều khiển"
+    },
+    {
+        "NavigationID": 1,
+        "LanguageCode": "en-US",
+        "Value": "Dashboards"
+    },
+    {
+        "NavigationID": 2,
+        "LanguageCode": "vi-VN",
+        "Value": "TỔ CHỨC & NHÂN SỰ"
+    },
+    {
+        "NavigationID": 2,
+        "LanguageCode": "en-US",
+        "Value": "ORG & PERSONNEL"
+    },
+    {
+        "NavigationID": 3,
+        "LanguageCode": "vi-VN",
+        "Value": "Cấu trúc công ty"
+    },
+    {
+        "NavigationID": 3,
+        "LanguageCode": "en-US",
+        "Value": "Company Structure"
+    },
+    {
+        "NavigationID": 4,
+        "LanguageCode": "vi-VN",
+        "Value": "Sơ đồ tổ chức"
+    },
+    {
+        "NavigationID": 4,
+        "LanguageCode": "en-US",
+        "Value": "Org Chart"
+    },
+    {
+        "NavigationID": 5,
+        "LanguageCode": "vi-VN",
+        "Value": "Phòng ban / Sơ đồ"
+    },
+    {
+        "NavigationID": 5,
+        "LanguageCode": "en-US",
+        "Value": "Departments"
+    },
+    {
+        "NavigationID": 6,
+        "LanguageCode": "vi-VN",
+        "Value": "Chức danh / Vị trí"
+    },
+    {
+        "NavigationID": 6,
+        "LanguageCode": "en-US",
+        "Value": "Positions"
+    },
+    {
+        "NavigationID": 7,
+        "LanguageCode": "vi-VN",
+        "Value": "Quản lý nhân sự"
+    },
+    {
+        "NavigationID": 7,
+        "LanguageCode": "en-US",
+        "Value": "Employee Management"
+    },
+    {
+        "NavigationID": 8,
+        "LanguageCode": "vi-VN",
+        "Value": "Danh sách nhân viên"
+    },
+    {
+        "NavigationID": 8,
+        "LanguageCode": "en-US",
+        "Value": "Employee List"
+    },
+    {
+        "NavigationID": 9,
+        "LanguageCode": "vi-VN",
+        "Value": "Tiếp nhận nhân sự"
+    },
+    {
+        "NavigationID": 9,
+        "LanguageCode": "en-US",
+        "Value": "Onboarding"
+    },
+    {
+        "NavigationID": 10,
+        "LanguageCode": "vi-VN",
+        "Value": "Hồ sơ hợp đồng"
+    },
+    {
+        "NavigationID": 10,
+        "LanguageCode": "en-US",
+        "Value": "Contracts"
+    },
+    {
+        "NavigationID": 11,
+        "LanguageCode": "vi-VN",
+        "Value": "VẬN HÀNH NHÂN SỰ"
+    },
+    {
+        "NavigationID": 11,
+        "LanguageCode": "en-US",
+        "Value": "HR OPERATIONS"
+    },
+    {
+        "NavigationID": 12,
+        "LanguageCode": "vi-VN",
+        "Value": "Chấm công & Phân ca"
+    },
+    {
+        "NavigationID": 12,
+        "LanguageCode": "en-US",
+        "Value": "Attendance"
+    },
+    {
+        "NavigationID": 13,
+        "LanguageCode": "vi-VN",
+        "Value": "Bảng công tháng"
+    },
+    {
+        "NavigationID": 13,
+        "LanguageCode": "en-US",
+        "Value": "Monthly Timesheet"
+    },
+    {
+        "NavigationID": 14,
+        "LanguageCode": "vi-VN",
+        "Value": "Dữ liệu chấm công"
+    },
+    {
+        "NavigationID": 14,
+        "LanguageCode": "en-US",
+        "Value": "Attendance Data"
+    },
+    {
+        "NavigationID": 15,
+        "LanguageCode": "vi-VN",
+        "Value": "Nhập dữ liệu máy"
+    },
+    {
+        "NavigationID": 15,
+        "LanguageCode": "en-US",
+        "Value": "Import Data"
+    },
+    {
+        "NavigationID": 16,
+        "LanguageCode": "vi-VN",
+        "Value": "Ca làm việc"
+    },
+    {
+        "NavigationID": 16,
+        "LanguageCode": "en-US",
+        "Value": "Shift Management"
+    },
+    {
+        "NavigationID": 17,
+        "LanguageCode": "vi-VN",
+        "Value": "Danh mục ca"
+    },
+    {
+        "NavigationID": 17,
+        "LanguageCode": "en-US",
+        "Value": "Shift Catalog"
+    },
+    {
+        "NavigationID": 18,
+        "LanguageCode": "vi-VN",
+        "Value": "Lịch làm việc"
+    },
+    {
+        "NavigationID": 18,
+        "LanguageCode": "en-US",
+        "Value": "Work Schedule"
+    },
+    {
+        "NavigationID": 19,
+        "LanguageCode": "vi-VN",
+        "Value": "Duyệt đổi ca"
+    },
+    {
+        "NavigationID": 19,
+        "LanguageCode": "en-US",
+        "Value": "Shift Approval"
+    },
+    {
+        "NavigationID": 20,
+        "LanguageCode": "vi-VN",
+        "Value": "Nghỉ phép & Vắng mặt"
+    },
+    {
+        "NavigationID": 20,
+        "LanguageCode": "en-US",
+        "Value": "Leave Management"
+    },
+    {
+        "NavigationID": 21,
+        "LanguageCode": "vi-VN",
+        "Value": "Đơn nghỉ phép"
+    },
+    {
+        "NavigationID": 21,
+        "LanguageCode": "en-US",
+        "Value": "Leave Requests"
+    },
+    {
+        "NavigationID": 22,
+        "LanguageCode": "vi-VN",
+        "Value": "Đơn đi công tác"
+    },
+    {
+        "NavigationID": 22,
+        "LanguageCode": "en-US",
+        "Value": "Business Trip"
+    },
+    {
+        "NavigationID": 23,
+        "LanguageCode": "vi-VN",
+        "Value": "Lương & Phúc lợi"
+    },
+    {
+        "NavigationID": 23,
+        "LanguageCode": "en-US",
+        "Value": "Payroll & Benefits"
+    },
+    {
+        "NavigationID": 24,
+        "LanguageCode": "vi-VN",
+        "Value": "Kỳ lương"
+    },
+    {
+        "NavigationID": 24,
+        "LanguageCode": "en-US",
+        "Value": "Payroll Periods"
+    },
+    {
+        "NavigationID": 25,
+        "LanguageCode": "vi-VN",
+        "Value": "Chế độ & Phúc lợi"
+    },
+    {
+        "NavigationID": 25,
+        "LanguageCode": "en-US",
+        "Value": "Benefits"
+    },
+    {
+        "NavigationID": 26,
+        "LanguageCode": "vi-VN",
+        "Value": "TUYỂN DỤNG & ĐÀO TẠO"
+    },
+    {
+        "NavigationID": 26,
+        "LanguageCode": "en-US",
+        "Value": "RECRUITMENT & TRAINING"
+    },
+    {
+        "NavigationID": 27,
+        "LanguageCode": "vi-VN",
+        "Value": "Tuyển dụng"
+    },
+    {
+        "NavigationID": 27,
+        "LanguageCode": "en-US",
+        "Value": "Recruitment"
+    },
+    {
+        "NavigationID": 28,
+        "LanguageCode": "vi-VN",
+        "Value": "Đào tạo"
+    },
+    {
+        "NavigationID": 28,
+        "LanguageCode": "en-US",
+        "Value": "Training"
+    },
+    {
+        "NavigationID": 29,
+        "LanguageCode": "vi-VN",
+        "Value": "TÀI SẢN & THIẾT BỊ"
+    },
+    {
+        "NavigationID": 29,
+        "LanguageCode": "en-US",
+        "Value": "ASSETS & EQUIPMENT"
+    },
+    {
+        "NavigationID": 30,
+        "LanguageCode": "vi-VN",
+        "Value": "Quản lý tài sản"
+    },
+    {
+        "NavigationID": 30,
+        "LanguageCode": "en-US",
+        "Value": "Asset Management"
+    },
+    {
+        "NavigationID": 31,
+        "LanguageCode": "vi-VN",
+        "Value": "Danh mục tài sản"
+    },
+    {
+        "NavigationID": 31,
+        "LanguageCode": "en-US",
+        "Value": "Asset Inventory"
+    },
+    {
+        "NavigationID": 32,
+        "LanguageCode": "vi-VN",
+        "Value": "Cấp phát tài sản"
+    },
+    {
+        "NavigationID": 32,
+        "LanguageCode": "en-US",
+        "Value": "Asset Allocation"
+    },
+    {
+        "NavigationID": 33,
+        "LanguageCode": "vi-VN",
+        "Value": "QUẢN TRỊ HỆ THỐNG"
+    },
+    {
+        "NavigationID": 33,
+        "LanguageCode": "en-US",
+        "Value": "SYSTEM ADMIN"
+    },
+    {
+        "NavigationID": 34,
+        "LanguageCode": "vi-VN",
+        "Value": "Cài đặt & Cấu hình"
+    },
+    {
+        "NavigationID": 34,
+        "LanguageCode": "en-US",
+        "Value": "Admin & Config"
+    },
+    {
+        "NavigationID": 35,
+        "LanguageCode": "vi-VN",
+        "Value": "Phân quyền & Nhóm"
+    },
+    {
+        "NavigationID": 35,
+        "LanguageCode": "en-US",
+        "Value": "Roles & Groups"
+    },
+    {
+        "NavigationID": 36,
+        "LanguageCode": "vi-VN",
+        "Value": "Danh mục quyền"
+    },
+    {
+        "NavigationID": 36,
+        "LanguageCode": "en-US",
+        "Value": "Permissions"
+    },
+    {
+        "NavigationID": 37,
+        "LanguageCode": "vi-VN",
+        "Value": "Cấu hình chung"
+    },
+    {
+        "NavigationID": 37,
+        "LanguageCode": "en-US",
+        "Value": "General Settings"
+    },
+    {
+        "NavigationID": 38,
+        "LanguageCode": "vi-VN",
+        "Value": "Danh mục ngân hàng"
+    },
+    {
+        "NavigationID": 38,
+        "LanguageCode": "en-US",
+        "Value": "Banks"
+    },
+    {
+        "NavigationID": 39,
+        "LanguageCode": "vi-VN",
+        "Value": "Cấu hình bảng lương"
+    },
+    {
+        "NavigationID": 39,
+        "LanguageCode": "en-US",
+        "Value": "Payroll Config"
+    },
+    {
+        "NavigationID": 40,
+        "LanguageCode": "vi-VN",
+        "Value": "HỖ TRỢ & TIỆN ÍCH"
+    },
+    {
+        "NavigationID": 40,
+        "LanguageCode": "en-US",
+        "Value": "SUPPORT & TOOLS"
+    },
+    {
+        "NavigationID": 41,
+        "LanguageCode": "vi-VN",
+        "Value": "Công cụ HR"
+    },
+    {
+        "NavigationID": 41,
+        "LanguageCode": "en-US",
+        "Value": "HR Toolkit"
+    },
+    {
+        "NavigationID": 42,
+        "LanguageCode": "vi-VN",
+        "Value": "Hướng dẫn sử dụng"
+    },
+    {
+        "NavigationID": 42,
+        "LanguageCode": "en-US",
+        "Value": "User Guide"
+    }
+]

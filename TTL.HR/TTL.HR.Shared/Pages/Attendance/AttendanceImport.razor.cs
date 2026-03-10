@@ -35,6 +35,9 @@ namespace TTL.HR.Shared.Pages.Attendance
         protected bool _isLoadingHistory = false;
         protected bool showRawData = false;
         protected bool _isDragging = false;
+        protected double _progressPercentage = 0;
+        protected string _progressStatus = "";
+        protected string? _currentJobId;
 
         protected override async Task OnInitializedAsync()
         {
@@ -73,10 +76,10 @@ namespace TTL.HR.Shared.Pages.Attendance
                 try
                 {
                     var fileName = e.File.Name.ToLower();
-                    var allowedExtensions = new[] { ".xlsx", ".xls", ".csv", ".txt", ".json" };
+                    var allowedExtensions = new[] { ".xlsx", ".xls", ".csv", ".txt", ".json", ".mdb" };
                     if (!allowedExtensions.Any(ext => fileName.EndsWith(ext)))
                     {
-                        await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Định dạng tệp không hỗ trợ. Vui lòng chọn .xlsx, .xls, .csv, .txt hoặc .json", "error");
+                        await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Định dạng tệp không hỗ trợ. Vui lòng chọn .xlsx, .xls, .csv, .txt, .json hoặc .mdb", "error");
                         _isProcessing = false;
                         return;
                     }
@@ -95,44 +98,53 @@ namespace TTL.HR.Shared.Pages.Attendance
                     // Set selectedFile only AFTER reading is done to avoid InputFile being removed from DOM too early
                     selectedFile = e.File;
 
-                    // If text/json/csv format, preview content in rawData
-                    if (!fileName.EndsWith(".xlsx") && !fileName.EndsWith(".xls"))
+                    // Preview content in rawDataTable for ALL file types to show on Step 1
+                    if (!fileName.EndsWith(".xlsx") && !fileName.EndsWith(".xls") && !fileName.EndsWith(".mdb"))
                     {
-                        rawData = System.Text.Encoding.UTF8.GetString(cachedFileBytes);
+                        // Register encoding provider for code pages like windows-1258
+                        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                        
+                        using (var ms = new MemoryStream(cachedFileBytes))
+                        using (var reader = new StreamReader(ms, System.Text.Encoding.UTF8, true))
+                        {
+                            rawData = await reader.ReadToEndAsync();
+                        }
+                        
                         ParseRawDataForTable();
                     }
                     else
                     {
-                        // Call backend to get preview for Excel
-                        try
+                        // For Excel/MDB, fetch headers and preview data from backend
+                        _progressStatus = "Đang đọc bản xem trước...";
+                        var response = await AttendanceService.ImportAttendanceAsync(null, cachedFileBytes, cachedFileName, importSource, 0, 0, isPreview: true);
+                        if (response.Success && response.Data != null)
                         {
-                            var response = await AttendanceService.ImportAttendanceAsync(null, cachedFileBytes, cachedFileName, importSource, 0, 0, isPreview: true);
-                            if (response.Success && response.Data != null)
+                            fileHeaders = response.Data.FileHeaders;
+                            rawDataTable.Clear();
+                            rawDataTable.Add(fileHeaders); // Header row
+                            
+                            if (response.Data.RawItems != null)
                             {
-                                fileHeaders = response.Data.FileHeaders;
-                                if (fileHeaders.Any())
+                                foreach (var raw in response.Data.RawItems.Take(10))
                                 {
-                                    rawDataTable.Add(fileHeaders);
-                                    foreach (var item in response.Data.RawItems)
+                                    var row = new List<string>();
+                                    foreach (var header in fileHeaders)
                                     {
-                                        var row = new List<string>();
-                                        foreach (var header in fileHeaders)
-                                        {
-                                            row.Add(item.RowData.ContainsKey(header) ? item.RowData[header] : "");
-                                        }
-                                        rawDataTable.Add(row);
+                                        row.Add(raw.RowData != null && raw.RowData.ContainsKey(header) ? raw.RowData[header] : "");
                                     }
+                                    rawDataTable.Add(row);
                                 }
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            await JSRuntime.InvokeVoidAsync("console.error", "Error getting Excel preview:", ex.ToString());
-                        }
                     }
+
+                    // DO NOT call ProcessNextStep() automatically anymore
+                    // await ProcessNextStep();
                 }
                 catch (Exception ex)
                 {
+                    _progressPercentage = 0;
+                    _progressStatus = "";
                     await JSRuntime.InvokeVoidAsync("Swal.fire", "Lỗi", "Có lỗi xảy ra khi đọc tệp: " + ex.Message, "error");
                 }
                 finally
@@ -142,6 +154,31 @@ namespace TTL.HR.Shared.Pages.Attendance
                     StateHasChanged();
                 }
             }
+        }
+
+        private async Task StartStatusPolling(string jobId)
+        {
+            _currentJobId = jobId;
+            _ = Task.Run(async () =>
+            {
+                while (_currentJobId == jobId && _isProcessing)
+                {
+                    try
+                    {
+                        var status = await AttendanceService.GetExportStatusAsync(jobId);
+                        if (status.Success && status.Data != null)
+                        {
+                            _progressPercentage = status.Data.Percentage;
+                            _progressStatus = status.Data.Status ?? "Đang xử lý...";
+                            StateHasChanged();
+
+                            if (status.Data.IsCompleted || status.Data.IsFailed) break;
+                        }
+                    }
+                    catch { }
+                    await Task.Delay(1000);
+                }
+            });
         }
 
         protected void HandleDragEnter() => _isDragging = true;
@@ -179,7 +216,7 @@ namespace TTL.HR.Shared.Pages.Attendance
 
         protected async Task ProcessNextStep()
         {
-            if (selectedFile != null && !selectedFile.Name.ToLower().EndsWith(".json"))
+            if (selectedFile != null && !selectedFile.Name.ToLower().EndsWith(".json") && !selectedFile.Name.ToLower().EndsWith(".mdb"))
             {
                 await GoToMapping();
             }
@@ -202,7 +239,7 @@ namespace TTL.HR.Shared.Pages.Attendance
             else if (currentStep == 3)
             {
                 bool isMappingRequired = false;
-                if (selectedFile != null && !selectedFile.Name.ToLower().EndsWith(".json"))
+                if (selectedFile != null && !selectedFile.Name.ToLower().EndsWith(".json") && !selectedFile.Name.ToLower().EndsWith(".mdb"))
                 {
                     isMappingRequired = true;
                 }
@@ -225,9 +262,14 @@ namespace TTL.HR.Shared.Pages.Attendance
         protected async Task GoToMapping()
         {
             _isProcessing = true;
+            _progressPercentage = 0;
+            _progressStatus = "Đang chuẩn bị tiêu đề...";
+            StateHasChanged();
             try
             {
-                var response = await AttendanceService.ImportAttendanceAsync(rawData, cachedFileBytes, cachedFileName, importSource, 0, 0, isPreview: true);
+                _currentJobId = Guid.NewGuid().ToString();
+                _ = StartStatusPolling(_currentJobId);
+                var response = await AttendanceService.ImportAttendanceAsync(rawData, cachedFileBytes, cachedFileName, importSource, 0, 0, isPreview: true, jobId: _currentJobId);
                 if (response.Success && response.Data != null)
                 {
                     fileHeaders = response.Data.FileHeaders;
@@ -257,12 +299,18 @@ namespace TTL.HR.Shared.Pages.Attendance
         protected async Task GoToPreview()
         {
             _isProcessing = true;
+            _progressPercentage = 0;
+            _progressStatus = "Đang tải dữ liệu xem trước...";
+            StateHasChanged();
             try
             {
-                var response = await AttendanceService.ImportAttendanceAsync(rawData, cachedFileBytes, cachedFileName, importSource, employeeCodeColIndex, timestampColIndex, isPreview: true);
+                _currentJobId = Guid.NewGuid().ToString();
+                _ = StartStatusPolling(_currentJobId);
+                var response = await AttendanceService.ImportAttendanceAsync(rawData, cachedFileBytes, cachedFileName, importSource, employeeCodeColIndex, timestampColIndex, isPreview: true, jobId: _currentJobId);
                 if (response.Success && response.Data != null)
                 {
                     importResult = response.Data;
+                    showRawData = true; // Auto-expand raw data for verification
                     currentStep = 3;
                 }
                 else
@@ -284,7 +332,11 @@ namespace TTL.HR.Shared.Pages.Attendance
                 _ = JSRuntime.InvokeVoidAsync("Swal.fire", new { title = "Đang lưu dữ liệu", text = "Vui lòng chờ...", allowOutsideClick = false, showConfirmButton = false });
                 try { _ = JSRuntime.InvokeVoidAsync("Swal.showLoading"); } catch { }
 
-                var response = await AttendanceService.ImportAttendanceAsync(rawData, cachedFileBytes, cachedFileName, importSource, employeeCodeColIndex, timestampColIndex, isPreview: false);
+                _currentJobId = Guid.NewGuid().ToString();
+                _progressPercentage = 0;
+                _progressStatus = "Đang lưu...";
+                _ = StartStatusPolling(_currentJobId);
+                var response = await AttendanceService.ImportAttendanceAsync(rawData, cachedFileBytes, cachedFileName, importSource, employeeCodeColIndex, timestampColIndex, isPreview: false, jobId: _currentJobId);
                 await JSRuntime.InvokeVoidAsync("Swal.close");
 
                 if (response.Success)

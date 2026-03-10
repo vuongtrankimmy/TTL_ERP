@@ -15,6 +15,7 @@ namespace TTL.HR.Application.Modules.Dashboard.Models
         public List<ExpiringContract> ExpiringContracts { get; set; } = new();
         public AttendanceToday AttendanceToday { get; set; } = new();
         public List<PendingAssetClearance> PendingAssetClearances { get; set; } = new();
+        public List<BirthdayAlert> BirthdayAlerts { get; set; } = new();
         public List<PayrollTrendDto> PayrollTrend { get; set; } = new();
     }
 
@@ -96,5 +97,12 @@ namespace TTL.HR.Application.Modules.Dashboard.Models
         public double Absent { get; set; }
         public double Late { get; set; }
         public int Total { get; set; }
+    }
+
+    public class BirthdayAlert
+    {
+        public string EmployeeName { get; set; } = string.Empty;
+        public DateTime DOB { get; set; }
+        public int DaysUntilBirthday { get; set; }
     }
 }

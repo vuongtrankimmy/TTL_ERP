@@ -5,33 +5,16 @@
 @inject IStringLocalizer<SharedResource> L
 
 <div class="post d-flex flex-column-fluid" id="kt_post">
-    <div id="kt_content_container" class="container-xxl">
+    <div id="kt_content_container" class="container-fluid">
         
-        <!-- Clean Header -->
-        <div class="card mb-8 shadow-sm border-0 bg-glass-premium">
-            <div class="card-body py-8 px-10">
-                <div class="d-flex align-items-center justify-content-between flex-wrap gap-5">
-                    <div class="d-flex align-items-center">
-                        <div class="symbol symbol-50px me-5">
-                            <div class="symbol-label bg-light-primary">
-                                <i class="ki-outline ki-category fs-2hx text-primary"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <h2 class="fw-boldest text-gray-900 fs-1 mb-1">Danh mục ca làm việc</h2>
-                            <p class="text-muted fw-bold fs-6 mb-0">Thiết lập và quản lý các ca làm việc tiêu chuẩn trong hệ thống</p>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center gap-3">
-                        <button type="button" class="btn btn-light-primary fw-boldest px-8 ripple" @onclick='() => NavigationManager.NavigateTo("/attendance/scheduler")'>
-                            <i class="ki-outline ki-calendar-8 fs-3 me-2"></i>Sơ đồ tổng quát
-                        </button>
-                        <button type="button" class="btn btn-primary fw-boldest px-8 shadow-sm ripple" @onclick="() => OpenShiftDialog()">
-                            <i class="ki-outline ki-plus fs-2 me-2"></i>Thêm ca mới
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <!-- Simplified Action Bar (No Redundant Title) -->
+        <div class="d-flex align-items-center justify-content-end mb-8 gap-3">
+            <button type="button" class="btn btn-sm btn-light-primary fw-boldest px-6 ripple shadow-sm" @onclick='() => NavigationManager.NavigateTo("/attendance/scheduler")'>
+                <i class="ki-outline ki-calendar-8 fs-4 me-2"></i>SƠ ĐỒ TỔNG QUÁT
+            </button>
+            <button type="button" class="btn btn-sm btn-primary fw-boldest px-6 shadow-sm ripple" @onclick="() => OpenShiftDialog()">
+                <i class="ki-outline ki-plus fs-3 me-2"></i>THÊM CA MỚI
+            </button>
         </div>
 
         <div class="card shadow-sm border-0">
@@ -57,7 +40,8 @@
                             <tr class="fw-bold text-gray-600 fs-8 text-uppercase bg-light">
                                 <th class="min-w-150px ps-4 rounded-start">Tên ca</th>
                                 <th class="min-w-100px text-center">Mã ca</th>
-                                <th class="min-w-150px text-center">Thời gian</th>
+                                <th class="min-w-150px text-center">Thời gian làm việc</th>
+                                <th class="min-w-100px text-center">Nghỉ ngơi</th>
                                 <th class="min-w-100px text-center">Màu sắc</th>
                                 <th class="min-w-100px text-end pe-4 rounded-end">Thao tác</th>
                             </tr>
@@ -66,7 +50,7 @@
                             @if (_isLoading)
                             {
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         <div class="skeleton-line h-40px w-100 mb-2"></div>
                                     </td>
                                 </tr>
@@ -74,7 +58,7 @@
                             else if (!_filteredShifts.Any())
                             {
                                 <tr>
-                                    <td colspan="5" class="text-center py-10">
+                                    <td colspan="6" class="text-center py-10">
                                         <div class="d-flex flex-column flex-center">
                                             <i class="ki-outline ki-ghost fs-3x text-gray-300 mb-3"></i>
                                             <span class="text-gray-500 fs-7 fw-bold">Không tìm thấy dữ liệu ca làm việc</span>
@@ -89,10 +73,21 @@
                                     <tr class="hover-bg-light">
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="symbol symbol-35px me-3">
-                                                    <div class="symbol-label fw-bold fs-8 @(GetShiftClass(shift.Color, "bg-light-"))" style="@(GetShiftStyle(shift.Color)) color: white !important;">@shift.Name.Substring(0, 1)</div>
+                                                <div class="symbol symbol-30px me-3">
+                                                    @{
+                                                        var isH = shift.Color.StartsWith("#");
+                                                        var sStyle = isH ? $"background-color: {shift.Color}20 !important; color: {shift.Color} !important; border: 1px solid {shift.Color}50 !important;" : "";
+                                                        var sClass = !isH ? $"bg-light-{shift.Color} text-{shift.Color} border border-{shift.Color} border-opacity-50" : "";
+                                                    }
+                                                    <div class="symbol-label fw-boldest fs-9 @sClass" style="@sStyle">@shift.Name.Substring(0, 1).ToUpper()</div>
                                                 </div>
-                                                <span class="text-gray-900 fw-bold fs-7">@shift.Name</span>
+                                                <div>
+                                                    <span class="text-gray-900 fw-boldest fs-7">@shift.Name</span>
+                                                    @if (shift.IsOvernight)
+                                                    {
+                                                        <span class="badge badge-light-danger fw-bold fs-10 ms-2 py-0">QUA ĐÊM</span>
+                                                    }
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="text-center">
@@ -101,13 +96,28 @@
                                         <td class="text-center">
                                             <div class="d-flex flex-center gap-2">
                                                 <span class="badge badge-light-success border border-success border-dashed fw-bold fs-8">@shift.StartTime</span>
-                                                <span class="text-gray-400">/</span>
+                                                <span class="text-gray-400">→</span>
                                                 <span class="badge badge-light-danger border border-danger border-dashed fw-bold fs-8">@shift.EndTime</span>
                                             </div>
                                         </td>
                                         <td class="text-center">
-                                            <span class="badge fw-bold fs-8 @(GetShiftClass(shift.Color))" style="@(GetShiftStyle(shift.Color)) @(shift.Color.StartsWith("#") ? "color: white !important;" : "")">
-                                                @(shift.Color.StartsWith("#") ? "Custom" : shift.Color)
+                                            @if (!string.IsNullOrEmpty(shift.BreakStartTime) && shift.BreakStartTime != "00:00")
+                                            {
+                                                <span class="text-gray-600 fs-8 fw-bold">@shift.BreakStartTime - @shift.BreakEndTime</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-gray-400 fs-10 fw-bold italic">Không nghỉ</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @{
+                                                var isHexC = shift.Color.StartsWith("#");
+                                                var bStyle = isHexC ? $"background-color: {shift.Color}15 !important; color: {shift.Color} !important; border: 1px dashed {shift.Color} !important;" : "";
+                                                var bClass = !isHexC ? $"badge-light-{shift.Color} border border-{shift.Color} border-dashed" : "badge-outline";
+                                            }
+                                            <span class="badge fw-boldest fs-10 px-3 @bClass" style="@bStyle">
+                                                @(isHexC ? shift.Color.ToUpper() : shift.Color.ToUpper())
                                             </span>
                                         </td>
                                         <td class="text-end pe-4">
@@ -116,13 +126,17 @@
                                                         title="Xem lịch" @onclick="() => GoToScheduler(shift)">
                                                     <i class="ki-outline ki-calendar-8 fs-4"></i>
                                                 </button>
-                                                <button class="btn btn-icon btn-light-primary btn-sm ripple" 
-                                                        title="Gán phân ca nhanh" @onclick="() => OpenAssignDrawer(shift)">
-                                                    <i class="ki-outline ki-profile-user fs-4"></i>
+                                                <button class="btn btn-icon btn-light-warning btn-sm ripple" 
+                                                        title="Phân bổ nhân sự gán ca" @onclick="() => GoToAllocation(shift)">
+                                                    <i class="ki-outline ki-profile-user fs-4 text-warning"></i>
                                                 </button>
-                                                <button class="btn btn-icon btn-light-info btn-sm ripple" 
+                                                <button class="btn btn-icon btn-light-info btn-sm ripple position-relative" 
                                                         title="Danh sách đối tượng" @onclick="() => OpenAssignedObjects(shift)">
                                                     <i class="ki-outline ki-people fs-4"></i>
+                                                    @if (shift.AssignedCount > 0)
+                                                    {
+                                                        <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary w-15px h-15px fs-10" style="margin-top: -5px; margin-left: -5px;">@shift.AssignedCount</span>
+                                                    }
                                                 </button>
                                                 <button class="btn btn-icon btn-light-warning btn-sm ripple" @onclick="() => OpenShiftDialog(shift)" title="Sửa">
                                                     <i class="ki-outline ki-pencil fs-4"></i>
@@ -188,14 +202,85 @@
                         </div>
                     </div>
                     
+                    <div class="d-flex flex-stack mb-5 bg-light-light p-4 rounded-3 border border-dashed">
+                        <div class="me-5">
+                            <label class="fs-7 fw-boldest text-gray-800">Cơ chế linh động</label>
+                            <div class="fs-9 text-muted fw-bold">Tự động chấm công theo ngày giờ làm việc công ty</div>
+                        </div>
+                        <div class="form-check form-switch form-check-custom form-check-solid">
+                            <input class="form-check-input w-40px h-20px" type="checkbox" @bind="_editingModel.IsFlexible" />
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-stack mb-5 bg-light-light p-4 rounded-3 border border-dashed">
+                        <div class="me-5">
+                            <label class="fs-7 fw-boldest text-gray-800">Ca qua đêm</label>
+                            <div class="fs-9 text-muted fw-bold">Ca làm việc kết thúc vào ngày hôm sau</div>
+                        </div>
+                        <div class="form-check form-switch form-check-custom form-check-solid">
+                            <input class="form-check-input w-40px h-20px" type="checkbox" @bind="_editingModel.IsOvernight" />
+                        </div>
+                    </div>
+
+                    @if (!_editingModel.IsFlexible)
+                    {
+                        <div class="row g-5 mb-5 animation-slide-in">
+                            <div class="col-md-6">
+                                <label class="form-label fs-8 fw-bold text-gray-700 required">Thời gian bắt đầu</label>
+                                <input type="time" class="form-control form-control-solid fs-7" value="@_editingModel.StartTime" @onchange="@(e => _editingModel.StartTime = e.Value?.ToString())" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fs-8 fw-bold text-gray-700 required">Thời gian kết thúc</label>
+                                <input type="time" class="form-control form-control-solid fs-7" value="@_editingModel.EndTime" @onchange="@(e => _editingModel.EndTime = e.Value?.ToString())" />
+                            </div>
+                        </div>
+
+                        <div class="row g-5 mb-5 animation-slide-in">
+                            <div class="col-md-6">
+                                <label class="form-label fs-8 fw-bold text-gray-700">Giờ nghỉ từ</label>
+                                <input type="time" class="form-control form-control-solid fs-7" value="@_editingModel.BreakStartTime" @onchange="@(e => _editingModel.BreakStartTime = e.Value?.ToString())" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fs-8 fw-bold text-gray-700">Giờ nghỉ đến</label>
+                                <input type="time" class="form-control form-control-solid fs-7" value="@_editingModel.BreakEndTime" @onchange="@(e => _editingModel.BreakEndTime = e.Value?.ToString())" />
+                            </div>
+                        </div>
+                    }
+
                     <div class="row g-5 mb-5">
                         <div class="col-md-6">
-                            <label class="form-label fs-8 fw-bold text-gray-700 required">Thời gian bắt đầu</label>
-                            <input type="time" class="form-control form-control-solid fs-7" value="@_editingModel.StartTime" @onchange="@(e => _editingModel.StartTime = e.Value?.ToString())" />
+                            <label class="form-label fs-8 fw-bold text-gray-700">Ngày áp dụng từ</label>
+                            <input type="date" class="form-control form-control-solid fs-7" @bind="_editingModel.StartDate" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fs-8 fw-bold text-gray-700 required">Thời gian kết thúc</label>
-                            <input type="time" class="form-control form-control-solid fs-7" value="@_editingModel.EndTime" @onchange="@(e => _editingModel.EndTime = e.Value?.ToString())" />
+                            <label class="form-label fs-8 fw-bold text-gray-700">Đến ngày</label>
+                            <input type="date" class="form-control form-control-solid fs-7" @bind="_editingModel.EndDate" />
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="form-label fs-8 fw-bold text-gray-700 mb-3">Thứ áp dụng mặc định</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            @{
+                                var days = new[] { 
+                                    new { Name = "T2", Day = DayOfWeek.Monday },
+                                    new { Name = "T3", Day = DayOfWeek.Tuesday },
+                                    new { Name = "T4", Day = DayOfWeek.Wednesday },
+                                    new { Name = "T5", Day = DayOfWeek.Thursday },
+                                    new { Name = "T6", Day = DayOfWeek.Friday },
+                                    new { Name = "T7", Day = DayOfWeek.Saturday },
+                                    new { Name = "CN", Day = DayOfWeek.Sunday }
+                                };
+                            }
+                            @foreach (var day in days)
+                            {
+                                <div class="form-check form-check-custom form-check-solid form-check-sm">
+                                    <input class="form-check-input" type="checkbox" id="day_@day.Day" 
+                                           checked="@(_editingModel.WorkingDays.Contains(day.Day))"
+                                           @onchange="@(e => ToggleWorkingDay(day.Day))" />
+                                    <label class="form-check-label fw-bold fs-9 text-gray-600 cursor-pointer" for="day_@day.Day">@day.Name</label>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -261,14 +346,52 @@
                 else
                 {
                     <div class="d-flex flex-stack mb-5">
-                        <div class="d-flex flex-column">
-                            <div class="fw-bold text-gray-700 fs-8 text-uppercase ls-1">Nhân sự hiện tại (@_totalDetailCount)</div>
-                            <button class="btn btn-link btn-color-warning btn-active-color-primary p-0 h-auto fs-9 fw-boldest text-start" 
+                    <div class="d-flex flex-column">
+                        <div class="fw-bold text-gray-700 fs-8 text-uppercase ls-1">Nhân sự hiện tại (@_totalDetailCount)</div>
+                        <div class="d-flex align-items-center gap-2 mt-2">
+                             <div class="position-relative flex-grow-1">
+                                <i class="ki-outline ki-magnifier fs-4 position-absolute ms-3 top-50 translate-middle-y text-gray-400"></i>
+                                <input type="text" class="form-control form-control-solid form-control-sm ps-10 fs-10" 
+                                       placeholder="Thêm nhân viên nhanh..." 
+                                       @oninput="OnAddSearchInput" />
+                            </div>
+                            <button class="btn btn-sm btn-icon btn-light-warning ripple" 
+                                    title="Gán ca (Nâng cao)"
                                     @onclick="() => OpenAssignDrawer(_selectedShiftForDetail)">
-                                <i class="ki-outline ki-plus-square fs-9 me-1"></i>BỔ SUNG & GÁN THÊM
+                                <i class="ki-outline ki-plus fs-3"></i>
                             </button>
                         </div>
-                        <div class="d-flex align-items-center gap-1">
+                    </div>
+                    
+                    @if (!string.IsNullOrEmpty(_quickAddSearch))
+                    {
+                        <div class="bg-light-light rounded-4 p-4 border border-dashed mb-5 mt-2">
+                            <div class="fw-boldest text-gray-800 fs-9 mb-3 text-uppercase">Kết quả tìm kiếm:</div>
+                            <div class="d-flex flex-column gap-2" style="max-height: 200px; overflow-y: auto;">
+                                @foreach (var emp in _quickAddResults)
+                                {
+                                    <div class="d-flex align-items-center bg-white p-2 rounded-3 border border-gray-200">
+                                        <div class="symbol symbol-30px me-3">
+                                            <div class="symbol-label bg-light-primary text-primary fs-9 fw-bold">@emp.FullName?.Substring(0, 1)</div>
+                                        </div>
+                                        <div class="d-flex flex-column flex-grow-1">
+                                            <span class="text-gray-900 fw-bold fs-9">@emp.FullName</span>
+                                            <span class="text-muted fs-11">@emp.Code</span>
+                                        </div>
+                                        <button class="btn btn-xs btn-light-success fw-boldest" @onclick="() => QuickAddEmployee(emp)">
+                                            + GÁN
+                                        </button>
+                                    </div>
+                                }
+                                @if (!_quickAddResults.Any())
+                                {
+                                    <div class="text-center py-2 text-muted fs-11">Không tìm thấy nhân viên</div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <div class="d-flex flex-stack mb-5">
                             <button class="btn btn-icon btn-xs btn-light-primary @(_detailPageIndex <= 1 ? "disabled" : "")" 
                                     @onclick="() => ChangeDetailPage(_detailPageIndex - 1)">
                                 <i class="ki-outline ki-arrow-left fs-9"></i>
@@ -294,22 +417,29 @@
                                     <span class="text-gray-900 fw-bold fs-7">@emp.EmployeeName</span>
                                     <span class="text-muted fs-10">@emp.EmployeeCode • @emp.Department</span>
                                 </div>
-                                <div class="text-end">
-                                    <div class="badge badge-light-primary fw-bold fs-10 px-2 py-1">
-                                        @{
-                                            var dayCount = emp.Schedules.Count(s => s.ShiftId == _selectedShiftForDetail?.Id);
-                                            @($"{dayCount} ngày")
-                                        }
-                                    </div>
-                                    <div class="mt-1">
-                                         @{
-                                             var shiftDays = emp.Schedules.Where(s => s.ShiftId == _selectedShiftForDetail?.Id).OrderBy(s => s.Date).ToList();
-                                             if (shiftDays.Any())
-                                             {
-                                                 <span class="text-gray-500 fs-10 fw-semibold">@shiftDays.First().Date.ToString("dd/MM")-@shiftDays.Last().Date.ToString("dd/MM")</span>
+                                <div class="text-end d-flex align-items-center gap-2">
+                                    <div class="d-flex flex-column align-items-end">
+                                        <div class="badge badge-light-primary fw-bold fs-10 px-2 py-1">
+                                            @{
+                                                var dayCount = emp.Schedules.Count(s => s.ShiftId == _selectedShiftForDetail?.Id);
+                                                @($"{dayCount} ngày")
+                                            }
+                                        </div>
+                                        <div class="mt-1">
+                                             @{
+                                                 var shiftDays = emp.Schedules.Where(s => s.ShiftId == _selectedShiftForDetail?.Id).OrderBy(s => s.Date).ToList();
+                                                 if (shiftDays.Any())
+                                                 {
+                                                     <span class="text-gray-500 fs-10 fw-semibold">@shiftDays.First().Date.ToString("dd/MM")-@shiftDays.Last().Date.ToString("dd/MM")</span>
+                                                 }
                                              }
-                                         }
+                                        </div>
                                     </div>
+                                    <button class="btn btn-icon btn-sm btn-light-danger btn-active-danger ripple ms-2" 
+                                            title="Gỡ khỏi ca"
+                                            @onclick="() => RemoveAssignment(emp)">
+                                        <i class="ki-outline ki-trash fs-5"></i>
+                                    </button>
                                 </div>
                             </div>
                         }
