@@ -19,6 +19,7 @@ namespace TTL.HR.Shared.Pages.Settings
         [Inject] public IEmployeeService EmployeeService { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
+        [Inject] public INavigationService NavigationService { get; set; } = default!;
 
 
         private string activeTab = "company_profile";
@@ -41,6 +42,11 @@ namespace TTL.HR.Shared.Pages.Settings
 
         protected override async Task OnInitializedAsync()
         {
+            if (!await NavigationService.UserHasPermissionAsync("Permissions.Administration.Settings"))
+            {
+                Navigation.NavigateTo("/access-denied");
+                return;
+            }
             await LoadData();
         }
 

@@ -44,6 +44,18 @@
                     <button type="button" class="btn btn-light-success fw-bold fs-7 px-6 ms-2" @onclick="ReCalculatePayroll">
                         <i class="ki-outline ki-arrows-loop fs-3 me-1"></i> Tính toán lại (Live)
                     </button>
+                    @if (Payslips.Any(p => p.IsSelected))
+                    {
+                        <button type="button" class="btn btn-light-info fw-bold fs-7 px-6 ms-2" @onclick="DownloadSelectedPayslips">
+                            <i class="ki-outline ki-printer fs-3 me-1"></i> In chọn lọc (@Payslips.Count(p => p.IsSelected))
+                        </button>
+                    }
+                    @if (Payslips.Any(p => p.AdvanceAmount > 0))
+                    {
+                        <button type="button" class="btn btn-light-danger fw-bold fs-7 px-6 ms-2" @onclick="() => DownloadAdvancePayslips()">
+                            <i class="ki-outline ki-wallet fs-3 me-1"></i> In danh sách tạm ứng (@Payslips.Count(p => p.AdvanceAmount > 0))
+                        </button>
+                    }
                 }
                 else if (SelectedPeriod != null && SelectedPeriod.Id.StartsWith("VIRTUAL"))
                 {
@@ -175,6 +187,15 @@
                     <div class="d-flex flex-column">
                         <a href="javascript:;" class="kt_drawer_employee_detail_toggle text-gray-900 fw-bold text-hover-primary mb-1 fs-6" @onclick="() => OpenDetailDrawer(slip)">@slip.EmployeeName</a>
                         <span class="text-muted fw-semibold fs-7">@slip.EmployeeCode • @slip.Department</span>
+                        @if (slip.PaymentDetails != null && slip.PaymentDetails.Any())
+                        {
+                            <div class="mt-1">
+                                <span class="badge badge-light-danger fw-bolder fs-9 px-2 py-1" title="Số lần đã tạm ứng/chi trả">
+                                    <i class="ki-outline ki-wallet fs-9 text-danger me-1"></i>
+                                    Tạm ứng: x@(slip.PaymentDetails.Count)
+                                </span>
+                            </div>
+                        }
                         @if (!string.IsNullOrEmpty(slip.WarningMessage))
                         {
                             <span class="text-danger fs-9 fw-bold mt-1">
@@ -256,236 +277,278 @@
                     </div>
                 </div>
 
-                <!-- Dynamic Formula Mapping Section -->
-                <div class="mb-10">
-                    <div class="d-flex flex-stack mb-5 border-bottom pb-2">
-                        <h4 class="fw-bold fs-6 text-uppercase text-gray-500 mb-0">Công thức & Mapping động</h4>
-                        <span class="badge badge-light-primary fw-bold">Live Calc</span>
-                    </div>
-                    
-                    <div class="bg-gray-50 rounded p-5 mb-8 border border-dashed border-gray-300">
-                        <div class="d-flex flex-stack mb-3">
-                            <span class="text-gray-600 fs-7">Lương cơ bản mapping từ HĐ:</span>
-                            <span class="text-gray-900 fw-bold">@FormatService.FormatCurrency(SelectedSlip.BasicSalary)</span>
-                        </div>
-                        <div class="d-flex flex-stack mb-3">
-                            <span class="text-gray-600 fs-7">Số ngày công chuẩn (Tháng @Month):</span>
-                            <span class="text-gray-900 fw-bold">@SelectedSlip.StandardWorkDays ngày</span>
-                        </div>
-                        <div class="separator separator-dashed my-3"></div>
-                        <div class="d-flex flex-stack mb-1">
-                            <span class="text-primary fw-bold fs-7">Lương tính từng ngày (Mặc định):</span>
-                            <span class="text-primary fw-bolder">@FormatService.FormatCurrency(SelectedSlip.StandardWorkDays > 0 ? SelectedSlip.BasicSalary / (decimal)SelectedSlip.StandardWorkDays : 0)</span>
-                        </div>
-                        <div class="text-muted fs-9 italic">*(Công thức: BasicSalary / StandardDays)*</div>
-                    </div>
+                <!-- Tab Navigation -->
+                <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold mb-8 gap-10">
+                    <li class="nav-item">
+                        <a class="nav-link text-active-primary ms-0 py-3 d-flex align-items-center @(_activeDrawerTab == 1 ? "active" : "")" href="javascript:;" @onclick="() => SetDrawerTab(1)">
+                            <i class="ki-outline ki-element-11 fs-4 me-2"></i>Tổng quan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-active-primary ms-0 py-3 d-flex align-items-center @(_activeDrawerTab == 2 ? "active" : "")" href="javascript:;" @onclick="() => SetDrawerTab(2)">
+                            <i class="ki-outline ki-calendar-8 fs-4 me-2"></i>Chấm công
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-active-primary ms-0 py-3 d-flex align-items-center @(_activeDrawerTab == 3 ? "active" : "")" href="javascript:;" @onclick="() => SetDrawerTab(3)">
+                            <i class="ki-outline ki-wallet fs-4 me-2"></i>Thu nhập
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-active-primary ms-0 py-3 d-flex align-items-center @(_activeDrawerTab == 4 ? "active" : "")" href="javascript:;" @onclick="() => SetDrawerTab(4)">
+                            <i class="ki-outline ki-bill fs-4 me-2"></i>Khấu trừ
+                        </a>
+                    </li>
+                </ul>
 
-                    <div class="row g-5 mb-8">
-                        <div class="col-4">
-                            <div class="card bg-light-success border-0 p-4">
-                                <label class="form-label text-success fs-8 mb-1 fw-bolder text-uppercase">Công đi làm</label>
-                                <div class="fw-bold fs-4 text-gray-800">@(SelectedSlip.ActualWorkDays - SelectedSlip.LeaveDays - SelectedSlip.HolidayDays) <span class="fs-7 fw-normal text-muted">ngày</span></div>
+                @if (_activeDrawerTab == 1)
+                {
+                    <!-- TAB 1: TỔNG QUAN -->
+                    <div class="animate__animated animate__fadeIn">
+                        <div class="row g-5 mb-8">
+                            <div class="col-4">
+                                <div class="card bg-light-success border-0 p-4 shadow-xs">
+                                    <label class="form-label text-success fs-8 mb-1 fw-bolder text-uppercase">Công đi làm</label>
+                                    <div class="fw-bold fs-4 text-gray-800">@(SelectedSlip.ActualWorkDays - SelectedSlip.LeaveDays - SelectedSlip.HolidayDays) <span class="fs-7 fw-normal text-muted">ngày</span></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card bg-light-info border-0 p-4 shadow-xs">
+                                    <label class="form-label text-info fs-8 mb-1 fw-bolder text-uppercase">Nghỉ phép/Lễ</label>
+                                    <div class="fw-bold fs-4 text-gray-800">@(SelectedSlip.LeaveDays + SelectedSlip.HolidayDays) <span class="fs-7 fw-normal text-muted">ngày</span></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card bg-light-primary border-0 p-4 shadow-xs">
+                                    <label class="form-label text-primary fs-8 mb-1 fw-bolder text-uppercase">Tổng công</label>
+                                    <div class="fw-bold fs-4 text-gray-800">@SelectedSlip.ActualWorkDays <span class="fs-7 fw-normal text-muted">ngày</span></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-4">
-                            <div class="card bg-light-info border-0 p-4">
-                                <label class="form-label text-info fs-8 mb-1 fw-bolder text-uppercase">Nghỉ phép/Lễ</label>
-                                <div class="fw-bold fs-4 text-gray-800">@(SelectedSlip.LeaveDays + SelectedSlip.HolidayDays) <span class="fs-7 fw-normal text-muted">ngày</span></div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="card bg-light-primary border-0 p-4">
-                                <label class="form-label text-primary fs-8 mb-1 fw-bolder text-uppercase">Tổng công mapping</label>
-                                <div class="fw-bold fs-4 text-gray-800">@SelectedSlip.ActualWorkDays <span class="fs-7 fw-normal text-muted">ngày</span></div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="mb-5 bg-light rounded p-4 border border-dashed border-gray-300">
-                        <div class="d-flex flex-stack mb-2">
-                             <div class="d-flex flex-column">
-                                 <span class="text-gray-700 fw-bold">Thành tiền công ngày:</span>
-                                 <span class="text-muted fs-8">(@SelectedSlip.ActualWorkDays ngày x <span class="text-primary fw-bold">@FormatService.FormatCurrency(SelectedSlip.StandardWorkDays > 0 ? SelectedSlip.BasicSalary / (decimal)SelectedSlip.StandardWorkDays : 0)</span>)</span>
-                             </div>
-                             <span class="text-dark fw-bolder">@FormatService.FormatCurrency(SelectedSlip.TotalWorkSalary)</span>
-                        </div>
-                        
-                        @if (SelectedSlip.OvertimeHours > 0)
-                        {
-                            <div class="separator separator-dashed my-3"></div>
-                            
-                            var otNormal = Math.Max(0, SelectedSlip.OvertimeHours - SelectedSlip.OvertimeHoursWeekend - SelectedSlip.OvertimeHoursHoliday);
-                            var hourlyRate = SelectedSlip.StandardWorkDays > 0 ? (SelectedSlip.BasicSalary / (decimal)SelectedSlip.StandardWorkDays / 8m) : 0;
-                            
-                            @if (otNormal > 0)
-                            {
+                        <div class="mb-8">
+                            <div class="d-flex flex-stack mb-5 border-bottom pb-2">
+                                <h4 class="fw-bold fs-6 text-uppercase text-gray-500 mb-0">Thành tiền mapping</h4>
+                            </div>
+                            <div class="bg-light rounded p-5 border border-dashed border-gray-300">
                                 <div class="d-flex flex-stack mb-2">
                                      <div class="d-flex flex-column">
-                                         <span class="text-gray-700 fw-bold">Tăng ca ngày thường (@((SelectedSlip.OtRateWeekday * 100).ToString("F0"))%):</span>
-                                         <span class="text-muted fs-8">(@otNormal h x <span class="text-success fw-bold">@FormatService.FormatCurrency(hourlyRate * (decimal)SelectedSlip.OtRateWeekday)</span>)</span>
+                                         <span class="text-gray-700 fw-bold">Tiền công ngày:</span>
+                                         <span class="text-muted fs-8">(@SelectedSlip.ActualWorkDays ngày x <span class="text-primary fw-bold">@FormatService.FormatCurrency(SelectedSlip.StandardWorkDays > 0 ? SelectedSlip.BasicSalary / (decimal)SelectedSlip.StandardWorkDays : 0)</span>)</span>
                                      </div>
-                                     <span class="text-dark fw-bolder">@FormatService.FormatCurrency(Math.Round(hourlyRate * (decimal)otNormal * (decimal)SelectedSlip.OtRateWeekday, 0))</span>
+                                     <span class="text-dark fw-bolder">@FormatService.FormatCurrency(SelectedSlip.TotalWorkSalary)</span>
                                 </div>
-                            }
-
-                            @if (SelectedSlip.OvertimeHoursWeekend > 0)
-                            {
-                                <div class="d-flex flex-stack mb-2 @(otNormal > 0 ? "mt-3" : "")">
-                                     <div class="d-flex flex-column">
-                                         <span class="text-gray-700 fw-bold">Tăng ca Cuối tuần (@((SelectedSlip.OtRateWeekend * 100).ToString("F0"))%):</span>
-                                         <span class="text-muted fs-8">(@SelectedSlip.OvertimeHoursWeekend h x <span class="text-primary fw-bold">@FormatService.FormatCurrency(hourlyRate * (decimal)SelectedSlip.OtRateWeekend)</span>)</span>
-                                     </div>
-                                     <span class="text-dark fw-bolder">@FormatService.FormatCurrency(SelectedSlip.OvertimeSalaryWeekend)</span>
-                                </div>
-                            }
-
-                            @if (SelectedSlip.OvertimeHoursHoliday > 0)
-                            {
-                                <div class="d-flex flex-stack mb-2 @(otNormal > 0 || SelectedSlip.OvertimeHoursWeekend > 0 ? "mt-3" : "")">
-                                     <div class="d-flex flex-column">
-                                         <span class="text-gray-700 fw-bold">Tăng ca Lễ/Tết (@((SelectedSlip.OtRateHoliday * 100).ToString("F0"))%):</span>
-                                         <span class="text-muted fs-8">(@SelectedSlip.OvertimeHoursHoliday h x <span class="text-danger fw-bold">@FormatService.FormatCurrency(hourlyRate * (decimal)SelectedSlip.OtRateHoliday)</span>)</span>
-                                     </div>
-                                     <span class="text-dark fw-bolder">@FormatService.FormatCurrency(SelectedSlip.OvertimeSalaryHoliday)</span>
-                                </div>
-                            }
-                            
-                            <div class="separator separator-dashed my-3"></div>
-                            <div class="d-flex flex-stack">
-                                <span class="text-gray-800 fw-bolder">Tổng tiền tăng ca:</span>
-                                <span class="text-dark fw-bolder fs-5">@FormatService.FormatCurrency(SelectedSlip.OvertimeSalary)</span>
-                            </div>
-                        }
-                    </div>
-                </div>
-
-                <div class="mb-10">
-                    <h4 class="fw-bold mb-5 fs-6 text-uppercase text-gray-500 border-bottom pb-2">Điều chỉnh Thông tin lương</h4>
-                    <div class="row g-5 mb-5">
-                        <div class="col-6">
-                            <label class="form-label fs-7 fw-bold">Lương cơ bản (HĐ):</label>
-                            <input type="number" class="form-control form-control-solid" @bind="SelectedSlip.BasicSalary" @bind:event="oninput" @onkeyup="SelectedSlip.CalculateNet" />
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label fs-7 fw-bold">Tổng phụ cấp:</label>
-                            <input type="number" class="form-control form-control-solid" @bind="SelectedSlip.TotalAllowances" @bind:event="oninput" @onkeyup="SelectedSlip.CalculateNet" />
-                        </div>
-                    </div>
-                    @if (SelectedSlip.AllowanceDetails != null && SelectedSlip.AllowanceDetails.Any())
-                    {
-                        <div class="bg-light-success rounded p-4 border border-success border-dashed">
-                            <div class="d-flex flex-stack mb-3">
-                                <span class="fw-bold text-success fs-7 text-uppercase">Phụ cấp theo setup nhân viên</span>
-                                <span class="badge badge-light-success fw-bold">@SelectedSlip.AllowanceDetails.Count khoản</span>
-                            </div>
-                            @foreach (var item in SelectedSlip.AllowanceDetails)
-                            {
-                                <div class="d-flex flex-stack mb-2 py-1 border-bottom border-dashed border-gray-200">
-                                    <div class="d-flex align-items-center">
-                                        <i class="ki-outline ki-gift fs-7 text-success me-2"></i>
-                                        <span class="text-gray-700 fw-semibold fs-7">@item.Name</span>
+                                
+                                @if (SelectedSlip.OvertimeHours > 0)
+                                {
+                                    <div class="separator separator-dashed my-3"></div>
+                                    <div class="d-flex flex-stack mb-2">
+                                         <span class="text-gray-700 fw-bold">Tiền tăng ca (@SelectedSlip.OvertimeHours h):</span>
+                                         <span class="text-dark fw-bolder">@FormatService.FormatCurrency(SelectedSlip.OvertimeSalary)</span>
                                     </div>
-                                    <span class="text-success fw-bolder">+@FormatService.FormatCurrency(item.Amount)</span>
+                                }
+
+                                @if (SelectedSlip.Bonus > 0)
+                                {
+                                    <div class="separator separator-dashed my-3"></div>
+                                    <div class="d-flex flex-stack mb-2">
+                                         <span class="text-gray-700 fw-bold">Thưởng/KPI:</span>
+                                         <span class="text-success fw-bolder">+@FormatService.FormatCurrency(SelectedSlip.Bonus)</span>
+                                    </div>
+                                }
+                                
+                                <div class="separator separator-dashed my-3 border-primary opacity-20"></div>
+                                <div class="d-flex flex-stack">
+                                     <span class="text-primary fw-bolder fs-5">TỔNG THU NHẬP (GROSS):</span>
+                                     <span class="text-primary fw-bolder fs-4">@FormatService.FormatCurrency(SelectedSlip.GrossSalary)</span>
                                 </div>
-                            }
-                            <div class="d-flex flex-stack pt-2 mt-1">
-                                <span class="text-gray-700 fw-bolder">Tổng cộng:</span>
-                                <span class="text-success fw-bolder fs-5">+@FormatService.FormatCurrency(SelectedSlip.AllowanceDetails.Sum(x => x.Amount))</span>
                             </div>
                         </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-warning fs-8 py-3">
-                            <i class="ki-outline ki-information-5 fs-7 me-2"></i>
-                            Nhân viên này chưa được thiết lập phụ cấp. Vui lòng cấu hình trong module Phú cấp & Phúc lợi.
-                        </div>
-                    }
-                </div>
-
-                <div class="mb-10">
-                    <h4 class="fw-bold mb-5 fs-6 text-uppercase text-gray-500 border-bottom pb-2">Chi tiết lịch sử chấm công (Mapping)</h4>
-                    <div style="zoom: 0.9">
-                         <TTL.HR.Shared.Pages.User.Components.UserAttendanceHistory EmployeeId="@SelectedSlip.EmployeeId" />
                     </div>
-                </div>
-
-                <div class="mb-10">
-                    <h4 class="fw-bold mb-5 fs-6 text-uppercase text-gray-500 border-bottom pb-2">Thu nhập khác & Tăng ca</h4>
-                    
-                    <div class="mb-5 bg-light-info p-5 rounded-3 border border-info border-dashed shadow-sm">
-                        @if (SelectedSlip.OvertimeHours > 0)
-                        {
-                            <div class="d-flex flex-stack mb-2">
-                                 <span class="text-gray-800 fw-bold">Tăng ca mapping (@SelectedSlip.OvertimeHours h):</span>
-                                 <span class="text-gray-900 fw-bolder">@FormatService.FormatCurrency(SelectedSlip.OvertimeSalary)</span>
+                }
+                else if (_activeDrawerTab == 2)
+                {
+                    <!-- TAB 2: CHẤM CÔNG -->
+                    <div class="animate__animated animate__fadeIn">
+                        <div class="bg-gray-50 rounded p-5 mb-8 border border-dashed border-gray-300">
+                            <div class="d-flex flex-stack mb-3">
+                                <span class="text-gray-600 fs-7">Lương cơ bản mapping từ HĐ:</span>
+                                <span class="text-gray-900 fw-bold">@FormatService.FormatCurrency(SelectedSlip.BasicSalary)</span>
                             </div>
-                        }
+                            <div class="d-flex flex-stack mb-3">
+                                <span class="text-gray-600 fs-7">Số ngày công chuẩn (Tháng @Month):</span>
+                                <span class="text-gray-900 fw-bold">@SelectedSlip.StandardWorkDays ngày</span>
+                            </div>
+                            <div class="separator separator-dashed my-3"></div>
+                            <div class="d-flex flex-stack mb-1">
+                                <span class="text-primary fw-bold fs-7">Lương tính từng ngày:</span>
+                                <span class="text-primary fw-bolder">@FormatService.FormatCurrency(SelectedSlip.StandardWorkDays > 0 ? SelectedSlip.BasicSalary / (decimal)SelectedSlip.StandardWorkDays : 0)</span>
+                            </div>
+                            <div class="text-muted fs-9 italic">*(Công thức: BasicSalary / StandardDays)*</div>
+                        </div>
+
+                        <div class="mb-5">
+                            <h4 class="fw-bold mb-5 fs-6 text-uppercase text-gray-500 border-bottom pb-2">Chi tiết lịch sử chấm công</h4>
+                            <div class="bg-white rounded border p-2" style="zoom: 0.85">
+                                 <TTL.HR.Shared.Pages.User.Components.UserAttendanceHistory EmployeeId="@SelectedSlip.EmployeeId" />
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (_activeDrawerTab == 3)
+                {
+                    <!-- TAB 3: THU NHẬP -->
+                    <div class="animate__animated animate__fadeIn">
+                        <h4 class="fw-bold mb-5 fs-6 text-uppercase text-gray-500 border-bottom pb-2">Điều chỉnh Thông tin lương</h4>
+                        <div class="row g-5 mb-5">
+                            <div class="col-6">
+                                <label class="form-label fs-7 fw-bold">Lương cơ bản (HĐ):</label>
+                                <TTLFormattedInput Simple="true" Suffix="₫"
+                                                  Value="SelectedSlip.BasicSalary"
+                                                  ValueChanged="@(val => { SelectedSlip.BasicSalary = val; SelectedSlip.CalculateNet(); })"
+                                                  Placeholder="0" />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fs-7 fw-bold">Thưởng/KPI:</label>
+                                <TTLFormattedInput Simple="true" Suffix="₫"
+                                                  Value="SelectedSlip.Bonus"
+                                                  ValueChanged="@(val => { SelectedSlip.Bonus = val; SelectedSlip.CalculateNet(); })"
+                                                  Placeholder="0" />
+                            </div>
+                        </div>
+
                         @if (SelectedSlip.AllowanceDetails != null && SelectedSlip.AllowanceDetails.Any())
                         {
-                            @foreach (var item in SelectedSlip.AllowanceDetails)
+                            <div class="bg-light-success rounded p-5 border border-success border-dashed mb-8">
+                                <div class="d-flex flex-stack mb-4">
+                                    <span class="fw-bold text-success fs-7 text-uppercase">Phụ cấp định kỳ</span>
+                                    <span class="badge badge-success fw-bold">@SelectedSlip.AllowanceDetails.Count khoản</span>
+                                </div>
+                                @foreach (var item in SelectedSlip.AllowanceDetails)
+                                {
+                                    <div class="d-flex flex-stack mb-2 py-1 border-bottom border-dashed border-gray-200">
+                                        <div class="d-flex align-items-center">
+                                            <i class="ki-outline ki-gift fs-7 text-success me-2"></i>
+                                            <span class="text-gray-700 fw-semibold fs-7">@item.Name</span>
+                                        </div>
+                                        <span class="text-success fw-bolder">+@FormatService.FormatCurrency(item.Amount)</span>
+                                    </div>
+                                }
+                                <div class="d-flex flex-stack pt-3 mt-1">
+                                    <span class="text-gray-700 fw-bolder">Tổng phụ cấp:</span>
+                                    <span class="text-success fw-bolder fs-5">+@FormatService.FormatCurrency(SelectedSlip.TotalAllowances)</span>
+                                </div>
+                            </div>
+                        }
+                        
+                        <div class="bg-light-primary rounded p-5 border border-primary border-dashed">
+                             <h4 class="text-primary fw-bolder fs-7 text-uppercase mb-4">Chi tiết tăng ca</h4>
+                             @{
+                                 var otNormal = Math.Max(0, SelectedSlip.OvertimeHours - SelectedSlip.OvertimeHoursWeekend - SelectedSlip.OvertimeHoursHoliday);
+                                 var hpR = SelectedSlip.StandardWorkDays > 0 ? (SelectedSlip.BasicSalary / (decimal)SelectedSlip.StandardWorkDays / 8m) : 0;
+                             }
+                             <div class="d-flex flex-stack mb-2">
+                                 <span class="text-gray-700 fs-7">Tăng ca ngày thường (@((SelectedSlip.OtRateWeekday * 100).ToString("F0"))%):</span>
+                                 <span class="text-gray-900 fw-bold">@otNormal h x @FormatService.FormatCurrency(hpR * (decimal)SelectedSlip.OtRateWeekday)/h</span>
+                             </div>
+                             <div class="d-flex flex-stack mb-2">
+                                 <span class="text-gray-700 fs-7">Tăng ca Cuối tuần (@((SelectedSlip.OtRateWeekend * 100).ToString("F0"))%):</span>
+                                 <span class="text-gray-900 fw-bold">@SelectedSlip.OvertimeHoursWeekend h x @FormatService.FormatCurrency(hpR * (decimal)SelectedSlip.OtRateWeekend)/h</span>
+                             </div>
+                             <div class="d-flex flex-stack mb-2">
+                                 <span class="text-gray-700 fs-7">Tăng ca Lễ/Tết (@((SelectedSlip.OtRateHoliday * 100).ToString("F0"))%):</span>
+                                 <span class="text-gray-900 fw-bold">@SelectedSlip.OvertimeHoursHoliday h x @FormatService.FormatCurrency(hpR * (decimal)SelectedSlip.OtRateHoliday)/h</span>
+                             </div>
+                        </div>
+                    </div>
+                }
+                else if (_activeDrawerTab == 4)
+                {
+                    <!-- TAB 4: KHẤU TRỪ -->
+                    <div class="animate__animated animate__fadeIn">
+                        <div class="bg-light-danger p-6 rounded-3 border border-danger border-dashed mb-8">
+                            <div class="d-flex flex-stack mb-4">
+                                <span class="fw-bold text-danger fs-7 text-uppercase">Khấu trừ bắt buộc</span>
+                            </div>
+                            <div class="d-flex flex-stack mb-3">
+                                 <div class="d-flex flex-column">
+                                    <span class="text-gray-800 fw-bold">Bảo hiểm (10.5%):</span>
+                                    <span class="fs-8 text-muted">Lương đóng BH: @FormatService.FormatCurrency(SelectedSlip.InsuranceSalary)</span>
+                                 </div>
+                                 <span class="text-danger fw-bolder">-@FormatService.FormatCurrency(SelectedSlip.TotalInsurance)</span>
+                            </div>
+                            
+                            <div class="d-flex flex-stack mb-0">
+                                 <div class="d-flex flex-column">
+                                    <span class="text-gray-800 fw-bold">Thuế TNCN:</span>
+                                    <span class="fs-8 text-muted">Personal: 11M @(SelectedSlip.DependentDeduction > 0 ? $" | Dependent: {FormatService.FormatCurrency(SelectedSlip.DependentDeduction)}" : "")</span>
+                                 </div>
+                                 <span class="text-danger fw-bolder">-@FormatService.FormatCurrency(SelectedSlip.TaxAmount)</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <div class="d-flex flex-stack mb-4">
+                                <h4 class="fw-bold fs-6 text-uppercase text-gray-500 mb-0">Các đợt thanh toán & Tạm ứng</h4>
+                                <button type="button" class="btn btn-sm btn-light-primary px-4" @onclick="SelectedSlip.AddPayment">
+                                    <i class="ki-outline ki-plus fs-7 me-1"></i> Thêm đợt
+                                </button>
+                            </div>
+
+                            @if (!SelectedSlip.PaymentDetails.Any())
                             {
-                                <div class="d-flex flex-stack mb-2">
-                                    <span class="text-gray-700 fw-semibold">
-                                        <i class="ki-outline ki-check-circle fs-7 text-success me-1"></i>@item.Name:
-                                    </span>
-                                    <span class="text-gray-900 fw-bold">+@FormatService.FormatCurrency(item.Amount)</span>
+                                <div class="bg-light rounded p-5 text-center text-muted fs-8">
+                                    Chưa có thông tin đợt thanh toán/tạm ứng.
                                 </div>
                             }
-                            <div class="separator separator-dashed border-info opacity-20 my-2"></div>
-                        }
-                        <div class="d-flex flex-stack mb-2">
-                             <span class="text-gray-800 fw-bold">Tổng phụ cấp mapping:</span>
-                             <span class="text-gray-900 fw-bolder">@FormatService.FormatCurrency(SelectedSlip.TotalAllowances)</span>
-                        </div>
-                        @if (SelectedSlip.Bonus > 0)
-                        {
-                            <div class="d-flex flex-stack mb-2">
-                                 <span class="text-gray-800 fw-bold">Thưởng/KPI:</span>
-                                 <span class="text-success fw-bolder">+@FormatService.FormatCurrency(SelectedSlip.Bonus)</span>
-                            </div>
-                        }
-                        <div class="d-flex flex-stack border-top border-info border-opacity-50 pt-3 mt-3">
-                             <span class="text-info-emphasis fw-bolder fs-5">TỔNG THU NHẬP (GROSS):</span>
-                             <span class="text-info-emphasis fw-bolder fs-4">@FormatService.FormatCurrency(SelectedSlip.GrossSalary)</span>
+                            
+                            @foreach (var payment in SelectedSlip.PaymentDetails)
+                            {
+                                <div class="bg-white rounded border border-dashed border-gray-300 p-4 mb-3 position-relative">
+                                    <button type="button" class="btn btn-icon btn-active-light-danger btn-sm position-absolute top-0 end-0 mt-2 me-2" @onclick="() => SelectedSlip.RemovePayment(payment)">
+                                        <i class="ki-outline ki-trash fs-3"></i>
+                                    </button>
+                                    <div class="row g-4">
+                                        <div class="col-6">
+                                            <label class="form-label fs-8 fw-bold">Ngày thanh toán:</label>
+                                            <input type="date" class="form-control form-control-sm form-control-solid fs-8" @bind="payment.PaymentDate" />
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label fs-8 fw-bold">Số tiền:</label>
+                                            <div class="input-group input-group-sm">
+                                                <TTLFormattedInput Simple="true" Size="sm" 
+                                                                  WrapperClass="flex-grow-1"
+                                                                  Value="payment.Amount" 
+                                                                  ValueChanged="@(val => { payment.Amount = val; SelectedSlip.CalculateNet(); })"
+                                                                  Placeholder="Số tiền" />
+                                                <button class="btn btn-light-info btn-sm px-3" type="button" @onclick="() => SelectedSlip.SetMaxPayment(payment)" title="Lấy mức tối đa">
+                                                    <span class="fs-9 fw-bold">MAX</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <input type="text" class="form-control form-control-sm form-control-solid fs-8" @bind="payment.Description" placeholder="Ghi chú đợt thanh toán (VD: Tạm ứng đợt 1...)" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            
+                            @if (SelectedSlip.PaymentDetails.Any())
+                            {
+                                <div class="d-flex flex-stack bg-light-danger p-4 rounded mt-4 border border-danger border-opacity-20 shadow-xs">
+                                     <span class="text-gray-800 fw-bold">TỔNG ĐÃ CHI TRẢ / TẠM ỨNG:</span>
+                                     <span class="text-danger fw-bolder fs-5">-@FormatService.FormatCurrency(SelectedSlip.AdvanceAmount)</span>
+                                </div>
+                            }
                         </div>
                     </div>
-                </div>
+                }
 
-                <div class="mb-10">
-                    <h4 class="fw-bold mb-5 fs-6 text-uppercase text-gray-500 border-bottom pb-2">Khấu trừ & Thuế</h4>
-                    
-                    <div class="mb-5 bg-light-danger p-5 rounded-3 border border-danger border-dashed shadow-sm">
-                        <div class="d-flex flex-stack mb-2">
-                             <div class="d-flex flex-column">
-                                <span class="text-gray-800 fw-bold">Bảo hiểm (10.5%) mapping:</span>
-                                <span class="fs-8 text-muted">Lương đóng BH: @FormatService.FormatCurrency(SelectedSlip.InsuranceSalary)</span>
-                             </div>
-                             <span class="text-danger fw-bolder">-@FormatService.FormatCurrency(SelectedSlip.TotalInsurance)</span>
-                        </div>
-                        
-                        <div class="d-flex flex-stack mb-2">
-                             <div class="d-flex flex-column">
-                                <span class="text-gray-800 fw-bold">Thuế TNCN:</span>
-                                <span class="fs-8 text-muted">Personal: 11M @(SelectedSlip.DependentDeduction > 0 ? $" | Dependent: {FormatService.FormatCurrency(SelectedSlip.DependentDeduction)}" : "")</span>
-                             </div>
-                             <span class="text-danger fw-bolder">-@FormatService.FormatCurrency(SelectedSlip.TaxAmount)</span>
-                        </div>
-
-                        @if (SelectedSlip.AdvanceAmount > 0)
-                        {
-                            <div class="d-flex flex-stack mb-2">
-                                 <span class="text-gray-800 fw-bold">Tạm ứng lương:</span>
-                                 <span class="text-danger fw-bolder">-@FormatService.FormatCurrency(SelectedSlip.AdvanceAmount)</span>
-                            </div>
-                        }
-                    </div>
-                </div>
-
-                <div class="bg-danger rounded p-8 d-flex flex-stack shadow-lg mb-5 overflow-hidden position-relative border border-white border-opacity-10">
+                <!-- Fixed Total Section -->
+                <div class="bg-danger rounded p-8 d-flex flex-stack shadow-lg mb-5 mt-10 overflow-hidden position-relative border border-white border-opacity-10">
                     <div class="d-flex flex-column position-relative z-index-1">
                         <span class="text-white fw-bold fs-6">THỰC LĨNH CUỐI CÙNG</span>
-                        <span class="text-white text-opacity-75 fs-8">Áp dụng công thức mapping động hàng ngày</span>
+                        <span class="text-white text-opacity-75 fs-8">Mapping từ công thức & dữ liệu chấm công</span>
                     </div>
                     <span class="text-white fw-bolder fs-1 position-relative z-index-1">@FormatService.FormatCurrency(SelectedSlip.NetSalary)</span>
                     <i class="ki-outline ki-wallet fs-4tx text-white opacity-5 position-absolute end-0 bottom-0 mb-n5 me-n5"></i>

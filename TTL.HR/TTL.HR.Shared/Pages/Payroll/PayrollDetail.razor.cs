@@ -28,6 +28,7 @@ namespace TTL.HR.Shared.Pages.Payroll
         private bool IsAllSelected = false;
         private bool IsDrawerOpen = false;
         private PayslipViewModel? SelectedSlip;
+        private int _activeDrawerTab = 1;
         private bool _isLoading = true;
         private List<DepartmentModel> _departments = new();
         private string _selectedDepartmentId = "";
@@ -145,6 +146,7 @@ namespace TTL.HR.Shared.Pages.Payroll
                                 OtRateHoliday = SelectedPeriod?.OtRateHoliday ?? 3.0,
                                 
                                 AdvanceAmount = p.AdvanceAmount,
+                                PaymentDetails = p.PaymentDetails ?? new(),
                                 TotalDeductions = p.Deduction,
                                 
                                 NetSalary = p.NetSalary,
@@ -228,7 +230,14 @@ namespace TTL.HR.Shared.Pages.Payroll
         {
             SelectedSlip = slip;
             SelectedSlip.CalculateNet(); // Ensure fresh calculations on open
+            _activeDrawerTab = 1; // Reset to first tab
             IsDrawerOpen = true;
+        }
+
+        private void SetDrawerTab(int tab)
+        {
+            _activeDrawerTab = tab;
+            StateHasChanged();
         }
 
         private void CloseDrawer()
@@ -297,6 +306,8 @@ namespace TTL.HR.Shared.Pages.Payroll
             model.OvertimeSalaryWeekend = SelectedSlip.OvertimeSalaryWeekend;
             model.OvertimeSalaryHoliday = SelectedSlip.OvertimeSalaryHoliday;
             model.Allowance = SelectedSlip.TotalAllowances;
+            model.AdvanceAmount = SelectedSlip.PaymentDetails.Sum(x => x.Amount);
+            model.PaymentDetails = SelectedSlip.PaymentDetails;
             model.Deduction = SelectedSlip.TotalDeductions;
             model.NetSalary = SelectedSlip.NetSalary;
 
@@ -305,10 +316,92 @@ namespace TTL.HR.Shared.Pages.Payroll
             {
                 await InvokeToastr("success", "Đã lưu thay đổi.");
                 CloseDrawer();
+                await LoadData();
             }
             else
             {
                 await InvokeToastr("error", "Lưu thay đổi thất bại.");
+            }
+        }
+
+        private async Task DownloadSelectedPayslips()
+        {
+            var selectedRows = Payslips.Where(p => p.IsSelected).ToList();
+            if (!selectedRows.Any())
+            {
+                await InvokeToastr("warning", "Vui lòng chọn ít nhất một nhân viên để in phiếu lương.");
+                return;
+            }
+
+            try
+            {
+                _isLoading = true;
+                StateHasChanged();
+                
+                var payrollsToPrint = selectedRows.Select(s => {
+                    var model = s.OriginalModel;
+                    // Sync current UI state back to model for PDF
+                    model.BasicSalary = s.BasicSalary;
+                    model.TotalWorkSalary = s.TotalWorkSalary;
+                    model.OvertimeSalary = s.OvertimeSalary;
+                    model.Allowance = s.TotalAllowances;
+                    model.Bonus = s.Bonus;
+                    model.BhxhAmount = s.BhxhAmount;
+                    model.BhytAmount = s.BhytAmount;
+                    model.BhtnAmount = s.BhtnAmount;
+                    model.UnionFee = s.UnionFee;
+                    model.TaxAmount = s.TaxAmount;
+                    model.Deduction = s.TotalDeductions;
+                    model.NetSalary = s.NetSalary;
+                    return model;
+                }).ToList();
+                
+                var pdfBytes = await PdfService.GenerateBatchPayslipsPdfAsync(payrollsToPrint);
+                
+                // Switch to direct printing
+                await JS.InvokeVoidAsync("printPdf", Convert.ToBase64String(pdfBytes));
+                await InvokeToastr("success", $"Đã mở màn hình in cho {payrollsToPrint.Count} nhân viên.");
+            }
+            catch (Exception ex)
+            {
+                await InvokeToastr("error", $"Lỗi in hàng loạt: {ex.Message}");
+            }
+            finally
+            {
+                _isLoading = false;
+                StateHasChanged();
+            }
+        }
+
+        private async Task DownloadAdvancePayslips()
+        {
+            var advanceRows = Payslips.Where(p => p.AdvanceAmount > 0).ToList();
+            if (!advanceRows.Any())
+            {
+                await InvokeToastr("warning", "Không có nhân viên nào có tạm ứng trong kỳ này.");
+                return;
+            }
+
+            try
+            {
+                _isLoading = true;
+                StateHasChanged();
+                
+                var payrollsToPrint = advanceRows.Select(s => s.OriginalModel).ToList();
+                var pdfBytes = await PdfService.GenerateBatchPayslipsPdfAsync(payrollsToPrint);
+                
+                // Switch to direct printing
+                await JS.InvokeVoidAsync("printPdf", Convert.ToBase64String(pdfBytes));
+                await InvokeToastr("success", $"Đã mở màn hình in tạm ứng cho {payrollsToPrint.Count} nhân viên.");
+            }
+            catch (Exception ex)
+            {
+                await InvokeToastr("error", $"Lỗi in danh sách tạm ứng: {ex.Message}");
+            }
+            finally
+            {
+                _isLoading = false;
+                StateHasChanged();
             }
         }
 
@@ -415,6 +508,7 @@ namespace TTL.HR.Shared.Pages.Payroll
             public decimal TaxAmount { get; set; }
             
             public decimal AdvanceAmount { get; set; }
+            public List<PaymentItemModel> PaymentDetails { get; set; } = new();
             public decimal TotalDeductions { get; set; }
             
             public decimal GrandTotalDeductions => TotalInsurance + TaxAmount + AdvanceAmount + TotalDeductions;
@@ -433,6 +527,12 @@ namespace TTL.HR.Shared.Pages.Payroll
 
             public void CalculateNet()
             {
+                // Ensure all amounts are positive and numeric
+                foreach (var p in PaymentDetails)
+                {
+                    if (p.Amount < 0) p.Amount = 0;
+                }
+
                 // Re-calculate basic components based on daily rate logic
                 if (StandardWorkDays > 0)
                 {
@@ -451,7 +551,57 @@ namespace TTL.HR.Shared.Pages.Payroll
                                      + OvertimeSalaryHoliday;
                 }
 
-                NetSalary = GrossSalary - TotalInsurance - TaxAmount - AdvanceAmount - TotalDeductions;
+                // Calculate Net without payments first to find the limit
+                decimal fixedDeductions = TotalInsurance + TaxAmount + TotalDeductions;
+                decimal maxPossibleAdvance = GrossSalary - fixedDeductions;
+                
+                decimal currentTotalPayments = PaymentDetails.Sum(x => x.Amount);
+                
+                // Limit payments if they exceed Gross
+                if (currentTotalPayments > maxPossibleAdvance)
+                {
+                    // If over limit, adjust the LAST payment added or all proportionally? 
+                    // Usually user just typed too much, so we clip the last one for safety
+                    var last = PaymentDetails.LastOrDefault();
+                    if (last != null)
+                    {
+                        decimal others = currentTotalPayments - last.Amount;
+                        last.Amount = Math.Max(0, maxPossibleAdvance - others);
+                    }
+                }
+
+                AdvanceAmount = PaymentDetails.Sum(x => x.Amount);
+                NetSalary = GrossSalary - fixedDeductions - AdvanceAmount;
+            }
+
+            public void AddPayment()
+            {
+                CalculateNet(); // Refresh net to see remaining
+                decimal defaultAmount = Math.Max(0, NetSalary);
+                
+                PaymentDetails.Add(new PaymentItemModel { 
+                    PaymentDate = DateTime.Now, 
+                    Description = $"Thanh toán lần {PaymentDetails.Count + 1}",
+                    Amount = defaultAmount
+                });
+                
+                CalculateNet();
+            }
+
+            public void SetMaxPayment(PaymentItemModel payment)
+            {
+                decimal others = PaymentDetails.Where(x => x != payment).Sum(x => x.Amount);
+                decimal fixedDeductions = TotalInsurance + TaxAmount + TotalDeductions;
+                decimal maxPossibleAdvance = GrossSalary - fixedDeductions;
+                
+                payment.Amount = Math.Max(0, maxPossibleAdvance - others);
+                CalculateNet();
+            }
+
+            public void RemovePayment(PaymentItemModel item)
+            {
+                PaymentDetails.Remove(item);
+                CalculateNet();
             }
         }
     }

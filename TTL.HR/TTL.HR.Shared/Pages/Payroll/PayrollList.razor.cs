@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TTL.HR.Application.Modules.Common.Interfaces;
 using TTL.HR.Application.Modules.Payroll.Interfaces;
 using TTL.HR.Application.Modules.Payroll.Models;
 
@@ -14,6 +15,7 @@ namespace TTL.HR.Shared.Pages.Payroll
         [Inject] public NavigationManager Navigation { get; set; } = default!;
         [Inject] public IPayrollService PayrollService { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
+        [Inject] public INavigationService NavigationService { get; set; } = default!;
 
         private List<PayrollPeriodViewModel> Periods = new();
         private bool _isLoading = true;
@@ -31,6 +33,11 @@ namespace TTL.HR.Shared.Pages.Payroll
 
         protected override async Task OnInitializedAsync()
         {
+            if (!await NavigationService.UserHasPermissionAsync("Permissions.Payroll.View"))
+            {
+                Navigation.NavigateTo("/access-denied");
+                return;
+            }
             await LoadData();
         }
 

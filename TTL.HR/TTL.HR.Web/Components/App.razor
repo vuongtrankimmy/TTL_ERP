@@ -64,8 +64,15 @@
                 }
             }
         };
-        window.downloadFile = (content, fileName, contentType) => {
-            const blob = new Blob([content], { type: contentType });
+        window.downloadFile = (fileName, contentType, base64) => {
+            const byteCharacters = atob(base64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: contentType });
+            
             const url = URL.createObjectURL(blob);
             const anchorElement = document.createElement('a');
             anchorElement.href = url;
@@ -74,6 +81,27 @@
             anchorElement.remove();
             URL.revokeObjectURL(url);
         };
+
+        window.printPdf = (base64) => {
+            const byteCharacters = atob(base64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            
+            // Create a temporary iframe for printing or open in new tab
+            const pdfWindow = window.open(url);
+            if (pdfWindow) {
+                // Small delay to ensure the PDF is loaded for printing
+                setTimeout(() => {
+                    pdfWindow.print();
+                }, 500);
+            }
+        };
+
         window.showModal = (selector) => {
             const el = document.querySelector(selector);
             if (el && typeof bootstrap !== 'undefined') {

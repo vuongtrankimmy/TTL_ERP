@@ -443,10 +443,9 @@
                 </div>
                 <div class="col-md-3">
                     <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Mức lương cơ bản (VNĐ)</label>
-                    <div class="position-relative d-flex align-items-center">
-                        <span class="position-absolute ms-4 fw-bold text-gray-500">VNĐ</span>
-                        <input type="text" class="form-control form-control-solid ps-14 text-end fw-bold text-primary" placeholder="10.000.000" @bind="newEmployee.SalaryDisplay" />
-                    </div>
+                    <TTLFormattedInput Simple="true" Suffix="VNĐ" Placeholder="10.000.000" 
+                                      Value="@(newEmployee.Salary ?? 0)" 
+                                      ValueChanged="@(val => newEmployee.Salary = val)" />
                 </div>
             </div>
             <div class="row g-9 mt-4">

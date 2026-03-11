@@ -16,6 +16,8 @@ namespace TTL.HR.Shared.Pages.Administration
         [Inject] private IPermissionService PermissionService { get; set; } = default!;
         [Inject] private IEmployeeService EmployeeService { get; set; } = default!;
         [Inject] private IJSRuntime JS { get; set; } = default!;
+        [Inject] private INavigationService NavigationService { get; set; } = default!;
+        [Inject] private NavigationManager Nav { get; set; } = default!;
 
         private bool _isLoading = true;
         private RoleModel? _selectedRole;
@@ -29,7 +31,9 @@ namespace TTL.HR.Shared.Pages.Administration
         [Parameter, SupplyParameterFromQuery(Name = "q")] public string _employeeSearchQuery { get; set; } = "";
         private string _memberSearchQuery = "";
         private string RoleSearchTerm = "";
+        private string PermSearchTerm = "";
         private System.Timers.Timer? _roleSearchTimer;
+        private List<string> _collapsedGroups = new();
 
         private List<RoleModel> _roles = new();
         private List<PermissionDto> _allPermissions = new();
@@ -50,8 +54,21 @@ namespace TTL.HR.Shared.Pages.Administration
         private string _newRoleDescription = "";
         private List<SelectedPerm> _availablePerms = new();
 
+        private IEnumerable<IGrouping<string, SelectedPerm>> GroupedPerms => _availablePerms
+            .Where(x => string.IsNullOrWhiteSpace(PermSearchTerm) || 
+                       x.Name.Contains(PermSearchTerm, StringComparison.OrdinalIgnoreCase) || 
+                       x.Code.Contains(PermSearchTerm, StringComparison.OrdinalIgnoreCase))
+            .GroupBy(x => x.Group);
+
+        private int SelectedPermsCount => _availablePerms.Count(x => x.IsSelected);
+
         protected override async Task OnParametersSetAsync()
         {
+            if (!await NavigationService.UserHasPermissionAsync("Permissions.Administration.Settings"))
+            {
+                Nav.NavigateTo("/dashboard");
+                return;
+            }
             await LoadDataAsync();
         }
 
@@ -103,6 +120,17 @@ namespace TTL.HR.Shared.Pages.Administration
             _isEditMode = true;
             _editingRoleId = role.Id;
             _newRoleName = role.Name;
+            _newRoleDescription = role.Description;
+            
+            // Map selected perms
+            _availablePerms.ForEach(x => x.IsSelected = role.Permissions.Contains(x.Id) || role.Permissions.Contains(x.Code));
+            
+            _showAddRoleDrawer = true;
+        }
+
+        private void cloneRole(RoleModel role) {
+            _isEditMode = false;
+            _newRoleName = role.Name + " (Copy)";
             _newRoleDescription = role.Description;
             
             // Map selected perms
@@ -228,10 +256,12 @@ namespace TTL.HR.Shared.Pages.Administration
             _roleToDelete = null;
         }
 
-        private async Task confirmDeleteRole() {
+        private async Task confirmDeleteRole()
+        {
             if (_roleToDelete == null) return;
             var result = await PermissionService.DeleteRoleAsync(_roleToDelete.Id);
-            if (result) {
+            if (result)
+            {
                 await JS.InvokeVoidAsync("toastr.success", "Đã xóa vai trò thành công");
                 await LoadDataAsync();
                 closeDeleteModal();
@@ -240,7 +270,19 @@ namespace TTL.HR.Shared.Pages.Administration
             {
                 await JS.InvokeVoidAsync("toastr.error", "Xóa vai trò thất bại");
             }
-            StateHasChanged();
+        }
+        private void ToggleGroup(string groupName)
+        {
+            if (_collapsedGroups.Contains(groupName))
+                _collapsedGroups.Remove(groupName);
+            else
+                _collapsedGroups.Add(groupName);
+        }
+
+        private void SelectGroup(string groupName, bool select)
+        {
+            var perms = _availablePerms.Where(x => x.Group == groupName);
+            foreach (var p in perms) p.IsSelected = select;
         }
 
         public class EmployeePickerItem {

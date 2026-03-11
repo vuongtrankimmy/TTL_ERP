@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Attendance.Interfaces;
 using TTL.HR.Application.Modules.Attendance.Models;
-using TTL.HR.Application.Modules.Common.Interfaces;
 using TTL.HR.Application.Modules.Common.Models;
+using TTL.HR.Application.Modules.Common.Interfaces;
 
 namespace TTL.HR.Shared.Pages.Attendance
 {
@@ -16,6 +17,9 @@ namespace TTL.HR.Shared.Pages.Attendance
         [Inject] private IAttendanceService AttendanceService { get; set; } = default!;
         [Inject] private IAuthService AuthService { get; set; } = default!;
         [Inject] private IJSRuntime JS { get; set; } = default!;
+        [Inject] private IStringLocalizer<SharedResource> L { get; set; } = default!;
+        [Inject] private INavigationService NavigationService { get; set; } = default!;
+        [Inject] private NavigationManager Nav { get; set; } = default!;
 
         private UserDto? _currentUser;
         private bool _isLoading = true;
@@ -44,6 +48,11 @@ namespace TTL.HR.Shared.Pages.Attendance
 
         protected override async Task OnInitializedAsync()
         {
+            if (!await NavigationService.UserHasPermissionAsync("Permissions.ShiftRequests.View"))
+            {
+                Nav.NavigateTo("/dashboard");
+                return;
+            }
             _currentUser = await AuthService.GetCurrentUserAsync();
             await LoadData();
         }
@@ -74,7 +83,7 @@ namespace TTL.HR.Shared.Pages.Attendance
             {
                 try
                 {
-                    await JS.InvokeVoidAsync("toastr.error", "Lỗi tải dữ liệu tăng ca: " + ex.Message);
+                    await JS.InvokeVoidAsync("toastr.error", string.Format(L["Message_LoadDataError"], ex.Message));
                 }
                 catch (JSDisconnectedException) { /* Circuit disconnected, ignore */ }
                 catch (Exception) { /* Ignore JS errors when circuit is unstable */ }
@@ -126,12 +135,12 @@ namespace TTL.HR.Shared.Pages.Attendance
         {
             _requestToProcess = req;
             _actionType = "APPROVE";
-            _modalTitle = "Phê duyệt Tăng ca";
-            _modalHeading = "Xác nhận đồng ý?";
-            _modalMessage = $"Bạn có đồng ý phê duyệt {req.Hours} giờ tăng ca ngày {req.Date:dd/MM/yyyy} cho {req.EmployeeName}?";
+            _modalTitle = L["Page_Overtime_Title"];
+            _modalHeading = L["Label_ConfirmApproveHeading"];
+            _modalMessage = string.Format(L["Label_ConfirmApproveMessage"], req.Hours, req.Date, req.EmployeeName);
             _modalColor = "success";
             _modalIcon = "ki-outline ki-check-circle";
-            _modalConfirmLabel = "Đồng ý Duyệt";
+            _modalConfirmLabel = L["Label_ConfirmApproveAction"];
             _showReasonInput = false;
             _showActionModal = true;
         }
@@ -140,12 +149,12 @@ namespace TTL.HR.Shared.Pages.Attendance
         {
             _requestToProcess = req;
             _actionType = "REJECT";
-            _modalTitle = "Từ chối Tăng ca";
-            _modalHeading = "Xác nhận từ chối?";
-            _modalMessage = $"Bạn muốn từ chối yêu cầu tăng ca của {req.EmployeeName}. Vui lòng nhập lý do bên dưới.";
+            _modalTitle = L["Label_Reject"];
+            _modalHeading = L["Label_ConfirmRejectHeading"];
+            _modalMessage = string.Format(L["Label_ConfirmRejectMessage"], req.EmployeeName);
             _modalColor = "danger";
             _modalIcon = "ki-outline ki-cross-circle";
-            _modalConfirmLabel = "Xác nhận Từ chối";
+            _modalConfirmLabel = L["Label_ConfirmRejectAction"];
             _showReasonInput = true;
             _showActionModal = true;
         }
@@ -165,7 +174,7 @@ namespace TTL.HR.Shared.Pages.Attendance
             
             if (success)
             {
-                await JS.InvokeVoidAsync("toastr.success", isApprove ? "Đã phê duyệt thành công" : "Đã từ chối yêu cầu");
+                await JS.InvokeVoidAsync("toastr.success", isApprove ? L["Message_ApproveSuccess"] : L["Message_RejectSuccess"]);
                 await LoadData();
                 if (_selectedRequest?.Id == _requestToProcess.Id)
                 {
@@ -175,7 +184,7 @@ namespace TTL.HR.Shared.Pages.Attendance
             }
             else
             {
-                await JS.InvokeVoidAsync("toastr.error", "Xử lý yêu cầu thất bại");
+                await JS.InvokeVoidAsync("toastr.error", L["Message_ProcessError"]);
             }
         }
     }

@@ -9,6 +9,7 @@ using TTL.HR.Application.Modules.Common.Models;
 using TTL.HR.Application.Modules.Organization.Models;
 using TTL.HR.Application.Modules.Common.Constants;
 using TTL.HR.Application.Modules.Common.Interfaces;
+using Microsoft.Extensions.Localization;
 
 namespace TTL.HR.Shared.Pages.Attendance
 {
@@ -17,6 +18,9 @@ namespace TTL.HR.Shared.Pages.Attendance
         [Inject] private IAttendanceService AttendanceService { get; set; } = default!;
         [Inject] private HttpClient _httpClient { get; set; } = default!;
         [Inject] private IMasterDataService MasterDataService { get; set; } = default!;
+        [Inject] private IStringLocalizer<SharedResource> L { get; set; } = default!;
+        [Inject] private INavigationService NavigationService { get; set; } = default!;
+        [Inject] private NavigationManager Nav { get; set; } = default!;
 
         private bool _showDetail = false;
         private bool _isLoading = true;
@@ -44,6 +48,12 @@ namespace TTL.HR.Shared.Pages.Attendance
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
+            if (!await NavigationService.UserHasPermissionAsync("Permissions.Attendance.View"))
+            {
+                Nav.NavigateTo("/dashboard");
+                return;
+            }
+
             // Generate last 12 months for periods
             var today = DateTime.Today;
             for (int i = 0; i < 12; i++)
@@ -72,7 +82,7 @@ namespace TTL.HR.Shared.Pages.Attendance
             {
                 if (_isJsReady)
                 {
-                    await JS.InvokeVoidAsync("toastr.error", $"Lỗi tải dữ liệu chấm công: {ex.Message}");
+                    await JS.InvokeVoidAsync("toastr.error", string.Format(L["Message_LoadDataError"], ex.Message));
                 }
                 else
                 {
@@ -145,17 +155,17 @@ namespace TTL.HR.Shared.Pages.Attendance
                 var response = await AttendanceService.CloseMonthlyAsync(_currentMonth, _currentYear);
                 if (response.Success)
                 {
-                    if (_isJsReady) await JS.InvokeVoidAsync("toastr.success", "Chốt công tháng thành công.");
+                    if (_isJsReady) await JS.InvokeVoidAsync("toastr.success", L["Message_LockMonthSuccess"]);
                     await LoadData();
                 }
                 else
                 {
-                    if (_isJsReady) await JS.InvokeVoidAsync("toastr.error", response.Message ?? "Lỗi khi chốt công tháng");
+                    if (_isJsReady) await JS.InvokeVoidAsync("toastr.error", response.Message ?? L["Message_LockMonthError"]);
                 }
             }
             catch (Exception ex)
             {
-                if (_isJsReady) await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra: " + ex.Message);
+                if (_isJsReady) await JS.InvokeVoidAsync("toastr.error", L["Message_ErrorOccurred"] + ": " + ex.Message);
             }
             finally
             {

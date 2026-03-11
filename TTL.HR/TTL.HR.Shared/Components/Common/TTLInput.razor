@@ -82,7 +82,7 @@
 </div>
 
 @code {
-    public enum InputDataType { Text, Name, Email, Phone, CCCD, Password, Number, Address }
+    public enum InputDataType { Text, Name, Email, Phone, CCCD, Password, Number, Address, Currency }
 
     [Parameter] public InputDataType Type { get; set; } = InputDataType.Text;
     [Parameter] public string? Label { get; set; }
@@ -104,7 +104,7 @@
         InputDataType.Password => "password",
         InputDataType.Email => "email",
         InputDataType.Phone => "tel",
-        InputDataType.Number => "number",
+        InputDataType.Number or InputDataType.Currency => "text",
         _ => "text"
     };
 
@@ -113,10 +113,11 @@
         InputDataType.Name => "text-capitalize fw-bold",
         InputDataType.Address => "text-capitalize",
         InputDataType.Email => "lowercase",
+        InputDataType.Currency or InputDataType.Number => "text-end fw-bold",
         _ => ""
     };
 
-    private bool IsNumericType => Type == InputDataType.CCCD || Type == InputDataType.Phone || Type == InputDataType.Number;
+    private bool IsNumericType => Type == InputDataType.CCCD || Type == InputDataType.Phone || Type == InputDataType.Number || Type == InputDataType.Currency;
     private bool IsSpaceAllowed => Type == InputDataType.Text || Type == InputDataType.Name || Type == InputDataType.Address;
 
     private int? GetMaxLength()
@@ -201,10 +202,6 @@
                 displayPhoneValue = Value;
             }
         }
-        else if (Type != InputDataType.Phone)
-        {
-            // Do nothing, standard value binding
-        }
     }
 
     private async Task HandleChange(ChangeEventArgs e)
@@ -235,6 +232,13 @@
                 break;
             case InputDataType.Password:
                 formattedValue = FormatService.NormalizePassword(rawValue);
+                break;
+            case InputDataType.Currency:
+            case InputDataType.Number:
+                if (decimal.TryParse(new string(rawValue.Where(c => char.IsDigit(c)).ToArray()), out var dVal))
+                {
+                    formattedValue = dVal.ToString("N0", new System.Globalization.CultureInfo("vi-VN"));
+                }
                 break;
         }
 
@@ -268,9 +272,21 @@
                 displayPhoneValue = val;
                 await UpdateFullPhoneValue(val);
                 return;
+            case InputDataType.Currency:
+            case InputDataType.Number:
+                var digits = new string(val.Where(c => char.IsDigit(c)).ToArray());
+                if (decimal.TryParse(digits, out var d))
+                {
+                    val = d.ToString("N0", new System.Globalization.CultureInfo("vi-VN"));
+                }
+                else
+                {
+                    val = string.IsNullOrEmpty(digits) ? "" : "0";
+                }
+                break;
         }
 
-        if (!IsSpaceAllowed && Type != InputDataType.Address && Type != InputDataType.Name && Type != InputDataType.CCCD && Type != InputDataType.Phone && Type != InputDataType.Email && Type != InputDataType.Password)
+        if (!IsSpaceAllowed && Type != InputDataType.Address && Type != InputDataType.Name && Type != InputDataType.CCCD && Type != InputDataType.Phone && Type != InputDataType.Email && Type != InputDataType.Password && Type != InputDataType.Currency && Type != InputDataType.Number)
         {
             val = val.Replace(" ", "");
         }

@@ -13,11 +13,11 @@
             <div class="col-6 col-md-3">
                 <div class="card border-0 border-start border-primary border-2 shadow-xs h-100 bg-light-primary">
                     <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
-                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng nhân sự</span>
+                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">@L["Label_TotalEmployees"]</span>
                         <div class="d-flex align-items-center">
                             <span class="fs-2qx fw-bold text-gray-800 me-2">@FilteredEmployees.Count</span>
 
-                            <span class="badge badge-light-primary fw-bold px-2 py-1">Tháng @_currentMonth/@_currentYear</span>
+                            <span class="badge badge-light-primary fw-bold px-2 py-1">@L["Label_Month"] @_currentMonth/@_currentYear</span>
                         </div>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
             <div class="col-6 col-md-3">
                 <div class="card border-0 border-start border-success border-2 shadow-xs h-100 bg-light-success">
                     <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
-                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng công thực tế</span>
+                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">@L["Label_TotalActualWork"]</span>
                         <div class="d-flex align-items-center">
                             <span class="fs-2qx fw-bold text-gray-800 me-2">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.ActualWork), 1)</span>
 
@@ -38,7 +38,7 @@
             <div class="col-6 col-md-3">
                 <div class="card border-0 border-start border-info border-2 shadow-xs h-100 bg-light-info">
                     <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
-                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng giờ tăng ca</span>
+                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">@L["Label_TotalOTHours"]</span>
                         <div class="d-flex align-items-center">
                             <span class="fs-2qx fw-bold text-gray-800 me-2">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.OvertimeHours), 1)</span>
 
@@ -51,7 +51,7 @@
             <div class="col-6 col-md-3">
                 <div class="card border-0 border-start border-danger border-2 shadow-xs h-100 bg-light-danger">
                     <div class="card-body d-flex flex-column justify-content-center px-6 py-4">
-                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">Tổng vi phạm (Phút)</span>
+                        <span class="text-muted fs-8 fw-bold text-uppercase mb-1 ls-1">@L["Label_TotalLateEarly"]</span>
                         <div class="d-flex align-items-center">
                             <span class="fs-2qx fw-bold text-gray-800 me-2">@(FilteredEmployees.Sum(e => e.LateMinutes + e.EarlyLeaveMinutes))</span>
 
@@ -76,7 +76,7 @@
                     <select class="form-select form-select-solid fs-7 fw-bold" @onchange="OnPeriodChange">
                         @foreach (var p in _periods)
                         {
-                            <option value="@p.ToString("yyyy-MM-dd")" selected="@(p.Month == _currentMonth && p.Year == _currentYear)">Tháng @p.ToString("MM/yyyy")</option>
+                            <option value="@p.ToString("yyyy-MM-dd")" selected="@(p.Month == _currentMonth && p.Year == _currentYear)">@L["Label_Month"] @p.ToString("MM/yyyy")</option>
                         }
                     </select>
                 </div>
@@ -85,13 +85,13 @@
                 @if (_isPeriodLocked)
                 {
                     <button class="btn btn-sm btn-success fw-bold fs-7 px-4 ms-2" disabled>
-                        <i class="bi bi-check-circle me-1"></i>Đã chốt công
+                        <i class="bi bi-check-circle me-1"></i>@L["Label_LockedAttendance"]
                     </button>
                 }
                 else
                 {
                     <button class="btn btn-sm btn-primary fw-bold fs-7 px-4 ms-2" @onclick="LockMonth" disabled="@_isLoading">
-                        <i class="bi bi-lock me-1"></i>Chốt công tháng
+                        <i class="bi bi-lock me-1"></i>@L["Label_LockAttendanceMonth"]
                     </button>
                 }
                 <button class="btn btn-icon btn-light-primary btn-sm ms-2 border border-primary border-dashed" title="Lọc thêm"><i class="bi bi-funnel"></i></button>
@@ -124,18 +124,18 @@
             Columns="13">
             <HeaderTemplate>
                 <th class="w-10px pe-2"></th>
-                <th class="min-w-180px">NHÂN VIÊN</th>
-                <th class="min-w-120px">PHÒNG BAN</th>
-                <th class="min-w-60px text-center">CHUẨN</th>
-                <th class="min-w-60px text-center">THỰC</th>
-                <th class="min-w-80px text-center">GIỜ CÔNG</th>
-                <th class="min-w-60px text-center">MUỘN (P)</th>
-                <th class="min-w-60px text-center">SỚM (P)</th>
-                <th class="min-w-60px text-center">PHÉP</th>
-                <th class="min-w-60px text-center">LỄ</th>
-                <th class="min-w-70px text-center">TĂNG CA</th>
-                <th class="min-w-100px text-center">TRẠNG THÁI</th>
-                <th class="min-w-100px text-end pe-7">THAO TÁC</th>
+                <th class="min-w-180px">@L["Label_Employee"].ToString().ToUpper()</th>
+                <th class="min-w-120px">@L["Label_Department"].ToString().ToUpper()</th>
+                <th class="min-w-60px text-center">@L["Label_Standard"].ToString().ToUpper()</th>
+                <th class="min-w-60px text-center">@L["Label_Actual"].ToString().ToUpper()</th>
+                <th class="min-w-80px text-center">@L["Label_WorkHours"].ToString().ToUpper()</th>
+                <th class="min-w-60px text-center">@L["Label_Late"].ToString().ToUpper()</th>
+                <th class="min-w-60px text-center">@L["Label_Early"].ToString().ToUpper()</th>
+                <th class="min-w-60px text-center">@L["Label_Leave"].ToString().ToUpper()</th>
+                <th class="min-w-60px text-center">@L["Label_Holiday"].ToString().ToUpper()</th>
+                <th class="min-w-70px text-center">@L["Label_TotalOTHours"].ToString().ToUpper()</th>
+                <th class="min-w-100px text-center">@L["Label_Status"].ToString().ToUpper()</th>
+                <th class="min-w-100px text-end pe-7">@L["Label_Actions"].ToString().ToUpper()</th>
             </HeaderTemplate>
             <RowTemplate Context="item">
                 <td><div class="form-check form-check-sm form-check-custom form-check-solid"><input class="form-check-input timesheet-checkbox" type="checkbox" value="1" @onclick:stopPropagation /></div></td>
@@ -162,14 +162,14 @@
                 </td>
                 <td><span class="text-gray-700 fw-bold">@item.Department</span></td>
                 <td class="text-center fw-bolder text-gray-800">@item.StandardWork</td>
-                <td class="text-center fw-bolder text-primary">@item.ActualWork</td>
+                <td class="text-center fw-bolder text-primary">@FormatService.FormatNumber(item.ActualWork, 1)</td>
                 <td class="text-center fw-bold text-dark">@FormatService.FormatNumber(item.TotalWorkingHours, 1) h</td>
 
                 <td class="text-center"><span class="text-danger fw-bold">@item.LateMinutes</span></td>
                 <td class="text-center"><span class="text-gray-600 fw-bold">@item.EarlyLeaveMinutes</span></td>
                 <td class="text-center"><span class="text-warning fw-bold">@item.LeaveDays</span></td>
                 <td class="text-center"><span class="text-gray-600 fw-bold">@item.HolidayDays</span></td>
-                <td class="text-center fw-bold text-success">@item.OvertimeHours h</td>
+                <td class="text-center fw-bold text-success">@FormatService.FormatNumber(item.OvertimeHours, 1) h</td>
                 <td class="text-center">
                     <span class="badge badge-light-@(string.IsNullOrEmpty(item.StatusColor) ? "info" : item.StatusColor) fw-bold px-4 py-2 rounded-pill d-inline-flex align-items-center">
                         <span class="bullet bullet-dot bg-@(string.IsNullOrEmpty(item.StatusColor) ? "info" : item.StatusColor) w-6px h-6px me-2"></span>@item.Status
@@ -196,7 +196,7 @@
             <FooterTemplate>
                 <tr>
                     <td></td>
-                    <td colspan="2" class="text-end ps-0">TỔNG CỘNG (@FilteredEmployees.Count NS):</td>
+                    <td colspan="2" class="text-end ps-0">@L["Label_Total"].ToString().ToUpper() (@FilteredEmployees.Count @L["Label_Employees"]):</td>
                     <td class="text-center">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.StandardWork))</td>
                     <td class="text-center text-primary">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.ActualWork), 1)</td>
                     <td class="text-center text-dark">@FormatService.FormatNumber(FilteredEmployees.Sum(e => e.TotalWorkingHours), 1) h</td>
@@ -221,7 +221,7 @@
         <div class="card-header pe-5">
             <div class="card-title">
                 <div class="d-flex justify-content-center flex-column me-3">
-                    <span class="fs-4 fw-bolder text-gray-900 lh-1">Chi tiết công tháng @_currentMonth/@_currentYear</span>
+                    <span class="fs-4 fw-bolder text-gray-900 lh-1">@L["Label_Details"] @L["Label_Month"].ToString().ToLower() @_currentMonth/@_currentYear</span>
                     <span class="fs-7 fw-bold text-muted mt-2">MàNV: @(_selectedEmployee?.Id ?? "---")</span>
                 </div>
             </div>
@@ -260,53 +260,53 @@
                         </div>
                     </div>
                     <div class="text-end">
-                        <span class="fs-9 fw-bold text-uppercase text-muted opacity-75 d-block mb-1">CÔNG THỰC</span>
-                        <span class="badge badge-primary fs-7 fw-bolder px-3 py-2">@_selectedEmployee.ActualWork <span class="fs-9 fw-normal ms-1">công</span></span>
+                        <span class="fs-9 fw-bold text-uppercase text-muted opacity-75 d-block mb-1">@L["Label_Actual"].ToString().ToUpper()</span>
+                        <span class="badge badge-primary fs-7 fw-bolder px-3 py-2">@FormatService.FormatNumber(_selectedEmployee.ActualWork, 1) <span class="fs-9 fw-normal ms-1">@L["Label_WorkDayUnit"]</span></span>
                     </div>
                 </div>
 
                 <!-- Attendance Stats -->
-                <h3 class="fw-bolder fs-6 mb-5 text-uppercase"><i class="ki-outline ki-chart-line text-primary me-2"></i>Thống kê tổng quát</h3>
+                <h3 class="fw-bolder fs-6 mb-5 text-uppercase"><i class="ki-outline ki-chart-line text-primary me-2"></i>@L["Label_TotalRank"]</h3>
                 <div class="row g-5 mb-8">
                     <div class="col-6">
                         <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 mb-3">
                             <div class="fs-6 fw-bolder text-gray-700">@_selectedEmployee.LateCount/@_selectedEmployee.EarlyLeaveCount</div>
-                            <div class="fw-bold text-muted fs-8">Đi muộn/Về sớm</div>
+                            <div class="fw-bold text-muted fs-8">@L["Label_Late"]/@L["Label_Early"]</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 mb-3">
-                            <div class="fs-6 fw-bolder text-gray-700">@_selectedEmployee.OvertimeHours h</div>
-                            <div class="fw-bold text-muted fs-8">Tăng ca (OT)</div>
+                            <div class="fs-6 fw-bolder text-gray-700">@FormatService.FormatNumber(_selectedEmployee.OvertimeHours, 1) h</div>
+                            <div class="fw-bold text-muted fs-8">@L["Label_TotalOTHours"] (OT)</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 mb-3">
                             <div class="fs-6 fw-bolder text-gray-700">@_selectedEmployee.LeaveDays/@_selectedEmployee.HolidayDays</div>
-                            <div class="fw-bold text-muted fs-8">Nghỉ phép/Lễ</div>
+                            <div class="fw-bold text-muted fs-8">@L["Label_Leave"]/@L["Label_Holiday"]</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="border border-gray-300 border-dashed rounded min-w-100px py-3 px-4 mb-3">
                             <div class="fs-6 fw-bolder text-gray-700">@(_selectedEmployee.StandardWork > 0 ? FormatService.FormatNumber(_selectedEmployee.ActualWork / _selectedEmployee.StandardWork * 100, 0) : "0")%</div>
-                            <div class="fw-bold text-muted fs-8">Tỷ lệ chuyên cần</div>
+                            <div class="fw-bold text-muted fs-8">@L["Label_AttendanceRate"]</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Day-by-Day Logs -->
-                <h3 class="fw-bolder fs-6 mb-5 text-uppercase"><i class="ki-outline ki-calendar-8 text-primary me-2"></i>Nhật ký chấm công</h3>
+                <h3 class="fw-bolder fs-6 mb-5 text-uppercase"><i class="ki-outline ki-calendar-8 text-primary me-2"></i>@L["Label_AttendanceLog"]</h3>
                 <div class="table-responsive">
                     <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4">
                         <thead>
                             <tr class="fw-bold text-muted fs-8 text-uppercase">
-                                <th class="min-w-80px">Ngày</th>
-                                <th class="min-w-70px text-center">Giờ vào</th>
-                                <th class="min-w-70px text-center">Giờ ra</th>
-                                <th class="min-w-60px text-center">Muộn</th>
-                                <th class="min-w-60px text-center">Sớm</th>
+                                <th class="min-w-80px">@L["Label_Date"]</th>
+                                <th class="min-w-70px text-center">@L["Label_CheckIn"]</th>
+                                <th class="min-w-70px text-center">@L["Label_CheckOut"]</th>
+                                <th class="min-w-60px text-center">@L["Label_Late"]</th>
+                                <th class="min-w-60px text-center">@L["Label_Early"]</th>
                                 <th class="min-w-60px text-center">OT</th>
-                                <th class="min-w-60px text-end">Công</th>
+                                <th class="min-w-60px text-end">@L["Label_Actual"]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -358,8 +358,8 @@
                     <div class="alert alert-dismissible bg-light-warning d-flex flex-column flex-sm-row p-5 mb-8 border border-warning">
                         <i class="ki-outline ki-information-5 fs-2hx text-warning me-4 mb-5 mb-sm-0"></i>
                         <div class="d-flex flex-column">
-                            <h4 class="fw-bold text-gray-800 mb-1">Lưu ý từ hệ thống</h4>
-                            <span class="fs-7 text-gray-700">Nhân viên này có @_selectedEmployee.LateCount ngày đi muộn. Vui lòng kiểm tra lý do giải trình nếu có.</span>
+                            <h4 class="fw-bold text-gray-800 mb-1">@L["Label_SystemNotice"]</h4>
+                            <span class="fs-7 text-gray-700">@string.Format(L["Message_LateNotice"], _selectedEmployee.LateCount)</span>
                         </div>
                     </div>
                 }
@@ -368,14 +368,14 @@
 
         <!-- Footer -->
         <div class="card-footer border-0 d-flex gap-3 justify-content-between p-10">
-            <button type="button" class="btn btn-light flex-grow-1 fs-7 fw-bold" @onclick="closeDetail">Đóng</button>
+            <button type="button" class="btn btn-light flex-grow-1 fs-7 fw-bold" @onclick="closeDetail">@L["Label_Close"]</button>
             @if (_isPeriodLocked)
             {
                 <button type="button" class="btn btn-light-success flex-grow-1 fs-7 fw-bold" disabled>Đã chốt công xong</button>
             }
             else
             {
-                <button type="button" class="btn btn-primary flex-grow-1 fs-7 fw-bold" @onclick="LockMonth" disabled="@_isLoading">Chốt công nhanh</button>
+                <button type="button" class="btn btn-primary flex-grow-1 fs-7 fw-bold" @onclick="LockMonth" disabled="@_isLoading">@L["Label_QuickLock"]</button>
             }
         </div>
     </div>

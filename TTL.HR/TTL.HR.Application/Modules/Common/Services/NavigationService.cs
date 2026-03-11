@@ -23,54 +23,67 @@ namespace TTL.HR.Application.Modules.Common.Services
             var user = await _authService.GetCurrentUserAsync();
             if (user == null) return false;
 
-            // 1. SuperAdmin & IT Support bypass for technical settings
+            // 1. SuperAdmin & Admin bypass
             if (user.Role == "SuperAdmin" || user.Role == "Super Administrator" || user.Role == "Admin") 
             {
                 return true;
             }
 
+            // 2. IT Support
             if (user.Role == "IT Support" || user.Role == "ITSupport")
             {
-                // IT Support can access settings and logs but NOT payroll
-                if (permission.Contains("Payroll") || permission.Contains("Salary")) return false;
-                if (permission.Contains("Settings") || permission.Contains("Audit") || permission.Contains("Administration")) return true;
+                // IT Support can access settings and logs but NOT payroll or HR details
+                if (permission.Contains("Payroll") || permission.Contains("Salary") || permission.Contains("Benefits")) return false;
+                if (permission.Contains("Contract")) return false;
+                if (permission.Contains("Settings") || permission.Contains("Audit") || permission.Contains("Administration") || permission.Contains("Permissions")) return true;
                 return true; 
             }
 
-            // 2. HR Manager Permissions
+            // 3. HR Manager
             if (user.Role == "HR Manager" || user.Role == "HRManager")
             {
-                // Full access to HR, Payroll, Recruitment, etc.
-                if (permission.Contains("Administration")) return false; // Block system level config
+                // Access to HR, Payroll, Recruitment, Training, Assets
+                // But block system-level configuration (Administration)
+                if (permission.Contains("Administration.Settings") || permission.Contains("Permissions.Edit")) return false;
                 return true;
             }
 
-            // 3. Dept Manager Permissions
-            if (user.Role == "Dept Manager" || user.Role == "DeptManager")
+            // 4. Dept Manager / Team Leader
+            if (user.Role == "Dept Manager" || user.Role == "DeptManager" || user.Role == "TeamLead")
             {
                 // Can view/approve for their department
-                if (permission.Contains("Payroll") || permission.Contains("Settings") || permission.Contains("Contract")) return false;
-                if (permission.Contains("LeaveRequests.Approve") || permission.Contains("ShiftRequests.View")) return true;
+                if (permission.Contains("Payroll") || permission.Contains("Settings") || permission.Contains("Contract") || permission.Contains("Administration")) return false;
+                
+                // Allowed actions
+                if (permission.Contains("View") || permission.Contains("Approve") || permission.Contains("Create"))
+                {
+                    if (permission.Contains("LeaveRequests") || permission.Contains("ShiftRequests") || permission.Contains("Attendance")) return true;
+                }
+                
                 if (permission.Contains("Employees.View")) return true;
-                return true;
+                
+                return false;
             }
 
-            // 4. Employee (Self-Service)
+            // 5. Employee (Self-Service)
             if (user.Role == "Employee" || user.Role == "User")
             {
                 // Restricted to self-service items
-                if (permission.Contains("Create") || permission.Contains("Edit") || permission.Contains("Delete") || permission.Contains("Approve"))
+                if (permission.Contains("Administration") || permission.Contains("Settings") || permission.Contains("Payroll.ViewAll")) return false;
+                
+                // Actions
+                if (permission.Contains("Create"))
                 {
-                    // Allow creating requests but not profiles/configs
                     if (permission.Contains("LeaveRequests.Create") || permission.Contains("ShiftRequests.Create")) return true;
                     return false;
                 }
                 
-                // Allow viewing specific items
-                if (permission.Contains("Employees.View") || permission.Contains("Contracts.View")) return false; // Cannot view other employees
+                // Restricted viewing
+                if (permission.Contains("Employees.View") || permission.Contains("Contracts.View")) return false; 
                 if (permission.Contains("Payroll.ViewSlip")) return true;
+                if (permission.Contains("Attendance.ViewMine")) return true;
                 
-                return permission.Contains("View");
+                return permission.Contains("View") && !permission.Contains("All");
             }
 
             return false;
@@ -173,7 +186,7 @@ namespace TTL.HR.Application.Modules.Common.Services
                     Icon = "ki-outline ki-address-book", 
                     SubItems = new List<NavItem>
                     {
-                        new NavItem { Title = "Menu_OrgChart", Href = "/organization/structure" },
+                        new NavItem { Title = "Menu_OrgChart", Href = "/organization/structure", Permission = "Permissions.OrgChart.View" },
                         new NavItem { Title = "Menu_Departments", Href = "/organization/departments", Permission = "Permissions.Administration.Settings" },
                         new NavItem { Title = "Menu_Positions", Href = "/organization/positions", Permission = "Permissions.Administration.Settings" }
                     }
@@ -239,6 +252,7 @@ namespace TTL.HR.Application.Modules.Common.Services
                 new NavItem { 
                     Title = "Menu_AssetManagement", 
                     Icon = "ki-outline ki-monitor-mobile", 
+                    Permission = "Permissions.Assets.View",
                     SubItems = new List<NavItem>
                     {
                         new NavItem { Title = "Menu_AssetInventory", Href = "/assets/inventory", Permission = "Permissions.Assets.View" },
@@ -253,11 +267,11 @@ namespace TTL.HR.Application.Modules.Common.Services
                     Permission = "Permissions.Administration.Settings",
                     SubItems = new List<NavItem>
                     {
-                        new NavItem { Title = "Menu_RolesAndGroups", Href = "/administration/roles" },
-                        new NavItem { Title = "Menu_Permissions", Href = "/permissions" },
-                        new NavItem { Title = "Menu_GeneralSettings", Href = "/settings/general" },
-                        new NavItem { Title = "Menu_Banks", Href = "/settings/banks" },
-                        new NavItem { Title = "Menu_PayrollConfig", Href = "/settings/payroll-config" }
+                        new NavItem { Title = "Menu_RolesAndGroups", Href = "/administration/roles", Permission = "Permissions.Administration.Settings" },
+                        new NavItem { Title = "Menu_Permissions", Href = "/permissions", Permission = "Permissions.Administration.Settings" },
+                        new NavItem { Title = "Menu_GeneralSettings", Href = "/settings/general", Permission = "Permissions.Administration.Settings" },
+                        new NavItem { Title = "Menu_Banks", Href = "/settings/banks", Permission = "Permissions.Administration.Settings" },
+                        new NavItem { Title = "Menu_PayrollConfig", Href = "/settings/payroll-config", Permission = "Permissions.Administration.Settings" }
                     }
                 },
                 

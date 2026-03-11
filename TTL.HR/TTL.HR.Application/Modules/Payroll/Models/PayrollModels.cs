@@ -113,6 +113,9 @@ namespace TTL.HR.Application.Modules.Payroll.Models
         [JsonPropertyName("advanceAmount")]
         public decimal AdvanceAmount { get; set; }
         
+        [JsonPropertyName("paymentDetails")]
+        public List<PaymentItemModel> PaymentDetails { get; set; } = new();
+        
         [JsonPropertyName("deduction")]
         public decimal Deduction { get; set; }
         
@@ -229,5 +232,20 @@ namespace TTL.HR.Application.Modules.Payroll.Models
         
         [JsonPropertyName("note")]
         public string? Note { get; set; }
+    }
+
+    public class PaymentItemModel
+    {
+        [JsonPropertyName("paymentDate")]
+        public DateTime? PaymentDate { get; set; }
+        
+        [JsonPropertyName("amount")]
+        public decimal Amount { get; set; }
+        
+        [JsonPropertyName("description")]
+        public string? Description { get; set; }
+        
+        [JsonPropertyName("paymentMethod")]
+        public string? PaymentMethod { get; set; }
     }
 }

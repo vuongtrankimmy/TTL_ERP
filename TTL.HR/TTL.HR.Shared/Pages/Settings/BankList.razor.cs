@@ -15,6 +15,8 @@ public partial class BankList
     [Inject] private IBankService BankService { get; set; } = default!;
     [Inject] private IFileService FileService { get; set; } = default!;
     [Inject] private IJSRuntime JS { get; set; } = default!;
+    [Inject] private INavigationService NavigationService { get; set; } = default!;
+    [Inject] private NavigationManager Nav { get; set; } = default!;
 
     private bool _isLoading = true;
     private bool _showEditDrawer = false;
@@ -41,6 +43,11 @@ public partial class BankList
 
     protected override async Task OnInitializedAsync()
     {
+        if (!await NavigationService.UserHasPermissionAsync("Permissions.Administration.Settings"))
+        {
+            Nav.NavigateTo("/access-denied");
+            return;
+        }
         await LoadBanks();
     }
 

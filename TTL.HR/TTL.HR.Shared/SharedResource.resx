@@ -229,4 +229,169 @@
   <data name="Menu_RecruitmentKanban" xml:space="preserve">
     <value>Recruitment Kanban</value>
   </data>
+  <data name="Page_Overtime_Title" xml:space="preserve">
+    <value>Phê duyệt Tăng ca</value>
+  </data>
+  <data name="Label_PendingApproval" xml:space="preserve">
+    <value>Đang chờ duyệt</value>
+  </data>
+  <data name="Label_TotalOTHours" xml:space="preserve">
+    <value>Tổng giờ OT</value>
+  </data>
+  <data name="Label_Rejected" xml:space="preserve">
+    <value>Đã từ chối</value>
+  </data>
+  <data name="Label_Employee" xml:space="preserve">
+    <value>Nhân viên</value>
+  </data>
+  <data name="Label_Date" xml:space="preserve">
+    <value>Ngày</value>
+  </data>
+  <data name="Label_TimeSlot" xml:space="preserve">
+    <value>Khung giờ</value>
+  </data>
+  <data name="Label_Hours" xml:space="preserve">
+    <value>Số giờ</value>
+  </data>
+  <data name="Label_Multiplier" xml:space="preserve">
+    <value>Hệ số</value>
+  </data>
+  <data name="Label_Reason" xml:space="preserve">
+    <value>Lý do</value>
+  </data>
+  <data name="Label_Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Label_Actions" xml:space="preserve">
+    <value>Hành động</value>
+  </data>
+  <data name="Label_Approve" xml:space="preserve">
+    <value>Phê duyệt</value>
+  </data>
+  <data name="Label_Reject" xml:space="preserve">
+    <value>Từ chối</value>
+  </data>
+  <data name="Label_NoData" xml:space="preserve">
+    <value>Không có dữ liệu tăng ca.</value>
+  </data>
+  <data name="Page_Attendance_Title" xml:space="preserve">
+    <value>Chấm công</value>
+  </data>
+  <data name="Label_TotalEmployees" xml:space="preserve">
+    <value>Tổng nhân sự</value>
+  </data>
+  <data name="Label_TotalActualWork" xml:space="preserve">
+    <value>Tổng công thực tế</value>
+  </data>
+  <data name="Label_TotalLateEarly" xml:space="preserve">
+    <value>Tổng vi phạm (Phút)</value>
+  </data>
+  <data name="Label_Department" xml:space="preserve">
+    <value>Phòng ban</value>
+  </data>
+  <data name="Label_Standard" xml:space="preserve">
+    <value>Chuẩn</value>
+  </data>
+  <data name="Label_Actual" xml:space="preserve">
+    <value>Thực</value>
+  </data>
+  <data name="Label_WorkHours" xml:space="preserve">
+    <value>Giờ công</value>
+  </data>
+  <data name="Label_Late" xml:space="preserve">
+    <value>Muộn (P)</value>
+  </data>
+  <data name="Label_Early" xml:space="preserve">
+    <value>Sớm (P)</value>
+  </data>
+  <data name="Label_Leave" xml:space="preserve">
+    <value>Phép</value>
+  </data>
+  <data name="Label_Holiday" xml:space="preserve">
+    <value>Lễ</value>
+  </data>
+  <data name="Label_LockAttendanceMonth" xml:space="preserve">
+    <value>Chốt công tháng</value>
+  </data>
+  <data name="Label_LockedAttendance" xml:space="preserve">
+    <value>Đã chốt công</value>
+  </data>
+  <data name="Label_Month" xml:space="preserve">
+    <value>Tháng</value>
+  </data>
+  <data name="Label_TotalRank" xml:space="preserve">
+    <value>Thống kê tổng quát</value>
+  </data>
+  <data name="Label_AttendanceLog" xml:space="preserve">
+    <value>Nhật ký chấm công</value>
+  </data>
+  <data name="Label_CheckIn" xml:space="preserve">
+    <value>Giờ vào</value>
+  </data>
+  <data name="Label_CheckOut" xml:space="preserve">
+    <value>Giờ ra</value>
+  </data>
+  <data name="Label_SystemNotice" xml:space="preserve">
+    <value>Lưu ý từ hệ thống</value>
+  </data>
+  <data name="Label_Close" xml:space="preserve">
+    <value>Đóng</value>
+  </data>
+  <data name="Label_QuickLock" xml:space="preserve">
+    <value>Chốt công nhanh</value>
+  </data>
+  <data name="Label_Pending" xml:space="preserve">
+    <value>Chờ duyệt</value>
+  </data>
+  <data name="Label_Approved" xml:space="preserve">
+    <value>Đã duyệt</value>
+  </data>
+  <data name="Label_ConfirmApproveHeading" xml:space="preserve">
+    <value>Xác nhận đồng ý?</value>
+  </data>
+  <data name="Label_ConfirmApproveMessage" xml:space="preserve">
+    <value>Bạn có đồng ý phê duyệt {0} giờ tăng ca ngày {1:dd/MM/yyyy} cho {2}?</value>
+  </data>
+  <data name="Label_ConfirmRejectHeading" xml:space="preserve">
+    <value>Xác nhận từ chối?</value>
+  </data>
+  <data name="Label_ConfirmRejectMessage" xml:space="preserve">
+    <value>Bạn muốn từ chối yêu cầu tăng ca của {0}. Vui lòng nhập lý do bên dưới.</value>
+  </data>
+  <data name="Label_ConfirmApproveAction" xml:space="preserve">
+    <value>Đồng ý Duyệt</value>
+  </data>
+  <data name="Label_ConfirmRejectAction" xml:space="preserve">
+    <value>Xác nhận Từ chối</value>
+  </data>
+  <data name="Message_ApproveSuccess" xml:space="preserve">
+    <value>Đã phê duyệt thành công</value>
+  </data>
+  <data name="Message_RejectSuccess" xml:space="preserve">
+    <value>Đã từ chối yêu cầu</value>
+  </data>
+  <data name="Message_ProcessError" xml:space="preserve">
+    <value>Xử lý yêu cầu thất bại</value>
+  </data>
+  <data name="Message_LoadDataError" xml:space="preserve">
+    <value>Lỗi tải dữ liệu tăng ca: {0}</value>
+  </data>
+  <data name="Label_Employees" xml:space="preserve">
+    <value>NS</value>
+  </data>
+  <data name="Label_WorkDayUnit" xml:space="preserve">
+    <value>công</value>
+  </data>
+  <data name="Message_LateNotice" xml:space="preserve">
+    <value>Nhân viên này có {0} ngày đi muộn. Vui lòng kiểm tra lý do giải trình nếu có.</value>
+  </data>
+  <data name="Message_LockMonthSuccess" xml:space="preserve">
+    <value>Chốt công tháng thành công.</value>
+  </data>
+  <data name="Message_LockMonthError" xml:space="preserve">
+    <value>Lỗi khi chốt công tháng</value>
+  </data>
+  <data name="Message_ErrorOccurred" xml:space="preserve">
+    <value>Có lỗi xảy ra</value>
+  </data>
 </root>

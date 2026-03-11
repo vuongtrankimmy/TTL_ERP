@@ -1,0 +1,150 @@
+@using System.Globalization
+@using TTL.HR.Application.Modules.Common.Interfaces
+@inject IFormatService FormatService
+@inject IJSRuntime JS
+
+@if (Simple)
+{
+    <div class="position-relative d-flex align-items-center @(string.IsNullOrEmpty(WrapperClass) ? "w-100" : WrapperClass)">
+        @if (!string.IsNullOrEmpty(Icon))
+        {
+            <i class="@Icon position-absolute ms-4 text-gray-500"></i>
+        }
+        
+        <input type="text"
+               id="@Id"
+               class='form-control form-control-solid @SizeClass @CssClass @(IsInvalid ? "is-invalid border-danger" : "") @(Icon != null ? "ps-12" : "") @(!string.IsNullOrEmpty(Suffix) ? "pe-20" : "") text-end fw-bold' 
+               placeholder="@Placeholder" 
+               value="@FormattedValue" 
+               @oninput="HandleInput"
+               @onblur="HandleBlur"
+               onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 44 && @(Decimals > 0 ? "true" : "false"))"
+               onpaste="setTimeout(() => { this.value = this.value.replace(/[^0-9,@(Decimals > 0 ? "" : ".")]/g, ''); }, 0)"
+               disabled="@Disabled"
+               inputmode="numeric" />
+        
+        @if (!string.IsNullOrEmpty(Suffix))
+        {
+            <span class="position-absolute end-0 me-4 fs-8 fw-bold text-gray-500">@Suffix</span>
+        }
+    </div>
+}
+else
+{
+    <div class="fv-row @(MarginBottom ? "mb-7" : "mb-0")">
+        @if (!string.IsNullOrEmpty(Label))
+        {
+            <label class="form-label @(IsRequired ? "required" : "") fs-7 fw-bolder text-gray-700 text-uppercase">@Label</label>
+        }
+        
+        <div class="position-relative d-flex align-items-center @WrapperClass">
+            @if (!string.IsNullOrEmpty(Icon))
+            {
+                <i class="@Icon position-absolute ms-4 text-gray-500"></i>
+            }
+            
+            <input type="text"
+                   id="@Id"
+                   class='form-control form-control-solid @SizeClass @CssClass @(Icon != null ? "ps-12" : "") @(!string.IsNullOrEmpty(Suffix) ? "pe-20" : "") @(IsInvalid ? "is-invalid border-danger" : "") text-end fw-bold' 
+                   placeholder="@Placeholder" 
+                   value="@FormattedValue" 
+                   @oninput="HandleInput"
+                   @onblur="HandleBlur"
+                   onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 44 && @(Decimals > 0 ? "true" : "false"))"
+                   onpaste="setTimeout(() => { this.value = this.value.replace(/[^0-9,@(Decimals > 0 ? "" : ".")]/g, ''); }, 0)"
+                   disabled="@Disabled"
+                   inputmode="numeric" />
+            
+            @if (!string.IsNullOrEmpty(Suffix))
+            {
+                <span class="position-absolute end-0 me-4 fs-8 fw-bold text-gray-500">@Suffix</span>
+            }
+        </div>
+        
+        @if (IsInvalid && !string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@ErrorMessage</div>
+        }
+        
+        @if (!string.IsNullOrEmpty(Hint))
+        {
+            <div class="text-muted fs-9 mt-1">@Hint</div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public decimal Value { get; set; }
+    [Parameter] public EventCallback<decimal> ValueChanged { get; set; }
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public string? Placeholder { get; set; }
+    [Parameter] public string? Icon { get; set; }
+    [Parameter] public string? Suffix { get; set; }
+    [Parameter] public bool IsRequired { get; set; }
+    [Parameter] public string? Hint { get; set; }
+    [Parameter] public string? CssClass { get; set; }
+    [Parameter] public string? WrapperClass { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool IsInvalid { get; set; }
+    [Parameter] public string? ErrorMessage { get; set; }
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public bool MarginBottom { get; set; } = true;
+    [Parameter] public int Decimals { get; set; } = 0;
+    [Parameter] public bool Simple { get; set; } = false;
+    [Parameter] public string Size { get; set; } = "normal";
+    [Parameter] public decimal? MaxValue { get; set; }
+    [Parameter] public decimal MinValue { get; set; } = 0;
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrEmpty(Id)) Id = "input_" + Guid.NewGuid().ToString("N").Substring(0, 8);
+    }
+
+    private string SizeClass => Size switch
+    {
+        "sm" => "form-control-sm fs-8",
+        "lg" => "form-control-lg fs-5",
+        _ => ""
+    };
+
+    private string FormattedValue => Value.ToString("N" + Decimals, new CultureInfo("vi-VN"));
+
+    private async Task HandleInput(ChangeEventArgs e)
+    {
+        var rawInput = e.Value?.ToString() ?? string.Empty;
+        
+        // Remove non-numeric characters (allow comma if decimals > 0)
+        var allowedChars = Decimals > 0 ? "0123456789," : "0123456789";
+        var cleanDigits = new string(rawInput.Where(c => allowedChars.Contains(c)).ToArray());
+        
+        if (decimal.TryParse(cleanDigits, NumberStyles.Any, new CultureInfo("vi-VN"), out var result))
+        {
+            if (result < MinValue) result = MinValue;
+            if (MaxValue.HasValue && result > MaxValue.Value) result = MaxValue.Value;
+            
+            // If the value was capped or cleaned, force the input element to refresh
+            bool wasCapped = MaxValue.HasValue && result == MaxValue.Value && result != Value;
+            bool hadLetters = rawInput.Length != cleanDigits.Length;
+
+            Value = result;
+            await ValueChanged.InvokeAsync(Value);
+
+            if (wasCapped || hadLetters)
+            {
+                // Force sync browser value with C# value immediately using direct JS
+                await JS.InvokeVoidAsync("LayoutHelper.syncInputValue", Id, FormattedValue);
+            }
+        }
+        else if (string.IsNullOrEmpty(cleanDigits))
+        {
+            Value = MinValue;
+            await ValueChanged.InvokeAsync(Value);
+            await JS.InvokeVoidAsync("LayoutHelper.syncInputValue", Id, FormattedValue);
+        }
+    }
+
+    private void HandleBlur()
+    {
+        StateHasChanged();
+    }
+}

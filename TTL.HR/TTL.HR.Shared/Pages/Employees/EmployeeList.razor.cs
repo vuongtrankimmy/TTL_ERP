@@ -30,6 +30,7 @@ namespace TTL.HR.Shared.Pages.Employees
         [Inject] public ISettingsService SettingsService { get; set; } = default!;
         [Inject] public IPdfService PdfService { get; set; } = default!;
         [Inject] public IAttendanceService AttendanceService { get; set; } = default!;
+        [Inject] public INavigationService NavigationService { get; set; } = default!;
 
 
         [Parameter, SupplyParameterFromQuery(Name = "q")] public string searchQuery { get; set; } = "";
@@ -86,11 +87,14 @@ namespace TTL.HR.Shared.Pages.Employees
 
         protected override async Task OnParametersSetAsync()
         {
+            if (!await NavigationService.UserHasPermissionAsync("Permissions.Employees.View"))
+            {
+                Nav.NavigateTo("/dashboard");
+                return;
+            }
+
             if (currentPage < 1) currentPage = 1;
             if (!string.IsNullOrEmpty(filterViewMode)) _viewMode = filterViewMode;
-
-            // Manual sync if needed (though SupplyParameterFromQuery usually handles this)
-            // But if the user reports "wrong state", we can be extra careful.
             
             _cts?.Cancel();
             _cts = new CancellationTokenSource();

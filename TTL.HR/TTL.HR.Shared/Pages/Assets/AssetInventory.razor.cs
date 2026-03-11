@@ -17,6 +17,7 @@ namespace TTL.HR.Shared.Pages.Assets
         [Inject] public IAssetService AssetService { get; set; } = default!;
         [Inject] public IMasterDataService MasterDataService { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
+        [Inject] public INavigationService NavigationService { get; set; } = default!;
 
         private List<AssetViewModel> AssetList = new();
         private List<LookupModel> StatusLookups = new();
@@ -27,6 +28,11 @@ namespace TTL.HR.Shared.Pages.Assets
 
         protected override async Task OnInitializedAsync()
         {
+            if (!await NavigationService.UserHasPermissionAsync("Permissions.Assets.View"))
+            {
+                Navigation.NavigateTo("/access-denied");
+                return;
+            }
             await LoadData();
         }
 
