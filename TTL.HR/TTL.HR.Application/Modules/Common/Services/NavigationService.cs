@@ -178,8 +178,10 @@ namespace TTL.HR.Application.Modules.Common.Services
         {
             return new List<NavItem>
             {
+                // 1. Dashboards
                 new NavItem { Title = "Menu_Dashboards", Icon = "ki-outline ki-element-11", Href = "/dashboard" },
                 
+                // 2. Organization & Personnel
                 new NavItem { Title = "Section_OrgAndPersonnel", IsSection = true },
                 new NavItem { 
                     Title = "Menu_CompanyStructure", 
@@ -198,10 +200,12 @@ namespace TTL.HR.Application.Modules.Common.Services
                     {
                         new NavItem { Title = "Menu_EmployeeList", Href = "/employees", Permission = "Permissions.Employees.View" },
                         new NavItem { Title = "Menu_Onboarding", Href = "/employees/add", Permission = "Permissions.Employees.Create" },
-                        new NavItem { Title = "Menu_Contracts", Href = "/contracts", Permission = "Permissions.Contracts.View" }
+                        new NavItem { Title = "Menu_Contracts", Href = "/contracts", Permission = "Permissions.Contracts.View" },
+                        new NavItem { Title = "Menu_MyProfile", Href = "/user/profile", Icon = "ki-outline ki-user-square" }
                     }
                 },
                 
+                // 3. HR Operations (Time & Attendance)
                 new NavItem { Title = "Section_HROperations", IsSection = true },
                 new NavItem { 
                     Title = "Menu_Attendance", 
@@ -221,34 +225,36 @@ namespace TTL.HR.Application.Modules.Common.Services
                     {
                         new NavItem { Title = "Menu_ShiftCatalog", Href = "/attendance/shifts", Icon = "ki-outline ki-category", Permission = "Permissions.Administration.Settings" },
                         new NavItem { Title = "Menu_WorkSchedule", Href = "/attendance/schedule", Icon = "ki-outline ki-calendar-edit", Permission = "Permissions.Attendance.Edit" },
+                        new NavItem { Title = "Menu_ShiftScheduler", Href = "/attendance/scheduler", Icon = "ki-outline ki-mask", Permission = "Permissions.Attendance.Edit" },
                         new NavItem { Title = "Menu_OvertimeRequests", Href = "/attendance/overtime", Icon = "ki-outline ki-clock", Permission = "Permissions.ShiftRequests.View" },
                         new NavItem { Title = "Menu_ShiftApproval", Href = "/attendance/approval", Icon = "ki-outline ki-check-square", Permission = "Permissions.ShiftRequests.View" }
                     }
                 },
                 new NavItem { 
                     Title = "Menu_LeaveManagement", 
-                    Icon = "ki-outline ki-calendar-8", 
+                    Icon = "ki-outline ki-cloud-change", 
                     SubItems = new List<NavItem>
                     {
                         new NavItem { Title = "Menu_LeaveRequests", Href = "/leave/requests", Permission = "Permissions.LeaveRequests.View" },
                         new NavItem { Title = "Menu_BusinessTrip", Href = "/attendance/leave-trip", Permission = "Permissions.LeaveRequests.View" }
                     }
                 },
+                
+                // 4. Payroll & Benefits
+                new NavItem { Title = "Section_PayrollAndFinance", IsSection = true },
                 new NavItem { 
                     Title = "Menu_PayrollAndBenefits", 
                     Icon = "ki-outline ki-wallet", 
                     SubItems = new List<NavItem>
                     {
                         new NavItem { Title = "Menu_PayrollPeriods", Href = "/payroll/periods", Permission = "Permissions.Payroll.View" },
-                        new NavItem { Title = "Menu_Benefits", Href = "/benefits", Permission = "Permissions.Benefits.View" }
+                        new NavItem { Title = "Menu_Benefits", Href = "/benefits", Permission = "Permissions.Benefits.View" },
+                        new NavItem { Title = "Menu_PayrollConfig", Href = "/settings/payroll-config", Permission = "Permissions.Administration.Settings" }
                     }
                 },
                 
-                new NavItem { Title = "Section_RecruitmentAndTraining", IsSection = true },
-                new NavItem { Title = "Menu_Recruitment", Icon = "ki-outline ki-user-tick", Href = "/recruitment", Permission = "Permissions.Recruitment.View" },
-                new NavItem { Title = "Menu_Training", Icon = "ki-outline ki-book-open", Href = "/training", Permission = "Permissions.Training.View" },
-                
-                new NavItem { Title = "Section_AssetsAndEquipment", IsSection = true },
+                // 5. Assets & Training
+                new NavItem { Title = "Section_AssetsAndTraining", IsSection = true },
                 new NavItem { 
                     Title = "Menu_AssetManagement", 
                     Icon = "ki-outline ki-monitor-mobile", 
@@ -259,8 +265,11 @@ namespace TTL.HR.Application.Modules.Common.Services
                         new NavItem { Title = "Menu_AssetAllocation", Href = "/assets/allocation", Permission = "Permissions.Assets.View" }
                     }
                 },
+                new NavItem { Title = "Menu_Recruitment", Icon = "ki-outline ki-user-tick", Href = "/recruitment", Permission = "Permissions.Recruitment.View" },
+                new NavItem { Title = "Menu_Training", Icon = "ki-outline ki-book-open", Href = "/training", Permission = "Permissions.Training.View" },
                 
-                new NavItem { Title = "Section_System", IsSection = true, Permission = "Permissions.Administration.Settings" },
+                // 6. System & Config
+                new NavItem { Title = "Section_SystemAndAdmin", IsSection = true, Permission = "Permissions.Administration.Settings" },
                 new NavItem { 
                     Title = "Menu_AdminAndConfig", 
                     Icon = "ki-outline ki-setting-2", 
@@ -270,14 +279,15 @@ namespace TTL.HR.Application.Modules.Common.Services
                         new NavItem { Title = "Menu_RolesAndGroups", Href = "/administration/roles", Permission = "Permissions.Administration.Settings" },
                         new NavItem { Title = "Menu_Permissions", Href = "/permissions", Permission = "Permissions.Administration.Settings" },
                         new NavItem { Title = "Menu_GeneralSettings", Href = "/settings/general", Permission = "Permissions.Administration.Settings" },
-                        new NavItem { Title = "Menu_Banks", Href = "/settings/banks", Permission = "Permissions.Administration.Settings" },
-                        new NavItem { Title = "Menu_PayrollConfig", Href = "/settings/payroll-config", Permission = "Permissions.Administration.Settings" }
+                        new NavItem { Title = "Menu_Localization", Href = "/settings/localization", Permission = "Permissions.Administration.Settings" },
+                        new NavItem { Title = "Menu_Banks", Href = "/settings/banks", Permission = "Permissions.Administration.Settings" }
                     }
                 },
                 
+                // 7. Support
                 new NavItem { Title = "Section_Support", IsSection = true },
                 new NavItem { Title = "Menu_HRToolkit", Icon = "ki-outline ki-calculator", Href = "/tools/hr-toolkit" },
-                new NavItem { Title = "Menu_UserGuide", Icon = "ki-outline ki-book-open", Href = "/system/guide" }
+                new NavItem { Title = "Menu_UserGuide", Icon = "ki-outline ki-scroll", Href = "/system/guide" }
             };
         }
     }

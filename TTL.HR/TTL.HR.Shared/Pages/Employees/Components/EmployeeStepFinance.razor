@@ -1,0 +1,116 @@
+@namespace TTL.HR.Shared.Pages.Employees.Components
+
+<div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
+    <!-- FINANCE SECTION -->
+    <div class="card card-flush py-4">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-bank text-primary fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Tài chính & Ngân hàng</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0">
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLBankSelector BankCode="@Model.BankName" BankCodeChanged="@(val => Model.BankName = val)" Label="Ngân hàng" IsReadOnly="@IsReadOnly" />
+                </div>
+                <div class="col-md-6">
+                    <TTLInput Label="Số tài khoản" Placeholder="STK ngân hàng" @bind-Value="Model.BankAccountNumber" IsReadOnly="@IsReadOnly" />
+                </div>
+            </div>
+            <div class="row g-9">
+                <div class="col-md-6">
+                    <TTLInput Label="Mã số thuế" Placeholder="MST cá nhân" @bind-Value="Model.TaxId" IsReadOnly="@IsReadOnly" />
+                </div>
+                <div class="col-md-6">
+                    <TTLInput Label="Số sổ BHXH" Placeholder="Số BHXH" @bind-Value="Model.SocialInsuranceId" IsReadOnly="@IsReadOnly" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACCOUNT SECTION -->
+    <div class="card card-flush py-4 border-primary border-dashed border-1 shadow-sm">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-shield-lock text-primary fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Tài khoản & Phân quyền</h2>
+            </div>
+            <div class="card-toolbar">
+                <div class="form-check form-switch form-check-custom form-check-solid">
+                    <input class="form-check-input h-30px w-50px" type="checkbox" @bind="Model.IsCreateAccount" id="createAccountToggle" disabled="@IsReadOnly" />
+                    <label class="form-check-label fw-bolder text-gray-700 ms-3" for="createAccountToggle">TỰ ĐỘNG KHỞI TẠO TÀI KHOẢN</label>
+                </div>
+            </div>
+        </div>
+        <div class="card-body pt-0 @(Model.IsCreateAccount ? "" : "opacity-50")">
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLInput Label="Tên đăng nhập" Placeholder="VD: nva_090" @bind-Value="Model.Username" IsRequired="Model.IsCreateAccount" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mật khẩu / Truy cập</label>
+                    @if (IsEditMode && !IsReadOnly)
+                    {
+                        <button type="button" class="btn btn-light-warning btn-sm fw-bold w-100 h-40px border border-warning border-dashed" @onclick="HandlePasswordReset">
+                            <i class="bi bi-key-fill fs-5 me-2"></i> Gửi Link Đặt Lại Mật Khẩu
+                        </button>
+                    }
+                    else if (IsReadOnly)
+                    {
+                         <div class="form-control form-control-solid bg-light text-gray-400 fw-bold h-40px d-flex align-items-center justify-content-center fs-8 border border-gray-200 border-dashed">
+                            CHỈ XEM (READ-ONLY)
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-control form-control-solid bg-light-info text-primary fw-bold h-40px d-flex align-items-center justify-content-center fs-8 border border-primary border-dashed">
+                            HỆ THỐNG GỬI QUA EMAIL / SMS
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="row g-9">
+                <div class="col-12">
+                     <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-3">Vai trò & Quyền hạn truy cập</label>
+                     <div class="d-flex flex-wrap gap-2">
+                        @if (AvailableRoles != null)
+                        {
+                            @foreach (var role in AvailableRoles)
+                            {
+                                var isSelected = Model.Roles?.Contains(role.Id) ?? false;
+                                <div class="badge badge-lg @(isSelected ? "badge-light-primary border border-primary" : "badge-light border border-gray-300") px-4 py-3 @(IsReadOnly ? "" : "cursor-pointer")"
+                                     @onclick="async () => { if(!IsReadOnly) await HandleToggleRole(role.Id); }">
+                                    <span class="fw-bold @(isSelected ? "text-primary" : "text-gray-700") fs-7">@role.Name</span>
+                                </div>
+                            }
+                        }
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer d-flex justify-content-end py-6 px-9 border-top-0">
+        <button type="button" class="btn @(IsReadOnly ? "btn-light-primary" : "btn-primary") fw-bolder px-10" @onclick="HandleSave" disabled="@IsProcessing">
+            @if (IsProcessing)
+            {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <span>ĐANG LƯU...</span>
+            }
+            else if (IsReadOnly)
+            {
+                <i class="bi bi-arrow-left me-2"></i>
+                <span>QUAY LẠI DANH SÁCH</span>
+            }
+            else
+            {
+                <i class="bi bi-check-circle me-2"></i>
+                <span>LƯU HỒ SƠ & QUAY LẠI</span>
+            }
+        </button>
+    </div>
+</div>

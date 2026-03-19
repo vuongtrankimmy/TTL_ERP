@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TTL.HR.Application.Modules.Common.Entities;
 using TTL.HR.Application.Modules.HumanResource.Models;
+
 namespace TTL.HR.Application.Modules.HumanResource.Entities
 {
     public class Employee : BaseEntity
@@ -35,6 +36,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
         public EmergencyContact EmergencyContact { get; set; } = new();
         public List<EducationDetailDto> Education { get; set; } = new();
         public List<ExperienceDetailDto> Experience { get; set; } = new();
+        public List<string> Skills { get; set; } = new();
+        public List<CertificationDetailDto> Certifications { get; set; } = new();
 
         public string Username { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
@@ -70,7 +73,18 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
         public string SocialInsuranceId { get; set; } = string.Empty;
         public List<DependentDetailDto> Dependents { get; set; } = new();
         public double Latitude { get; set; } = 0;
-        public double Longitude { get; set; }= 0;
+        public double Longitude { get; set; } = 0;
+        /// <summary>Mã quốc gia ISO 3166-1 numeric (VD: 704 = Việt Nam)</summary>
+        public int? CountryId { get; set; }
+        /// <summary>Mã tỉnh/thành phố hành chính VN</summary>
+        public int? ProvinceId { get; set; }
+        /// <summary>Mã quận/huyện hành chính VN</summary>
+        public int? DistrictId { get; set; }
+        /// <summary>Mã phường/xã hành chính VN</summary>
+        public int? WardId { get; set; }
+        /// <summary>Số thứ tự đường (int). Null nếu nhập tay.</summary>
+        public int? StreetId { get; set; }
+        public string? Street { get; set; }
     }
 
     public class EmergencyContact
@@ -79,6 +93,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Entities
         public string Relation { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
     }
+
+
 
     public enum EmployeeStatus { Active, Probation, MaternityLeave, Resigned, Terminated }
     public enum EmploymentType { FullTime, PartTime, Intern, Contractor }

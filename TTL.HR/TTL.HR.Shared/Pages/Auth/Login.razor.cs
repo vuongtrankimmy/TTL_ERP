@@ -9,9 +9,9 @@ namespace TTL.HR.Shared.Pages.Auth
 {
     public partial class Login
     {
-        [Inject] public IJSRuntime JS { get; set; }
-        [Inject] public IAuthService AuthService { get; set; }
-        [Inject] public NavigationManager Navigation { get; set; }
+        [Inject] public required IJSRuntime JS { get; set; }
+        [Inject] public required IAuthService AuthService { get; set; }
+        [Inject] public required NavigationManager Navigation { get; set; }
 
         private string _username = "admin";
         private string _password = "admin123";
@@ -58,7 +58,7 @@ namespace TTL.HR.Shared.Pages.Auth
                     } catch { }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 try {
                     await JS.InvokeVoidAsync("toastr.error", "Có lỗi xảy ra trong quá trình kết nối!");

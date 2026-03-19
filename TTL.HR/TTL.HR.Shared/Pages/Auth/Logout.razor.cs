@@ -7,8 +7,8 @@ namespace TTL.HR.Shared.Pages.Auth
 {
     public partial class Logout
     {
-        [Inject] public IAuthService AuthService { get; set; }
-        [Inject] public NavigationManager Navigation { get; set; }
+        [Inject] public required IAuthService AuthService { get; set; }
+        [Inject] public required NavigationManager Navigation { get; set; }
 
         protected override async Task OnInitializedAsync()
         {

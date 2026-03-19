@@ -34,11 +34,18 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
             return result?.Data?.Items ?? new List<EmployeeDto>();
         }
 
-        public async Task<PagedResult<EmployeeDto>> GetEmployeesPaginatedAsync(int pageIndex, int pageSize, string? searchTerm = null, string? departmentId = null, string? status = null, string? workplace = null, string? sortBy = "name", bool sortDesc = false)
+        public async Task<PagedResult<EmployeeDto>> GetEmployeesPaginatedAsync(int pageIndex, int pageSize, string? searchTerm = null, IEnumerable<string>? departmentIds = null, string? status = null, string? workplace = null, string? sortBy = "name", bool sortDesc = false)
         {
             var url = $"{ApiEndpoints.Employees.Base}?pageIndex={pageIndex}&pageSize={pageSize}";
             if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
-            if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
+            
+            if (departmentIds != null && departmentIds.Any())
+            {
+                foreach (var id in departmentIds)
+                {
+                    if (!string.IsNullOrEmpty(id)) url += $"&departmentId={id}";
+                }
+            }
             if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
             if (!string.IsNullOrEmpty(workplace)) url += $"&workplace={Uri.EscapeDataString(workplace)}";
             if (!string.IsNullOrEmpty(sortBy)) url += $"&sortBy={sortBy}";
@@ -310,13 +317,20 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
             }
         }
 
-        public async Task<byte[]?> ExportEmployeesAsync(string? searchTerm = null, string? departmentId = null, string? status = null, string? workplace = null)
+        public async Task<byte[]?> ExportEmployeesAsync(string? searchTerm = null, IEnumerable<string>? departmentIds = null, string? status = null, string? workplace = null)
         {
             try
             {
                 var url = $"{ApiEndpoints.Employees.Base}/export?1=1";
                 if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
-                if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
+                
+                if (departmentIds != null && departmentIds.Any())
+                {
+                    foreach (var id in departmentIds)
+                    {
+                        if (!string.IsNullOrEmpty(id)) url += $"&departmentId={id}";
+                    }
+                }
                 if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
                 if (!string.IsNullOrEmpty(workplace)) url += $"&workplace={Uri.EscapeDataString(workplace)}";
 
@@ -333,11 +347,18 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
                 return null;
             }
         }
-        public async Task<EmployeeStatusCounts> GetStatusCountsAsync(string? searchTerm = null, string? departmentId = null, string? workplace = null)
+        public async Task<EmployeeStatusCounts> GetStatusCountsAsync(string? searchTerm = null, IEnumerable<string>? departmentIds = null, string? workplace = null)
         {
             var url = $"{ApiEndpoints.Employees.Base}/counts?1=1";
             if (!string.IsNullOrEmpty(searchTerm)) url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
-            if (!string.IsNullOrEmpty(departmentId)) url += $"&departmentId={departmentId}";
+            
+            if (departmentIds != null && departmentIds.Any())
+            {
+                foreach (var id in departmentIds)
+                {
+                    if (!string.IsNullOrEmpty(id)) url += $"&departmentId={id}";
+                }
+            }
             if (!string.IsNullOrEmpty(workplace)) url += $"&workplace={Uri.EscapeDataString(workplace)}";
 
             var response = await _httpClient.GetAsync(url);

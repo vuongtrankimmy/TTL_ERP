@@ -146,52 +146,58 @@
                     <button class="btn btn-sm btn-icon btn-active-light-primary bg-light" @onclick="CloseExplanation"><i class="ki-outline ki-cross fs-1"></i></button>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-8 p-6">
-                    <i class="ki-outline ki-information-5 fs-2tx text-warning me-4"></i>
-                    <div class="d-flex flex-stack flex-grow-1">
-                        <div class="fw-semibold">
-                            <h4 class="text-gray-900 fw-bold">Thông tin ghi nhận</h4>
-                            <div class="fs-6 text-gray-700">
-                                Vào: <span class="fw-bold">@(_selectedRecordForExplanation.CheckIn?.ToString("HH:mm") ?? "--:--")</span> |
-                                Ra: <span class="fw-bold">@(_selectedRecordForExplanation.CheckOut?.ToString("HH:mm") ?? "--:--")</span>
+                <div class="card-body">
+                    <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-8 p-6">
+                        <i class="ki-outline ki-information-5 fs-2tx text-warning me-4"></i>
+                        <div class="d-flex flex-stack flex-grow-1">
+                            <div class="fw-semibold">
+                                <h4 class="text-gray-900 fw-bold">Thông tin ghi nhận</h4>
+                                <div class="fs-6 text-gray-700">
+                                    Vào: <span class="fw-bold">@(_selectedRecordForExplanation.CheckIn?.ToString("HH:mm") ?? "--:--")</span> |
+                                    Ra: <span class="fw-bold">@(_selectedRecordForExplanation.CheckOut?.ToString("HH:mm") ?? "--:--")</span>
+                                </div>
+                                @if (_selectedRecordForExplanation.LateMinutes > 0)
+                                {
+                                    <div class="fs-7 text-danger mt-1">Đi muộn: @_selectedRecordForExplanation.LateMinutes phút</div>
+                                }
+                                @if (_selectedRecordForExplanation.EarlyLeaveMinutes > 0)
+                                {
+                                    <div class="fs-7 text-danger mt-1">Về sớm: @_selectedRecordForExplanation.EarlyLeaveMinutes phút</div>
+                                }
                             </div>
-                            @if (_selectedRecordForExplanation.LateMinutes > 0)
-                            {
-                                <div class="fs-7 text-danger mt-1">Đi muộn: @_selectedRecordForExplanation.LateMinutes phút</div>
-                            }
-                            @if (_selectedRecordForExplanation.EarlyLeaveMinutes > 0)
-                            {
-                                <div class="fs-7 text-danger mt-1">Về sớm: @_selectedRecordForExplanation.EarlyLeaveMinutes phút</div>
-                            }
                         </div>
                     </div>
-                </div>
 
-                <div class="fv-row mb-8">
-                    <label class="required fs-6 fw-bold mb-2">Lý do giải trình</label>
-                    <select class="form-select form-select-solid fw-bold">
-                        <option>Hỏng máy chấm công</option>
-                        <option>Quên thẻ / Quên quét vân tay</option>
-                        <option>Đi công tác đột xuất</option>
-                        <option>Xử lý sự cố hạ tầng đêm</option>
-                        <option>Đi muộn có lý do chính đáng</option>
-                        <option>Khác</option>
-                    </select>
+                    <div class="mb-8">
+                        <label class="required fs-6 fw-bold mb-2">Lý do giải trình</label>
+                        <select class="form-select form-select-solid fw-bold" @bind="_explanationReason">
+                            <option value="Hỏng máy chấm công">Hỏng máy chấm công</option>
+                            <option value="Quên thẻ / Quên quét vân tay">Quên thẻ / Quên quét vân tay</option>
+                            <option value="Đi công tác đột xuất">Đi công tác đột xuất</option>
+                            <option value="Xử lý sự cố hạ tầng đêm">Xử lý sự cố hạ tầng đêm</option>
+                            <option value="Đi muộn có lý do chính đáng">Đi muộn có lý do chính đáng</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <TTLInput Label="Ghi chú chi tiết" @bind-Value="_explanationDetail" Placeholder="Mô tả cụ thể lý do và thời gian thực tế..." Type="TTLInput.InputDataType.Text" />
+                    </div>
+
+                    <div class="mb-8">
+                        <label class="fs-6 fw-bold mb-2">Minh chứng (Ảnh/File)</label>
+                        <div class="dropzone dropzone-queue mb-2" id="kt_modal_upload_dropzone">
+                            <input type="file" class="form-control form-control-solid" />
+                        </div>
+                        <span class="fs-9 text-muted italic">* Vui lòng đính kèm hình ảnh hoặc tệp tin xác nhận nếu có.</span>
+                    </div>
                 </div>
-                <div class="fv-row mb-8">
-                    <label class="required fs-6 fw-bold mb-2">Ghi chú chi tiết</label>
-                    <textarea class="form-control form-control-solid" rows="5" placeholder="Mô tả cụ thể lý do và thời gian thực tế..."></textarea>
+                <div class="card-footer border-0 d-flex gap-3 justify-content-end p-9 bg-light-light">
+                    <button class="btn btn-light fw-bold px-6" @onclick="CloseExplanation">Hủy</button>
+                    <button class="btn btn-primary fw-bold px-8 shadow-sm" @onclick="CloseExplanation">
+                        <i class="ki-outline ki-send fs-3 me-2"></i>Gửi giải trình
+                    </button>
                 </div>
-                <div class="fv-row mb-8">
-                    <label class="fs-6 fw-bold mb-2">Minh chứng (Ảnh/File)</label>
-                    <input type="file" class="form-control form-control-solid" />
-                </div>
-            </div>
-            <div class="card-footer border-0 d-flex gap-3 justify-content-end p-9 bg-light-light">
-                <button class="btn btn-light fw-bold px-6" @onclick="CloseExplanation">Hủy</button>
-                <button class="btn btn-primary fw-bold px-8" @onclick="CloseExplanation">Gửi giải trình</button>
-            </div>
         </div>
     }
 </div>

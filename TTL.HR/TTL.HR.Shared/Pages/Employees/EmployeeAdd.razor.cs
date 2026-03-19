@@ -15,6 +15,7 @@ using Entities = TTL.HR.Application.Modules.HumanResource.Entities;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace TTL.HR.Shared.Pages.Employees
+#pragma warning disable CS0169, CS0414
 {
     public partial class EmployeeAdd
     {
@@ -31,6 +32,7 @@ namespace TTL.HR.Shared.Pages.Employees
         [Inject] public ISettingsService SettingsService { get; set; } = default!;
 
         [Parameter] public string? Id { get; set; }
+        [Parameter] public bool IsReadOnly { get; set; }
         public bool IsEditMode => !string.IsNullOrEmpty(Id);
         private bool IsEmailValid => !string.IsNullOrEmpty(newEmployee.Email) && FormatService.IsValidEmail(newEmployee.Email);
 
@@ -42,6 +44,10 @@ namespace TTL.HR.Shared.Pages.Employees
         private List<CountryModel> nationalityLookups = new();
         private List<LookupModel> ethnicityLookups = new();
         private List<LookupModel> religionLookups = new();
+        private List<LookupModel> schoolLookups = new();
+        private List<LookupModel> degreeLookups = new();
+        private List<LookupModel> majorLookups = new();
+        private List<LookupModel> provinceLookups = new();
         private List<DepartmentModel> departments = new();
         private List<PositionModel> positions = new();
         private List<EmployeeDto> allEmployees = new();
@@ -58,8 +64,8 @@ namespace TTL.HR.Shared.Pages.Employees
         private EmployeeModel newEmployee = new()
         {
             IsActive = true,
-            JoinDate = DateTime.Now,
-            DOB = new DateTime(1995, 1, 1)
+            JoinDate = DateTime.Today,
+            DOB = DateTime.Today.AddYears(-14)
         };
         
         private string[] BindRoles
@@ -157,6 +163,17 @@ namespace TTL.HR.Shared.Pages.Employees
                     nationalityLookups = (await MasterDataService.GetCachedCountriesAsync(lang) ?? new()).OrderBy(c => c.Name).ToList();
                     ethnicityLookups = (await MasterDataService.GetCachedLookupsAsync("Ethnicity", lang) ?? new()).DistinctBy(l => l.LookupID).ToList();
                     religionLookups = (await MasterDataService.GetCachedLookupsAsync("Religion", lang) ?? new()).DistinctBy(l => l.LookupID).ToList();
+                    
+                    // Additional suggestions for Education & Location
+                    provinceLookups = await MasterDataService.GetProvincesAsync(lang) ?? new();
+                    schoolLookups = (await MasterDataService.GetCachedLookupsAsync("Education_School", lang) ?? new()).DistinctBy(l => l.Name).ToList();
+                    if (!schoolLookups.Any()) schoolLookups = (await MasterDataService.GetCachedLookupsAsync("School", lang) ?? new()).DistinctBy(l => l.Name).ToList();
+                    
+                    degreeLookups = (await MasterDataService.GetCachedLookupsAsync("Education_Level", lang) ?? new()).DistinctBy(l => l.Name).ToList();
+                    if (!degreeLookups.Any()) degreeLookups = (await MasterDataService.GetCachedLookupsAsync("Degree", lang) ?? new()).DistinctBy(l => l.Name).ToList();
+                    
+                    majorLookups = (await MasterDataService.GetCachedLookupsAsync("Education_Major", lang) ?? new()).DistinctBy(l => l.Name).ToList();
+                    if (!majorLookups.Any()) majorLookups = (await MasterDataService.GetCachedLookupsAsync("Major", lang) ?? new()).DistinctBy(l => l.Name).ToList();
                 }
                 catch (Exception ex) { Console.WriteLine($"Step 1 failed: {ex.Message}"); }
 
@@ -235,46 +252,84 @@ namespace TTL.HR.Shared.Pages.Employees
                             newEmployee.IsTrainer = employee.IsTrainer;
                             newEmployee.Roles = employee.Roles ?? new();
 
+                            // compatibility fields sync
+                            newEmployee.Name = !string.IsNullOrEmpty(employee.FullName) ? employee.FullName : employee.Name;
+                            newEmployee.DeptId = employee.DepartmentId;
+                            newEmployee.Avatar = !string.IsNullOrEmpty(employee.AvatarUrl) ? employee.AvatarUrl : employee.Avatar;
+                            newEmployee.OfficialJoinDate = employee.JoinDate;
+                            if (employee.Salary.HasValue) newEmployee.SalaryDisplay = employee.Salary.Value.ToString("N0");
+
                             // Nested objects - merge/update
                             if (employee.PersonalDetails != null)
                             {
                                 newEmployee.PersonalDetails ??= new();
-                                var src = employee.PersonalDetails;
-                                var dest = newEmployee.PersonalDetails;
-                                dest.DOB = src.DOB;
-                                dest.GenderId = src.GenderId;
-                                dest.Gender = src.Gender;
-                                dest.Address = src.Address;
-                                dest.Hometown = src.Hometown;
-                                dest.IdCardNumber = src.IdCardNumber;
-                                dest.IdCard = src.IdCard;
-                                dest.IdCardIssueDate = src.IdCardIssueDate;
-                                dest.IdCardPlace = src.IdCardPlace;
-                                dest.TaxCode = src.TaxCode;
-                                dest.BankAccount = src.BankAccount;
-                                dest.BankName = src.BankName;
-                                dest.NationalityId = src.NationalityId;
-                                dest.Nationality = src.Nationality;
-                                dest.EthnicityId = src.EthnicityId;
-                                dest.Ethnicity = src.Ethnicity;
-                                dest.ReligionId = src.ReligionId;
-                                dest.Religion = src.Religion;
-                                dest.MaritalStatusId = src.MaritalStatusId;
-                                dest.MaritalStatus = src.MaritalStatus;
-                                dest.PlaceOfOrigin = src.PlaceOfOrigin;
-                                dest.Residence = src.Residence;
-                                dest.SocialInsuranceId = src.SocialInsuranceId;
-                                dest.Dependents = src.Dependents ?? new();
-                                dest.Latitude = src.Latitude;
-                                dest.Longitude = src.Longitude;
+                                var pd = employee.PersonalDetails;
+                                
+                                // Sync nested properties
+                                newEmployee.PersonalDetails.DOB = pd.DOB;
+                                newEmployee.PersonalDetails.GenderId = pd.GenderId;
+                                newEmployee.PersonalDetails.IdCardNumber = pd.IdCardNumber;
+                                newEmployee.PersonalDetails.TaxCode = pd.TaxCode;
+                                newEmployee.PersonalDetails.BankAccount = pd.BankAccount;
+                                newEmployee.PersonalDetails.BankName = pd.BankName;
+                                newEmployee.PersonalDetails.Residence = pd.Residence;
+                                newEmployee.PersonalDetails.Address = pd.Address;
+                                newEmployee.PersonalDetails.Hometown = pd.Hometown;
+                                newEmployee.PersonalDetails.PlaceOfOrigin = pd.PlaceOfOrigin;
+                                newEmployee.PersonalDetails.SocialInsuranceId = pd.SocialInsuranceId;
+                                newEmployee.PersonalDetails.Dependents = pd.Dependents ?? new();
+                                newEmployee.PersonalDetails.CountryId = pd.CountryId;
+                                newEmployee.PersonalDetails.ProvinceId = pd.ProvinceId;
+                                newEmployee.PersonalDetails.DistrictId = pd.DistrictId;
+                                newEmployee.PersonalDetails.WardId = pd.WardId;
+                                newEmployee.PersonalDetails.Street = pd.Street;
+                                newEmployee.PersonalDetails.IdCardIssueDate = pd.IdCardIssueDate;
+                                newEmployee.PersonalDetails.IdCardPlace = pd.IdCardPlace;
+                                newEmployee.PersonalDetails.NationalityId = pd.NationalityId;
+                                newEmployee.PersonalDetails.EthnicityId = pd.EthnicityId;
+                                newEmployee.PersonalDetails.ReligionId = pd.ReligionId;
+                                newEmployee.PersonalDetails.MaritalStatusId = pd.MaritalStatusId;
+                                newEmployee.PersonalDetails.Nationality = pd.Nationality;
+                                newEmployee.PersonalDetails.Ethnicity = pd.Ethnicity;
+                                newEmployee.PersonalDetails.Religion = pd.Religion;
+                                newEmployee.PersonalDetails.MaritalStatus = pd.MaritalStatus;
+
+                                // Sync compatibility top-level fields from nested source
+                                newEmployee.DOB = pd.DOB;
+                                newEmployee.GenderId = pd.GenderId;
+                                newEmployee.IdCard = !string.IsNullOrEmpty(pd.IdCardNumber) ? pd.IdCardNumber : pd.IdCard;
+                                newEmployee.TaxId = pd.TaxCode;
+                                newEmployee.BankAccountNumber = pd.BankAccount;
+                                newEmployee.BankName = pd.BankName;
+                                newEmployee.Residence = pd.Residence ?? string.Empty;
+                                newEmployee.Address = pd.Address;
+                                newEmployee.Hometown = pd.Hometown;
+                                newEmployee.PlaceOfOrigin = pd.PlaceOfOrigin ?? string.Empty;
+                                newEmployee.SocialInsuranceId = pd.SocialInsuranceId ?? string.Empty;
+                                newEmployee.CccdIssueDate = pd.IdCardIssueDate;
+                                newEmployee.CccdIssuePlace = pd.IdCardPlace;
+                                newEmployee.NationalityId = pd.NationalityId;
+                                newEmployee.EthnicityId = pd.EthnicityId;
+                                newEmployee.ReligionId = pd.ReligionId;
+                                newEmployee.MaritalStatusId = pd.MaritalStatusId;
+                                newEmployee.Nationality = pd.Nationality;
+                                newEmployee.Ethnicity = pd.Ethnicity;
+                                newEmployee.Religion = pd.Religion;
+                                newEmployee.MaritalStatus = pd.MaritalStatus;
                             }
 
                             if (employee.EmergencyContact != null)
                             {
                                 newEmployee.EmergencyContact ??= new();
-                                newEmployee.EmergencyContact.Name = employee.EmergencyContact.Name;
-                                newEmployee.EmergencyContact.Phone = employee.EmergencyContact.Phone;
-                                newEmployee.EmergencyContact.Relation = employee.EmergencyContact.Relation;
+                                var ec = employee.EmergencyContact;
+                                newEmployee.EmergencyContact.Name = ec.Name;
+                                newEmployee.EmergencyContact.Phone = ec.Phone;
+                                newEmployee.EmergencyContact.Relation = ec.Relation;
+
+                                // Sync top-level fields
+                                newEmployee.EmergencyContactName = ec.Name;
+                                newEmployee.EmergencyContactPhone = ec.Phone;
+                                newEmployee.EmergencyContactRelation = ec.Relation;
                             }
 
                             newEmployee.Education = employee.Education ?? new();
@@ -282,42 +337,6 @@ namespace TTL.HR.Shared.Pages.Employees
                             newEmployee.AuditLogs = employee.AuditLogs ?? new();
                             newEmployee.ModulePermissions = employee.ModulePermissions ?? new();
                             newEmployee.AttendanceSummary = employee.AttendanceSummary ?? new();
-                            
-                            // Map compatibility (Sync top-level props used in UI with nested/source props)
-                            if (string.IsNullOrEmpty(newEmployee.Name)) newEmployee.Name = newEmployee.FullName;
-                            if (string.IsNullOrEmpty(newEmployee.DeptId)) newEmployee.DeptId = newEmployee.DepartmentId;
-                            if (string.IsNullOrEmpty(newEmployee.Avatar)) newEmployee.Avatar = newEmployee.AvatarUrl;
-                            if (newEmployee.OfficialJoinDate == null) newEmployee.OfficialJoinDate = newEmployee.JoinDate;
-
-                            if (newEmployee.PersonalDetails != null)
-                            {
-                                if (newEmployee.DOB == null) newEmployee.DOB = newEmployee.PersonalDetails.DOB;
-                                if (!newEmployee.GenderId.HasValue) newEmployee.GenderId = newEmployee.PersonalDetails.GenderId;
-                                if (string.IsNullOrEmpty(newEmployee.IdCard)) newEmployee.IdCard = newEmployee.PersonalDetails.IdCardNumber;
-                                if (newEmployee.CccdIssueDate == null) newEmployee.CccdIssueDate = newEmployee.PersonalDetails.IdCardIssueDate;
-                                if (string.IsNullOrEmpty(newEmployee.CccdIssuePlace)) newEmployee.CccdIssuePlace = newEmployee.PersonalDetails.IdCardPlace;
-                                if (string.IsNullOrEmpty(newEmployee.Nationality)) newEmployee.Nationality = newEmployee.PersonalDetails.Nationality;
-                                if (!newEmployee.NationalityId.HasValue) newEmployee.NationalityId = newEmployee.PersonalDetails.NationalityId;
-                                if (string.IsNullOrEmpty(newEmployee.Ethnicity)) newEmployee.Ethnicity = newEmployee.PersonalDetails.Ethnicity;
-                                if (!newEmployee.EthnicityId.HasValue) newEmployee.EthnicityId = newEmployee.PersonalDetails.EthnicityId;
-                                if (string.IsNullOrEmpty(newEmployee.Religion)) newEmployee.Religion = newEmployee.PersonalDetails.Religion;
-                                if (!newEmployee.ReligionId.HasValue) newEmployee.ReligionId = newEmployee.PersonalDetails.ReligionId;
-                                if (!newEmployee.MaritalStatusId.HasValue) newEmployee.MaritalStatusId = newEmployee.PersonalDetails.MaritalStatusId;
-                                if (string.IsNullOrEmpty(newEmployee.PlaceOfOrigin)) newEmployee.PlaceOfOrigin = newEmployee.PersonalDetails.PlaceOfOrigin;
-                                if (string.IsNullOrEmpty(newEmployee.Residence)) newEmployee.Residence = newEmployee.PersonalDetails.Residence;
-                                if (string.IsNullOrEmpty(newEmployee.Hometown)) newEmployee.Hometown = newEmployee.PersonalDetails.Hometown;
-                                if (string.IsNullOrEmpty(newEmployee.SocialInsuranceId)) newEmployee.SocialInsuranceId = newEmployee.PersonalDetails.SocialInsuranceId;
-                                if (string.IsNullOrEmpty(newEmployee.TaxId)) newEmployee.TaxId = newEmployee.PersonalDetails.TaxCode;
-                                if (string.IsNullOrEmpty(newEmployee.BankAccountNumber)) newEmployee.BankAccountNumber = newEmployee.PersonalDetails.BankAccount;
-                                if (string.IsNullOrEmpty(newEmployee.BankName)) newEmployee.BankName = newEmployee.PersonalDetails.BankName;
-                            }
-
-                            if (newEmployee.EmergencyContact != null)
-                            {
-                                if (string.IsNullOrEmpty(newEmployee.EmergencyContactName)) newEmployee.EmergencyContactName = newEmployee.EmergencyContact.Name;
-                                if (string.IsNullOrEmpty(newEmployee.EmergencyContactPhone)) newEmployee.EmergencyContactPhone = newEmployee.EmergencyContact.Phone;
-                                if (string.IsNullOrEmpty(newEmployee.EmergencyContactRelation)) newEmployee.EmergencyContactRelation = newEmployee.EmergencyContact.Relation;
-                            }
 
                             if (newEmployee.Salary.HasValue && string.IsNullOrEmpty(newEmployee.SalaryDisplay))
                                 newEmployee.SalaryDisplay = newEmployee.Salary.Value.ToString("N0");
@@ -338,9 +357,21 @@ namespace TTL.HR.Shared.Pages.Employees
                                 };
                             }
 
+                            // ... mapping compatibility ends ...
+
+                            // Force a UI update here so the main form data is visible
+                            _isLoading = false;
+                            await InvokeAsync(StateHasChanged);
+
                             try {
-                                var profile = await EmployeeService.GetDigitalProfileAsync(Id!);
-                                if (profile != null) uploadedDocuments = profile.Documents ?? new();
+                                var profileTask = EmployeeService.GetDigitalProfileAsync(Id!);
+                                var profileTimeout = Task.Delay(3000); // Shorter 3s timeout for profile
+                                if (await Task.WhenAny(profileTask, profileTimeout) == profileTask)
+                                {
+                                    var profile = await profileTask;
+                                    if (profile != null) uploadedDocuments = profile.Documents ?? new();
+                                    await InvokeAsync(StateHasChanged);
+                                }
                             } catch { }
                         }
                         else
@@ -407,7 +438,7 @@ namespace TTL.HR.Shared.Pages.Employees
             }
         }
 
-        private CccdScanner cccdScanner;
+        private TTL.HR.Shared.Components.Common.CccdScanner cccdScanner = null!;
 
         private async Task ScanCCCD()
         {
@@ -604,7 +635,10 @@ namespace TTL.HR.Shared.Pages.Employees
 
                 // 1. Local Preview
                 var buffer = new byte[file.Size];
-                await file.OpenReadStream(2 * 1024 * 1024).ReadAsync(buffer);
+                using (var stream = file.OpenReadStream(2 * 1024 * 1024))
+                {
+                    var bytesRead = await stream.ReadAsync(buffer.AsMemory(0, buffer.Length));
+                }
                 var base64 = Convert.ToBase64String(buffer);
                 newEmployee.Avatar = $"data:{file.ContentType};base64,{base64}";
                 
@@ -694,11 +728,11 @@ namespace TTL.HR.Shared.Pages.Employees
 
                 using var stream = file.OpenReadStream(10 * 1024 * 1024);
                 var result = await EmployeeService.UploadDocumentAsync(Id!, documentType, stream, file.Name, null, $"Tải lên {documentType}");
-                
+
                 if (string.IsNullOrEmpty(result))
                 {
                     await JSRuntime.InvokeVoidAsync("toastr.success", $"Đã tải lên {documentType} thành công!");
-                    
+
                     // Refresh documents list
                     var profile = await EmployeeService.GetDigitalProfileAsync(Id!);
                     if (profile != null)
@@ -721,41 +755,6 @@ namespace TTL.HR.Shared.Pages.Employees
                 StateHasChanged();
             }
         }
-
-        private void AddDependent()
-        {
-            if (newEmployee.PersonalDetails == null) newEmployee.PersonalDetails = new EmployeePersonalDetails();
-            if (newEmployee.PersonalDetails.Dependents == null) newEmployee.PersonalDetails.Dependents = new List<DependentDetailDto>();
-            newEmployee.PersonalDetails.Dependents.Add(new DependentDetailDto { IsEligibleForDeduction = true });
-            StateHasChanged();
-        }
-
-        private void RemoveDependent(DependentDetailDto item)
-        {
-            newEmployee.PersonalDetails?.Dependents?.Remove(item);
-            StateHasChanged();
-        }
-
-        private void AddEducation()
-        {
-            if (newEmployee.Education == null) newEmployee.Education = new List<EducationDetailDto>();
-            newEmployee.Education.Add(new EducationDetailDto { StartYear = DateTime.Now.Year - 4, EndYear = DateTime.Now.Year });
-            StateHasChanged();
-        }
-
-        private void RemoveEducation(EducationDetailDto item)
-        {
-            newEmployee.Education?.Remove(item);
-            StateHasChanged();
-        }
-
-        private void AddExperience()
-        {
-            if (newEmployee.Experience == null) newEmployee.Experience = new List<ExperienceDetailDto>();
-            newEmployee.Experience.Add(new ExperienceDetailDto { StartDate = DateTime.Now.AddYears(-2), EndDate = DateTime.Now });
-            StateHasChanged();
-        }
-
         private void RemoveExperience(ExperienceDetailDto item)
         {
             newEmployee.Experience?.Remove(item);
@@ -906,8 +905,8 @@ namespace TTL.HR.Shared.Pages.Employees
                         StatusId = newEmployee.StatusId,
                         ContractTypeId = newEmployee.ContractTypeId,
                         
-                        JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Now,
-                        Salary = ParseSalary(newEmployee.SalaryDisplay),
+                        JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Today,
+                        Salary = newEmployee.Salary,
                         ContractEndDate = newEmployee.ContractExpiry ?? newEmployee.ContractEndDate,
                         WorkplaceId = newEmployee.WorkplaceId,
                         IsAccountActive = newEmployee.IsActive,
@@ -931,12 +930,21 @@ namespace TTL.HR.Shared.Pages.Employees
                             BankAccount = newEmployee.BankAccountNumber,
                             BankName = newEmployee.BankName,
                             NationalityId = newEmployee.NationalityId,
+                            Nationality = newEmployee.Nationality,
                             EthnicityId = newEmployee.EthnicityId,
+                            Ethnicity = ethnicityLookups.FirstOrDefault(x => x.LookupID == newEmployee.EthnicityId)?.Name ?? newEmployee.Ethnicity,
                             ReligionId = newEmployee.ReligionId,
+                            Religion = religionLookups.FirstOrDefault(x => x.LookupID == newEmployee.ReligionId)?.Name ?? newEmployee.Religion,
                             MaritalStatusId = newEmployee.MaritalStatusId,
+                            MaritalStatus = maritalStatusLookups.FirstOrDefault(x => x.LookupID == newEmployee.MaritalStatusId)?.Name ?? newEmployee.MaritalStatus,
                             PlaceOfOrigin = newEmployee.PlaceOfOrigin,
                             Residence = newEmployee.Residence,
                             SocialInsuranceId = newEmployee.SocialInsuranceId,
+                            CountryId = newEmployee.PersonalDetails?.CountryId,
+                            ProvinceId = newEmployee.PersonalDetails?.ProvinceId,
+                            DistrictId = newEmployee.PersonalDetails?.DistrictId,
+                            WardId = newEmployee.PersonalDetails?.WardId,
+                            Street = newEmployee.PersonalDetails?.Street,
                             Latitude = newEmployee.Latitude,
                             Longitude = newEmployee.Longitude,
                             Dependents = newEmployee.PersonalDetails?.Dependents ?? new List<DependentDetailDto>()
@@ -989,8 +997,8 @@ namespace TTL.HR.Shared.Pages.Employees
                         StatusId = newEmployee.StatusId,
                         ContractTypeId = newEmployee.ContractTypeId,
                         
-                        JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Now,
-                        Salary = ParseSalary(newEmployee.SalaryDisplay),
+                        JoinDate = newEmployee.OfficialJoinDate ?? newEmployee.JoinDate ?? DateTime.Today,
+                        Salary = newEmployee.Salary,
                         ContractEndDate = newEmployee.ContractExpiry ?? newEmployee.ContractEndDate,
                         WorkplaceId = newEmployee.WorkplaceId,
                         IsTrainer = newEmployee.IsTrainer,
@@ -1008,12 +1016,22 @@ namespace TTL.HR.Shared.Pages.Employees
                             BankAccount = newEmployee.BankAccountNumber,
                             BankName = newEmployee.BankName,
                             NationalityId = newEmployee.NationalityId,
+                            Nationality = newEmployee.Nationality,
                             EthnicityId = newEmployee.EthnicityId,
+                            Ethnicity = ethnicityLookups.FirstOrDefault(x => x.LookupID == newEmployee.EthnicityId)?.Name ?? newEmployee.Ethnicity,
                             ReligionId = newEmployee.ReligionId,
+                            Religion = religionLookups.FirstOrDefault(x => x.LookupID == newEmployee.ReligionId)?.Name ?? newEmployee.Religion,
                             MaritalStatusId = newEmployee.MaritalStatusId,
+                            MaritalStatus = maritalStatusLookups.FirstOrDefault(x => x.LookupID == newEmployee.MaritalStatusId)?.Name ?? newEmployee.MaritalStatus,
                             PlaceOfOrigin = newEmployee.PlaceOfOrigin,
                             Residence = newEmployee.Residence,
                             SocialInsuranceId = newEmployee.SocialInsuranceId,
+                            CountryId = newEmployee.PersonalDetails?.CountryId,
+                            ProvinceId = newEmployee.PersonalDetails?.ProvinceId,
+                            DistrictId = newEmployee.PersonalDetails?.DistrictId,
+                            WardId = newEmployee.PersonalDetails?.WardId,
+                            StreetId = newEmployee.PersonalDetails?.StreetId,
+                            Street = newEmployee.PersonalDetails?.Street,
                             Latitude = newEmployee.Latitude,
                             Longitude = newEmployee.Longitude,
                             Dependents = newEmployee.PersonalDetails?.Dependents ?? new List<DependentDetailDto>()
@@ -1173,6 +1191,10 @@ namespace TTL.HR.Shared.Pages.Employees
             public string Phone { get; set; } = string.Empty;
             public string AvatarUrl { get; set; } = string.Empty;
             public string? DepartmentId { get; set; }
+            public string? ProvinceId { get; set; }
+            public string? DistrictId { get; set; }
+            public string? WardId { get; set; }
+            public string? Street { get; set; }
             public string? PositionId { get; set; }
             public string? ReportToId { get; set; }
             public int? StatusId { get; set; }
@@ -1219,6 +1241,17 @@ namespace TTL.HR.Shared.Pages.Employees
             public string SocialInsuranceId { get; set; } = string.Empty;
             public double Latitude { get; set; }
             public double Longitude { get; set; }
+            /// <summary>Mã quốc gia ISO 3166-1 numeric (704 = Việt Nam)</summary>
+            public int? CountryId { get; set; }
+            /// <summary>Mã tỉnh/thành hành chính VN</summary>
+            public int? ProvinceId { get; set; }
+            /// <summary>Mã quận/huyện hành chính VN</summary>
+            public int? DistrictId { get; set; }
+            /// <summary>Mã phường/xã hành chính VN</summary>
+            public int? WardId { get; set; }
+            /// <summary>Số thứ tự đường (int lookup). Null nếu nhập tay.</summary>
+            public int? StreetId { get; set; }
+            public string? Street { get; set; }
             public List<DependentDetailDto> Dependents { get; set; } = new();
         }
 
@@ -1280,6 +1313,11 @@ namespace TTL.HR.Shared.Pages.Employees
                     SocialInsuranceId = dto.PersonalDetails.SocialInsuranceId,
                     Latitude = dto.PersonalDetails.Latitude,
                     Longitude = dto.PersonalDetails.Longitude,
+                    CountryId = dto.PersonalDetails.CountryId,
+                    ProvinceId = dto.PersonalDetails.ProvinceId,
+                    DistrictId = dto.PersonalDetails.DistrictId,
+                    WardId = dto.PersonalDetails.WardId,
+                    Street = dto.PersonalDetails.Street,
                     Dependents = dto.PersonalDetails.Dependents ?? new List<DependentDetailDto>()
                 },
                 EmergencyContact = new Entities.EmergencyContact

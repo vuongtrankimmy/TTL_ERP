@@ -38,7 +38,7 @@
 						<label class="form-label fs-6 fw-bold">Phòng ban:</label>
 						<select class="form-select form-select-solid" @bind="filterDept">
 							<option value="">Tất cả phòng ban</option>
-							@foreach (var dept in CachedDepartments)
+							@foreach (var dept in CachedDepartments.Where(d => !_allowedDeptIds.Any() || _allowedDeptIds.Contains(d.Id)))
 							{
 								<option value="@dept.Name">@dept.Name</option>
 							}

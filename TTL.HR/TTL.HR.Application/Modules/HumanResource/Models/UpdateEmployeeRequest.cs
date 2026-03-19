@@ -42,6 +42,17 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string Gender { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public string Hometown { get; set; } = string.Empty;
+        /// <summary>Mã quốc gia ISO 3166-1 numeric (VD: 704 = Việt Nam)</summary>
+        public int? CountryId { get; set; }
+        /// <summary>Mã tỉnh/thành phố hành chính VN</summary>
+        public int? ProvinceId { get; set; }
+        /// <summary>Mã quận/huyện hành chính VN</summary>
+        public int? DistrictId { get; set; }
+        /// <summary>Mã phường/xã hành chính VN</summary>
+        public int? WardId { get; set; }
+        /// <summary>Số thứ tự đường (int lookup). Null nếu nhập tay tự do.</summary>
+        public int? StreetId { get; set; }
+        public string? Street { get; set; }
         public string IdCardNumber { get; set; } = string.Empty;
         public DateTime? IdCardIssueDate { get; set; }
         public string IdCardPlace { get; set; } = string.Empty;

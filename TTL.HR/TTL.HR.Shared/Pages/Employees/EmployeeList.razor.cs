@@ -1,3 +1,4 @@
+#pragma warning disable CS8600, CS8601, CS8604, CS8625
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -17,6 +18,7 @@ using TTL.HR.Application.Modules.Attendance.Models;
 
 namespace TTL.HR.Shared.Pages.Employees
 {
+#pragma warning disable CS0169, CS0414
     public partial class EmployeeList
     {
         [Inject] public IEmployeeService EmployeeService { get; set; } = default!;
@@ -58,6 +60,8 @@ namespace TTL.HR.Shared.Pages.Employees
         private List<LookupModel> CachedAttendanceStatuses = new();
         private List<LookupModel> CachedRoles = new();
         private List<EmployeeDto> CachedEmployees = new();
+        private List<string> _allowedDeptIds = new();
+        private string? _currentEmployeeId;
         private EmployeeStatusCounts _counts = new();
         private bool _loadFailed = false;
         private bool _isPrintLoading = false;
@@ -141,6 +145,24 @@ namespace TTL.HR.Shared.Pages.Employees
                 
                 if (ct.IsCancellationRequested) return;
 
+                // Determine managed departments for scoping
+                var user = await AuthService.GetCurrentUserAsync();
+                if (user != null && user.Role != "Admin" && user.Role != "SuperAdmin" && user.Role != "CEO")
+                {
+                    // Get the employee record for the current user to find their management scope
+                    var myProfile = await EmployeeService.GetMyEmployeeAsync();
+                    _currentEmployeeId = myProfile?.Id;
+                    
+                    if (!string.IsNullOrEmpty(_currentEmployeeId))
+                    {
+                        _allowedDeptIds = await DepartmentService.GetManagedDepartmentIdsAsync(_currentEmployeeId);
+                    }
+                }
+                else
+                {
+                    _allowedDeptIds.Clear(); // Global admin sees everything
+                }
+
                 await LoadEmployeesAsync(ct);
             }
             catch (OperationCanceledException) { }
@@ -179,11 +201,37 @@ namespace TTL.HR.Shared.Pages.Employees
         {
             try
             {
-                var departmentId = CachedDepartments.FirstOrDefault(d => d.Name == filterDept)?.Id;
+                IEnumerable<string>? targetDeptIds = null;
                 
+                // If the user has a narrowed scope (is a manager), apply it
+                if (_allowedDeptIds != null && _allowedDeptIds.Any())
+                {
+                    var selectedDeptId = CachedDepartments.FirstOrDefault(d => d.Name == filterDept)?.Id;
+                    
+                    if (!string.IsNullOrEmpty(selectedDeptId))
+                    {
+                        // If they filtered for a specific dept, ensure it's in their allowed list
+                        if (_allowedDeptIds.Contains(selectedDeptId))
+                            targetDeptIds = new[] { selectedDeptId };
+                        else
+                            targetDeptIds = _allowedDeptIds; // Fallback to entire managed scope
+                    }
+                    else
+                    {
+                        // No specific filter, show entire managed scope
+                        targetDeptIds = _allowedDeptIds;
+                    }
+                }
+                else if (!string.IsNullOrEmpty(filterDept))
+                {
+                    // Global admin/CEO with a specific department filter
+                    var deptId = CachedDepartments.FirstOrDefault(d => d.Name == filterDept)?.Id;
+                    if (!string.IsNullOrEmpty(deptId)) targetDeptIds = new[] { deptId };
+                }
+
                 // Fetch counts and paged result
-                var countTask = EmployeeService.GetStatusCountsAsync(searchQuery, departmentId, filterWorkplace);
-                var pagedTask = EmployeeService.GetEmployeesPaginatedAsync(currentPage, pageSize, searchQuery, departmentId, filterStatus, filterWorkplace, sortBy, sortDesc);
+                var countTask = EmployeeService.GetStatusCountsAsync(searchQuery, targetDeptIds, filterWorkplace);
+                var pagedTask = EmployeeService.GetEmployeesPaginatedAsync(currentPage, pageSize, searchQuery, targetDeptIds, filterStatus, filterWorkplace, sortBy, sortDesc);
                 
                 try 
                 {
@@ -345,8 +393,22 @@ namespace TTL.HR.Shared.Pages.Employees
                 });
                 try { _ = JSRuntime.InvokeVoidAsync("Swal.showLoading"); } catch { }
 
-                var departmentId = CachedDepartments.FirstOrDefault(d => d.Name == filterDept)?.Id;
-                var fileBytes = await EmployeeService.ExportEmployeesAsync(searchQuery, departmentId, filterStatus, filterWorkplace);
+                IEnumerable<string>? targetDeptIds = null;
+                if (_allowedDeptIds != null && _allowedDeptIds.Any())
+                {
+                    var selectedDeptId = CachedDepartments.FirstOrDefault(d => d.Name == filterDept)?.Id;
+                    if (!string.IsNullOrEmpty(selectedDeptId) && _allowedDeptIds.Contains(selectedDeptId))
+                        targetDeptIds = new[] { selectedDeptId };
+                    else
+                        targetDeptIds = _allowedDeptIds;
+                }
+                else if (!string.IsNullOrEmpty(filterDept))
+                {
+                    var deptId = CachedDepartments.FirstOrDefault(d => d.Name == filterDept)?.Id;
+                    if (!string.IsNullOrEmpty(deptId)) targetDeptIds = new[] { deptId };
+                }
+
+                var fileBytes = await EmployeeService.ExportEmployeesAsync(searchQuery, targetDeptIds, filterStatus, filterWorkplace);
 
                 await JSRuntime.InvokeVoidAsync("Swal.close");
 
@@ -631,10 +693,10 @@ namespace TTL.HR.Shared.Pages.Employees
                         selectedEmployee.Nationality = !string.IsNullOrEmpty(selectedEmployee.Nationality) ? selectedEmployee.Nationality : selectedEmployee.PersonalDetails.Nationality;
                         selectedEmployee.Ethnicity = !string.IsNullOrEmpty(selectedEmployee.Ethnicity) ? selectedEmployee.Ethnicity : selectedEmployee.PersonalDetails.Ethnicity;
                         selectedEmployee.Religion = !string.IsNullOrEmpty(selectedEmployee.Religion) ? selectedEmployee.Religion : selectedEmployee.PersonalDetails.Religion;
-                        selectedEmployee.SocialInsuranceId = !string.IsNullOrEmpty(selectedEmployee.SocialInsuranceId) ? selectedEmployee.SocialInsuranceId : selectedEmployee.PersonalDetails.SocialInsuranceId;
+                        selectedEmployee.SocialInsuranceId = !string.IsNullOrEmpty(selectedEmployee.SocialInsuranceId) ? selectedEmployee.SocialInsuranceId : selectedEmployee.PersonalDetails.SocialInsuranceId ?? string.Empty;
                         selectedEmployee.MaritalStatus = !string.IsNullOrEmpty(selectedEmployee.MaritalStatus) ? selectedEmployee.MaritalStatus : selectedEmployee.PersonalDetails.MaritalStatus;
-                        selectedEmployee.PlaceOfOrigin = !string.IsNullOrEmpty(selectedEmployee.PlaceOfOrigin) ? selectedEmployee.PlaceOfOrigin : selectedEmployee.PersonalDetails.PlaceOfOrigin;
-                        selectedEmployee.Residence = !string.IsNullOrEmpty(selectedEmployee.Residence) ? selectedEmployee.Residence : selectedEmployee.PersonalDetails.Residence;
+                        selectedEmployee.PlaceOfOrigin = !string.IsNullOrEmpty(selectedEmployee.PlaceOfOrigin) ? selectedEmployee.PlaceOfOrigin : selectedEmployee.PersonalDetails.PlaceOfOrigin ?? string.Empty;
+                        selectedEmployee.Residence = !string.IsNullOrEmpty(selectedEmployee.Residence) ? selectedEmployee.Residence : selectedEmployee.PersonalDetails.Residence ?? string.Empty;
                     }
 
                     if (selectedEmployee.EmergencyContact != null)

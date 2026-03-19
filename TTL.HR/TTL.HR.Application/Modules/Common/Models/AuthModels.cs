@@ -30,5 +30,22 @@ namespace TTL.HR.Application.Modules.Common.Models
         public string Email { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+        public string AvatarUrl { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string IdCardNumber { get; set; } = string.Empty;
+        public string JobTitle { get; set; } = string.Empty;
+        public string Hometown { get; set; } = string.Empty;
+        public int? CountryId { get; set; }
+        public int? ProvinceId { get; set; }
+        public int? DistrictId { get; set; }
+        public int? WardId { get; set; }
+        public int? StreetId { get; set; }
+        public string? Street { get; set; }
+        public string BankName { get; set; } = string.Empty;
+        public string BankAccount { get; set; } = string.Empty;
+        public int? GenderId { get; set; }
+        public string Gender { get; set; } = string.Empty;
+        public int? MaritalStatusId { get; set; }
+        public string MaritalStatus { get; set; } = string.Empty;
     }
 }

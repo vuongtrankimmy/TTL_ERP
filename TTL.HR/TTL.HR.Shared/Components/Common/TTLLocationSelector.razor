@@ -1,0 +1,144 @@
+@using TTL.HR.Application.Modules.Common.Models
+@using TTL.HR.Application.Modules.Common.Interfaces
+@inject IMasterDataService MasterDataService
+
+<div class="row g-5">
+    @if (ShowCountry)
+    {
+        <div class="@CountryCssClass">
+            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase @(IsRequired ? "required" : "")">Quốc gia</label>
+            <select class="form-select form-select-solid" value="@CountryId" @onchange="HandleCountryChanged" disabled="@(Disabled || IsReadOnly)">
+                <option value="">-- Chọn quốc gia --</option>
+                @if (_countries != null)
+                {
+                    @foreach (var c in _countries)
+                    {
+                        @* Dùng IntId (ISO 3166-1 numeric) làm value *@
+                        <option value="@c.IntId">@c.Name</option>
+                    }
+                }
+            </select>
+        </div>
+    }
+
+    <div class="@ProvinceCssClass">
+        <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase @(IsRequired ? "required" : "")">Tỉnh / Thành phố</label>
+        <div class="position-relative">
+            <select class="form-select form-select-solid" value="@ProvinceId" @onchange="HandleProvinceChanged" disabled="@(Disabled || IsReadOnly || _isLoadingProvinces)">
+                <option value="">-- Chọn tỉnh/thành --</option>
+                @if (_provinces != null)
+                {
+                    @foreach (var p in _provinces)
+                    {
+                        @* Dùng Code (mã hành chính VN, int) làm value *@
+                        @if (int.TryParse(p.Code, out int pval))
+                        {
+                            <option value="@pval">@p.Name</option>
+                        }
+                    }
+                }
+            </select>
+            @if (_isLoadingProvinces)
+            {
+                <div class="position-absolute translate-middle-y top-50 end-0 me-10">
+                    <span class="spinner-border spinner-border-sm text-primary"></span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="@DistrictCssClass">
+        <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Quận / Huyện</label>
+        <div class="position-relative">
+            <select class="form-select form-select-solid" value="@DistrictId" @onchange="HandleDistrictChanged"
+                    disabled="@(Disabled || IsReadOnly || !ProvinceId.HasValue || _isLoadingDistricts)">
+                @if (_districts == null)
+                {
+                    <option value="">-- Chọn quận/huyện --</option>
+                }
+                else if (!_districts.Any())
+                {
+                    <option value="">-- Không có dữ liệu --</option>
+                }
+                else
+                {
+                    <option value="">-- Chọn quận/huyện --</option>
+                    @foreach (var d in _districts)
+                    {
+                        <option value="@d.LookupID">@d.Name</option>
+                    }
+                }
+            </select>
+            @if (_isLoadingDistricts)
+            {
+                <div class="position-absolute translate-middle-y top-50 end-0 me-10">
+                    <span class="spinner-border spinner-border-sm text-primary"></span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="@WardCssClass">
+        <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Phường / Xã</label>
+        <div class="position-relative">
+            <select class="form-select form-select-solid" value="@WardId" @onchange="HandleWardChanged"
+                    disabled="@(Disabled || IsReadOnly || _isLoadingWards || !ProvinceId.HasValue || (_districts != null && _districts.Any() && !DistrictId.HasValue))">
+                @if (_wards == null)
+                {
+                    <option value="">-- Chọn phường/xã --</option>
+                }
+                else if (!_wards.Any())
+                {
+                    <option value="">-- Không có dữ liệu --</option>
+                }
+                else
+                {
+                    <option value="">-- Chọn phường/xã --</option>
+                    @foreach (var w in _wards)
+                    {
+                        <option value="@w.LookupID">@w.Name</option>
+                    }
+                }
+            </select>
+            @if (_isLoadingWards)
+            {
+                <div class="position-absolute translate-middle-y top-50 end-0 me-10">
+                    <span class="spinner-border spinner-border-sm text-primary"></span>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (ShowStreet)
+    {
+        <div class="@StreetCssClass">
+            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase @(IsRequired ? "required" : "")">Số nhà / Tên đường</label>
+            <div class="position-relative">
+                <input type="text" list="street-suggestions-@GetHashCode()"
+                       class="form-control form-control-solid text-capitalize"
+                       value="@Street"
+                       @oninput="HandleStreetInput"
+                       @onchange="HandleStreetChanged"
+                       placeholder="VD: 123 Đường Lê Lợi..."
+                       disabled="@(Disabled || IsReadOnly || (!WardId.HasValue && !ProvinceId.HasValue))" />
+
+                <datalist id="street-suggestions-@GetHashCode()">
+                    @if (_streets != null)
+                    {
+                        @foreach (var s in _streets)
+                        {
+                            <option value="@s.Name" />
+                        }
+                    }
+                </datalist>
+
+                @if (_isLoadingStreets)
+                {
+                    <div class="position-absolute translate-middle-y top-50 end-0 me-3">
+                        <span class="spinner-border spinner-border-sm text-primary"></span>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

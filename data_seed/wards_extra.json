@@ -1,0 +1,56 @@
+[
+  {
+    "_id": {
+      "$oid": "65fc5b5b0100000000010001"
+    },
+    "DistrictId": "65fc5b5b0000000000000201",
+    "ProvinceId": "65fc5b5b0000000000000179",
+    "Code": "10001",
+    "Name": "Phường Bến Nghé"
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0100000000010002"
+    },
+    "DistrictId": "65fc5b5b0000000000000201",
+    "ProvinceId": "65fc5b5b0000000000000179",
+    "Code": "10002",
+    "Name": "Phường Bến Thành"
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0100000000010003"
+    },
+    "DistrictId": "65fc5b5b0000000000000201",
+    "ProvinceId": "65fc5b5b0000000000000179",
+    "Code": "10003",
+    "Name": "Phường Cầu Kho"
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0100000000010004"
+    },
+    "DistrictId": "65fc5b5b0000000000000201",
+    "ProvinceId": "65fc5b5b0000000000000179",
+    "Code": "10004",
+    "Name": "Phường Cầu Ông Lãnh"
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0100000000010005"
+    },
+    "DistrictId": "65fc5b5b0000000000000201",
+    "ProvinceId": "65fc5b5b0000000000000179",
+    "Code": "10005",
+    "Name": "Phường Cô Giang"
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0100000000010006"
+    },
+    "DistrictId": "65fc5b5b0000000000000201",
+    "ProvinceId": "65fc5b5b0000000000000179",
+    "Code": "10006",
+    "Name": "Phường Đa Kao"
+  }
+]

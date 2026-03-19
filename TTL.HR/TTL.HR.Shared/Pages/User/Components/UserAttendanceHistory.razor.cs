@@ -22,6 +22,8 @@ namespace TTL.HR.Shared.Pages.User.Components
         private List<AttendanceDetailModel> _attendanceRecords = new();
         private bool _isLoading = true;
         private TTL.HR.Shared.Components.Attendance.CreateShiftRequestModal? _createRequestModal;
+        private string _explanationReason = "Hỏng máy chấm công";
+        private string _explanationDetail = "";
 
         // Tháng đang xem, mặc định là tháng hiện tại
         private DateTime _currentMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);

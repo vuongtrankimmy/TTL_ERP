@@ -7,7 +7,7 @@ namespace TTL.HR.Shared.Pages.Organization
 {
     public partial class OrgNodeView
     {
-        [Parameter] public OrgNode Node { get; set; }
+        [Parameter] public required OrgNode Node { get; set; }
         [Parameter] public EventCallback<OrgNode> OnNodeClick { get; set; }
         [Parameter] public bool IsReadOnly { get; set; }
 

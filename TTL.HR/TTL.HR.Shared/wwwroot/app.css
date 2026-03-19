@@ -237,3 +237,61 @@ h1:focus {
 .apexcharts-canvas {
     margin: 0 auto;
 }
+
+/* ===== Sidebar Toggle Button ===== */
+.sidebar-toggle-btn {
+    position: absolute;
+    top: 50%;
+    right: -14px;
+    transform: translateY(-50%);
+    z-index: 105;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--bs-body-bg, #ffffff);
+    border: 1px solid var(--bs-gray-300, #E1E3EA);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.sidebar-toggle-btn:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    box-shadow: 0 2px 8px rgba(var(--bs-primary-rgb, 27, 132, 255), 0.35);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.sidebar-toggle-btn:hover .sidebar-toggle-icon {
+    color: #ffffff !important;
+}
+
+.sidebar-toggle-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.sidebar-toggle-icon {
+    color: var(--bs-gray-600, #78829D);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    line-height: 1;
+}
+
+/* Rotate icon when sidebar is minimized */
+[data-kt-app-sidebar-minimize="on"] .sidebar-toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Dark mode */
+[data-bs-theme="dark"] .sidebar-toggle-btn {
+    background-color: var(--bs-gray-200, #26272F);
+    border-color: var(--bs-gray-400, #363843);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+[data-bs-theme="dark"] .sidebar-toggle-btn:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}

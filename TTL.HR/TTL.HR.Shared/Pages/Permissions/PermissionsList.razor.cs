@@ -5,6 +5,7 @@ using TTL.HR.Application.Modules.Common.Interfaces;
 using TTL.HR.Application.Modules.Common.Models;
 
 namespace TTL.HR.Shared.Pages.Permissions
+#pragma warning disable CS0169, CS0414
 {
     public partial class PermissionsList
     {

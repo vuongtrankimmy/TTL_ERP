@@ -1,0 +1,169 @@
+@namespace TTL.HR.Shared.Pages.Employees.Components
+
+<div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
+    <div class="card card-flush py-4">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-person-badge text-primary fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Hồ sơ công việc & Tiếp nhận</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0">
+            <!-- AI Scanner & Avatar Area -->
+            <div class="row mb-10">
+                <div class="col-lg-4">
+                    <div class="card card-flush shadow-sm border-0 bg-light-info h-100 min-h-200px">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-4">Ảnh đại diện</label>
+                            <div class="image-input image-input-outline @(string.IsNullOrEmpty(Model.Avatar) ? "image-input-empty" : "")" style="width: 150px; height: 150px;">
+                                <div class="image-input-wrapper w-150px h-150px shadow-sm" style="background-image: url('@(string.IsNullOrEmpty(Model.Avatar) ? "assets/media/svg/avatars/001-boy.svg" : Model.Avatar)')"></div>
+                                <label class="btn btn-icon btn-circle btn-active-color-primary w-30px h-30px bg-body shadow" data-kt-image-input-action="change" title="Thay đổi ảnh">
+                                    <i class="bi bi-pencil-fill fs-7"></i>
+                                    <InputFile OnChange="HandleAvatarUpload" accept=".png, .jpg, .jpeg" class="d-none" />
+                                </label>
+                            </div>
+                            <div class="text-muted fs-8 mt-4 text-center">Cho phép: png, jpg, jpeg. <br/>Tối đa 2MB.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="py-10 px-8 border border-primary border-dashed rounded-3 bg-light-primary text-center h-100 d-flex flex-column align-items-center justify-content-center position-relative overflow-hidden">
+                        <div class="position-absolute top-50 start-50 translate-middle opacity-5" style="z-index: 0;">
+                            <i class="bi bi-qr-code-scan" style="font-size: 10rem;"></i>
+                        </div>
+                        <div class="position-relative" style="z-index: 1;">
+                            <div class="mb-4">
+                                <i class="bi bi-qr-code-scan fs-3x text-primary opacity-75"></i>
+                            </div>
+                            <div class="fw-bolder fs-5 text-gray-800 mb-1">Tính năng Scan CCCD Thông minh</div>
+                            <div class="text-gray-500 fs-7 mb-6">Sử dụng công nghệ AI OCR để tự động nhận diện thông tin từ thẻ CCCD.</div>
+                            <button type="button" class="btn btn-primary px-10 fw-bolder shadow-sm" @onclick="HandleScan">
+                                <i class="bi bi-upc-scan me-2"></i> Bấm quét thẻ hoặc kéo thả ảnh vào đây
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLInput Type="TTLInput.InputDataType.Name"
+                              Label="Họ và tên nhân viên" id="input_Name"
+                              @bind-Value="Model.Name"
+                              Placeholder="VD: Nguyễn Văn A"
+                              IsRequired="true"
+                              Hint="Bắt buộc để tạo hồ sơ."
+                              IsInvalid='@Errors.ContainsKey("Name")'
+                              ErrorMessage='@Errors.GetValueOrDefault("Name")' />
+                </div>
+                <div class="col-md-6">
+                    <TTLInput Type="TTLInput.InputDataType.Phone" Label="Số điện thoại" @bind-Value="Model.Phone" Placeholder="090xxxxxxx" IsRequired="true" />
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLInput Label="Phòng ban" @bind-Value="Model.DeptName" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select" IsRequired="true"
+                              IsInvalid='@Errors.ContainsKey("DeptId")' ErrorMessage='@Errors.GetValueOrDefault("DeptId")'>
+                        <select id="input_DeptId" class="form-select form-select-solid" @bind="Model.DeptId" disabled="@IsReadOnly">
+                            <option value="">Chọn phòng ban...</option>
+                            @foreach (var item in Departments)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </TTLInput>
+                </div>
+                <div class="col-md-6">
+                    <TTLInput Label="Chức vụ / Vị trí" @bind-Value="Model.PositionName" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select" IsRequired="true"
+                              IsInvalid='@Errors.ContainsKey("PositionId")' ErrorMessage='@Errors.GetValueOrDefault("PositionId")'>
+                        <select id="input_PositionId" class="form-select form-select-solid" @bind="Model.PositionId" disabled="@IsReadOnly">
+                            <option value="">Chọn vị trí...</option>
+                            @foreach (var item in Positions)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </TTLInput>
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLInput Label="Nơi làm việc" @bind-Value="Model.Workplace" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select" IsRequired="true"
+                              IsInvalid='@Errors.ContainsKey("WorkplaceId")' ErrorMessage='@Errors.GetValueOrDefault("WorkplaceId")'>
+                        <select id="input_WorkplaceId" class="form-select form-select-solid" @bind="Model.WorkplaceId" disabled="@IsReadOnly">
+                            <option value="">-- Chọn địa điểm --</option>
+                            @foreach (var item in WorkplaceLookups)
+                            {
+                                <option value="@item.LookupID">@item.Name</option>
+                            }
+                        </select>
+                    </TTLInput>
+                </div>
+                <div class="col-md-6">
+                    <TTLInput Label="Trạng thái nhân sự" @bind-Value="Model.StatusName" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select" IsRequired="true"
+                              IsInvalid='@Errors.ContainsKey("StatusId")' ErrorMessage='@Errors.GetValueOrDefault("StatusId")'>
+                        <select id="input_StatusId" class="form-select form-select-solid" @bind="Model.StatusId" disabled="@IsReadOnly">
+                            @foreach (var item in StatusLookups)
+                            {
+                                <option value="@item.LookupID">@item.Name</option>
+                            }
+                        </select>
+                    </TTLInput>
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLInput Label="Loại hợp đồng" @bind-Value="Model.ContractTypeName" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select" IsRequired="true"
+                              IsInvalid='@Errors.ContainsKey("ContractTypeId")' ErrorMessage='@Errors.GetValueOrDefault("ContractTypeId")'>
+                        <select id="input_ContractTypeId" class="form-select form-select-solid" @bind="Model.ContractTypeId" disabled="@IsReadOnly">
+                            <option value="">-- Loại hợp đồng --</option>
+                            @foreach (var item in ContractTypeLookups)
+                            {
+                                <option value="@item.LookupID">@item.Name</option>
+                            }
+                        </select>
+                    </TTLInput>
+                </div>
+                <div class="col-md-6">
+                    <TTLFormattedInput Label="Lương cơ bản (VNĐ)" Simple="true" Suffix="VNĐ" Placeholder="VD: 10.000.000" 
+                              Value="@(Model.Salary ?? 0)" 
+                              ValueChanged="@(val => Model.Salary = val)"
+                              IsReadOnly="@IsReadOnly" />
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLInput Label="Ngày gia nhập" @bind-DateValue="Model.OfficialJoinDate" Type="TTLInput.InputDataType.Date" IsReadOnly="@IsReadOnly" />
+                </div>
+                <div class="col-md-6">
+                    <TTLInput Type="TTLInput.InputDataType.Email" Label="Email cá nhân" @bind-Value="Model.Email" Placeholder="example@mail.com" IsReadOnly="@IsReadOnly" />
+                </div>
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end py-6 px-9 border-top-0">
+            <button type="button" class="btn @(IsReadOnly ? "btn-light-primary" : "btn-primary") fw-bolder px-10" @onclick="HandleSave" disabled="@IsProcessing">
+                @if (IsProcessing)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>ĐANG LƯU...</span>
+                }
+                else if (IsReadOnly)
+                {
+                    <i class="bi bi-arrow-left me-2"></i>
+                    <span>QUAY LẠI DANH SÁCH</span>
+                }
+                else
+                {
+                    <i class="bi bi-check-circle me-2"></i>
+                    <span>LƯU HỒ SƠ & QUAY LẠI</span>
+                }
+            </button>
+        </div>
+    </div>
+</div>

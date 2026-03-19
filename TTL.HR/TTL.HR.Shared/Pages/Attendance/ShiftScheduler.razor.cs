@@ -134,7 +134,7 @@ namespace TTL.HR.Shared.Pages.Attendance
                 var endDate = startDate.AddMonths(1).AddDays(-1);
                 
                 // 1. Fetch all employees (within department if selected)
-                var empResult = await EmployeeService.GetEmployeesPaginatedAsync(_pageIndex, _pageSize, null, _selectedDepartmentId);
+                var empResult = await EmployeeService.GetEmployeesPaginatedAsync(_pageIndex, _pageSize, null, string.IsNullOrEmpty(_selectedDepartmentId) ? null : new[] { _selectedDepartmentId });
                 if (empResult == null || empResult.Items == null)
                 {
                     _employees = new();

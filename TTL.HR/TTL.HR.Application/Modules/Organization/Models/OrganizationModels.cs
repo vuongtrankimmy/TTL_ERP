@@ -54,7 +54,7 @@ namespace TTL.HR.Application.Modules.Organization.Models
     public class UpdateDepartmentRequest : CreateDepartmentRequest
     {
         public string Id { get; set; } = string.Empty;
-        public bool IsActive { get; set; }
+        public new bool IsActive { get; set; }
     }
 
     public class PositionModel

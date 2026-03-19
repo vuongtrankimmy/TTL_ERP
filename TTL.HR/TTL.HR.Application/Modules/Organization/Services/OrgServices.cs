@@ -137,6 +137,35 @@ namespace TTL.HR.Application.Modules.Organization.Services
 
             return orgNode;
         }
+
+        public async Task<List<string>> GetManagedDepartmentIdsAsync(string managerEmployeeId)
+        {
+            if (string.IsNullOrEmpty(managerEmployeeId)) return new List<string>();
+
+            // Collect all raw nodes from the structure API to handle ManagerId lookups
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<OrganizationNode>>>(ApiEndpoints.Organization.Structure);
+            var rawNodes = response?.Data ?? new List<OrganizationNode>();
+            var managedIds = new HashSet<string>();
+
+            void Traverse(List<OrganizationNode> nodes, bool parentIsManaged)
+            {
+                foreach (var node in nodes)
+                {
+                    bool isManaged = parentIsManaged || (node.ManagerId == managerEmployeeId);
+                    if (isManaged && node.Type == "Department")
+                    {
+                        managedIds.Add(node.Id);
+                    }
+                    if (node.Children != null && node.Children.Any())
+                    {
+                        Traverse(node.Children, isManaged);
+                    }
+                }
+            }
+
+            Traverse(rawNodes, false);
+            return managedIds.ToList();
+        }
     }
 
     public class PositionService : IPositionService

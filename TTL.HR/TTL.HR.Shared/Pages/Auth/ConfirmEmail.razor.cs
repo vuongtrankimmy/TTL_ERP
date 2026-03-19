@@ -7,11 +7,11 @@ namespace TTL.HR.Shared.Pages.Auth
 {
     public partial class ConfirmEmail
     {
-        [Inject] public IAuthService AuthService { get; set; }
-        [Inject] public NavigationManager Navigation { get; set; }
+        [Inject] public required IAuthService AuthService { get; set; }
+        [Inject] public required NavigationManager Navigation { get; set; }
 
         [Parameter, SupplyParameterFromQuery]
-        public string Token { get; set; }
+        public string Token { get; set; } = string.Empty;
 
         private bool _isProcessing = true;
         private bool _isSuccess = false;
@@ -36,7 +36,7 @@ namespace TTL.HR.Shared.Pages.Auth
                     _errorMessage = response.Message ?? "Xác thực email thất bại. Token có thể đã hết hạn hoặc không tồn tại.";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _isSuccess = false;
                 _errorMessage = "Có lỗi xảy ra trong quá trình kết nối với hệ thống.";

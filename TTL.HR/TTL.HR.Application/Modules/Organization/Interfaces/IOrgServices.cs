@@ -14,6 +14,7 @@ namespace TTL.HR.Application.Modules.Organization.Interfaces
         Task<bool> DeleteDepartmentAsync(string id);
         Task<bool> AssignEmployeesAsync(string departmentId, List<string> employeeIds);
         Task<List<OrgNode>> GetOrganizationStructureAsync();
+        Task<List<string>> GetManagedDepartmentIdsAsync(string managerEmployeeId);
     }
 
     public interface IPositionService

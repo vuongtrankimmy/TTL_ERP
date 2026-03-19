@@ -1,9 +1,11 @@
-﻿[
+[
   {
     "_id": {
       "$oid": "65fc5b5b0000000000000101"
     },
-    "CountryId": "65fc5b5b0000000000000000",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
     "Code": "01",
     "Name": "Thành phố Hà Nội",
     "Type": "thành phố trung ương",
@@ -11,332 +13,746 @@
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000104"
+      "$oid": "65fc5b5b0000000000000102"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "04",
-    "Name": "Tỉnh Cao Bằng",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "02",
+    "Name": "Tỉnh Hà Giang",
     "Type": "tỉnh",
     "Order": 2
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000108"
+      "$oid": "65fc5b5b0000000000000104"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "08",
-    "Name": "Tỉnh Tuyên Quang",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "04",
+    "Name": "Tỉnh Cao Bằng",
     "Type": "tỉnh",
     "Order": 3
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000111"
+      "$oid": "65fc5b5b0000000000000106"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "11",
-    "Name": "Tỉnh Điện Biên",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "06",
+    "Name": "Tỉnh Bắc Kạn",
     "Type": "tỉnh",
     "Order": 4
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000112"
+      "$oid": "65fc5b5b0000000000000108"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "12",
-    "Name": "Tỉnh Lai Châu",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "08",
+    "Name": "Tỉnh Tuyên Quang",
     "Type": "tỉnh",
     "Order": 5
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000114"
+      "$oid": "65fc5b5b0000000000000110"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "14",
-    "Name": "Tỉnh Sơn La",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "10",
+    "Name": "Tỉnh Lào Cai",
     "Type": "tỉnh",
     "Order": 6
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000115"
+      "$oid": "65fc5b5b0000000000000111"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "15",
-    "Name": "Tỉnh Lào Cai",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "11",
+    "Name": "Tỉnh Điện Biên",
     "Type": "tỉnh",
     "Order": 7
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000119"
+      "$oid": "65fc5b5b0000000000000112"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "19",
-    "Name": "Tỉnh Thái Nguyên",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "12",
+    "Name": "Tỉnh Lai Châu",
     "Type": "tỉnh",
     "Order": 8
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000120"
+      "$oid": "65fc5b5b0000000000000114"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "20",
-    "Name": "Tỉnh Lạng Sơn",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "14",
+    "Name": "Tỉnh Sơn La",
     "Type": "tỉnh",
     "Order": 9
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000122"
+      "$oid": "65fc5b5b0000000000000115"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "22",
-    "Name": "Tỉnh Quảng Ninh",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "15",
+    "Name": "Tỉnh Yên Bái",
     "Type": "tỉnh",
     "Order": 10
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000124"
+      "$oid": "65fc5b5b0000000000000117"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "24",
-    "Name": "Tỉnh Bắc Ninh",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "17",
+    "Name": "Tỉnh Hoà Bình",
     "Type": "tỉnh",
     "Order": 11
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000125"
+      "$oid": "65fc5b5b0000000000000119"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "25",
-    "Name": "Tỉnh Phú Thọ",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "19",
+    "Name": "Tỉnh Thái Nguyên",
     "Type": "tỉnh",
     "Order": 12
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000131"
+      "$oid": "65fc5b5b0000000000000120"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "31",
-    "Name": "Thành phố Hải Phòng",
-    "Type": "thành phố trung ương",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "20",
+    "Name": "Tỉnh Lạng Sơn",
+    "Type": "tỉnh",
     "Order": 13
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000133"
+      "$oid": "65fc5b5b0000000000000122"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "33",
-    "Name": "Tỉnh Hưng Yên",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "22",
+    "Name": "Tỉnh Quảng Ninh",
     "Type": "tỉnh",
     "Order": 14
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000137"
+      "$oid": "65fc5b5b0000000000000124"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "37",
-    "Name": "Tỉnh Ninh Bình",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "24",
+    "Name": "Tỉnh Bắc Giang",
     "Type": "tỉnh",
     "Order": 15
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000138"
+      "$oid": "65fc5b5b0000000000000125"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "38",
-    "Name": "Tỉnh Thanh Hóa",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "25",
+    "Name": "Tỉnh Phú Thọ",
     "Type": "tỉnh",
     "Order": 16
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000140"
+      "$oid": "65fc5b5b0000000000000126"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "40",
-    "Name": "Tỉnh Nghệ An",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "26",
+    "Name": "Tỉnh Vĩnh Phúc",
     "Type": "tỉnh",
     "Order": 17
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000142"
+      "$oid": "65fc5b5b0000000000000127"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "42",
-    "Name": "Tỉnh Hà Tĩnh",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "27",
+    "Name": "Tỉnh Bắc Ninh",
     "Type": "tỉnh",
     "Order": 18
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000144"
+      "$oid": "65fc5b5b0000000000000130"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "44",
-    "Name": "Tỉnh Quảng Trị",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "30",
+    "Name": "Tỉnh Hải Dương",
     "Type": "tỉnh",
     "Order": 19
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000146"
+      "$oid": "65fc5b5b0000000000000131"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "46",
-    "Name": "Thành phố Huế",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "31",
+    "Name": "Thành phố Hải Phòng",
     "Type": "thành phố trung ương",
     "Order": 20
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000148"
+      "$oid": "65fc5b5b0000000000000133"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "48",
-    "Name": "Thành phố Đà Nẵng",
-    "Type": "thành phố trung ương",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "33",
+    "Name": "Tỉnh Hưng Yên",
+    "Type": "tỉnh",
     "Order": 21
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000151"
+      "$oid": "65fc5b5b0000000000000134"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "51",
-    "Name": "Tỉnh Quảng Ngãi",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "34",
+    "Name": "Tỉnh Thái Bình",
     "Type": "tỉnh",
     "Order": 22
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000152"
+      "$oid": "65fc5b5b0000000000000135"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "52",
-    "Name": "Tỉnh Gia Lai",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "35",
+    "Name": "Tỉnh Hà Nam",
     "Type": "tỉnh",
     "Order": 23
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000156"
+      "$oid": "65fc5b5b0000000000000136"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "56",
-    "Name": "Tỉnh Khánh Hòa",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "36",
+    "Name": "Tỉnh Nam Định",
     "Type": "tỉnh",
     "Order": 24
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000166"
+      "$oid": "65fc5b5b0000000000000137"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "66",
-    "Name": "Tỉnh Đắk Lắk",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "37",
+    "Name": "Tỉnh Ninh Bình",
     "Type": "tỉnh",
     "Order": 25
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000168"
+      "$oid": "65fc5b5b0000000000000138"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "68",
-    "Name": "Tỉnh Lâm Đồng",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "38",
+    "Name": "Tỉnh Thanh Hóa",
     "Type": "tỉnh",
     "Order": 26
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000175"
+      "$oid": "65fc5b5b0000000000000140"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "75",
-    "Name": "Tỉnh Đồng Nai",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "40",
+    "Name": "Tỉnh Nghệ An",
     "Type": "tỉnh",
     "Order": 27
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000179"
+      "$oid": "65fc5b5b0000000000000142"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "79",
-    "Name": "Thành phố Hồ Chí Minh",
-    "Type": "thành phố trung ương",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "42",
+    "Name": "Tỉnh Hà Tĩnh",
+    "Type": "tỉnh",
     "Order": 28
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000180"
+      "$oid": "65fc5b5b0000000000000144"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "80",
-    "Name": "Tỉnh Tây Ninh",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "44",
+    "Name": "Tỉnh Quảng Bình",
     "Type": "tỉnh",
     "Order": 29
   },
   {
     "_id": {
-      "$oid": "65fc5b5b0000000000000182"
+      "$oid": "65fc5b5b0000000000000145"
     },
-    "CountryId": "65fc5b5b0000000000000000",
-    "Code": "82",
-    "Name": "Tỉnh Đồng Tháp",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "45",
+    "Name": "Tỉnh Quảng Trị",
     "Type": "tỉnh",
     "Order": 30
   },
   {
     "_id": {
+      "$oid": "65fc5b5b0000000000000146"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "46",
+    "Name": "Thành phố Huế",
+    "Type": "thành phố trung ương",
+    "Order": 31
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000148"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "48",
+    "Name": "Thành phố Đà Nẵng",
+    "Type": "thành phố trung ương",
+    "Order": 32
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000149"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "49",
+    "Name": "Tỉnh Quảng Nam",
+    "Type": "tỉnh",
+    "Order": 33
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000151"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "51",
+    "Name": "Tỉnh Quảng Ngãi",
+    "Type": "tỉnh",
+    "Order": 34
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000152"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "52",
+    "Name": "Tỉnh Bình Định",
+    "Type": "tỉnh",
+    "Order": 35
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000154"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "54",
+    "Name": "Tỉnh Phú Yên",
+    "Type": "tỉnh",
+    "Order": 36
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000156"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "56",
+    "Name": "Tỉnh Khánh Hòa",
+    "Type": "tỉnh",
+    "Order": 37
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000158"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "58",
+    "Name": "Tỉnh Ninh Thuận",
+    "Type": "tỉnh",
+    "Order": 38
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000160"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "60",
+    "Name": "Tỉnh Bình Thuận",
+    "Type": "tỉnh",
+    "Order": 39
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000162"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "62",
+    "Name": "Tỉnh Kon Tum",
+    "Type": "tỉnh",
+    "Order": 40
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000164"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "64",
+    "Name": "Tỉnh Gia Lai",
+    "Type": "tỉnh",
+    "Order": 41
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000166"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "66",
+    "Name": "Tỉnh Đắk Lắk",
+    "Type": "tỉnh",
+    "Order": 42
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000167"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "67",
+    "Name": "Tỉnh Đắk Nông",
+    "Type": "tỉnh",
+    "Order": 43
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000168"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "68",
+    "Name": "Tỉnh Lâm Đồng",
+    "Type": "tỉnh",
+    "Order": 44
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000170"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "70",
+    "Name": "Tỉnh Bình Phước",
+    "Type": "tỉnh",
+    "Order": 45
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000172"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "72",
+    "Name": "Tỉnh Tây Ninh",
+    "Type": "tỉnh",
+    "Order": 46
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000174"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "74",
+    "Name": "Tỉnh Bình Dương",
+    "Type": "tỉnh",
+    "Order": 47
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000175"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "75",
+    "Name": "Tỉnh Đồng Nai",
+    "Type": "tỉnh",
+    "Order": 48
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000177"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "77",
+    "Name": "Tỉnh Bà Rịa - Vũng Tàu",
+    "Type": "tỉnh",
+    "Order": 49
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000179"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "79",
+    "Name": "Thành phố Hồ Chí Minh",
+    "Type": "thành phố trung ương",
+    "Order": 50
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000180"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "80",
+    "Name": "Tỉnh Long An",
+    "Type": "tỉnh",
+    "Order": 51
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000182"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "82",
+    "Name": "Tỉnh Tiền Giang",
+    "Type": "tỉnh",
+    "Order": 52
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000183"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "83",
+    "Name": "Tỉnh Bến Tre",
+    "Type": "tỉnh",
+    "Order": 53
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000184"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "84",
+    "Name": "Tỉnh Trà Vinh",
+    "Type": "tỉnh",
+    "Order": 54
+  },
+  {
+    "_id": {
       "$oid": "65fc5b5b0000000000000186"
     },
-    "CountryId": "65fc5b5b0000000000000000",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
     "Code": "86",
     "Name": "Tỉnh Vĩnh Long",
     "Type": "tỉnh",
-    "Order": 31
+    "Order": 55
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000187"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "87",
+    "Name": "Tỉnh Đồng Tháp",
+    "Type": "tỉnh",
+    "Order": 56
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000189"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "89",
+    "Name": "Tỉnh An Giang",
+    "Type": "tỉnh",
+    "Order": 57
   },
   {
     "_id": {
       "$oid": "65fc5b5b0000000000000191"
     },
-    "CountryId": "65fc5b5b0000000000000000",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
     "Code": "91",
-    "Name": "Tỉnh An Giang",
+    "Name": "Tỉnh Kiên Giang",
     "Type": "tỉnh",
-    "Order": 32
+    "Order": 58
   },
   {
     "_id": {
       "$oid": "65fc5b5b0000000000000192"
     },
-    "CountryId": "65fc5b5b0000000000000000",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
     "Code": "92",
     "Name": "Thành phố Cần Thơ",
     "Type": "thành phố trung ương",
-    "Order": 33
+    "Order": 59
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000193"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "93",
+    "Name": "Tỉnh Hậu Giang",
+    "Type": "tỉnh",
+    "Order": 60
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000194"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "94",
+    "Name": "Tỉnh Sóc Trăng",
+    "Type": "tỉnh",
+    "Order": 61
+  },
+  {
+    "_id": {
+      "$oid": "65fc5b5b0000000000000195"
+    },
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
+    "Code": "95",
+    "Name": "Tỉnh Bạc Liêu",
+    "Type": "tỉnh",
+    "Order": 62
   },
   {
     "_id": {
       "$oid": "65fc5b5b0000000000000196"
     },
-    "CountryId": "65fc5b5b0000000000000000",
+    "CountryId": {
+      "$oid": "65fc5b5b0000000000000000"
+    },
     "Code": "96",
     "Name": "Tỉnh Cà Mau",
     "Type": "tỉnh",
-    "Order": 34
+    "Order": 63
   }
 ]

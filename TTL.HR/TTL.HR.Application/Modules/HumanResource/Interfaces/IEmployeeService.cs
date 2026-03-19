@@ -10,7 +10,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Interfaces
     public interface IEmployeeService
     {
         Task<List<EmployeeDto>> GetEmployeesAsync();
-        Task<PagedResult<EmployeeDto>> GetEmployeesPaginatedAsync(int pageIndex, int pageSize, string? searchTerm = null, string? departmentId = null, string? status = null, string? workplace = null, string? sortBy = "name", bool sortDesc = false);
+        Task<PagedResult<EmployeeDto>> GetEmployeesPaginatedAsync(int pageIndex, int pageSize, string? searchTerm = null, IEnumerable<string>? departmentIds = null, string? status = null, string? workplace = null, string? sortBy = "name", bool sortDesc = false);
         Task<EmployeeModel?> GetEmployeeAsync(string id);
         Task<EmployeeModel?> GetMyEmployeeAsync();
         Task<string?> CreateEmployeeAsync(Employee employee);
@@ -20,8 +20,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Interfaces
         /// <summary>Returns null on success, or an error message string on failure.</summary>
         Task<string?> UploadDocumentAsync(string employeeId, string documentType, Stream fileStream, string fileName, DateTime? expiryDate, string? note);
         Task<bool> LinkIdentityAsync(string employeeId);
-        Task<byte[]?> ExportEmployeesAsync(string? searchTerm = null, string? departmentId = null, string? status = null, string? workplace = null);
-        Task<EmployeeStatusCounts> GetStatusCountsAsync(string? searchTerm = null, string? departmentId = null, string? workplace = null);
+        Task<byte[]?> ExportEmployeesAsync(string? searchTerm = null, IEnumerable<string>? departmentIds = null, string? status = null, string? workplace = null);
+        Task<EmployeeStatusCounts> GetStatusCountsAsync(string? searchTerm = null, IEnumerable<string>? departmentIds = null, string? workplace = null);
         Task<string?> AccrueLeaveAsync(int month, int year);
         Task<bool> SendCredentialsAsync(string employeeId, string channel, string? customMessage = null);
     }

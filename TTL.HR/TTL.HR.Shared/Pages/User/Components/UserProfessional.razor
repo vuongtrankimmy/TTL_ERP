@@ -1,0 +1,172 @@
+@namespace TTL.HR.Shared.Pages.User.Components
+@using TTL.HR.Shared.Components.Common
+
+<div class="animate__animated animate__fadeIn">
+    @if (_isLoading)
+    {
+        <div class="card shadow-sm border-0 mb-5">
+            <div class="card-body py-15 text-center">
+                <div class="spinner-border text-primary border-4 w-50px h-50px mb-5"></div>
+                <div class="text-gray-500 fw-bold fs-5">Đang tải dữ liệu chuyên môn...</div>
+            </div>
+        </div>
+    }
+    else if (_employee == null)
+    {
+        <div class="alert alert-danger d-flex align-items-center p-5 shadow-sm">
+            <i class="ki-outline ki-information-5 fs-2hx text-danger me-4"></i>
+            <div class="d-flex flex-column">
+                <h4 class="mb-1 text-danger">Không tìm thấy dữ liệu</h4>
+                <span>Vui lòng kiểm tra lại kết nối hoặc tài khoản nhân viên.</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- SKILLS SECTION -->
+        <div class="card card-flush shadow-sm border-0 mb-6 mb-xl-9">
+            <div class="card-header pt-5">
+                <div class="card-title flex-column">
+                    <h2 class="fw-bold fs-3 mb-1">Kỹ năng chuyên môn</h2>
+                    <span class="text-muted fw-semibold fs-7">Danh sách các kỹ năng được ghi nhận</span>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="d-flex flex-wrap gap-2">
+                    @if (_employee.Skills != null && _employee.Skills.Any())
+                    {
+                        @foreach (var skill in _employee.Skills)
+                        {
+                            <span class="badge badge-lg badge-light-primary fw-bold px-4 py-3">@skill</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-muted fs-6 italic">Chưa cập nhật danh sách kỹ năng.</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- CERTIFICATIONS SECTION -->
+        <div class="card card-flush shadow-sm border-0 mb-6 mb-xl-9">
+            <div class="card-header pt-5">
+                <div class="card-title flex-column">
+                    <h2 class="fw-bold fs-3 mb-1">Chứng chỉ & Bằng cấp</h2>
+                    <span class="text-muted fw-semibold fs-7">Các chứng nhận đạt được trong quá trình công tác</span>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="row g-6">
+                    @if (_employee.Certifications != null && _employee.Certifications.Any())
+                    {
+                        @foreach (var cert in _employee.Certifications)
+                        {
+                            <div class="col-md-6 col-xl-4">
+                                <div class="card border border-gray-300 border-dashed rounded p-6 h-100">
+                                    <div class="d-flex flex-stack mb-4">
+                                        <div class="symbol symbol-40px symbol-circle bg-light-success">
+                                            <i class="ki-outline ki-medal-star fs-2 text-success p-3"></i>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(cert.CredentialUrl))
+                                        {
+                                            <a href="@cert.CredentialUrl" target="_blank" class="btn btn-icon btn-sm btn-light-primary">
+                                                <i class="ki-outline ki-exit-right-corner fs-2"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                    <div class="fw-bold fs-5 text-gray-900 mb-1">@cert.Name</div>
+                                    <div class="fw-semibold text-gray-600 fs-7 mb-4">@cert.Organization</div>
+                                    <div class="d-flex flex-wrap border-top border-gray-100 pt-4">
+                                        <div class="me-7">
+                                            <span class="text-muted d-block fs-8 fw-bold text-uppercase">Ngày cấp</span>
+                                            <span class="text-gray-800 fs-7 fw-bold">@(cert.IssueDate?.ToString("MM/yyyy") ?? "-")</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-muted d-block fs-8 fw-bold text-uppercase">Hết hạn</span>
+                                            <span class="text-gray-800 fs-7 fw-bold">@(cert.ExpiryDate?.ToString("MM/yyyy") ?? "Vô thời hạn")</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12 py-5 text-center border border-dashed rounded bg-light">
+                            <span class="text-muted">Chưa có thông tin chứng chỉ được cập nhật.</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-6 g-xl-9">
+            <!-- EDUCATION SECTION -->
+            <div class="col-lg-6">
+                <div class="card card-flush h-lg-100 shadow-sm border-0">
+                    <div class="card-header pt-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bold text-gray-900 fs-3">Học vấn & Bằng cấp</span>
+                        </h3>
+                    </div>
+                    <div class="card-body pt-5">
+                        @if (_employee.Education != null && _employee.Education.Any())
+                        {
+                            @foreach (var edu in _employee.Education)
+                            {
+                                <div class="d-flex align-items-center mb-7">
+                                    <div class="symbol symbol-50px me-5 bg-light-info rounded-circle d-flex align-items-center justify-content-center">
+                                         <i class="ki-outline ki-bank fs-1 text-info"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <span class="text-gray-900 fw-bold fs-6">@edu.SchoolName</span>
+                                        <span class="text-muted d-block fw-semibold">@edu.Major - @edu.Degree</span>
+                                        <span class="text-muted fs-7">@edu.StartYear - @edu.EndYear</span>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted italic">Chưa cập nhật thông tin học vấn.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXPERIENCE SECTION -->
+            <div class="col-lg-6">
+                <div class="card card-flush h-lg-100 shadow-sm border-0">
+                    <div class="card-header pt-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bold text-gray-900 fs-3">Kinh nghiệm làm việc</span>
+                        </h3>
+                    </div>
+                    <div class="card-body pt-5">
+                        @if (_employee.Experience != null && _employee.Experience.Any())
+                        {
+                            @foreach (var exp in _employee.Experience)
+                            {
+                                <div class="d-flex align-items-center mb-7">
+                                    <div class="symbol symbol-50px me-5 bg-light-warning rounded-circle d-flex align-items-center justify-content-center">
+                                         <i class="ki-outline ki-briefcase fs-1 text-warning"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <span class="text-gray-900 fw-bold fs-6">@exp.CompanyName</span>
+                                        <span class="text-muted d-block fw-semibold">@exp.Position</span>
+                                        <span class="text-muted fs-7">@exp.StartDate.ToString("MM/yyyy") - @(exp.EndDate?.ToString("MM/yyyy") ?? "Hiện tại")</span>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted italic">Chưa cập nhật kinh nghiệm làm việc.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

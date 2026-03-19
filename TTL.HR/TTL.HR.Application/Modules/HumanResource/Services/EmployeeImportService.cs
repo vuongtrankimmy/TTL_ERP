@@ -68,7 +68,12 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
                 return result;
             }
 
-            var rows = worksheet.RangeUsed().RowsUsed().Skip(1); // Skip header
+            var rows = worksheet.RangeUsed()?.RowsUsed()?.Skip(1); // Skip header
+            if (rows == null)
+            {
+                result.Errors.Add("Không có dữ liệu trong worksheet.");
+                return result;
+            }
             foreach (var row in rows)
             {
                 try

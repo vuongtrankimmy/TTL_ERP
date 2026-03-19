@@ -7,6 +7,7 @@ using TTL.HR.Application.Modules.HumanResource.Models;
 
 namespace TTL.HR.Shared.Components.HumanResource
 {
+#pragma warning disable CS8600, CS8601, CS8604, CS8625
     public partial class EmployeeSelectionDrawer
     {
         [Parameter] public string Title { get; set; } = "Chọn nhân sự";

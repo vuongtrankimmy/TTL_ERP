@@ -367,7 +367,7 @@ namespace TTL.HR.Shared.Pages.Contracts
                 TemplateContent = await JSRuntime.InvokeAsync<string>("getEditorContent");
                 Console.WriteLine($"Editor content retrieved. Length: {TemplateContent?.Length ?? 0}");
                 
-                TemplateModel.ContentHtml = TemplateContent;
+                TemplateModel.ContentHtml = TemplateContent ?? string.Empty;
                 
                 if (string.IsNullOrEmpty(Id))
                 {
@@ -379,8 +379,8 @@ namespace TTL.HR.Shared.Pages.Contracts
                         TypeId = TemplateModel.TypeId,
                         StatusId = TemplateModel.StatusId,
                         ContentHtml = TemplateModel.ContentHtml,
-                        Icon = TemplateModel.Icon,
-                        Color = TemplateModel.Color
+                        Icon = TemplateModel.Icon ?? string.Empty,
+                        Color = TemplateModel.Color ?? string.Empty
                     });
                     success = result != null;
                     Console.WriteLine($"Create result: {success}");
@@ -406,8 +406,8 @@ namespace TTL.HR.Shared.Pages.Contracts
                         TypeId = TemplateModel.TypeId,
                         StatusId = TemplateModel.StatusId,
                         ContentHtml = TemplateModel.ContentHtml,
-                        Icon = TemplateModel.Icon,
-                        Color = TemplateModel.Color
+                        Icon = TemplateModel.Icon ?? string.Empty,
+                        Color = TemplateModel.Color ?? string.Empty
                     });
                     success = result != null;
                     Console.WriteLine($"Update result: {success}");

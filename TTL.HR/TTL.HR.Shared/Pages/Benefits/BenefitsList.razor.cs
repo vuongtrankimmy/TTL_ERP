@@ -71,8 +71,8 @@ namespace TTL.HR.Shared.Pages.Benefits
             }
         }
 
-        private void CreateNewBenefit() => _editModal.OpenAsync();
-        private void EditBenefit(BenefitModel item) => _editModal.OpenAsync(item.Id);
+        private async Task CreateNewBenefit() => await _editModal.OpenAsync();
+        private async Task EditBenefit(BenefitModel item) => await _editModal.OpenAsync(item.Id);
 
         private void PromptDeleteBenefit(BenefitModel item)
         {

@@ -1,3 +1,4 @@
+#pragma warning disable CS8600, CS8601, CS8604, CS8625
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,20 +21,20 @@ namespace TTL.HR.Shared.Pages.Training
         
         // Modal Registration Control
         private bool IsRegisterModalOpen = false;
-        private TrainingItemViewModel ItemToRegister;
+        private TrainingItemViewModel ItemToRegister = new();
 
         // Modal Delete Control
         private bool IsDeleteModalOpen = false;
-        private TrainingItemViewModel ItemToDelete;
+        private TrainingItemViewModel ItemToDelete = new();
 
         [Microsoft.AspNetCore.Components.Inject]
-        public Microsoft.AspNetCore.Components.NavigationManager Navigation { get; set; }
+        public required Microsoft.AspNetCore.Components.NavigationManager Navigation { get; set; }
 
         [Microsoft.AspNetCore.Components.Inject]
-        public IJSRuntime JS { get; set; }
+        public required IJSRuntime JS { get; set; }
 
         [Microsoft.AspNetCore.Components.Inject]
-        public ITrainingService TrainingService { get; set; }
+        public required ITrainingService TrainingService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {

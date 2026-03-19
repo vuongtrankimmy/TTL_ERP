@@ -43,7 +43,7 @@ namespace TTL.HR.Application.Modules.Payroll.Services
             return response?.Data ?? new List<PayrollPeriodModel>();
         }
 
-        public async Task<PayrollPeriodDetailModel?> GetPeriodDetailAsync(string id, string? searchTerm = null, string? departmentId = null, int page = 1, int pageSize = 10, int? year = null, int? month = null)
+        public async Task<PayrollPeriodDetailModel?> GetPeriodDetailAsync(string? id, string? searchTerm = null, string? departmentId = null, int page = 1, int pageSize = 10, int? year = null, int? month = null)
         {
             var queryParams = new List<string>();
             if (!string.IsNullOrWhiteSpace(searchTerm)) queryParams.Add($"searchTerm={Uri.EscapeDataString(searchTerm)}");

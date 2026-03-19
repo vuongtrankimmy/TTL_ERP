@@ -1,5 +1,6 @@
 @page "/employees/add"
 @page "/employees/edit/{Id}"
+@using TTL.HR.Shared.Components.Common
 
 <CccdScanner @ref="cccdScanner" />
 
@@ -10,7 +11,7 @@
         </button>
         <div class="d-flex flex-column">
             <h1 class="fs-3 fw-bold text-gray-900 mb-1">
-                @(IsEditMode ? $"Chỉnh sửa hồ sơ: {newEmployee.FullName}" : "Thêm mới nhân viên")
+                @(IsEditMode ? $"CHỈNH SỬA: {newEmployee.FullName}" : "THÊM MỚI NHÂN VIÊN")
             </h1>
             <div class="d-flex align-items-center gap-2">
                 <span class="badge badge-light-primary fw-bold">ID: @(IsEditMode ? newEmployee.Code : "TỰ ĐỘNG SINH")</span>
@@ -23,6 +24,18 @@
             </div>
         </div>
     </div>
+    <div class="d-flex gap-2">
+        @if (IsReadOnly)
+        {
+            <div class="alert alert-dismissible bg-light-warning d-flex flex-column flex-sm-row p-3 border border-warning border-dashed rounded-3 m-0">
+                <i class="ki-outline ki-shield-search fs-2hx text-warning me-4 mb-5 mb-sm-0"></i>
+                <div class="d-flex flex-column pe-0 pe-sm-10">
+                    <h5 class="mb-1 text-warning fw-bolder fs-7 text-uppercase">Chế độ xem (Read-only)</h5>
+                    <span class="fs-9 text-gray-600">Bạn đang ở chế độ xem hồ sơ. Các tính năng chỉnh sửa đã được tạm khóa.</span>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
 
@@ -30,17 +43,17 @@
     <div class="card-body p-0">
         <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold px-10">
             <li class="nav-item">
-                <a class="nav-link text-active-primary active py-5 d-flex align-items-center" data-bs-toggle="tab" href="#tab_personal">
+                <a class="nav-link text-active-primary active py-5 d-flex align-items-center" data-bs-toggle="tab" href="#tab_basic">
                     <span class="symbol symbol-20px me-3">
-                        <i class="bi bi-person-circle fs-4 text-primary"></i>
-                    </span>THÔNG TIN CÁ NHÂN
+                        <i class="bi bi-person-check-fill fs-4 text-primary"></i>
+                    </span>HỒ SƠ CƠ BẢN
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-active-primary py-5 d-flex align-items-center" data-bs-toggle="tab" href="#tab_job">
+                <a class="nav-link text-active-primary py-5 d-flex align-items-center" data-bs-toggle="tab" href="#tab_personal">
                     <span class="symbol symbol-20px me-3">
-                        <i class="bi bi-briefcase fs-4 text-success"></i>
-                    </span>CÔNG VIỆC & LƯƠNG
+                        <i class="bi bi-person-lines-fill fs-4 text-success"></i>
+                    </span>LÝ LỊCH CHI TIẾT
                 </a>
             </li>
             <li class="nav-item">
@@ -51,10 +64,17 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-active-primary py-5 d-flex align-items-center" data-bs-toggle="tab" href="#tab_account">
+                <a class="nav-link text-active-primary py-5 d-flex align-items-center" data-bs-toggle="tab" href="#tab_account_finance">
                     <span class="symbol symbol-20px me-3">
                         <i class="bi bi-shield-lock-fill fs-4 text-danger"></i>
-                    </span>TÀI KHOẢN & HỒ SƠ
+                    </span>TÀI KHOẢN & TÀI CHÍNH
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-active-primary py-5 d-flex align-items-center" data-bs-toggle="tab" href="#tab_documents">
+                    <span class="symbol symbol-20px me-3">
+                        <i class="bi bi-paperclip fs-4 text-info"></i>
+                    </span>TÀI LIỆU
                 </a>
             </li>
         </ul>
@@ -82,974 +102,77 @@
         </div>
     }
     
-    <!-- TAB 1: THÔNG TIN CÁ NHÂN -->
-    <div class="tab-pane fade show active" id="tab_personal" role="tabpanel">
-        <div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
-
-    <!-- SECTION: THÔNG TIN CÁ NHÂN -->
-    <div class="card card-flush py-4">
-        <div class="card-header border-0">
-            <div class="card-title">
-                <span class="symbol symbol-30px me-3">
-                    <i class="bi bi-person-bounding-box text-primary fs-2"></i>
-                </span>
-                <h2 class="fw-bold fs-5 text-uppercase m-0">Thông tin cá nhân & Định danh</h2>
-            </div>
-        </div>
-        <div class="card-body pt-0">
-            <!-- AI Scanner & Avatar Area -->
-            <div class="row mb-10">
-                <div class="col-lg-4">
-                    <div class="card card-flush shadow-sm border-0 bg-light-info h-100 min-h-200px">
-                        <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-4">Ảnh đại diện</label>
-                            <div class="image-input image-input-outline @(string.IsNullOrEmpty(newEmployee.Avatar) ? "image-input-empty" : "")" style="width: 150px; height: 150px;">
-                                <div class="image-input-wrapper w-150px h-150px shadow-sm" style="background-image: url('@(string.IsNullOrEmpty(newEmployee.Avatar) ? "assets/media/svg/avatars/001-boy.svg" : newEmployee.Avatar)')"></div>
-                                <label class="btn btn-icon btn-circle btn-active-color-primary w-30px h-30px bg-body shadow" data-kt-image-input-action="change" title="Thay đổi ảnh">
-                                    <i class="bi bi-pencil-fill fs-7"></i>
-                                    <InputFile OnChange="UploadAvatar" accept=".png, .jpg, .jpeg" class="d-none" />
-                                </label>
-                            </div>
-                            <div class="text-muted fs-8 mt-4 text-center">Cho phép: png, jpg, jpeg. <br/>Tối đa 2MB.</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-8">
-                    <div class="py-10 px-8 border border-primary border-dashed rounded-3 bg-light-primary text-center h-100 d-flex flex-column align-items-center justify-content-center position-relative overflow-hidden">
-                        <div class="position-absolute top-50 start-50 translate-middle opacity-5" style="z-index: 0;">
-                            <i class="bi bi-qr-code-scan" style="font-size: 10rem;"></i>
-                        </div>
-                        <div class="position-relative" style="z-index: 1;">
-                            <div class="mb-4">
-                                <i class="bi bi-qr-code-scan fs-3x text-primary opacity-75"></i>
-                            </div>
-                            <div class="fw-bolder fs-5 text-gray-800 mb-1">Tính năng Scan CCCD Thông minh</div>
-                            <div class="text-gray-500 fs-7 mb-6">Sử dụng công nghệ AI OCR để tự động nhận diện thông tin từ thẻ CCCD.</div>
-                            <button type="button" class="btn btn-primary px-10 fw-bolder shadow-sm" @onclick="ScanCCCD">
-                                <i class="bi bi-upc-scan me-2"></i> Bấm quét thẻ hoặc kéo thả ảnh vào đây
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row g-9 mb-8">
-                <div class="col-md-6">
-                    <TTLInput Type="TTLInput.InputDataType.Name"
-                              Label="Họ và tên nhân viên" id="input_Name"
-                              @bind-Value="newEmployee.Name"
-                              Placeholder="VD: Nguyễn Văn A"
-                              IsRequired="true"
-                              Hint="Hệ thống sẽ tự động viết hoa chữ cái đầu."
-                              IsInvalid='@errorsMap.ContainsKey("Name")'
-                              ErrorMessage='@errorsMap.GetValueOrDefault("Name")' />
-                </div>
-                <div class="col-md-6">
-                    <TTLInput Type="TTLInput.InputDataType.CCCD"
-                              Label="Số CCCD / CMND"
-                              @bind-Value="newEmployee.IdCard"
-                              Placeholder="001xxxxxxxxx"
-                              IsRequired="false"
-                              Hint="Nhập 12 chữ số (không bắt buộc)."
-                              IsInvalid='@errorsMap.ContainsKey("IdCard")'
-                              ErrorMessage='@errorsMap.GetValueOrDefault("IdCard")'
-                              Id="input_IdCard" />
-                </div>
-            </div>
-
-            <div class="row g-9 mb-8">
-                <div class="col-md-6">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Ngày cấp (CCCD)</label>
-                    <div class="position-relative d-flex align-items-center">
-                        <i class="bi bi-calendar-check position-absolute ms-4 text-gray-500"></i>
-                        <input type="date" class="form-control form-control-solid ps-12" @bind="newEmployee.CccdIssueDate" />
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Nơi cấp (CCCD)</label>
-                    <input type="text" class="form-control form-control-solid" placeholder="Cục CS QLHC về TTXH" @bind="newEmployee.CccdIssuePlace" />
-                </div>
-            </div>
-
-            <div class="row g-9 mb-8">
-                <div class="col-md-4">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Ngày sinh</label>
-                    <div class="position-relative d-flex align-items-center">
-                        <i class="bi bi-calendar3 position-absolute ms-4 text-gray-500"></i>
-                        <input type="date" class="form-control form-control-solid ps-12" @bind="newEmployee.DOB" />
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Giới tính</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.GenderId">
-                        <option value="">Chọn giới tính</option>
-                        @foreach (var item in genderLookups)
-                        {
-                            <option value="@item.LookupID">@item.Name</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tình trạng hôn nhân</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.MaritalStatusId">
-                        <option value="">Chọn tình trạng</option>
-                        @foreach (var item in maritalStatusLookups)
-                        {
-                            <option value="@item.LookupID">@item.Name</option>
-                        }
-                    </select>
-                </div>
-            </div>
-
-            <div class="row g-9 mb-8">
-                <div class="col-md-4">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Quốc tịch</label>
-                    <select id="input_Nationality" class="form-select form-select-solid @(errorsMap.ContainsKey("Nationality") ? "is-invalid border-danger" : "")" @bind="newEmployee.Nationality">
-                        @if (nationalityLookups == null || !nationalityLookups.Any())
-                        {
-                            <option value="Việt Nam">Việt Nam</option>
-                        }
-                        else
-                        {
-                            <option value="">-- Chọn quốc gia --</option>
-                            @foreach (var item in nationalityLookups)
-                            {
-                                <option value="@item.Name">@item.Name</option>
-                            }
-                        }
-                    </select>
-                    @if (errorsMap.ContainsKey("Nationality"))
-                    {
-                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["Nationality"]</div>
-                    }
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Dân tộc</label>
-                    <select id="input_EthnicityId" class="form-select form-select-solid @(errorsMap.ContainsKey("EthnicityId") ? "is-invalid border-danger" : "")" @bind="newEmployee.EthnicityId">
-                        <option value="">Chọn dân tộc</option>
-                        @foreach (var item in ethnicityLookups)
-                        {
-                            <option value="@item.LookupID">@item.Name</option>
-                        }
-                    </select>
-                    @if (errorsMap.ContainsKey("EthnicityId"))
-                    {
-                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["EthnicityId"]</div>
-                    }
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tôn giáo</label>
-                    <select id="input_ReligionId" class="form-select form-select-solid @(errorsMap.ContainsKey("ReligionId") ? "is-invalid border-danger" : "")" @bind="newEmployee.ReligionId">
-                        <option value="">Chọn tôn giáo</option>
-                        @foreach (var item in religionLookups)
-                        {
-                            <option value="@item.LookupID">@item.Name</option>
-                        }
-                    </select>
-                    @if (errorsMap.ContainsKey("ReligionId"))
-                    {
-                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["ReligionId"]</div>
-                    }
-                </div>
-            </div>
-
-            <div class="row g-9">
-                <div class="col-md-6">
-                    <TTLInput Type="TTLInput.InputDataType.Email"
-                              Label="Email cá nhân"
-                              @bind-Value="newEmployee.Email"
-                              Placeholder="example@mail.com"
-                              IsRequired="false"
-                              Hint="Địa chỉ email cá nhân (không bắt buộc)."
-                              IsInvalid='@errorsMap.ContainsKey("Email")'
-                              ErrorMessage='@errorsMap.GetValueOrDefault("Email")'
-                              Id="input_Email" />
-                </div>
-                <div class="col-md-6">
-                    <TTLInput Type="TTLInput.InputDataType.Phone"
-                              Label="Số điện thoại"
-                              @bind-Value="newEmployee.Phone"
-                              Placeholder="090xxxxxxx"
-                              IsRequired="false"
-                              Hint="Số điện thoại liên lạc (không bắt buộc)."
-                              IsInvalid='@errorsMap.ContainsKey("Phone")'
-                              ErrorMessage='@errorsMap.GetValueOrDefault("Phone")'
-                              Id="input_Phone" />
-                </div>
-            </div>
-        </div>
+    <!-- TAB 1: THÔNG TIN CƠ BẢN & CÔNG VIỆC -->
+    <div class="tab-pane fade show active" id="tab_basic" role="tabpanel">
+        <EmployeeStepBasic 
+            Model="newEmployee" 
+            IsProcessing="_isProcessing" 
+            IsReadOnly="@IsReadOnly"
+            Errors="errorsMap"
+            Departments="departments"
+            Positions="positions"
+            WorkplaceLookups="workplaceLookups"
+            StatusLookups="employeeStatusLookups"
+            ContractTypeLookups="contractTypeLookups"
+            OnSave="Submit"
+            OnAvatarUpload="UploadAvatar"
+            OnScanRequested="ScanCCCD" />
     </div>
-
-    <!-- SECTION: ĐỊA CHỈ & LIÊN LẠC (Moved Emergency here) -->
-    <div class="row g-7 g-lg-10">
-        <div class="col-xl-8">
-            <div class="card card-flush py-4 h-100">
-                <div class="card-header border-0">
-                    <div class="card-title">
-                        <span class="symbol symbol-30px me-3">
-                            <i class="bi bi-geo-alt text-primary fs-2"></i>
-                        </span>
-                        <h2 class="fw-bold fs-5 text-uppercase m-0">Địa chỉ & Hộ khẩu</h2>
-                    </div>
-                </div>
-                <div class="card-body pt-0">
-                    <div class="row g-9">
-                        <div class="col-md-4">
-                            <TTLInput Type="TTLInput.InputDataType.Address" Label="Quê quán" @bind-Value="newEmployee.Hometown" Placeholder="Ghi theo CCCD..." />
-                        </div>
-                        <div class="col-md-4">
-                            <TTLInput Type="TTLInput.InputDataType.Address" Label="Nơi sinh" @bind-Value="newEmployee.PlaceOfOrigin" Placeholder="Ghi theo CCCD..." />
-                        </div>
-                        <div class="col-md-4">
-                            <div class="d-flex flex-stack mb-2">
-                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-0">Nơi thường trú</label>
-                                <button type="button" class="btn btn-sm btn-light-info fw-bold py-1 px-3" @onclick="GetResidenceCoordinates">
-                                    <i class="bi bi-geo-alt-fill me-1"></i> Lấy tọa độ
-                                </button>
-                            </div>
-                            <TTLInput Type="TTLInput.InputDataType.Address" @bind-Value="newEmployee.Residence" Placeholder="Địa chỉ hiện tại..." />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-4">
-            <div class="card card-flush py-4 h-100 border-warning border-dashed border-1 shadow-sm">
-                <div class="card-header border-0">
-                    <div class="card-title">
-                        <span class="symbol symbol-30px me-3">
-                            <i class="bi bi-exclamation-triangle-fill text-warning fs-2"></i>
-                        </span>
-                        <h2 class="fw-bold fs-5 text-uppercase m-0">Liên hệ khẩn cấp</h2>
-                    </div>
-                </div>
-                <div class="card-body pt-0">
-                    <div class="mb-6">
-                        <TTLInput Type="TTLInput.InputDataType.Name" Label="Họ tên người liên hệ" @bind-Value="newEmployee.EmergencyContactName" Placeholder="VD: Nguyễn Văn B" />
-                    </div>
-                    <div class="row g-4 mb-0">
-                        <div class="col-12">
-                            <TTLInput Type="TTLInput.InputDataType.Phone" Label="SĐT Khẩn cấp" @bind-Value="newEmployee.EmergencyContactPhone" Placeholder="090xxxxxxx" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-        </div>
-    </div>
-
-    <!-- TAB 2: CÔNG VIỆC & LƯƠNG -->
-    <div class="tab-pane fade" id="tab_job" role="tabpanel">
-        <div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
-            <!-- SECTION: THÔNG TIN CÔNG VIỆC -->
-            <div class="card card-flush py-4">
-        <div class="card-header border-0">
-            <div class="card-title">
-                <span class="symbol symbol-30px me-3">
-                    <i class="bi bi-briefcase text-primary fs-2"></i>
-                </span>
-                <h2 class="fw-bold fs-5 text-uppercase m-0">Thông tin công việc & Hợp đồng</h2>
-            </div>
-        </div>
-        <div class="card-body pt-0">
-            <div class="row g-9 mb-8">
-                <div class="col-md-3">
-                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Chức vụ / Vị trí</label>
-                    <select id="input_PositionId" class="form-select form-select-solid @(errorsMap.ContainsKey("PositionId") ? "is-invalid border-danger" : "")" @bind="newEmployee.PositionId">
-                        <option value="">Chọn chức danh...</option>
-                        @foreach (var item in positions)
-                        {
-                            <option value="@item.Id">@item.Name</option>
-                        }
-                    </select>
-                    @if (errorsMap.ContainsKey("PositionId"))
-                    {
-                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["PositionId"]</div>
-                    }
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Phòng ban</label>
-                    <select id="input_DeptId" class="form-select form-select-solid @(errorsMap.ContainsKey("DeptId") ? "is-invalid border-danger" : "")" @bind="newEmployee.DeptId">
-                        @foreach (var item in departments)
-                        {
-                            <option value="@item.Id">@item.Name</option>
-                        }
-                    </select>
-                    @if (errorsMap.ContainsKey("DeptId"))
-                    {
-                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["DeptId"]</div>
-                    }
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Nơi làm việc</label>
-                    <select id="input_WorkplaceId" class="form-select form-select-solid @(errorsMap.ContainsKey("WorkplaceId") ? "is-invalid border-danger" : "")" @bind="newEmployee.WorkplaceId">
-                        <option value="">-- Chọn địa điểm --</option>
-                        @foreach (var item in workplaceLookups)
-                        {
-                            <option value="@item.LookupID">@item.Name</option>
-                        }
-                    </select>
-                    @if (errorsMap.ContainsKey("WorkplaceId"))
-                    {
-                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["WorkplaceId"]</div>
-                    }
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Trạng thái nhân sự</label>
-                    <select id="input_StatusId" class="form-select form-select-solid @(errorsMap.ContainsKey("StatusId") ? "is-invalid border-danger" : "")" @bind="newEmployee.StatusId">
-                        @foreach (var item in employeeStatusLookups)
-                        {
-                            <option value="@item.LookupID">@item.Name</option>
-                        }
-                    </select>
-                    @if (errorsMap.ContainsKey("StatusId"))
-                    {
-                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["StatusId"]</div>
-                    }
-                </div>
-            </div>
-            <div class="row g-9">
-                <div class="col-md-3">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Người quản lý</label>
-                    <select class="form-select form-select-solid" @bind="newEmployee.ReportToId">
-                        <option value="">-- Không có --</option>
-                        @foreach (var item in allEmployees)
-                        {
-                            <option value="@item.Id">@item.FullName</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Loại hợp đồng</label>
-                    <select id="input_ContractTypeId" class="form-select form-select-solid @(errorsMap.ContainsKey("ContractTypeId") ? "is-invalid border-danger" : "")" @bind="newEmployee.ContractTypeId">
-                        @foreach (var item in contractTypeLookups)
-                        {
-                            <option value="@item.LookupID">@item.Name</option>
-                        }
-                    </select>
-                    @if (errorsMap.ContainsKey("ContractTypeId"))
-                    {
-                        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["ContractTypeId"]</div>
-                    }
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Ngày gia nhập</label>
-                    <div class="position-relative d-flex align-items-center">
-                        <i class="bi bi-calendar-event position-absolute ms-4 text-gray-500"></i>
-                        <input type="date" class="form-control form-control-solid ps-12" @bind="newEmployee.OfficialJoinDate" />
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label required fs-7 fw-bolder text-gray-700 text-uppercase">Mức lương cơ bản (VNĐ)</label>
-                    <TTLFormattedInput Simple="true" Suffix="VNĐ" Placeholder="10.000.000" 
-                                      Value="@(newEmployee.Salary ?? 0)" 
-                                      ValueChanged="@(val => newEmployee.Salary = val)" />
-                </div>
-            </div>
-            <div class="row g-9 mt-4">
-                <div class="col-md-3">
-                    <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mã máy chấm công (NV cũ)</label>
-                    <div class="position-relative d-flex align-items-center">
-                        <i class="bi bi-person-badge-fill position-absolute ms-4 text-gray-500"></i>
-                        <input type="text" class="form-control form-control-solid ps-12" placeholder="VD: NV001" @bind="newEmployee.TimekeepingCode" />
-                    </div>
-                </div>
-                <div class="col-md-3 d-flex align-items-end pb-2">
-                    <div class="form-check form-check-custom form-check-solid">
-                        <input class="form-check-input h-30px w-50px" type="checkbox" @bind="newEmployee.IsTrainer" id="isTrainerToggle" />
-                        <label class="form-check-label fw-bolder text-gray-700 ms-3" for="isTrainerToggle">LÀ GIẢNG VIÊN ĐÀO TẠO</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- DOUBLE COLUMN: FINANCE & EMERGENCY -->
-    <div class="row g-7 g-lg-10">
-        <div class="col-xl-8">
-            <div class="card card-flush py-4">
-
-                <div class="card-header border-0">
-                    <div class="card-title">
-                        <span class="symbol symbol-30px me-3">
-                            <i class="bi bi-bank text-primary fs-2"></i>
-                        </span>
-                        <h2 class="fw-bold fs-5 text-uppercase m-0">Tài chính & Bảo hiểm</h2>
-                    </div>
-                </div>
-                <div class="card-body pt-0">
-                    <div class="row g-9 mb-8">
-                        <div class="col-md-6">
-                            <div class="d-flex flex-stack mb-2">
-                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-0">Ngân hàng</label>
-                                <a href="/settings/banks" target="_blank" class="fs-9 fw-bold text-primary text-hover-underline"><i class="ki-outline ki-setting-2 fs-9"></i> Cấu hình</a>
-                            </div>
-                             <select id="input_BankName" class="form-select form-select-solid @(errorsMap.ContainsKey("BankName") ? "is-invalid border-danger" : "")" @bind="newEmployee.BankName">
-                                 <option value="">-- Chọn ngân hàng --</option>
-                                 @foreach (var bank in activeBanks)
-                                 {
-                                     <option value="@bank.Code">@bank.Code - @bank.Name</option>
-                                 }
-                             </select>
-                             @if (errorsMap.ContainsKey("BankName"))
-                             {
-                                 <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@errorsMap["BankName"]</div>
-                             }
-                        </div>
-                        <div class="col-md-6">
-                            <TTLInput Label="Số tài khoản" Placeholder="STK ngân hàng" @bind-Value="newEmployee.BankAccountNumber" Type="TTLInput.InputDataType.CCCD"
-                                      IsInvalid='@errorsMap.ContainsKey("BankAccountNumber")' ErrorMessage='@errorsMap.GetValueOrDefault("BankAccountNumber")' Id="input_BankAccountNumber" />
-                        </div>
-                    </div>
-                    <div class="row g-9">
-                        <div class="col-md-6">
-                            <TTLInput Label="Mã số thuế" Placeholder="MST cá nhân" @bind-Value="newEmployee.TaxId" Type="TTLInput.InputDataType.CCCD"
-                                      IsInvalid='@errorsMap.ContainsKey("TaxId")' ErrorMessage='@errorsMap.GetValueOrDefault("TaxId")' Id="input_TaxId" />
-                        </div>
-                        <div class="col-md-6">
-                            <TTLInput Label="Số sổ BHXH" Placeholder="Số BHXH" @bind-Value="newEmployee.SocialInsuranceId" Type="TTLInput.InputDataType.CCCD" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-    </div>
+<!-- TAB 2: LÝ LỊCH CHI TIẾT -->
+<div class="tab-pane fade" id="tab_personal" role="tabpanel">
+    <EmployeeStepPersonal 
+        Model="newEmployee" 
+        IsProcessing="_isProcessing" 
+        IsReadOnly="@IsReadOnly"
+        Errors="errorsMap"
+        GenderLookups="genderLookups"
+        MaritalStatusLookups="maritalStatusLookups"
+        EthnicityLookups="ethnicityLookups"
+        ReligionLookups="religionLookups"
+        NationalityLookups="nationalityLookups"
+        ProvinceLookups="provinceLookups"
+        OnSave="Submit" />
 </div>
 
     <!-- TAB 3: NĂNG LỰC & GIA ĐÌNH -->
     <div class="tab-pane fade" id="tab_competence" role="tabpanel">
-        <div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
-            <!-- SECTION: HỒ SƠ NĂNG LỰC & NGƯỜI PHỤ THUỘC -->
-            <div class="card card-flush py-4">
-        <div class="card-header border-0">
-            <div class="card-title">
-                <span class="symbol symbol-30px me-3">
-                    <i class="bi bi-mortarboard text-primary fs-2"></i>
-                </span>
-                <h2 class="fw-bold fs-5 text-uppercase m-0">Trình độ, Kinh nghiệm & Người phụ thuộc</h2>
-            </div>
-        </div>
-        <div class="card-body pt-0">
-            <!-- TABS FOR SUB-SECTIONS -->
-            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold mb-8">
-                <li class="nav-item">
-                    <a class="nav-link text-active-primary active" data-bs-toggle="tab" href="#kt_tab_education">Bằng cấp & Học vấn</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-active-primary" data-bs-toggle="tab" href="#kt_tab_experience">Kinh nghiệm làm việc</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-active-primary" data-bs-toggle="tab" href="#kt_tab_dependents">Người phụ thuộc</a>
-                </li>
-            </ul>
+        <EmployeeStepCompetence 
+            Model="newEmployee" 
+            IsProcessing="_isProcessing" 
+            IsReadOnly="@IsReadOnly"
+            Errors="errorsMap"
+            SchoolLookups="schoolLookups"
+            DegreeLookups="degreeLookups"
+            MajorLookups="majorLookups"
+            OnSave="Submit" />
+    </div>
 
-            <div class="tab-content">
-                <!-- Education Tab -->
-                <div class="tab-pane fade show active" id="kt_tab_education" role="tabpanel">
-                    <div class="d-flex flex-stack mb-5">
-                        <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bold text-gray-800 fs-6">Danh sách Bằng cấp</span>
-                        </h3>
-                        <button type="button" class="btn btn-sm btn-light-primary" @onclick="AddEducation">
-                            <i class="bi bi-plus-lg me-2"></i>Thêm bằng cấp
-                        </button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
-                            <thead>
-                                <tr class="fw-bold text-muted bg-light">
-                                    <th class="ps-4 min-w-150px rounded-start">Trường / Tổ chức</th>
-                                    <th class="min-w-125px">Bằng cấp</th>
-                                    <th class="min-w-125px">Chuyên ngành</th>
-                                    <th class="min-w-100px">Năm học</th>
-                                    <th class="min-w-50px text-end rounded-end"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (newEmployee.Education != null && newEmployee.Education.Any())
-                                {
-                                    @foreach (var edu in newEmployee.Education)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="edu.SchoolName" placeholder="ĐH Bách Khoa..." />
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="edu.Degree" placeholder="Cử nhân / Kỹ sư..." />
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="edu.Major" placeholder="CNTT..." />
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <input type="number" class="form-control form-control-solid form-control-sm w-70px" @bind="edu.StartYear" />
-                                                    <span>-</span>
-                                                    <input type="number" class="form-control form-control-solid form-control-sm w-70px" @bind="edu.EndYear" />
-                                                </div>
-                                            </td>
-                                            <td class="text-end">
-                                                <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" @onclick="() => RemoveEducation(edu)">
-                                                    <i class="bi bi-trash fs-5"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="5" class="text-center text-muted fs-7 py-10">Chưa có thông tin học vấn.</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    <!-- TAB 4: TÀI KHOẢN & TÀI CHÍNH -->
+    <div class="tab-pane fade" id="tab_account_finance" role="tabpanel">
+        <EmployeeStepFinance 
+            Model="newEmployee" 
+            IsProcessing="_isProcessing" 
+            IsReadOnly="@IsReadOnly"
+            Errors="errorsMap"
+            IsEditMode="IsEditMode"
+            AvailableRoles="availableRoles"
+            OnSave="Submit"
+            OnToggleRole="ToggleRole"
+            OnPasswordResetRequested="RequestPasswordReset" />
+    </div>
 
-                <!-- Experience Tab -->
-                <div class="tab-pane fade" id="kt_tab_experience" role="tabpanel">
-                    <div class="d-flex flex-stack mb-5">
-                        <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bold text-gray-800 fs-6">Kinh nghiệm làm việc</span>
-                        </h3>
-                        <button type="button" class="btn btn-sm btn-light-primary" @onclick="AddExperience">
-                            <i class="bi bi-plus-lg me-2"></i>Thêm kinh nghiệm
-                        </button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
-                            <thead>
-                                <tr class="fw-bold text-muted bg-light">
-                                    <th class="ps-4 min-w-150px rounded-start">Công ty</th>
-                                    <th class="min-w-125px">Vị trí</th>
-                                    <th class="min-w-200px">Thời gian</th>
-                                    <th class="min-w-50px text-end rounded-end"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (newEmployee.Experience != null && newEmployee.Experience.Any())
-                                {
-                                    @foreach (var exp in newEmployee.Experience)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="exp.CompanyName" placeholder="Tên công ty cũ..." />
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="exp.Position" placeholder="Chức vụ..." />
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <input type="date" class="form-control form-control-solid form-control-sm" @bind="exp.StartDate" />
-                                                    <span>đến</span>
-                                                    <input type="date" class="form-control form-control-solid form-control-sm" @bind="exp.EndDate" />
-                                                </div>
-                                            </td>
-                                            <td class="text-end">
-                                                <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" @onclick="() => RemoveExperience(exp)">
-                                                    <i class="bi bi-trash fs-5"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="4" class="text-center text-muted fs-7 py-10">Chưa có thông tin kinh nghiệm.</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Dependents Tab -->
-                <div class="tab-pane fade" id="kt_tab_dependents" role="tabpanel">
-                    <div class="d-flex flex-stack mb-5">
-                        <div class="d-flex flex-column">
-                            <h3 class="card-title align-items-start flex-column mb-1">
-                                <span class="card-label fw-bold text-gray-800 fs-6">Người phụ thuộc (Dùng cho Giảm trừ gia cảnh)</span>
-                            </h3>
-                            <span class="text-muted fw-semibold fs-7">Số người phụ thuộc hiện tại: <span class="text-primary fw-bold">@(newEmployee.PersonalDetails?.Dependents?.Count ?? 0)</span></span>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-light-primary" @onclick="AddDependent">
-                            <i class="bi bi-plus-lg me-2"></i>Thêm người phụ thuộc
-                        </button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
-                            <thead>
-                                <tr class="fw-bold text-muted bg-light">
-                                    <th class="ps-4 min-w-150px rounded-start">Họ tên</th>
-                                    <th class="min-w-125px">Ngày sinh</th>
-                                    <th class="min-w-100px">Quan hệ</th>
-                                    <th class="min-w-125px">CCCD/MST</th>
-                                    <th class="min-w-100px text-center">Giảm trừ</th>
-                                    <th class="min-w-50px text-end rounded-end"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (newEmployee.PersonalDetails?.Dependents != null && newEmployee.PersonalDetails.Dependents.Any())
-                                {
-                                    @foreach (var dep in newEmployee.PersonalDetails.Dependents)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="dep.FullName" placeholder="Họ tên..." />
-                                            </td>
-                                            <td>
-                                                <input type="date" class="form-control form-control-solid form-control-sm" @bind="dep.DOB" />
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="dep.Relationship" placeholder="Con/Vợ/Chồng..." />
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control form-control-solid form-control-sm" @bind="dep.TaxCode" placeholder="CCCD hoặc MST..." />
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="form-check form-check-custom form-check-solid form-check-sm justify-content-center">
-                                                    <input class="form-check-input" type="checkbox" @bind="dep.IsEligibleForDeduction" />
-                                                </div>
-                                            </td>
-                                            <td class="text-end">
-                                                <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm" @onclick="() => RemoveDependent(dep)">
-                                                    <i class="bi bi-trash fs-5"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="6" class="text-center text-muted fs-7 py-10">Chưa có thông tin người phụ thuộc.</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- TAB 5: TÀI LIỆU -->
+    <div class="tab-pane fade" id="tab_documents" role="tabpanel">
+        <EmployeeStepDocuments 
+            Model="newEmployee"
+            IsProcessing="_isProcessing"
+            IsReadOnly="@IsReadOnly"
+            UploadedDocuments="uploadedDocuments"
+            OnSave="Submit"
+            OnDocumentUpload='(val) => UploadDocument(val.Args, val.DocType)' />
     </div>
 </div>
-</div>
 
-    <!-- TAB 4: TÀI KHOẢN & HỒ SƠ -->
-    <div class="tab-pane fade" id="tab_account" role="tabpanel">
-        <div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
-            <!-- SECTION: TÀI KHOẢN HỆ THỐNG -->
-            @if (IsEmailValid)
-            {
-                <div class="card card-flush py-4 border-primary border-dashed border-1 shadow-sm">
-                    <div class="card-header border-0">
-                        <div class="card-title">
-                            <span class="symbol symbol-30px me-3">
-                                <i class="bi bi-shield-lock text-primary fs-2"></i>
-                            </span>
-                            <h2 class="fw-bold fs-5 text-uppercase m-0">Tài khoản đăng nhập hệ thống</h2>
-                        </div>
-                        <div class="card-toolbar gap-10">
-                            <div class="form-check form-switch form-check-custom form-check-solid">
-                                <input class="form-check-input h-30px w-50px" type="checkbox" @bind="newEmployee.IsCreateAccount" id="createAccountToggle" />
-                                <label class="form-check-label fw-bolder text-gray-700 ms-3" for="createAccountToggle">TỰ ĐỘNG KHỞI TẠO TÀI KHOẢN</label>
-                            </div>
-                            <div class="d-flex align-items-center gap-3 border-start border-gray-300 ps-10">
-                                <label class="fs-7 fw-bolder text-gray-700 text-uppercase m-0">Trạng thái tài khoản:</label>
-                                <div class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input h-25px w-45px" type="checkbox" @bind="newEmployee.IsActive" id="accountActiveToggle" disabled="@(!newEmployee.IsCreateAccount)" />
-                                </div>
-                                <span class="badge @(newEmployee.IsActive ? "badge-light-success" : "badge-light-danger") fs-9 fw-bold">
-                                    @(newEmployee.IsActive ? "ĐANG HOẠT ĐỘNG" : "BỊ KHOÁ")
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body pt-0 @(newEmployee.IsCreateAccount || !string.IsNullOrEmpty(newEmployee.Username) ? "" : "opacity-50")">
-                        <div class="row g-9">
-                            <div class="col-md-3">
-                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Tên đăng nhập</label>
-                                <input type="text" id="input_Username" class="form-control form-control-solid @(errorsMap.ContainsKey("Username") ? "is-invalid border-danger" : "")" 
-                                       placeholder="VD: tantanloc" @bind="newEmployee.Username" disabled="@(!newEmployee.IsCreateAccount)" />
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Mật khẩu</label>
-                                @if (IsEditMode)
-                                {
-                                    <div class="position-relative">
-                                        <button type="button" class="btn btn-light-warning btn-sm fw-bold w-100 h-40px border border-warning border-dashed" @onclick="RequestPasswordReset">
-                                            <i class="bi bi-key-fill fs-5 me-2"></i> Gửi Link Đặt Lại
-                                        </button>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="form-control form-control-solid bg-light-info text-primary fw-bold h-40px d-flex align-items-center justify-content-center fs-8 flex-grow-1 border border-primary border-dashed">
-                                            THIẾT LẬP QUA EMAIL
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                            <div class="col-md-1">
-                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase invisible">Gửi</label>
-                                <div class="d-flex gap-1 justify-content-center">
-                                    <button type="button" class="btn btn-icon btn-light-primary btn-sm h-40px w-40px shadow-sm" title="Gửi qua Email" @onclick='() => SendCredentialsAction("EMAIL")'>
-                                        <i class="bi bi-envelope-at fs-5"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-icon btn-light-success btn-sm h-40px w-40px shadow-sm" title="Gửi qua SMS" @onclick='() => SendCredentialsAction("SMS")'>
-                                        <i class="bi bi-chat-dots fs-5"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-3">Phân quyền vai trò</label>
-                                <div class="d-flex flex-wrap gap-2">
-                                    @if (availableRoles != null)
-                                    {
-                                        @foreach (var role in availableRoles)
-                                        {
-                                            var isSelected = newEmployee.Roles?.Contains(role.Id) ?? false;
-                                            <div class="cursor-pointer badge badge-lg @(isSelected ? "badge-light-primary border border-primary" : "badge-light border border-gray-300") px-4 py-3"
-                                                 @onclick="() => ToggleRole(role.Id)"
-                                                 style="transition: all 0.2s ease-in-out; border-style: @(isSelected ? "solid" : "dashed") !important; @(!newEmployee.IsCreateAccount ? "opacity: 0.5; cursor: not-allowed;" : "")">
-                                                <div class="d-flex align-items-center">
-                                                    @if (isSelected)
-                                                    {
-                                                        <i class="ki-outline ki-shield-tick fs-5 me-2 text-primary"></i>
-                                                    }
-                                                    else
-                                                    {
-                                                        <i class="ki-outline ki-shield fs-5 me-2 text-gray-400"></i>
-                                                    }
-                                                    <span class="fw-bold @(isSelected ? "text-primary" : "text-gray-700") fs-7">@role.Name</span>
-                                                </div>
-                                            </div>
-                                        }
-                                    }
-                                </div>
-                                @if (!newEmployee.IsCreateAccount)
-                                {
-                                    <div class="text-muted fs-9 mt-2 italic"> <i class="bi bi-info-circle fs-9 me-1"></i> Bật 'Tự động khởi tạo tài khoản' để phân quyền</div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-
-            <!-- SECTION: TÀI LIỆU ĐÍNH KÈM -->
-            <div class="card card-flush py-4">
-        <div class="card-header border-0">
-            <div class="card-title">
-                <span class="symbol symbol-30px me-3">
-                    <i class="bi bi-paperclip text-primary fs-2"></i>
-                </span>
-                <h2 class="fw-bold fs-5 text-uppercase m-0">Hồ sơ & Tài liệu đính kèm</h2>
-            </div>
-        </div>
-        <div class="card-body pt-0">
-            <div class="row g-7">
-                <!-- Document: ID CARD -->
-                <div class="col-md-6">
-                    @{
-                        var idCardDoc = uploadedDocuments.FirstOrDefault(x => x.DocumentType == "IDCard");
-                    }
-                    <div class="d-flex flex-stack border border-dashed @(idCardDoc != null ? "border-success bg-light-success" : "border-gray-300") rounded p-5">
-                        <div class="d-flex align-items-center">
-                            <div class="symbol symbol-40px me-4">
-                                <div class="symbol-label @(idCardDoc != null ? "bg-success" : "bg-light-danger")">
-                                    <i class="bi @(idCardDoc != null ? "bi-check2-circle text-white" : "bi-file-earmark-pdf text-danger") fs-2"></i>
-                                </div>
-                            </div>
-                            <div class="ms-1">
-                                <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Ảnh CCCD (Mặt trước/sau)</span>
-                                @if (idCardDoc != null)
-                                {
-                                    <div class="d-flex align-items-center">
-                                        <span class="badge badge-light-success fs-9 px-2 py-1">Đã tải lên (@idCardDoc.FileSizeDisplay)</span>
-                                        <a href="@idCardDoc.FileUrl" target="_blank" class="ms-3 text-primary fs-9 fw-bold">Xem lại</a>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
-                                }
-                            </div>
-                        </div>
-                        <label class="btn btn-sm @(idCardDoc != null ? "btn-success" : "btn-light-primary") fw-bolder px-5 mb-0">
-                            @(idCardDoc != null ? "TẢI LẠI" : "TẢI LÊN")
-                            <InputFile OnChange='(e) => UploadDocument(e, "IDCard")' accept=".pdf, .jpg, .jpeg, .png" class="d-none" />
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Document: DEGREES -->
-                <div class="col-md-6">
-                    @{
-                        var degreeDoc = uploadedDocuments.FirstOrDefault(x => x.DocumentType == "Certification");
-                    }
-                    <div class="d-flex flex-stack border border-dashed @(degreeDoc != null ? "border-success bg-light-success" : "border-gray-300") rounded p-5">
-                        <div class="d-flex align-items-center">
-                            <div class="symbol symbol-40px me-4">
-                                <div class="symbol-label @(degreeDoc != null ? "bg-success" : "bg-light-success")">
-                                    <i class="bi @(degreeDoc != null ? "bi-check2-circle text-white" : "bi-patch-check text-success") fs-2"></i>
-                                </div>
-                            </div>
-                            <div class="ms-1">
-                                <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Bằng cấp & Chứng chỉ</span>
-                                @if (degreeDoc != null)
-                                {
-                                    <div class="d-flex align-items-center">
-                                        <span class="badge badge-light-success fs-9 px-2 py-1">Đã tải lên (@degreeDoc.FileSizeDisplay)</span>
-                                        <a href="@degreeDoc.FileUrl" target="_blank" class="ms-3 text-primary fs-9 fw-bold">Xem lại</a>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
-                                }
-                            </div>
-                        </div>
-                        <label class="btn btn-sm @(degreeDoc != null ? "btn-success" : "btn-light-primary") fw-bolder px-5 mb-0">
-                            @(degreeDoc != null ? "TẢI LẠI" : "TẢI LÊN")
-                            <InputFile OnChange='(e) => UploadDocument(e, "Certification")' accept=".pdf, .jpg, .jpeg, .png" class="d-none" />
-                        </label>
-                    </div>
-                </div>
-                <!-- Document: LABOR CONTRACT -->
-                <div class="col-md-6">
-                    @{
-                        var contractDoc = uploadedDocuments.FirstOrDefault(x => x.DocumentType == "LaborContract");
-                    }
-                    <div class="d-flex flex-stack border border-dashed @(contractDoc != null ? "border-success bg-light-success" : "border-gray-300") rounded p-5">
-                        <div class="d-flex align-items-center">
-                            <div class="symbol symbol-40px me-4">
-                                <div class="symbol-label @(contractDoc != null ? "bg-success" : "bg-light-info")">
-                                    <i class="bi @(contractDoc != null ? "bi-check2-circle text-white" : "bi-file-earmark-text text-info") fs-2"></i>
-                                </div>
-                            </div>
-                            <div class="ms-1">
-                                <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Hợp đồng lao động</span>
-                                @if (contractDoc != null)
-                                {
-                                    <div class="d-flex align-items-center">
-                                        <span class="badge badge-light-success fs-9 px-2 py-1">Đã tải lên (@contractDoc.FileSizeDisplay)</span>
-                                        <a href="@contractDoc.FileUrl" target="_blank" class="ms-3 text-primary fs-9 fw-bold">Xem lại</a>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
-                                }
-                            </div>
-                        </div>
-                        <label class="btn btn-sm @(contractDoc != null ? "btn-success" : "btn-light-primary") fw-bolder px-5 mb-0">
-                            @(contractDoc != null ? "TẢI LẠI" : "TẢI LÊN")
-                            <InputFile OnChange='(e) => UploadDocument(e, "LaborContract")' accept=".pdf, .jpg, .jpeg, .png" class="d-none" />
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Document: CV -->
-                <div class="col-md-6">
-                    @{
-                        var cvDoc = uploadedDocuments.FirstOrDefault(x => x.DocumentType == "CurriculumVitae");
-                    }
-                    <div class="d-flex flex-stack border border-dashed @(cvDoc != null ? "border-success bg-light-success" : "border-gray-300") rounded p-5">
-                        <div class="d-flex align-items-center">
-                            <div class="symbol symbol-40px me-4">
-                                <div class="symbol-label @(cvDoc != null ? "bg-success" : "bg-light-warning")">
-                                    <i class="bi @(cvDoc != null ? "bi-check2-circle text-white" : "bi-person-badge text-warning") fs-2"></i>
-                                </div>
-                            </div>
-                            <div class="ms-1">
-                                <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Sơ yếu lý lịch</span>
-                                @if (cvDoc != null)
-                                {
-                                    <div class="d-flex align-items-center">
-                                        <span class="badge badge-light-success fs-9 px-2 py-1">Đã tải lên (@cvDoc.FileSizeDisplay)</span>
-                                        <a href="@cvDoc.FileUrl" target="_blank" class="ms-3 text-primary fs-9 fw-bold">Xem lại</a>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
-                                }
-                            </div>
-                        </div>
-                        <label class="btn btn-sm @(cvDoc != null ? "btn-success" : "btn-light-primary") fw-bolder px-5 mb-0">
-                            @(cvDoc != null ? "TẢI LẠI" : "TẢI LÊN")
-                            <InputFile OnChange='(e) => UploadDocument(e, "CurriculumVitae")' accept=".pdf, .jpg, .jpeg, .png" class="d-none" />
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Document: HEALTH CERTIFICATE -->
-                <div class="col-md-6">
-                    @{
-                        var healthDoc = uploadedDocuments.FirstOrDefault(x => x.DocumentType == "HealthCertificate");
-                    }
-                    <div class="d-flex flex-stack border border-dashed @(healthDoc != null ? "border-success bg-light-success" : "border-gray-300") rounded p-5">
-                        <div class="d-flex align-items-center">
-                            <div class="symbol symbol-40px me-4">
-                                <div class="symbol-label @(healthDoc != null ? "bg-success" : "bg-light-primary")">
-                                    <i class="bi @(healthDoc != null ? "bi-check2-circle text-white" : "bi-heart-pulse text-primary") fs-2"></i>
-                                </div>
-                            </div>
-                            <div class="ms-1">
-                                <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">Giấy khám sức khỏe</span>
-                                @if (healthDoc != null)
-                                {
-                                    <div class="d-flex align-items-center">
-                                        <span class="badge badge-light-success fs-9 px-2 py-1">Đã tải lên (@healthDoc.FileSizeDisplay)</span>
-                                        <a href="@healthDoc.FileUrl" target="_blank" class="ms-3 text-primary fs-9 fw-bold">Xem lại</a>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span>
-                                }
-                            </div>
-                        </div>
-                        <label class="btn btn-sm @(healthDoc != null ? "btn-success" : "btn-light-primary") fw-bolder px-5 mb-0">
-                            @(healthDoc != null ? "TẢI LẠI" : "TẢI LÊN")
-                            <InputFile OnChange='(e) => UploadDocument(e, "HealthCertificate")' accept=".pdf, .jpg, .jpeg, .png" class="d-none" />
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-</div>
-
-    <!-- FOOTER -->
-    <div class="d-flex align-items-center justify-content-between mt-10 p-8 border-top border-gray-200">
-        <div class="text-gray-500 fs-8 fw-semibold">
-            <i class="bi bi-shield-lock-fill me-2 text-primary"></i>
-            Hệ thống bảo mật dữ liệu theo tiêu chuẩn quốc tế. Mọi thay đổi đều được lưu vết chi tiết.
-        </div>
-        <div class="d-flex gap-4">
-            <button type="button" class="btn btn-light fw-bold px-10 btn-sm" @onclick='() => Navigation.NavigateTo("/employees")'>HUỶ BỎ</button>
-            <button type="button" class="btn btn-primary fw-bold px-10 btn-sm" @onclick="Submit" disabled="@_isProcessing">
-                @if (_isProcessing)
-                {
-                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    <span>ĐANG LƯU...</span>
-                }
-                else
-                {
-                    <span>@(IsEditMode ? "CẬP NHẬT HỒ SƠ" : "LƯU HỒ SƠ NHÂN VIÊN")</span>
-                }
-            </button>
-        </div>
-    </div>
 
 
 

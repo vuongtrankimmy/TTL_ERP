@@ -14,6 +14,7 @@ using TTL.HR.Application.Modules.Organization.Interfaces;
 using TTL.HR.Application.Modules.Organization.Models;
 
 namespace TTL.HR.Shared.Pages.Attendance
+#pragma warning disable CS0169, CS0414
 {
     public partial class ShiftAllocation
     {
@@ -553,7 +554,7 @@ namespace TTL.HR.Shared.Pages.Attendance
             {
                 // Increase search window for full grouping on init
                 int size = fetchAll ? 5000 : 1000;
-                var result = await EmployeeService.GetEmployeesPaginatedAsync(1, size, _searchTerm, _selectedDeptIdInner, _selectedStatusId, _selectedWorkplace);
+                var result = await EmployeeService.GetEmployeesPaginatedAsync(1, size, _searchTerm, string.IsNullOrEmpty(_selectedDeptIdInner) ? null : new[] { _selectedDeptIdInner }, _selectedStatusId, _selectedWorkplace);
                 _employeeList = result?.Items?.ToList() ?? new List<EmployeeDto>();
                 _totalCount = result?.TotalCount ?? 0;
                 
@@ -627,7 +628,7 @@ namespace TTL.HR.Shared.Pages.Attendance
             {
                 _selectedDeptIds.Add(dId);
                 // Tự động chọn tất cả nhân viên thuộc phòng ban này để đồng bộ tab Nhân viên
-                var result = await EmployeeService.GetEmployeesPaginatedAsync(1, 5000, null, dId);
+                var result = await EmployeeService.GetEmployeesPaginatedAsync(1, 5000, null, string.IsNullOrEmpty(dId) ? null : new[] { dId });
                 if (result?.Items != null)
                 {
                     foreach(var emp in result.Items) 

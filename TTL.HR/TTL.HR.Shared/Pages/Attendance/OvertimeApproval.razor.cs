@@ -11,6 +11,7 @@ using TTL.HR.Application.Modules.Common.Models;
 using TTL.HR.Application.Modules.Common.Interfaces;
 
 namespace TTL.HR.Shared.Pages.Attendance
+#pragma warning disable CS0169, CS0414
 {
     public partial class OvertimeApproval
     {

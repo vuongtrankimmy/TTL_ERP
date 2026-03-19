@@ -9,9 +9,9 @@ namespace TTL.HR.Shared.Pages.Auth
 {
     public partial class Register
     {
-        [Inject] public IJSRuntime JS { get; set; }
-        [Inject] public IAuthService AuthService { get; set; }
-        [Inject] public NavigationManager Navigation { get; set; }
+        [Inject] public required IJSRuntime JS { get; set; }
+        [Inject] public required IAuthService AuthService { get; set; }
+        [Inject] public required NavigationManager Navigation { get; set; }
 
         private string _fullName = "";
         private string _email = "";

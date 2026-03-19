@@ -275,7 +275,7 @@
             <!-- Footer -->
             <div class="card-footer py-8 px-12 border-0 d-flex gap-3 justify-content-end bg-light-light">
                 <button type="button" class="btn btn-light fw-bold px-10" @onclick="closeDetail">Đóng</button>
-                <button type="button" class="btn btn-primary fw-bold px-12 shadow-sm" @onclick="() => { closeDetail(); EditBenefit(_selectedBenefit); }">
+                <button type="button" class="btn btn-primary fw-bold px-12 shadow-sm" @onclick="async () => { closeDetail(); await EditBenefit(_selectedBenefit); }">
                     <i class="ki-outline ki-pencil fs-5 me-1"></i>Chỉnh sửa
                 </button>
             </div>

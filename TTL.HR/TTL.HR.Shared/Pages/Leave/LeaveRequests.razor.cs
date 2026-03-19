@@ -12,6 +12,7 @@ using Microsoft.JSInterop;
 
 namespace TTL.HR.Shared.Pages.Leave
 {
+#pragma warning disable CS0169, CS0414
     public partial class LeaveRequests
     {
         private bool _showDetail = false;

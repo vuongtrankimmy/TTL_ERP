@@ -21,6 +21,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public List<EmployeeAuditLog>? AuditLogs { get; set; } = new();
         public List<EmployeeModulePermission>? ModulePermissions { get; set; } = new();
         public string? ActiveContractId { get; set; }
+        public List<string> Skills { get; set; } = new();
+        public List<CertificationDetailDto> Certifications { get; set; } = new();
 
         // Display properties from Backend API
         public string DepartmentName { get; set; } = string.Empty;
@@ -66,12 +68,17 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public bool IsCreateAccount { get; set; }
         public int? NationalityId { get; set; }
         public string Nationality { get; set; } = string.Empty;
+        public string DeptName { get => DepartmentName; set => DepartmentName = value; }
         public int? EthnicityId { get; set; }
         public string Ethnicity { get; set; } = string.Empty;
         public int? ReligionId { get; set; }
         public string Religion { get; set; } = string.Empty;
+        public string ReligionName { get => Religion; set => Religion = value; }
         public int? MaritalStatusId { get; set; }
         public string MaritalStatus { get; set; } = string.Empty;
+        public string MaritalStatusName { get => MaritalStatus; set => MaritalStatus = value; }
+        public string GenderName { get => Gender; set => Gender = value; }
+        public string EthnicityName { get => Ethnicity; set => Ethnicity = value; }
         public DateTime? CccdIssueDate { get; set; }
         public string CccdIssuePlace { get; set; } = string.Empty;
         public string BankAccountNumber { get; set; } = string.Empty;
@@ -99,21 +106,43 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public DateTime? DOB { get; set; }
         public int? GenderId { get; set; }
         public string Gender { get; set; } = string.Empty;
+        public string GenderName { get => Gender; set => Gender = value; }
         public string Hometown { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
+        /// <summary>Mã quốc gia ISO 3166-1 numeric (VD: 704 = Việt Nam)</summary>
+        public int? CountryId { get; set; }
+        /// <summary>Mã tỉnh/thành theo quy định hành chính VN</summary>
+        public int? ProvinceId { get; set; }
+        /// <summary>Mã quận/huyện theo quy định hành chính VN</summary>
+        public int? DistrictId { get; set; }
+        /// <summary>Mã phường/xã theo quy định hành chính VN</summary>
+        public int? WardId { get; set; }
+        /// <summary>Số thứ tự đường (lookup int ID), null nếu nhập tay</summary>
+        public int? StreetId { get; set; }
+        /// <summary>Tên đường / số nhà (text)</summary>
+        public string? Street { get; set; }
         public int? NationalityId { get; set; }
         public string Nationality { get; set; } = string.Empty;
         public int? EthnicityId { get; set; }
         public string Ethnicity { get; set; } = string.Empty;
+        public string EthnicityName { get => Ethnicity; set => Ethnicity = value; }
         public int? ReligionId { get; set; }
         public string Religion { get; set; } = string.Empty;
+        public string ReligionName { get => Religion; set => Religion = value; }
         public string TaxCode { get; set; } = string.Empty;
         public string BankAccount { get; set; } = string.Empty;
         public string BankName { get; set; } = string.Empty;
         public int? MaritalStatusId { get; set; }
         public string MaritalStatus { get; set; } = string.Empty;
+        public string MaritalStatusName { get => MaritalStatus; set => MaritalStatus = value; }
         public string? PlaceOfOrigin { get; set; }
         public string? Residence { get; set; }
+        public int? CurrentCountryId { get; set; }
+        public int? CurrentProvinceId { get; set; }
+        public int? CurrentDistrictId { get; set; }
+        public int? CurrentWardId { get; set; }
+        public int? CurrentStreetId { get; set; }
+        public string? CurrentStreet { get; set; }
         public string? SocialInsuranceId { get; set; }
         public int NumberOfDependents => Dependents?.Count ?? 0;
         public List<DependentDetailDto>? Dependents { get; set; } = new();
@@ -121,6 +150,8 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public string IdCardPlace { get; set; } = string.Empty;
         public double Latitude { get; set; } = 0;
         public double Longitude { get; set; } = 0;
+        public List<string> Skills { get; set; } = new();
+        public List<CertificationDetailDto> Certifications { get; set; } = new();
     }
 
     public class DependentDetailDto
@@ -264,5 +295,15 @@ namespace TTL.HR.Application.Modules.HumanResource.Models
         public int Active { get; set; }
         public int Probation { get; set; }
         public int Resigned { get; set; }
+    }
+
+    public class CertificationDetailDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Organization { get; set; } = string.Empty;
+        public DateTime? IssueDate { get; set; }
+        public DateTime? ExpiryDate { get; set; }
+        public string CredentialId { get; set; } = string.Empty;
+        public string CredentialUrl { get; set; } = string.Empty;
     }
 }

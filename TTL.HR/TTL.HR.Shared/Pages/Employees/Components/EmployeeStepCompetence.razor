@@ -1,0 +1,212 @@
+@namespace TTL.HR.Shared.Pages.Employees.Components
+
+<div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
+    <!-- SECTION: HỒ SƠ NĂNG LỰC & NGƯỜI PHỤ THUỘC -->
+    <div class="card card-flush py-4">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-mortarboard text-primary fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Trình độ, Kinh nghiệm & Gia đình</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0">
+            <!-- TABS FOR SUB-SECTIONS -->
+            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold mb-8">
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary active" data-bs-toggle="tab" href="#comp_tab_education">Bằng cấp & Học vấn</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary" data-bs-toggle="tab" href="#comp_tab_experience">Kinh nghiệm làm việc</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-active-primary" data-bs-toggle="tab" href="#comp_tab_dependents">Người phụ thuộc</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Education Tab -->
+                <div class="tab-pane fade show active" id="comp_tab_education" role="tabpanel">
+                    <div class="d-flex flex-stack mb-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bold text-gray-800 fs-6">Danh sách Bằng cấp</span>
+                        </h3>
+                        @if (!IsReadOnly)
+                        {
+                            <button type="button" class="btn btn-sm btn-light-primary" @onclick="AddEducation">
+                                <i class="bi bi-plus-lg me-2"></i>Thêm bằng cấp
+                            </button>
+                        }
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                            <thead>
+                                <tr class="fw-bold text-muted bg-light">
+                                    <th class="ps-4 min-w-150px rounded-start">Trường / Tổ chức</th>
+                                    <th class="min-w-125px">Bằng cấp</th>
+                                    <th class="min-w-125px">Chuyên ngành</th>
+                                    <th class="min-w-100px text-end rounded-end">Năm học</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Education != null && Model.Education.Any())
+                                {
+                                    @foreach (var edu in Model.Education)
+                                    {
+                                        <tr>
+                                            <td><input type="text" list="school-list" class="form-control form-control-sm form-control-solid" @bind="edu.SchoolName" disabled="@IsReadOnly" /></td>
+                                            <td><input type="text" list="degree-list" class="form-control form-control-sm form-control-solid" @bind="edu.Degree" disabled="@IsReadOnly" /></td>
+                                            <td><input type="text" list="major-list" class="form-control form-control-sm form-control-solid" @bind="edu.Major" disabled="@IsReadOnly" /></td>
+                                            <td class="text-end">
+                                                <div class="d-flex align-items-center justify-content-end gap-2">
+                                                    <input type="number" class="form-control form-control-sm form-control-solid w-80px" @bind="edu.StartYear" disabled="@IsReadOnly" />
+                                                    <span>-</span>
+                                                    <input type="number" class="form-control form-control-sm form-control-solid w-80px" @bind="edu.EndYear" disabled="@IsReadOnly" />
+                                                    @if (!IsReadOnly)
+                                                    {
+                                                        <button type="button" class="btn btn-icon btn-sm btn-light-danger ms-2" @onclick="() => RemoveEducation(edu)"><i class="bi bi-trash"></i></button>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else { <tr><td colspan="4" class="text-center py-10 text-muted fs-7">Chưa có thông tin.</td></tr> }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Experience Tab -->
+                <div class="tab-pane fade" id="comp_tab_experience" role="tabpanel">
+                     <div class="d-flex flex-stack mb-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bold text-gray-800 fs-6">Lịch sử công tác</span>
+                        </h3>
+                        @if (!IsReadOnly)
+                        {
+                            <button type="button" class="btn btn-sm btn-light-primary" @onclick="AddExperience">
+                                <i class="bi bi-plus-lg me-2"></i>Thêm kinh nghiệm
+                            </button>
+                        }
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                            <thead>
+                                <tr class="fw-bold text-muted bg-light">
+                                    <th class="ps-4 min-w-150px rounded-start">Công ty</th>
+                                    <th class="min-w-125px">Vị trí</th>
+                                    <th class="min-w-200px">Thời gian</th>
+                                    <th class="min-w-50px text-end rounded-end"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Experience != null && Model.Experience.Any())
+                                {
+                                    @foreach (var exp in Model.Experience)
+                                    {
+                                        <tr>
+                                            <td><input type="text" class="form-control form-control-sm form-control-solid" @bind="exp.CompanyName" disabled="@IsReadOnly" /></td>
+                                            <td><input type="text" class="form-control form-control-sm form-control-solid" @bind="exp.Position" disabled="@IsReadOnly" /></td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <input type="date" class="form-control form-control-sm form-control-solid" @bind="exp.StartDate" disabled="@IsReadOnly" />
+                                                    <span>-</span>
+                                                    <input type="date" class="form-control form-control-sm form-control-solid" @bind="exp.EndDate" disabled="@IsReadOnly" />
+                                                </div>
+                                            </td>
+                                            <td class="text-end">
+                                                @if (!IsReadOnly)
+                                                {
+                                                    <button type="button" class="btn btn-icon btn-sm btn-light-danger" @onclick="() => RemoveExperience(exp)"><i class="bi bi-trash"></i></button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else { <tr><td colspan="4" class="text-center py-10 text-muted fs-7">Chưa có thông tin.</td></tr> }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Dependents Tab -->
+                <div class="tab-pane fade" id="comp_tab_dependents" role="tabpanel">
+                     <div class="d-flex flex-stack mb-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bold text-gray-800 fs-6">Người phụ thuộc</span>
+                        </h3>
+                        @if (!IsReadOnly)
+                        {
+                            <button type="button" class="btn btn-sm btn-light-primary" @onclick="AddDependent">
+                                <i class="bi bi-plus-lg me-2"></i>Thêm người thân
+                            </button>
+                        }
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                            <thead>
+                                <tr class="fw-bold text-muted bg-light">
+                                    <th class="ps-4 min-w-150px rounded-start">Họ tên</th>
+                                    <th class="min-w-125px">Quan hệ</th>
+                                    <th class="min-w-150px">CCCD/MST</th>
+                                    <th class="min-w-50px text-end rounded-end"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.PersonalDetails?.Dependents != null && Model.PersonalDetails.Dependents.Any())
+                                {
+                                    @foreach (var dep in Model.PersonalDetails.Dependents)
+                                    {
+                                        <tr>
+                                            <td><input type="text" class="form-control form-control-sm form-control-solid" @bind="dep.FullName" disabled="@IsReadOnly" /></td>
+                                            <td><input type="text" class="form-control form-control-sm form-control-solid" @bind="dep.Relationship" disabled="@IsReadOnly" /></td>
+                                            <td><input type="text" class="form-control form-control-sm form-control-solid" @bind="dep.TaxCode" disabled="@IsReadOnly" /></td>
+                                            <td class="text-end">
+                                                @if (!IsReadOnly)
+                                                {
+                                                    <button type="button" class="btn btn-icon btn-sm btn-light-danger" @onclick="() => RemoveDependent(dep)"><i class="bi bi-trash"></i></button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else { <tr><td colspan="4" class="text-center py-10 text-muted fs-7">Chưa có thông tin.</td></tr> }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end py-6 px-9 border-top-0">
+            <button type="button" class="btn @(IsReadOnly ? "btn-light-primary" : "btn-warning") fw-bolder px-10 @(IsReadOnly ? "" : "text-white")" @onclick="HandleSave" disabled="@IsProcessing">
+                @if (IsProcessing)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>ĐANG LƯU...</span>
+                }
+                else if (IsReadOnly)
+                {
+                    <i class="bi bi-arrow-left me-2"></i>
+                    <span>QUAY LẠI DANH SÁCH</span>
+                }
+                else
+                {
+                    <i class="bi bi-check-circle me-2 @(IsReadOnly ? "" : "text-white")"></i>
+                    <span>LƯU HỒ SƠ & QUAY LẠI</span>
+                }
+            </button>
+        </div>
+    </div>
+</div>
+
+<datalist id="school-list">
+    @foreach(var item in SchoolLookups) { <option value="@item.Name" /> }
+</datalist>
+<datalist id="degree-list">
+    @foreach(var item in DegreeLookups) { <option value="@item.Name" /> }
+</datalist>
+<datalist id="major-list">
+    @foreach(var item in MajorLookups) { <option value="@item.Name" /> }
+</datalist>

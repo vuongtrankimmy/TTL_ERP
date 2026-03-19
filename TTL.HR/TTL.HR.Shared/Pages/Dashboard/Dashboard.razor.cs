@@ -94,7 +94,8 @@ namespace TTL.HR.Shared.Pages.Dashboard
                 try {
                     await JS.InvokeVoidAsync("toastr.error", "Lỗi: " + ex.Message);
                 } catch { }
-                System.Console.WriteLine($"Dashboard Error: {ex.Message}");
+                // Logger or UI feedback is enough
+                // System.Console.WriteLine($"Dashboard Error: {ex.Message}");
             }
         }
 

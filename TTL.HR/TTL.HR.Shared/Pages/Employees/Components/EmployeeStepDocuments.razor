@@ -1,0 +1,62 @@
+@namespace TTL.HR.Shared.Pages.Employees.Components
+
+<div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
+    <!-- DOCUMENTS SECTION -->
+    <div class="card card-flush py-4">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-paperclip text-primary fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Hồ sơ & Tài liệu đính kèm</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0">
+            <div class="row g-7">
+                @foreach (var docType in new[] { ("IDCard", "CCCD / CMND"), ("Certification", "Bằng cấp / Chứng chỉ"), ("LaborContract", "Hợp đồng lao động"), ("HealthCertificate", "Giấy khám sức khỏe") })
+                {
+                    var doc = UploadedDocuments?.FirstOrDefault(x => x.DocumentType == docType.Item1);
+                    <div class="col-md-6">
+                        <div class="d-flex flex-stack border border-dashed @(doc != null ? "border-success bg-light-success" : "border-gray-300") rounded p-5">
+                            <div class="d-flex align-items-center">
+                                <div class="symbol symbol-40px me-4">
+                                    <div class="symbol-label @(doc != null ? "bg-success" : "bg-light-primary")">
+                                        <i class="bi @(doc != null ? "bi-check2-circle text-white" : "bi-file-earmark-arrow-up text-primary") fs-2"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="fw-bold fs-7 text-gray-800 d-block text-uppercase">@docType.Item2</span>
+                                    @if (doc != null) { <span class="badge badge-light-success fs-9 px-2 py-1">Đã tải lên (@doc.FileSizeDisplay)</span> }
+                                    else { <span class="fw-semibold fs-9 text-gray-400">PDF, JPG, PNG | Max 10MB</span> }
+                                </div>
+                            </div>
+                            @if (!IsReadOnly)
+                            {
+                                <label class="btn btn-sm btn-icon btn-light-primary"><i class="bi bi-upload"></i><InputFile OnChange='(e) => HandleDocumentUpload(e, docType.Item1)' class="d-none" /></label>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end py-6 px-9 border-top-0">
+            <button type="button" class="btn @(IsReadOnly ? "btn-light-primary" : "btn-primary") fw-bolder px-10" @onclick="HandleSave" disabled="@IsProcessing">
+                @if (IsProcessing)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>ĐANG LƯU...</span>
+                }
+                else if (IsReadOnly)
+                {
+                    <i class="bi bi-arrow-left me-2"></i>
+                    <span>QUAY LẠI DANH SÁCH</span>
+                }
+                else
+                {
+                    <i class="bi bi-check-circle me-2"></i>
+                    <span>LƯU HỒ SƠ & QUAY LẠI</span>
+                }
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,235 @@
+@namespace TTL.HR.Shared.Pages.Employees.Components
+
+<div class="d-flex flex-column gap-7 gap-lg-10 mb-10">
+    <div class="card card-flush py-4">
+        <div class="card-header border-0">
+            <div class="card-title">
+                <span class="symbol symbol-30px me-3">
+                    <i class="bi bi-person-lines-fill text-success fs-2"></i>
+                </span>
+                <h2 class="fw-bold fs-5 text-uppercase m-0">Định danh & Thông tin cá nhân</h2>
+            </div>
+        </div>
+        <div class="card-body pt-0">
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLInput Type="TTLInput.InputDataType.CCCD" Label="Số CCCD / CMND" @bind-Value="Model.IdCard" Placeholder="001xxxxxxxxx" IsReadOnly="@IsReadOnly" />
+                </div>
+                <div class="col-md-6">
+                    <TTLInput Label="Ngày cấp (CCCD)" @bind-DateValue="Model.CccdIssueDate" Type="TTLInput.InputDataType.Date" IsReadOnly="@IsReadOnly" />
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLInput Label="Nơi cấp (CCCD)" @bind-Value="Model.CccdIssuePlace" IsReadOnly="@IsReadOnly" />
+                </div>
+                <div class="col-md-6">
+                    <TTLInput Label="Ngày sinh" @bind-DateValue="Model.DOB" Type="TTLInput.InputDataType.Date" IsReadOnly="@IsReadOnly" />
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLInput Label="Giới tính" @bind-Value="Model.GenderName" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select">
+                        <select class="form-select form-select-solid" @bind="Model.GenderId" disabled="@IsReadOnly">
+                            <option value="">-- Chọn giới tính --</option>
+                            @foreach (var item in GenderLookups)
+                            {
+                                <option value="@item.LookupID">@item.Name</option>
+                            }
+                        </select>
+                    </TTLInput>
+                </div>
+                <div class="col-md-6">
+                    <TTLInput Label="Tình trạng hôn nhân" @bind-Value="Model.MaritalStatusName" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select">
+                        <select class="form-select form-select-solid" @bind="Model.MaritalStatusId" disabled="@IsReadOnly">
+                            <option value="">-- Chọn tình trạng --</option>
+                            @foreach (var item in MaritalStatusLookups)
+                            {
+                                <option value="@item.LookupID">@item.Name</option>
+                            }
+                        </select>
+                    </TTLInput>
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLInput Label="Dân tộc" @bind-Value="Model.EthnicityName" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select">
+                        <select class="form-select form-select-solid" @bind="Model.EthnicityId" disabled="@IsReadOnly">
+                            <option value="">-- Dân tộc --</option>
+                            @foreach (var item in EthnicityLookups)
+                            {
+                                <option value="@item.LookupID">@item.Name</option>
+                            }
+                        </select>
+                    </TTLInput>
+                </div>
+                <div class="col-md-6">
+                    <TTLInput Label="Tôn giáo" @bind-Value="Model.ReligionName" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select">
+                        <select class="form-select form-select-solid" @bind="Model.ReligionId" disabled="@IsReadOnly">
+                            <option value="">-- Tôn giáo --</option>
+                            @foreach (var item in ReligionLookups)
+                            {
+                                <option value="@item.LookupID">@item.Name</option>
+                            }
+                        </select>
+                    </TTLInput>
+                </div>
+            </div>
+
+            <div class="row g-9 mb-8">
+                <div class="col-md-6">
+                    <TTLInput Label="Quốc tịch" @bind-Value="Model.Nationality" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select">
+                        <select class="form-select form-select-solid" @bind="Model.Nationality" disabled="@IsReadOnly">
+                            <option value="Việt Nam">Việt Nam</option>
+                            @foreach (var item in NationalityLookups)
+                            {
+                                <option value="@item.Name">@item.Name</option>
+                            }
+                        </select>
+                    </TTLInput>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Address Section -->
+    <div class="row g-7 g-lg-10">
+        <div class="col-xl-8">
+            <div class="card card-flush py-4 h-100">
+                <div class="card-header border-0">
+                    <div class="card-title">
+                        <span class="symbol symbol-30px me-3">
+                            <i class="bi bi-geo-alt text-primary fs-2"></i>
+                        </span>
+                        <h2 class="fw-bold fs-5 text-uppercase m-0">Địa chỉ & Hộ khẩu</h2>
+                    </div>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-6">
+                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Quê quán</label>
+                            <input type="text" list="province-suggestions" class="form-control form-control-solid" @bind="Model.Hometown" placeholder="Địa chỉ quê quán..." />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase">Nơi sinh</label>
+                            <input type="text" list="province-suggestions" class="form-control form-control-solid" @bind="Model.PlaceOfOrigin" placeholder="Ghi theo CCCD..." />
+                        </div>
+                        <datalist id="province-suggestions">
+                            @foreach (var p in ProvinceLookups)
+                            {
+                                <option value="@p.Name" />
+                            }
+                        </datalist>
+                    </div>
+                    <div class="separator separator-dashed my-8"></div>
+                    <div class="col-12 mb-10">
+                        <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase mb-4">Địa chỉ Hộ khẩu (Thường trú)</label>
+                        @if (Model.PersonalDetails != null)
+                        {
+                            <TTLLocationSelector 
+                                @bind-CountryId="Model.PersonalDetails.CountryId"
+                                @bind-ProvinceId="Model.PersonalDetails.ProvinceId"
+                                @bind-DistrictId="Model.PersonalDetails.DistrictId"
+                                @bind-WardId="Model.PersonalDetails.WardId"
+                                @bind-StreetId="Model.PersonalDetails.StreetId"
+                                @bind-Street="Model.PersonalDetails.Street"
+                                OnAddressUpdated="HandleResidenceUpdate"
+                                IsReadOnly="@IsReadOnly"
+                                CountryCssClass="col-md-6 mb-5"
+                                ProvinceCssClass="col-md-6 mb-5"
+                                DistrictCssClass="col-md-6 mb-5"
+                                WardCssClass="col-md-6 mb-5"
+                                StreetCssClass="col-md-12 mb-5" />
+                        }
+                    </div>
+
+                    <div class="separator separator-dashed my-8"></div>
+
+                    <div class="col-12">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase m-0">Địa chỉ Hiện tại (Tạm trú)</label>
+                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                <input class="form-check-input" type="checkbox" @bind="IsAddressSameAsResidence" id="chkSameAsResidence" disabled="@IsReadOnly" />
+                                <label class="form-check-label fs-8 fw-bold text-gray-600" for="chkSameAsResidence">
+                                    Giống địa chỉ hộ khẩu
+                                </label>
+                            </div>
+                        </div>
+
+                        @if (Model.PersonalDetails != null && !IsAddressSameAsResidence)
+                        {
+                            <TTLLocationSelector 
+                                @bind-CountryId="Model.PersonalDetails.CurrentCountryId"
+                                @bind-ProvinceId="Model.PersonalDetails.CurrentProvinceId"
+                                @bind-DistrictId="Model.PersonalDetails.CurrentDistrictId"
+                                @bind-WardId="Model.PersonalDetails.CurrentWardId"
+                                @bind-StreetId="Model.PersonalDetails.CurrentStreetId"
+                                @bind-Street="Model.PersonalDetails.CurrentStreet"
+                                OnAddressUpdated="HandleCurrentAddressUpdate"
+                                IsReadOnly="@IsReadOnly"
+                                CountryCssClass="col-md-6 mb-5"
+                                ProvinceCssClass="col-md-6 mb-5"
+                                DistrictCssClass="col-md-6 mb-5"
+                                WardCssClass="col-md-6 mb-5"
+                                StreetCssClass="col-md-12 mb-5" />
+                        }
+                        else if (IsAddressSameAsResidence)
+                        {
+                            <div class="p-5 bg-light-primary rounded border border-primary border-dashed">
+                                <span class="text-primary fw-bold">
+                                    <i class="bi bi-info-circle-fill me-2 text-primary"></i>
+                                    Đang sử dụng địa chỉ giống với Hộ khẩu thường trú.
+                                </span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card card-flush py-4 h-100 border-warning border-dashed border-1 shadow-sm">
+                <div class="card-header border-0">
+                    <div class="card-title">
+                        <span class="symbol symbol-30px me-3">
+                            <i class="bi bi-exclamation-triangle-fill text-warning fs-2"></i>
+                        </span>
+                        <h2 class="fw-bold fs-5 text-uppercase m-0">Liên hệ khẩn cấp</h2>
+                    </div>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="mb-8">
+                        <TTLInput Type="TTLInput.InputDataType.Name" Label="Họ tên người liên hệ" @bind-Value="Model.EmergencyContactName" Placeholder="VD: Nguyễn Văn B" IsReadOnly="@IsReadOnly" />
+                    </div>
+                    <div class="mb-8">
+                        <TTLInput Type="TTLInput.InputDataType.Phone" Label="Số điện thoại" @bind-Value="Model.EmergencyContactPhone" Placeholder="090xxxxxxx" IsReadOnly="@IsReadOnly" />
+                    </div>
+                    <div class="mb-0">
+                        <TTLInput Label="Mối quan hệ" @bind-Value="Model.EmergencyContactRelation" Placeholder="VD: Cha, Mẹ, Vợ..." IsReadOnly="@IsReadOnly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer d-flex justify-content-end py-6 px-9 border-top-0">
+        <button type="button" class="btn @(IsReadOnly ? "btn-light-primary" : "btn-primary") fw-bolder px-10" @onclick="HandleSave" disabled="@IsProcessing">
+            @if (IsProcessing)
+            {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <span>ĐANG LƯU...</span>
+            }
+            else if (IsReadOnly)
+            {
+                <i class="bi bi-arrow-left me-2"></i>
+                <span>QUAY LẠI DANH SÁCH</span>
+            }
+            else
+            {
+                <i class="bi bi-check-circle me-2"></i>
+                <span>LƯU HỒ SƠ & QUAY LẠI</span>
+            }
+        </button>
+    </div>
+</div>

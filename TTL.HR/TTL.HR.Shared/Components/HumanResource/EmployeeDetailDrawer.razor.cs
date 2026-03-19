@@ -12,6 +12,7 @@ using TTL.HR.Application.Modules.Attendance.Interfaces;
 using TTL.HR.Application.Modules.Organization.Models;
 
 namespace TTL.HR.Shared.Components.HumanResource;
+#pragma warning disable CS0169, CS0414
 
 public partial class EmployeeDetailDrawer
 {

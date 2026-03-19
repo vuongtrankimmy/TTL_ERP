@@ -1,50 +1,49 @@
-﻿@inject IStringLocalizer<SharedResource> L
+@inject IStringLocalizer<SharedResource> L
 
 
 
 <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
 	<!--begin::Logo-->
-	<div class="app-sidebar-logo px-6 position-relative d-flex align-items-center" id="kt_app_sidebar_logo">
+	<div class="app-sidebar-logo px-6 d-flex align-items-center justify-content-center border-bottom border-gray-300" id="kt_app_sidebar_logo" style="height: var(--bs-app-header-height, 100px); flex-shrink: 0;">
 		<!--begin::Logo image-->
-		<a href="/dashboard">
+		<a href="/dashboard" class="d-flex align-items-center justify-content-center w-100">
             @if (!string.IsNullOrEmpty(SettingsService.CachedSettings?.LogoUrl))
             {
-                <img alt="Logo" src="@SettingsService.CachedSettings.LogoUrl" class="app-sidebar-logo-default" style="object-fit: contain; width: 160px; max-height: 45px;" />
-                <img alt="Logo" src="@SettingsService.CachedSettings.LogoUrl" class="h-25px app-sidebar-logo-minimize pe-2" style="object-fit: contain;" />
+                <img alt="Logo" src="@SettingsService.CachedSettings.LogoUrl" class="app-sidebar-logo-default" style="max-height: 45px; max-width: 180px; object-fit: contain;" />
+                <img alt="Logo" src="@SettingsService.CachedSettings.LogoUrl" class="app-sidebar-logo-minimize" style="max-height: 35px; max-width: 45px; object-fit: contain;" />
             }
             else
             {
-                <img alt="Logo" src="assets/media/logos/demo42.svg" class="h-30px app-sidebar-logo-default" />
-                <img alt="Logo" src="assets/media/logos/demo42-small.svg" class="h-20px app-sidebar-logo-minimize" />
+                <img alt="Logo" src="assets/media/logos/demo42.svg" class="h-35px app-sidebar-logo-default" />
+                <img alt="Logo" src="assets/media/logos/demo42-small.svg" class="h-25px app-sidebar-logo-minimize" />
             }
 		</a>
 
 		<!--end::Logo image-->
 		<!--begin::Sidebar toggle-->
-		<div id="kt_app_sidebar_toggle" class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary h-30px w-30px position-absolute top-50 start-100 translate-middle rotate" 
-			 data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="app-sidebar-minimize" @onclick="ToggleSidebar">
-			<i class="ki-outline ki-double-right fs-2 rotate-180"></i>
+		<div id="kt_app_sidebar_toggle" class="sidebar-toggle-btn"
+			 data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="app-sidebar-minimize"
+			 @onclick="ToggleSidebar"
+			 title="Thu gọn / Mở rộng sidebar">
+			<i class="ki-outline ki-left fs-5 sidebar-toggle-icon"></i>
 		</div>
 		<!--end::Sidebar toggle-->
 	</div>
-
 	<!--end::Logo-->
+
 	<!--begin::sidebar menu-->
-	<div class="app-sidebar-menu overflow-hidden flex-column-fluid">
+	<div class="app-sidebar-menu flex-column-fluid">
 		<!--begin::Menu wrapper-->
-		<div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper hover-scroll-overlay-y my-5" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer" data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
+		<div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper hover-scroll-overlay-y my-5" 
+             style="height: calc(100vh - 200px);"
+             data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto" 
+             data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer" 
+             data-kt-scroll-wrappers="#kt_app_sidebar_menu_wrapper" data-kt-scroll-offset="5px">
 			<!--begin::Menu-->
-			<div class="menu menu-column menu-rounded menu-sub-indention px-3" id="kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false">
+			<div class="menu menu-column menu-rounded menu-sub-indention px-3" id="kt_app_sidebar_menu" data-kt-menu="true">
 				
                 @foreach (var item in _menuItems)
                 {
-                    @if (!string.IsNullOrEmpty(item.Permission))
-                    {
-                        <!-- Dynamic Permission Check -->
-                        @* Note: In a real server-side Blazor app, we can't use await directly in a loop easily without performance hit, 
-                           but for sidebar it's acceptable or should be pre-filtered in the service. *@
-                    }
-
                     if (item.IsSection)
                     {
                         <div class="menu-item pt-5">
@@ -56,7 +55,7 @@
                     else if (item.HasSubItems)
                     {
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                            <span class="menu-link text-active-primary py-3" title="@L[item.Title]">
+                            <span class="menu-link py-3" title="@L[item.Title]">
                                 <span class="menu-icon">
                                     <i class="@item.Icon fs-2"></i>
                                 </span>
@@ -88,7 +87,6 @@
                         </div>
                     }
                 }
-
 			</div>
 			<!--end::Menu-->
 		</div>
@@ -97,7 +95,7 @@
 	<!--end::sidebar menu-->
 
 	<!--begin::Footer-->
-	<div class="app-sidebar-footer d-flex align-items-center px-8 pb-10" id="kt_app_sidebar_footer">
+	<div class="app-sidebar-footer d-flex align-items-center px-8 pb-6 pt-6 flex-column-auto border-top border-gray-300" id="kt_app_sidebar_footer" style="margin-top: auto;">
 		<div class="d-flex flex-stack w-100">
 			<!--begin::User info-->
 			<div class="d-flex align-items-center cursor-pointer me-3" 
@@ -106,18 +104,41 @@
 				 data-kt-menu-overflow="true" 
 				 data-kt-menu-placement="top-start">
 				<div class="symbol symbol-circle symbol-40px">
-					<img src="https://ui-avatars.com/api/?name=@(System.Uri.EscapeDataString(_currentUser?.FullName ?? "User"))&background=random" alt="user" />
-					<div class="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-white border-2 h-10px w-10px"></div>
+                    @if (!string.IsNullOrEmpty(_currentEmployee?.AvatarUrl))
+                    {
+                        <img src="@_currentEmployee.AvatarUrl" alt="user" />
+                    }
+                    else if (!string.IsNullOrEmpty(_currentUser?.AvatarUrl))
+                    {
+                        <img src="@_currentUser.AvatarUrl" alt="user" />
+                    }
+                    else
+                    {
+                        <img src="https://ui-avatars.com/api/?name=@(System.Uri.EscapeDataString(_currentEmployee?.FullName ?? _currentUser?.FullName ?? "User"))&background=random" alt="user" />
+                    }
+					<div class="bg-success position-absolute rounded-circle translate-middle start-100 top-10 top-100 border border-white border-2 h-10px w-10px"></div>
 				</div>
 				<div class="d-flex flex-column ms-3 app-sidebar-user-info">
-					<span class="text-gray-900 fw-bold fs-7 mb-1">@(_currentUser?.FullName ?? "N/A")</span>
-					<span class="text-gray-600 fw-semibold fs-8">@(_currentUser?.Role ?? "User")</span>
+					<span class="text-gray-900 fw-bold fs-7 mb-1 text-truncate" style="max-width: 100px;">@(_currentEmployee?.FullName ?? _currentUser?.FullName ?? "N/A")</span>
+					<span class="text-gray-600 fw-semibold fs-8 text-truncate" style="max-width: 100px;">@(_currentEmployee?.PositionName ?? _currentUser?.Role ?? "User")</span>
 				</div>
 			</div>
 			<!--end::User info-->
 
+			<!--begin::Theme Switcher-->
+            <div class="d-flex align-items-center ms-auto">
+                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary" @onclick="ToggleTheme">
+                    <i class="ki-outline ki-night-day fs-2 text-gray-600 theme-light-show"></i>
+                    <i class="ki-outline ki-moon fs-2 text-gray-600 theme-dark-show"></i>
+                </button>
+            </div>
+            <!--end::Theme Switcher-->
+
 			<style>
 				[data-kt-app-sidebar-minimize="on"] .app-sidebar-user-info { display: none !important; }
+                [data-kt-app-sidebar-minimize="on"] .app-sidebar-footer { padding-left: 0 !important; padding-right: 0 !important; justify-content: center !important; }
+                [data-kt-app-sidebar-minimize="on"] .app-sidebar-footer .flex-stack { justify-content: center !important; }
+                [data-kt-app-sidebar-minimize="on"] .app-sidebar-footer .ms-auto { display: none !important; }
 			</style>
 			
 			<!--begin::User menu-->
@@ -125,14 +146,23 @@
 				<div class="menu-item px-3">
 					<div class="menu-content d-flex align-items-center px-3">
 						<div class="symbol symbol-50px me-5">
-							<img alt="Logo" src="https://ui-avatars.com/api/?name=@(System.Uri.EscapeDataString(_currentUser?.FullName ?? "User"))&background=random" />
+                            @if (!string.IsNullOrEmpty(_currentEmployee?.AvatarUrl))
+                            {
+                                <img src="@_currentEmployee.AvatarUrl" alt="user" />
+                            }
+                            else if (!string.IsNullOrEmpty(_currentUser?.AvatarUrl))
+                            {
+                                <img src="@_currentUser.AvatarUrl" alt="user" />
+                            }
+                            else
+                            {
+                                <img src="https://ui-avatars.com/api/?name=@(System.Uri.EscapeDataString(_currentEmployee?.FullName ?? _currentUser?.FullName ?? "User"))&background=random" alt="user" />
+                            }
 						</div>
 						<div class="d-flex flex-column">
-							<div class="fw-bold d-flex align-items-center fs-5">@(_currentUser?.FullName ?? "N/A")
+							<div class="fw-bold d-flex align-items-center fs-5">@(_currentEmployee?.FullName ?? _currentUser?.FullName ?? "N/A")
 							<span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">@L["Status_Active"]</span></div>
-							<a href="/user/profile" class="fw-semibold text-muted text-hover-primary fs-7">@(_currentUser?.Email ?? _currentUser?.Username ?? "N/A")</a>
-
-
+							<a href="/user/profile" class="fw-semibold text-muted text-hover-primary fs-7">@(_currentEmployee?.Email ?? _currentUser?.Email ?? _currentUser?.Username ?? "N/A")</a>
 						</div>
 					</div>
 				</div>
@@ -141,7 +171,7 @@
 					<a href="/user/profile" class="menu-link px-5">@L["Label_MyProfile"]</a>
 				</div>
 				<div class="menu-item px-5">
-					<a href="/user/profile" class="menu-link px-5">@L["Label_ActivityLog"]</a>
+					<a href="/user/profile?tab=audit" class="menu-link px-5">@L["Label_ActivityLog"]</a>
 				</div>
 				<div class="separator my-2"></div>
 				<div class="menu-item px-5">

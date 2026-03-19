@@ -17,6 +17,7 @@ namespace TTL.HR.Application.Modules.Common.Constants
             public const string ConfirmEmail = $"{Base}/confirm-email";
             public const string RequestPasswordReset = $"{Base}/forgot-password";
             public const string ResetPassword = $"{Base}/reset-password";
+            public const string UpdateProfile = "auth/profile";
         }
 
         public static class Recruitment
@@ -127,6 +128,21 @@ namespace TTL.HR.Application.Modules.Common.Constants
             public const string Audit = $"{CorePrefix}/Audit";
             public const string Banks = $"{CorePrefix}/banks";
             public const string Countries = $"{CorePrefix}/countries";
+            public static class AdministrativeDivisions
+            {
+                public const string Base = $"{CorePrefix}/administrative-divisions";
+                public const string Provinces = $"{Base}/provinces";
+
+                // String overloads (legacy / MongoDB _id)
+                public static string Districts(string provinceId) => $"{Provinces}/{provinceId}/districts";
+                public static string Wards(string districtId) => $"{Base}/districts/{districtId}/wards";
+                public static string WardsByProvince(string provinceId) => $"{Provinces}/{provinceId}/wards";
+
+                // Int overloads (numeric ID từ SQL / API mới)
+                public static string Districts(int provinceId) => $"{Provinces}/{provinceId}/districts";
+                public static string Wards(int districtId) => $"{Base}/districts/{districtId}/wards";
+                public static string WardsByProvince(int provinceId) => $"{Provinces}/{provinceId}/wards";
+            }
         }
 
         public static class Notifications

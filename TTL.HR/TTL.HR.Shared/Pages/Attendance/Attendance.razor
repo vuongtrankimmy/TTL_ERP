@@ -67,7 +67,7 @@
             SearchQuery="@_searchTerm"
             Departments="@_departments"
             OnSearchChanged="OnSearchChange"
-            OnDepartmentChanged="(id) => { _selectedDepartmentId = id; _currentPage = 1; LoadData(); }"
+            OnDepartmentChanged="async (id) => { _selectedDepartmentId = id; _currentPage = 1; await LoadData(); }"
             ShowExport="true"
             OnExport="ExportExcel">
             <ExtraFilters>

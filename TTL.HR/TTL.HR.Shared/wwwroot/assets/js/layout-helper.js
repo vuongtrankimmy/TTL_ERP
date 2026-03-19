@@ -18,6 +18,18 @@ window.LayoutHelper = {
         if (savedState) {
             document.body.setAttribute('data-kt-app-sidebar-minimize', savedState);
         }
+        this.initTheme();
+    },
+    toggleTheme: function () {
+        let themeMode = document.documentElement.getAttribute("data-bs-theme");
+        const newTheme = themeMode === "dark" ? "light" : "dark";
+        
+        document.documentElement.setAttribute("data-bs-theme", newTheme);
+        localStorage.setItem("data-bs-theme", newTheme);
+    },
+    initTheme: function () {
+        let themeMode = localStorage.getItem("data-bs-theme") || "light";
+        document.documentElement.setAttribute("data-bs-theme", themeMode);
     },
     getCoordinatesFromAddress: async function (address) {
         if (!address) return null;

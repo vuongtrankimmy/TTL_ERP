@@ -18,9 +18,20 @@ else
         <div class="card-body pt-9 pb-0">
             <div class="d-flex flex-wrap flex-sm-nowrap">
                 <div class="me-7 mb-4">
-                    <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                        <img src="https://ui-avatars.com/api/?name=@(Uri.EscapeDataString(currentEmployee?.FullName ?? currentUser?.FullName ?? "User"))&background=random&size=200" alt="image" />
-                        <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-body h-20px w-20px"></div>
+                    <div class="symbol symbol-100px symbol-lg-160px position-relative">
+                        @if (!string.IsNullOrEmpty(currentEmployee?.AvatarUrl))
+                        {
+                            <img src="@currentEmployee.AvatarUrl" alt="image" />
+                        }
+                        else if (!string.IsNullOrEmpty(currentUser?.AvatarUrl))
+                        {
+                            <img src="@currentUser.AvatarUrl" alt="image" />
+                        }
+                        else
+                        {
+                            <img src="https://ui-avatars.com/api/?name=@(Uri.EscapeDataString(currentEmployee?.FullName ?? currentUser?.FullName ?? "User"))&background=random&size=200" alt="image" />
+                        }
+                        <div class="position-absolute translate-middle bottom-0 start-100 bg-success rounded-circle border border-4 border-body h-20px w-20px"></div>
                     </div>
                 </div>
                 <div class="flex-grow-1">
@@ -30,10 +41,11 @@ else
                                 <a href="javascript:void(0)" class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">
                                     @(currentEmployee?.FullName ?? currentUser?.FullName ?? "N/A")
                                 </a>
-                                <i class="ki-outline ki-verify fs-1 text-primary"></i>
+                                <i class="ki-outline ki-verify fs-1 text-primary me-3"></i>
+                                <span class="badge badge-light-success fw-bold fs-9 px-2 shadow-sm"><i class="ki-outline ki-document fs-8 me-1 text-success"></i>Digital CV Ready</span>
                             </div>
                             <div class="d-flex flex-wrap fw-semibold fs-6 mb-4 pe-2">
-                                <span class="d-flex align-items-center text-gray-400 me-5 mb-2"><i class="ki-outline ki-profile-circle fs-4 me-1"></i>@(currentEmployee?.PositionName ?? "Nhân viên")</span>
+                                <span class="d-flex align-items-center text-gray-400 me-5 mb-2"><i class="ki-outline ki-profile-circle fs-4 me-1"></i>@(currentEmployee?.PositionName ?? currentUser?.JobTitle ?? "Nhân viên")</span>
                                 <span class="d-flex align-items-center text-gray-400 me-5 mb-2"><i class="ki-outline ki-geolocation fs-4 me-1"></i>@(currentEmployee?.DepartmentName ?? "Văn phòng")</span>
                                 <span class="d-flex align-items-center text-gray-400 mb-2"><i class="ki-outline ki-sms fs-4 me-1"></i>@(currentEmployee?.Email ?? currentUser?.Email ?? "N/A")</span>
                             </div>
@@ -45,14 +57,15 @@ else
                     </div>
                 </div>
             </div>
-            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
+            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x fs-5 fw-bold">
                 <li class="nav-item mt-2"><a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "overview" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("overview")'>Tổng quan</a></li>
                 <li class="nav-item mt-2"><a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "contracts" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("contracts")'>Hợp đồng</a></li>
                 <li class="nav-item mt-2"><a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "salary" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("salary")'>Lương & Thưởng</a></li>
                 <li class="nav-item mt-2"><a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "documents" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("documents")'>Tài liệu</a></li>
+                <li class="nav-item mt-2"><a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "professional" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("professional")'>Chuyên môn</a></li>
+                <li class="nav-item mt-2"><a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "attendance" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("attendance")'>Lịch sử chấm công</a></li>
                 <li class="nav-item mt-2"><a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "leave" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("leave")'>Nghỉ phép</a></li>
                 <li class="nav-item mt-2"><a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "audit" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("audit")'>Nhật ký</a></li>
-                <li class="nav-item mt-2"><a class="nav-link text-active-primary ms-0 me-10 py-5 @(activeTab == "debug" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("debug")'>Gỡ lỗi</a></li>
             </ul>
         </div>
     </div>
@@ -65,163 +78,767 @@ else
                 <div class="card-body p-9">
                     @if (currentEmployee == null)
                     {
-                        <div class="alert alert-dismissible bg-light-warning d-flex flex-column flex-sm-row p-5 mb-10">
+                        <div class="alert alert-dismissible bg-light-warning d-flex flex-column flex-sm-row p-5 mb-10 border border-warning">
                             <i class="ki-outline ki-information fs-2hx text-warning me-4 mb-5 mb-sm-0"></i>
                             <div class="d-flex flex-column pe-0 pe-sm-10">
-                                <h4 class="fw-bold">Tài khoản chưa được liên kết</h4>
-                                <span>Tài khoản của bạn chưa được kết nối với hồ sơ nhân viên trong hệ thống. Vui lòng chọn hồ sơ của bạn bên dưới để liên kết.</span>
+                                <h4 class="fw-bold text-warning">Tài khoản chưa được liên kết nhân viên</h4>
+                                <span>Tài khoản <strong>@currentUser?.Username</strong> hiện chưa được kết nối với hồ sơ nhân viên. Vui lòng chọn hồ sơ của bạn từ danh sách bên dưới.</span>
                             </div>
                         </div>
 
-                        <div class="mb-10">
-                            <label class="form-label fw-bold fs-6 text-gray-700">Tìm hồ sơ của bạn:</label>
-                            <div class="d-flex align-items-center">
-                                <select class="form-select form-select-solid me-3" @bind="_selectedEmployeeToLink">
-                                    <option value="">-- Chọn đúng nhân viên từ danh sách --</option>
+                        <div class="bg-light-primary p-10 rounded shadow-sm border border-dashed border-primary mb-10">
+                            <label class="form-label fw-bold fs-5 text-gray-800 mb-5">Liên kết với hồ sơ nhân viên:</label>
+                            <div class="d-flex flex-wrap align-items-center gap-5">
+                                <select class="form-select form-select-solid w-md-400px" @bind="_selectedEmployeeToLink">
+                                    <option value="">-- Tìm và chọn tên của bạn --</option>
                                     @if (_allEmployees != null)
                                     {
-                                        @foreach (var emp in _allEmployees)
+                                        @foreach (var emp in _allEmployees.OrderBy(x => x.FullName))
                                         {
                                             <option value="@emp.Id">@emp.FullName (@emp.Code) - @emp.DepartmentName</option>
                                         }
                                     }
                                 </select>
-                                <button class="btn btn-primary fw-bold flex-shrink-0" @onclick="HandleLinkIdentity" disabled="@(string.IsNullOrEmpty(_selectedEmployeeToLink))">
-                                    <i class="ki-outline ki-link fs-2 me-1"></i>Kết nối ngay
+                                <button class="btn btn-primary fw-bold" @onclick="HandleLinkIdentity" disabled="@(string.IsNullOrEmpty(_selectedEmployeeToLink) || _isLinking)">
+                                    @if (_isLinking)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                    }
+                                    <i class="ki-outline ki-link fs-3 me-2"></i>Kết nối hồ sơ
                                 </button>
                             </div>
-                            <div class="text-muted fs-7 mt-2">Sau khi kết nối, bạn mới có thể chỉnh sửa các thông tin chi tiết (Số điện thoại, Ngân hàng, v.v.).</div>
+                            @if (!string.IsNullOrEmpty(_linkMessage))
+                            {
+                                <div class="mt-4 fw-bold text-info">@_linkMessage</div>
+                            }
                         </div>
                     }
-                    
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Mã nhân viên</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.Code ?? "N/A")</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Họ và tên</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.FullName ?? currentUser?.FullName ?? "N/A")</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Phòng ban</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.DepartmentName ?? "N/A")</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Chức vụ</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.PositionName ?? "N/A")</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số ĐT liên lạc</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.Phone ?? "N/A")</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số CMND/CCCD</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.PersonalDetails?.IdCardNumber ?? currentEmployee?.IdCard ?? "N/A")</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Quê quán</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.PersonalDetails?.Hometown ?? currentEmployee?.Hometown ?? "N/A")</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Tài khoản ngân hàng</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.PersonalDetails?.BankAccount ?? currentEmployee?.BankAccountNumber ?? "N/A") (@(currentEmployee?.PersonalDetails?.BankName ?? currentEmployee?.BankName ?? "N/A"))</div></div>
-                    <div class="row mb-7"><label class="col-lg-4 fw-semibold text-muted">Số người phụ thuộc</label><div class="col-lg-8 fw-bold fs-6">@(currentEmployee?.PersonalDetails?.NumberOfDependents ?? currentEmployee?.NumberOfDependents ?? 0)</div></div>
+
+                    <div class="row g-9">
+                        <!-- Personal Info Row -->
+                        <div class="col-md-6">
+                            <div class="bg-light-primary p-6 rounded-3 border border-primary border-dashed h-100">
+                                <label class="fw-semibold text-muted d-block fs-7 text-uppercase mb-2">Họ và tên</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="ki-outline ki-user fs-2 text-primary me-3"></i>
+                                    <span class="fw-bold fs-4 text-gray-800">@(currentEmployee?.FullName ?? currentUser?.FullName ?? "N/A")</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-light-info p-6 rounded-3 border border-info border-dashed h-100">
+                                <label class="fw-semibold text-muted d-block fs-7 text-uppercase mb-2">Mã nhân viên</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="ki-outline ki-barcode fs-2 text-info me-3"></i>
+                                    <span class="fw-bold fs-4 text-gray-800">@(currentEmployee?.Code ?? "N/A")</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Organization Row -->
+                        <div class="col-md-6">
+                            <div class="ps-2">
+                                <label class="fw-semibold text-muted d-block fs-7 text-uppercase mb-1">Phòng ban</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="ki-outline ki-geolocation fs-4 text-gray-500 me-2"></i>
+                                    <span class="fw-bold fs-6 text-gray-800">@(currentEmployee?.DepartmentName ?? "N/A")</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="ps-2">
+                                <label class="fw-semibold text-muted d-block fs-7 text-uppercase mb-1">Chức vụ</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="ki-outline ki-briefcase fs-4 text-gray-500 me-2"></i>
+                                    <span class="fw-bold fs-6 text-gray-800">@(currentEmployee?.PositionName ?? currentUser?.JobTitle ?? "N/A")</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Row -->
+                        <div class="col-md-6">
+                            <div class="ps-2">
+                                <label class="fw-semibold text-muted d-block fs-7 text-uppercase mb-1">Số điện thoại</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="ki-outline ki-phone fs-4 text-gray-500 me-2"></i>
+                                    <span class="fw-bold fs-6 text-gray-800">@(currentPhone ?? "N/A")</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="ps-2">
+                                <label class="fw-semibold text-muted d-block fs-7 text-uppercase mb-1">Email</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="ki-outline ki-sms fs-4 text-gray-500 me-2"></i>
+                                    <span class="fw-bold fs-6 text-gray-800">@(currentEmployee?.Email ?? currentUser?.Email ?? "N/A")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         }
-        else if (activeTab == "contracts") { <UserContracts EmployeeId="@employeeId" /> }
-        else if (activeTab == "salary") { <UserSalary EmployeeId="@employeeId" /> }
-        else if (activeTab == "documents") { <UserDocuments EmployeeId="@employeeId" /> }
-        else if (activeTab == "leave") { <UserLeave EmployeeId="@employeeId" /> }
-        else if (activeTab == "audit") { <UserAuditLog EmployeeId="@employeeId" /> }
-        else if (activeTab == "debug")
+        else if (activeTab == "contracts")
         {
-            <div class="card mb-5 mb-xl-10">
-                <div class="card-header"><h3 class="card-title fw-bold">Hệ thống gỡ lỗi</h3></div>
-                <div class="card-body p-9">
-                    <div class="row mb-7"><label class="col-lg-4 text-muted">User ID</label><div class="col-lg-8 fw-bold">@(currentUser?.Id ?? "N/A")</div></div>
-                    <div class="d-flex align-items-center mb-5">
-                        <select class="form-select form-select-solid me-3 w-50" @bind="_selectedEmployeeToLink">
-                            <option value="">-- Chọn nhân viên --</option>
-                            @if (_allEmployees != null)
-                            {
-                                @foreach (var emp in _allEmployees)
+            <div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+                <div class="card-header">
+                    <h3 class="card-title fw-bold">Lịch sử hợp đồng lao động</h3>
+                    <div class="card-toolbar">
+                        <span class="badge badge-light-primary fw-bold">Tổng số: @(_contracts?.Count ?? 0)</span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-row-bordered table-row-gray-300 align-middle gs-9 gy-6">
+                            <thead class="bg-light">
+                                <tr class="fw-bold fs-7 text-gray-800 text-uppercase border-bottom-0">
+                                    <th class="min-w-150px">Số hợp đồng</th>
+                                    <th class="min-w-150px">Loại hợp đồng</th>
+                                    <th class="min-w-100px">Ngày bắt đầu</th>
+                                    <th class="min-w-100px">Ngày kết thúc</th>
+                                    <th class="min-w-125px">Lương cơ bản</th>
+                                    <th class="min-w-100px">Trạng thái</th>
+                                    <th class="min-w-50px text-end">Tác vụ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (_contracts == null)
                                 {
-                                    <option value="@emp.Id">@emp.FullName (@emp.Code) - @(string.IsNullOrEmpty(emp.Username) ? "Chưa kết nối" : emp.Username)</option>
+                                    <tr><td colspan="7" class="text-center py-20"><div class="spinner-border text-primary"></div></td></tr>
+                                }
+                                else if (!_contracts.Any())
+                                {
+                                    <tr><td colspan="7" class="text-center py-20 text-gray-500 fs-5">Chưa có thông tin hợp đồng.</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (var contract in _contracts.OrderByDescending(x => x.StartDate))
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <i class="ki-outline ki-file-text fs-2 text-primary me-3"></i>
+                                                    <span class="text-gray-800 fw-bold fs-6">@contract.ContractNumber</span>
+                                                </div>
+                                            </td>
+                                            <td><span class="text-gray-700 fw-semibold">@contract.TypeName</span></td>
+                                            <td><span class="text-gray-600">@contract.StartDate.ToString("dd/MM/yyyy")</span></td>
+                                            <td><span class="text-gray-600">@(contract.EndDate?.ToString("dd/MM/yyyy") ?? "Không thời hạn")</span></td>
+                                            <td><span class="text-gray-800 fw-bold">@contract.BasicSalary.ToString("N0") đ</span></td>
+                                            <td>
+                                                <span class="badge @(contract.StatusName == "Active" ? "badge-light-success" : "badge-light-secondary") fw-bold">
+                                                    @(contract.StatusName == "Active" ? "Đang hiệu lực" : contract.StatusName)
+                                                </span>
+                                            </td>
+                                            <td class="text-end">
+                                                @if (!string.IsNullOrEmpty(contract.SignedFileUrl))
+                                                {
+                                                    <a href="@contract.SignedFileUrl" target="_blank" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
+                                                        <i class="ki-outline ki-file-down fs-2"></i>
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (activeTab == "salary")
+        {
+            <div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+                <div class="card-header">
+                    <h3 class="card-title fw-bold">Lịch sử lương thưởng</h3>
+                    <div class="card-toolbar">
+                        <div class="d-flex align-items-center position-relative my-1">
+                            <i class="ki-outline ki-calendar fs-3 position-absolute ms-3"></i>
+                            <select class="form-select form-select-solid ps-10" @bind="_selectedYear" @bind:after="() => LoadTabData(activeTab)">
+                                @for (int year = DateTime.Now.Year; year >= 2024; year--)
+                                {
+                                    <option value="@year">Năm @year</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-row-bordered table-row-gray-300 align-middle gs-9 gy-6">
+                            <thead class="bg-light">
+                                <tr class="fw-bold fs-7 text-gray-800 text-uppercase">
+                                    <th class="min-w-100px text-center px-0">Tháng/Năm</th>
+                                    <th class="min-w-125px">Lương cơ bản</th>
+                                    <th class="min-w-125px">Tổng phụ cấp</th>
+                                    <th class="min-w-125px">Thưởng/Khác</th>
+                                    <th class="min-w-125px">Khấu trừ & Thuế</th>
+                                    <th class="min-w-150px">Lương thực nhận</th>
+                                    <th class="min-w-100px text-end">Chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (_payrolls == null)
+                                {
+                                    <tr><td colspan="7" class="text-center py-20"><div class="spinner-border text-primary"></div></td></tr>
+                                }
+                                else if (!_payrolls.Any())
+                                {
+                                    <tr><td colspan="7" class="text-center py-20 text-gray-500 fs-5">Chưa có dữ liệu bảng lương năm @_selectedYear.</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (var payslip in _payrolls.OrderByDescending(x => x.Month))
+                                    {
+                                        <tr>
+                                            <td class="text-center px-0">
+                                                <span class="badge badge-light-info fs-7 fw-bold px-4 py-3">@payslip.Month / @payslip.Year</span>
+                                            </td>
+                                            <td><span class="text-gray-800 fw-bold">@payslip.BasicSalary.ToString("N0")</span></td>
+                                            <td><span class="text-success fw-bold">+ @payslip.Allowance.ToString("N0")</span></td>
+                                            <td><span class="text-primary fw-bold">+ @payslip.Bonus.ToString("N0")</span></td>
+                                            <td><span class="text-danger fw-bold">- @((payslip.TotalDeduction + payslip.TaxAmount).ToString("N0"))</span></td>
+                                            <td>
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-gray-900 fw-bolder fs-5">@payslip.NetSalary.ToString("N0") đ</span>
+                                                    <span class="text-muted fs-8">VAT Included @payslip.StatusName</span>
+                                                </div>
+                                            </td>
+                                            <td class="text-end">
+                                                <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" title="Xem phiếu lương chi tiết">
+                                                    <i class="ki-outline ki-eye fs-2"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (activeTab == "documents")
+        {
+            <div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+                <div class="card-header">
+                    <h3 class="card-title fw-bold">Hồ sơ & Tài liệu số</h3>
+                    <div class="card-toolbar">
+                        <button class="btn btn-sm btn-light-primary fw-bold"><i class="ki-outline ki-cloud-upload fs-3"></i> Tải lên tài liệu mới</button>
+                    </div>
+                </div>
+                <div class="card-body p-9">
+                    @if (_digitalProfile == null)
+                    {
+                        <div class="d-flex flex-center py-20"><div class="spinner-border text-primary"></div></div>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-stack bg-light-success p-6 rounded-3 mb-10 border border-success border-dashed">
+                            <div class="d-flex align-items-center">
+                                <div class="symbol symbol-60px me-5">
+                                    <span class="symbol-label bg-success">
+                                        <i class="ki-outline ki-abstract-26 fs-2x text-white"></i>
+                                    </span>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <span class="fw-bold text-gray-800 fs-4">Mức độ hoàn thiện hồ sơ</span>
+                                    <span class="text-gray-500 fw-semibold fs-6">Hồ sơ số (Digital CV) giúp bạn nhanh chóng ứng tuyển nội bộ.</span>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center w-200px w-sm-300px">
+                                <div class="progress h-10px w-100 me-5">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: @((int)_digitalProfile.CompletionPercentage)%" aria-valuenow="@((int)_digitalProfile.CompletionPercentage)" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <span class="fw-bold text-gray-800 fs-5">@((int)_digitalProfile.CompletionPercentage)%</span>
+                            </div>
+                        </div>
+
+                        <div class="row g-6">
+                            @if (!_digitalProfile.Documents.Any())
+                            {
+                                <div class="col-12 text-center py-10 text-muted fs-5">Chưa có tài liệu số nào được lưu trữ.</div>
+                            }
+                            else
+                            {
+                                @foreach (var doc in _digitalProfile.Documents)
+                                {
+                                    <div class="col-md-4">
+                                        <div class="card shadow-none border border-gray-300 card-hover h-100 animate__animated animate__zoomIn animate__faster">
+                                            <div class="card-body d-flex flex-column p-7">
+                                                <div class="d-flex flex-stack mb-5">
+                                                    <div class="symbol symbol-45px me-5">
+                                                        <span class="symbol-label @(doc.FileType == "pdf" ? "bg-light-danger" : "bg-light-primary")">
+                                                            <i class="ki-outline @(doc.FileType == "pdf" ? "ki-pdf" : "ki-file") fs-2x @(doc.FileType == "pdf" ? "text-danger" : "text-primary")"></i>
+                                                        </span>
+                                                    </div>
+                                                    <span class="badge badge-light-@(doc.StatusColor) fw-bold">@doc.StatusName</span>
+                                                </div>
+                                                <div class="fs-6 fw-bold text-gray-800 mb-1">@doc.DocumentTypeName</div>
+                                                <div class="fs-7 fw-semibold text-gray-500 mb-5">@doc.DocumentName (@doc.FileSizeDisplay)</div>
+                                                <div class="mt-auto d-flex flex-stack border-top border-gray-200 pt-5">
+                                                    <span class="text-gray-400 fs-8 fw-bold">Cập nhật: @doc.CreatedAt.ToString("dd/MM/yyyy")</span>
+                                                    <div class="d-flex">
+                                                        <a href="@doc.FileUrl" target="_blank" class="btn btn-icon btn-sm btn-light-primary me-2"><i class="ki-outline ki-eye fs-5"></i></a>
+                                                        <a href="@doc.FileUrl" download="@doc.DocumentName" class="btn btn-icon btn-sm btn-light-success"><i class="ki-outline ki-file-down fs-5"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
                             }
-                        </select>
-                        <button class="btn btn-primary" @onclick="HandleLinkIdentity">Kết nối ngay</button>
-                    </div>
-                    @if (!string.IsNullOrEmpty(_linkMessage)) { <div class="alert alert-info">@_linkMessage</div> }
+                        </div>
+                    }
                 </div>
             </div>
         }
-    </div>
-}
+        else if (activeTab == "professional")
+        {
+            <div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+                <div class="card-header"><h3 class="card-title fw-bold">Trình độ & Kinh nghiệm chuyên môn</h3></div>
+                <div class="card-body p-9">
+                    <div class="mb-10">
+                        <h4 class="text-gray-800 fw-bold mb-5"><i class="ki-outline ki-geolocation fs-3 text-primary me-2"></i> Kỹ năng chuyên môn</h4>
+                        <div class="d-flex flex-wrap gap-2">
+                            @if (currentEmployee?.Skills != null && currentEmployee.Skills.Any())
+                            {
+                                @foreach (var skill in currentEmployee.Skills)
+                                {
+                                    <span class="badge badge-light-primary fw-bold fs-7 px-4 py-3">@skill</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-muted italic">Chưa cập nhật kỹ năng.</span>
+                            }
+                        </div>
+                    </div>
 
-@if (isEditModalOpen)
-{
-    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5)">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Chỉnh sửa thông tin</h3>
-                    <div class="btn btn-icon btn-sm" @onclick="CloseModals"><i class="ki-outline ki-cross fs-1"></i></div>
+                    <div class="separator separator-dashed my-10"></div>
+
+                    <div class="row g-10">
+                        <div class="col-md-6">
+                            <h4 class="text-gray-800 fw-bold mb-7"><i class="ki-outline ki-teacher fs-3 text-success me-2"></i> Học vấn</h4>
+                            <div class="timeline-label">
+                                @if (currentEmployee?.Education != null && currentEmployee.Education.Any())
+                                {
+                                    @foreach (var edu in currentEmployee.Education)
+                                    {
+                                        <div class="timeline-item">
+                                            <div class="timeline-label fw-bold text-gray-800 fs-6">@edu.EndYear</div>
+                                            <div class="timeline-badge"><i class="fa fa-genderless text-success fs-1"></i></div>
+                                            <div class="timeline-content fw-semibold text-gray-600 ps-3">
+                                                <span class="text-gray-800 fw-bold d-block">@edu.Degree - @edu.Major</span>
+                                                @edu.SchoolName
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-muted">Chưa có thông tin học vấn.</div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h4 class="text-gray-800 fw-bold mb-7"><i class="ki-outline ki-briefcase fs-3 text-info me-2"></i> Kinh nghiệm làm việc</h4>
+                            <div class="timeline-label">
+                                @if (currentEmployee?.Experience != null && currentEmployee.Experience.Any())
+                                {
+                                    @foreach (var exp in currentEmployee.Experience)
+                                    {
+                                        <div class="timeline-item">
+                                            <div class="timeline-label fw-bold text-gray-800 fs-6">@exp.StartDate.Year</div>
+                                            <div class="timeline-badge"><i class="fa fa-genderless text-info fs-1"></i></div>
+                                            <div class="timeline-content fw-semibold text-gray-600 ps-3">
+                                                <span class="text-gray-800 fw-bold d-block">@exp.Position</span>
+                                                @exp.CompanyName @(exp.EndDate.HasValue ? $" - {exp.EndDate.Value.Year}" : " (Hiện tại)")
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-muted">Chưa có thông tin kinh nghiệm.</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    @if (!string.IsNullOrEmpty(_modalError)) { <div class="alert alert-danger">@_modalError</div> }
-                    @if (!string.IsNullOrEmpty(_modalSuccess)) { <div class="alert alert-success">@_modalSuccess</div> }
-                    <div class="mb-5"><label class="form-label fw-bold">Họ và tên</label><input type="text" class="form-control" @bind="_editFullName" /></div>
-                    <div class="row mb-5">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Số điện thoại</label>
-                            <input type="text" class="form-control" @bind="_editPhone" />
+            </div>
+        }
+        else if (activeTab == "attendance")
+        {
+            <div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+                <div class="card-header">
+                    <h3 class="card-title fw-bold">Lịch sử chấm công</h3>
+                    <div class="card-toolbar">
+                        <div class="d-flex align-items-center gap-3">
+                            <select class="form-select form-select-solid w-100px" @bind="_selectedMonth" @bind:after="() => LoadTabData(activeTab)">
+                                @for (int m = 1; m <= 12; m++) { <option value="@m">Tháng @m</option> }
+                            </select>
+                            <select class="form-select form-select-solid w-125px" @bind="_selectedYear" @bind:after="() => LoadTabData(activeTab)">
+                                @for (int y = DateTime.Now.Year; y >= 2024; y--) { <option value="@y">Năm @y</option> }
+                            </select>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Email</label>
-                            <input type="email" class="form-control" @bind="_editEmail" />
-                        </div>
-                    </div>
-                    <div class="row mb-5">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Số CMND/CCCD</label>
-                            <input type="text" class="form-control" @bind="_editIdCard" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Quê quán</label>
-                            <input type="text" class="form-control" @bind="_editHometown" />
-                        </div>
-                    </div>
-                    <div class="row mb-5">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Số tài khoản</label>
-                            <input type="text" class="form-control" @bind="_editBankAccount" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Ngân hàng</label>
-                            <input type="text" class="form-control" @bind="_editBankName" />
-                        </div>
-                    </div>
-                    <div class="mb-5">
-                        <label class="form-label fw-bold">Số người phụ thuộc (Giảm trừ gia cảnh)</label>
-                        <input type="number" class="form-control" @bind="_editDependents" />
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" @onclick="CloseModals" disabled="@_isSaving">Hủy</button>
-                    <button type="button" class="btn btn-primary" @onclick="HandleSaveProfile" disabled="@_isSaving">
-                        @if (_isSaving)
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-row-bordered table-row-gray-300 align-middle gs-9 gy-4">
+                            <thead class="bg-light">
+                                <tr class="fw-bold fs-7 text-gray-800 text-uppercase">
+                                    <th class="min-w-100px">Ngày</th>
+                                    <th class="min-w-100px">Thứ</th>
+                                    <th class="min-w-125px">Giờ vào</th>
+                                    <th class="min-w-125px">Giờ ra</th>
+                                    <th class="min-w-100px">Công</th>
+                                    <th class="min-w-150px">Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (_attendanceDetails == null)
+                                {
+                                    <tr><td colspan="6" class="text-center py-20"><div class="spinner-border text-primary"></div></td></tr>
+                                }
+                                else if (!_attendanceDetails.Any())
+                                {
+                                    <tr><td colspan="6" class="text-center py-20 text-gray-500 fs-5">Chưa có dữ liệu chấm công kỳ này.</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (var log in _attendanceDetails)
+                                    {
+                                        <tr class="@(log.DayOfWeek == "Sunday" || log.DayOfWeek == "Chủ Nhật" ? "bg-light-danger opacity-75" : "")">
+                                            <td><span class="fw-bold">@log.Date.ToString("dd/MM")</span></td>
+                                            <td><span class="text-muted">@log.DayOfWeek</span></td>
+                                            <td>
+                                                @if (log.CheckIn.HasValue) {
+                                                    <span class="badge badge-light-success fw-bold">@log.CheckIn.Value.ToString("HH:mm")</span>
+                                                    @if (log.LateMinutes > 0) { <span class="badge badge-light-danger ms-1 fs-9">Muộn @(log.LateMinutes)p</span> }
+                                                } else { <span class="text-gray-300">--:--</span> }
+                                            </td>
+                                            <td>
+                                                @if (log.CheckOut.HasValue) {
+                                                    <span class="badge badge-light-primary fw-bold">@log.CheckOut.Value.ToString("HH:mm")</span>
+                                                    @if (log.EarlyLeaveMinutes > 0) { <span class="badge badge-light-warning ms-1 fs-9">Về sớm @(log.EarlyLeaveMinutes)p</span> }
+                                                } else { <span class="text-gray-300">--:--</span> }
+                                            </td>
+                                            <td><span class="badge badge-light-dark fw-bold">@log.WorkValue</span></td>
+                                            <td class="fs-7 text-gray-600">@log.Note</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (activeTab == "leave")
+        {
+            <div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+                <div class="card-header"><h3 class="card-title fw-bold">Thông tin nghỉ phép</h3></div>
+                <div class="card-body p-9">
+                    <div class="row g-10 mb-10">
+                        <div class="col-md-3">
+                            <div class="card shadow-none border border-primary border-dashed p-6">
+                                <span class="text-muted fw-bold d-block fs-7 text-uppercase mb-2">Tổng ngày phép</span>
+                                <span class="text-gray-800 fw-bolder fs-2">@(_leaveBalance?.EntitledDays ?? 0)</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card shadow-none border border-success border-dashed p-6">
+                                <span class="text-muted fw-bold d-block fs-7 text-uppercase mb-2">Đã sử dụng</span>
+                                <span class="text-success fw-bolder fs-2">@(_leaveBalance?.UsedDays ?? 0)</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card shadow-none border border-info border-dashed p-6">
+                                <span class="text-muted fw-bold d-block fs-7 text-uppercase mb-2">Đang chờ duyệt</span>
+                                <span class="text-info fw-bolder fs-2">@(_leaveBalance?.PendingDays ?? 0)</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card shadow-none border border-danger border-dashed p-6">
+                                <span class="text-muted fw-bold d-block fs-7 text-uppercase mb-2">Còn lại</span>
+                                <span class="text-danger fw-bolder fs-2">@(_leaveBalance?.RemainingDays ?? 0)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="text-gray-800 fw-bold mb-5">Danh sách yêu cầu nghỉ phép</h4>
+                    <div class="table-responsive">
+                        <table class="table table-row-bordered table-row-gray-300 align-middle gs-0 gy-4">
+                            <thead>
+                                <tr class="fw-bold fs-7 text-gray-800 text-uppercase bg-light">
+                                    <th class="ps-4 min-w-150px">Loại nghỉ</th>
+                                    <th class="min-w-150px">Thời gian</th>
+                                    <th class="min-w-100px text-center">Tổng ngày</th>
+                                    <th class="min-w-125px">Lý do</th>
+                                    <th class="min-w-100px text-end pe-4">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (_leaveRequests == null)
+                                {
+                                    <tr><td colspan="5" class="text-center py-10"><div class="spinner-border text-primary"></div></td></tr>
+                                }
+                                else if (!_leaveRequests.Any())
+                                {
+                                    <tr><td colspan="5" class="text-center py-10 text-muted">Không có yêu cầu nào.</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (var req in _leaveRequests.OrderByDescending(x => x.StartDate))
+                                    {
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="bullet bullet-vertical h-30px @req.TypeColor me-5"></span>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-gray-800 fw-bold fs-6">@req.Type</span>
+                                                        <span class="text-muted fs-8">@req.SubType</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="text-gray-600 fs-7">@req.StartDate.ToString("dd/MM") - @req.EndDate.ToString("dd/MM")</span>
+                                            </td>
+                                            <td class="text-center">@req.TotalDays</td>
+                                            <td class="fs-7 text-gray-500">@req.Reason</td>
+                                            <td class="text-end pe-4">
+                                                <span class="badge @req.StatusBadgeClass fw-bold">@req.Status</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (activeTab == "audit")
+        {
+            <div class="card mb-5 mb-xl-10 animate__animated animate__fadeIn">
+                <div class="card-header"><h3 class="card-title fw-bold">Nhật ký hoạt động</h3></div>
+                <div class="card-body p-9">
+                    <div class="timeline-label">
+                        @if (_auditLogs == null)
                         {
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                            <span class="ms-2">Đang xử lý...</span>
+                            <div class="d-flex flex-center py-20"><div class="spinner-border text-primary"></div></div>
+                        }
+                        else if (!_auditLogs.Any())
+                        {
+                            <div class="text-center py-10 text-muted fs-5">Chưa có nhật ký hoạt động nào được ghi nhận.</div>
                         }
                         else
                         {
-                            <span>Lưu thay đổi</span>
+                            @foreach (var log in _auditLogs.OrderByDescending(x => x.Timestamp))
+                            {
+                                <div class="timeline-item">
+                                    <div class="timeline-label fw-bold text-gray-800 fs-6">@log.Timestamp.ToString("HH:mm")</div>
+                                    <div class="timeline-badge">
+                                        <i class="fa fa-genderless @(log.Action.Contains("Update") ? "text-warning" : "text-primary") fs-1"></i>
+                                    </div>
+                                    <div class="timeline-content ps-3">
+                                        <span class="text-gray-800 fw-bold d-block">@log.Action</span>
+                                        <span class="text-muted fs-7">@log.Description</span>
+                                        <div class="text-gray-400 fs-8 mt-1">@log.Timestamp.ToString("dd/MM/yyyy") @(log.IpAddress != null ? $" - IP: {log.IpAddress}" : "")</div>
+                                    </div>
+                                </div>
+                            }
                         }
-                    </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     </div>
-}
 
-@if (isPasswordModalOpen)
-{
-    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5)">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Đổi mật khẩu</h3>
-                    <div class="btn btn-icon btn-sm" @onclick="CloseModals"><i class="ki-outline ki-cross fs-1"></i></div>
+    @if (isEditModalOpen)
+    {
+        <div class="modal fade show d-block animate__animated animate__fadeIn" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content shadow-lg border-0">
+                    <div class="modal-header border-0 px-10 pt-10 pb-0">
+                        <h3 class="modal-title fw-bolder fs-2 text-primary">Cập nhật hồ sơ chi tiết</h3>
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="CloseModals">
+                            <i class="ki-outline ki-cross fs-1"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-body py-10 px-10 px-lg-17">
+                        @if (_isLoadingProfile)
+                        {
+                            <div class="d-flex flex-column flex-center min-h-400px">
+                                <div class="spinner-border text-primary w-60px h-60px mb-5" role="status"></div>
+                                <div class="fs-4 fw-bold text-gray-700">Đang chuẩn bị dữ liệu hồ sơ...</div>
+                            </div>
+                        }
+                        else
+                        {
+                            @if (!string.IsNullOrEmpty(_modalError)) { <div class="alert alert-danger shadow-sm mb-10"><i class="ki-outline ki-information fs-2 me-2"></i>@_modalError</div> }
+                            @if (!string.IsNullOrEmpty(_modalSuccess)) { <div class="alert alert-success shadow-sm mb-10"><i class="ki-outline ki-check fs-2 me-2"></i>@_modalSuccess</div> }
+
+                            <div class="scroll-y me-n7 pe-7" style="max-height: 700px">
+                                <!-- Section 1: Thông tin cơ bản -->
+                                <div class="mb-10">
+                                    <h4 class="fw-bold text-gray-800 mb-5 d-flex align-items-center">
+                                        <span class="bullet bullet-vertical h-20px bg-primary me-3"></span>Thông tin cơ bản
+                                    </h4>
+                                    <div class="row g-7 mb-7">
+                                        <div class="col-md-6">
+                                            <TTLInput Type="TTLInput.InputDataType.Name" Label="Họ và tên" @bind-Value="_editFullName" Placeholder="Nguyễn Văn A" IsRequired="true" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold fs-7 text-gray-700 text-uppercase">Chức danh / Chức vụ</label>
+                                            <select class="form-select form-select-solid" @bind="_editJobTitle">
+                                                <option value="">-- Chọn chức vụ --</option>
+                                                @if (_positions != null)
+                                                {
+                                                    @foreach (var pos in _positions)
+                                                    {
+                                                        <option value="@pos.Name">@pos.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row g-7 mb-7">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold fs-7 text-gray-700 text-uppercase">Giới tính</label>
+                                            <select class="form-select form-select-solid" @bind="_editGenderId">
+                                                <option value="">-- Chọn giới tính --</option>
+                                                @if (_genders != null)
+                                                {
+                                                    @foreach (var item in _genders)
+                                                    {
+                                                        <option value="@item.LookupID">@item.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold fs-7 text-gray-700 text-uppercase">Tình trạng hôn nhân</label>
+                                            <select class="form-select form-select-solid" @bind="_editMaritalStatusId">
+                                                <option value="">-- Chọn tình trạng --</option>
+                                                @if (_maritalStatuses != null)
+                                                {
+                                                    @foreach (var item in _maritalStatuses)
+                                                    {
+                                                        <option value="@item.LookupID">@item.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row g-7">
+                                        <div class="col-md-4">
+                                            <TTLInput Type="TTLInput.InputDataType.Phone" Label="Số điện thoại" @bind-Value="_editPhone" Placeholder="0901234567" IsRequired="true" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <TTLInput Type="TTLInput.InputDataType.Email" Label="Email cá nhân" @bind-Value="_editEmail" Placeholder="example@mail.com" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <TTLInput Type="TTLInput.InputDataType.CCCD" Label="Số CMND/CCCD" @bind-Value="_editIdCard" Placeholder="001200000001" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Section 2: Địa chỉ liên lạc -->
+                                <div class="mb-10">
+                                    <h4 class="fw-bold text-gray-800 mb-5 d-flex align-items-center">
+                                        <span class="bullet bullet-vertical h-20px bg-success me-3"></span>Địa chỉ liên lạc & Hộ khẩu
+                                    </h4>
+                                    <div class="bg-light-primary p-7 rounded-3 border border-primary border-dashed mb-5">
+                                        <TTLLocationSelector @bind-CountryId="_editCountryId" @bind-ProvinceId="_editProvinceId" @bind-DistrictId="_editDistrictId" @bind-WardId="_editWardId" @bind-StreetId="_editStreetId" @bind-Street="_editStreet" 
+                                            ShowCountry="false" ProvinceCssClass="col-md-6 mb-5" DistrictCssClass="col-md-6 mb-5" WardCssClass="col-md-6 mb-5" StreetCssClass="col-md-6 mb-5" 
+                                            OnAddressUpdated="@(addr => _editHometown = addr)" />
+                                    </div>
+                                    <TTLInput Label="Quê quán / Địa chỉ đầy đủ" @bind-Value="_editHometown" Disabled="true" Hint="Hệ thống tự động cập nhật từ lựa chọn trên..." />
+                                </div>
+
+                                <!-- Section 3: Tài chính & Gia cảnh -->
+                                <div class="mb-5">
+                                    <h4 class="fw-bold text-gray-800 mb-5 d-flex align-items-center">
+                                        <span class="bullet bullet-vertical h-20px bg-warning me-3"></span>Tài chính & Giảm trừ gia cảnh
+                                    </h4>
+                                    <div class="row g-7">
+                                        <div class="col-md-6 mb-7">
+                                            <TTLInput Label="Số tài khoản ngân hàng" @bind-Value="_editBankAccount" Placeholder="Nhập số tài khoản..." />
+                                        </div>
+                                        <div class="col-md-6 mb-7">
+                                            <label class="form-label fw-bold fs-7 text-gray-700 text-uppercase">Ngân hàng thụ hưởng</label>
+                                            <TTLBankSelector @bind-BankCode="_editBankName" Label="" />
+                                        </div>
+                                        <div class="col-md-12 mb-5">
+                                            <TTLInput Label="Số người phụ thuộc" Value="@(_editDependents?.ToString())" ValueChanged="@(s => { if(int.TryParse(s, out var v)) _editDependents = v; else _editDependents = null; })" Type="TTLInput.InputDataType.Number" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="modal-footer border-0 px-10 pb-10">
+                        <button type="button" class="btn btn-light-danger fw-bold px-8 me-3" @onclick="CloseModals" disabled="@_isSaving">Hủy bỏ</button>
+                        <button type="button" class="btn btn-primary fw-bold px-10 shadow-sm" @onclick="HandleSaveProfile" disabled="@_isSaving">
+                            @if (_isSaving)
+                            {
+                                <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                                <span>Đang lưu...</span>
+                            }
+                            else
+                            {
+                                <i class="ki-outline ki-check fs-2 me-2"></i><span>Lưu thay đổi</span>
+                            }
+                        </button>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    @if (!string.IsNullOrEmpty(_modalError)) { <div class="alert alert-danger">@_modalError</div> }
-                    @if (!string.IsNullOrEmpty(_modalSuccess)) { <div class="alert alert-success">@_modalSuccess</div> }
-                    <div class="mb-5"><label class="form-label fw-bold">Mật khẩu hiện tại</label><input type="password" class="form-control" @bind="_currentPassword" /></div>
-                    <div class="mb-5"><label class="form-label fw-bold">Mật khẩu mới</label><input type="password" class="form-control" @bind="_newPassword" /></div>
-                    <div class="mb-5"><label class="form-label fw-bold">Xác nhận mật khẩu</label><input type="password" class="form-control" @bind="_confirmPassword" /></div>
-                </div>
-                <div class="modal-footer"><button class="btn btn-light" @onclick="CloseModals">Hủy</button><button class="btn btn-primary" @onclick="HandleChangePassword">Cập nhật mật khẩu</button></div>
             </div>
         </div>
-    </div>
+    }
+
+    @if (isPasswordModalOpen)
+    {
+        <div class="modal fade show d-block animate__animated animate__fadeIn" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow-lg">
+                    <div class="modal-header">
+                        <h3 class="modal-title fw-bold">Thay đổi mật khẩu tài khoản</h3>
+                        <div class="btn btn-icon btn-sm" @onclick="CloseModals">
+                            <i class="ki-outline ki-cross fs-1"></i>
+                        </div>
+                    </div>
+                    <div class="modal-body p-10">
+                        @if (!string.IsNullOrEmpty(_modalError)) { <div class="alert alert-danger shadow-sm">@_modalError</div> }
+                        @if (!string.IsNullOrEmpty(_modalSuccess)) { <div class="alert alert-success shadow-sm">@_modalSuccess</div> }
+                        <div class="mb-5">
+                            <label class="form-label fw-bold">Mật khẩu hiện tại</label>
+                            <input type="password" class="form-control form-control-solid" @bind="_currentPassword" />
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label fw-bold">Mật khẩu mới</label>
+                            <input type="password" class="form-control form-control-solid" @bind="_newPassword" />
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label fw-bold">Xác nhận mật khẩu mới</label>
+                            <input type="password" class="form-control form-control-solid" @bind="_confirmPassword" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-light fw-bold" @onclick="CloseModals">Hủy</button>
+                        <button class="btn btn-primary fw-bold" @onclick="HandleChangePassword" disabled="@_isSaving">
+                             @if (_isSaving) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                             Cập nhật mật khẩu
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 }

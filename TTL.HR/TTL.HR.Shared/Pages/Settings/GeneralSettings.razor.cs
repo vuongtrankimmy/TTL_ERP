@@ -1,3 +1,4 @@
+#pragma warning disable CS8600, CS8601, CS8604, CS8625
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;

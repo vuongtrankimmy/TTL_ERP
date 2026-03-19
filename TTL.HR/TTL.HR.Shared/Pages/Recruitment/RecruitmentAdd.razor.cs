@@ -6,6 +6,7 @@ using TTL.HR.Application.Modules.Recruitment.Models;
 using Microsoft.JSInterop;
 
 namespace TTL.HR.Shared.Pages.Recruitment
+#pragma warning disable CS0169, CS0414
 {
     public partial class RecruitmentAdd
     {

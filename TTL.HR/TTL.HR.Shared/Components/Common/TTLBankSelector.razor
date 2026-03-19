@@ -1,0 +1,40 @@
+@using TTL.HR.Application.Modules.Common.Models
+@using TTL.HR.Application.Modules.Common.Interfaces
+@inject IBankService BankService
+
+<div class="fv-row">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <label class="form-label fs-7 fw-bolder text-gray-700 text-uppercase @(IsRequired ? "required" : "")">@Label</label>
+    }
+
+    <div class="position-relative">
+        <select class="form-select form-select-solid @(IsInvalid ? "is-invalid border-danger" : "")" 
+                value="@BankCode" 
+                @onchange="HandleBankChanged"
+                disabled="@(Disabled || IsReadOnly)">
+            <option value="">-- Chọn ngân hàng --</option>
+            @if (_banks != null)
+            {
+                @foreach (var bank in _banks)
+                {
+                    <option value="@bank.Code" selected="@(bank.Code == BankCode)">
+                        @bank.Code - @bank.Name
+                    </option>
+                }
+            }
+        </select>
+        
+        @if (_isLoading)
+        {
+            <div class="position-absolute translate-middle-y top-50 end-0 me-10">
+                <span class="spinner-border spinner-border-sm text-primary"></span>
+            </div>
+        }
+    </div>
+
+    @if (IsInvalid && !string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="invalid-feedback d-block fs-9 fw-bold mt-1 text-danger">@ErrorMessage</div>
+    }
+</div>

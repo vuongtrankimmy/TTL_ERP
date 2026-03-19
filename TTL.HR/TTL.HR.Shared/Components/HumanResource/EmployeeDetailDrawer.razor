@@ -68,37 +68,28 @@
 								</div>
 								<div class="row g-6 mb-8">
 									<div class="col-md-6">
-										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Họ và tên</label>
-										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.FullName</div> }
-										else { <input type="text" class="form-control form-control-solid" @bind="Employee.FullName" /> }
+										<TTLInput Label="Họ và tên" @bind-Value="Employee.FullName" IsReadOnly="@IsReadOnly" />
 									</div>
                                     <div class="col-md-6">
-										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Ngày sinh</label>
-										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.DOB?.ToString("dd/MM/yyyy")</div> }
-										else { <input type="date" class="form-control form-control-solid" @bind="Employee.DOB" /> }
+										<TTLInput Label="Ngày sinh" @bind-DateValue="Employee.DOB" Type="TTLInput.InputDataType.Date" IsReadOnly="@IsReadOnly" />
 									</div>
                                     <div class="col-md-6">
-										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Giới tính</label>
-										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.Gender</div> }
-										else {
-											<select class="form-select form-select-solid" @bind="Employee.Gender">
+										<TTLInput Label="Giới tính" @bind-Value="Employee.Gender" Type="TTLInput.InputDataType.Select" IsReadOnly="@IsReadOnly">
+											<select class="form-select form-select-solid" @bind="Employee.Gender" disabled="@IsReadOnly">
 												<option value="">Chọn giới tính</option>
 												<option value="Nam">Nam</option>
 												<option value="Nữ">Nữ</option>
 											</select>
-										}
+										</TTLInput>
 									</div>
                                     <div class="col-md-6">
-										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Số CCCD</label>
-										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.IdCard</div> }
-										else {
-											<div class="position-relative">
-												<input type="text" class="form-control form-control-solid" @bind="Employee.IdCard" />
-												<button type="button" class="btn btn-icon btn-sm btn-active-color-primary position-absolute end-0 top-0 mt-1 me-1" @onclick="OnScanCCCD">
+										<TTLInput Label="Số CCCD" @bind-Value="Employee.IdCard" IsReadOnly="@IsReadOnly">
+											@if (!IsReadOnly) {
+												<button type="button" class="btn btn-icon btn-sm btn-active-color-primary position-absolute end-0 top-0 mt-8 me-1" @onclick="OnScanCCCD">
 													<i class="ki-outline ki-scan-barcode fs-3"></i>
 												</button>
-											</div>
-										}
+											}
+										</TTLInput>
 									</div>
                                 </div>
 
@@ -108,10 +99,8 @@
 								</div>
 								<div class="row g-6 mb-8">
 									<div class="col-md-6">
-										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Phòng ban</label>
-										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.DepartmentName</div> }
-										else {
-											<select class="form-select form-select-solid" @bind="Employee.DepartmentId">
+										<TTLInput Label="Phòng ban" Value="@Employee.DepartmentName" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select">
+											<select class="form-select form-select-solid" @bind="Employee.DepartmentId" disabled="@IsReadOnly">
 												@if (Departments != null) {
 													@foreach (var dept in Departments)
 													{
@@ -119,13 +108,11 @@
 													}
 												}
 											</select>
-										}
+										</TTLInput>
 									</div>
                                     <div class="col-md-6">
-										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Chức vụ</label>
-										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.PositionName</div> }
-										else {
-											<select class="form-select form-select-solid" @bind="Employee.PositionId">
+										<TTLInput Label="Chức vụ" Value="@Employee.PositionName" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select">
+											<select class="form-select form-select-solid" @bind="Employee.PositionId" disabled="@IsReadOnly">
 												@if (Positions != null) {
 													@foreach (var pos in Positions)
 													{
@@ -133,13 +120,11 @@
 													}
 												}
 											</select>
-										}
+										</TTLInput>
 									</div>
                                     <div class="col-md-6">
-										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Người quản lý</label>
-										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@(string.IsNullOrEmpty(Employee.ReportToName) ? "Không có" : Employee.ReportToName)</div> }
-										else {
-											<select class="form-select form-select-solid" @bind="Employee.ReportToId">
+										<TTLInput Label="Người quản lý" Value="@Employee.ReportToName" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select">
+											<select class="form-select form-select-solid" @bind="Employee.ReportToId" disabled="@IsReadOnly">
 												<option value="">Không có</option>
 												@if (Managers != null) {
 													@foreach (var mgr in Managers)
@@ -148,18 +133,14 @@
 													}
 												}
 											</select>
-										}
+										</TTLInput>
 									</div>
                                     <div class="col-md-6">
-										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Ngày gia nhập</label>
-										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@Employee.JoinDate?.ToString("dd/MM/yyyy")</div> }
-										else { <input type="date" class="form-control form-control-solid" @bind="Employee.JoinDate" /> }
+										<TTLInput Label="Ngày gia nhập" Value="@(Employee.JoinDate?.ToString("yyyy-MM-dd"))" Type="TTLInput.InputDataType.Date" IsReadOnly="@IsReadOnly" />
 									</div>
                                     <div class="col-md-6">
-										<label class="form-label text-muted fs-7 text-uppercase fw-bold">Nơi làm việc</label>
-										@if (IsReadOnly) { <div class="fw-bolder fs-6 text-gray-800 p-3 bg-light rounded">@(string.IsNullOrEmpty(Employee.Workplace) ? "Chưa chọn" : Employee.Workplace)</div> }
-										else {
-											<select class="form-select form-select-solid" @bind="Employee.WorkplaceId">
+										<TTLInput Label="Nơi làm việc" Value="@Employee.Workplace" IsReadOnly="@IsReadOnly" Type="TTLInput.InputDataType.Select">
+											<select class="form-select form-select-solid" @bind="Employee.WorkplaceId" disabled="@IsReadOnly">
 												<option value="">Chọn địa điểm...</option>
 												@if (Workplaces != null) {
 													@foreach (var wp in Workplaces)
@@ -168,7 +149,7 @@
 													}
 												}
 											</select>
-										}
+										</TTLInput>
 									</div>
                                 </div>
 

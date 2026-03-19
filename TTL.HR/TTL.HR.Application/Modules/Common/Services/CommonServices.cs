@@ -58,6 +58,7 @@ namespace TTL.HR.Application.Modules.Common.Services
         private readonly HttpClient _httpClient;
         private static readonly ConcurrentDictionary<string, List<LookupModel>> _cache = new();
         private static readonly ConcurrentDictionary<string, List<CountryModel>> _countryCache = new();
+        private static readonly ConcurrentDictionary<string, string> _codeToIdMap = new(); // Mapping from integer Code to string Id instance
         
         public MasterDataService(HttpClient httpClient) => _httpClient = httpClient;
         
@@ -115,6 +116,242 @@ namespace TTL.HR.Application.Modules.Common.Services
             var data = await GetCountriesAsync(lang);
             _countryCache.TryAdd(cacheKey, data);
             return data;
+        }
+
+        public async Task<List<LookupModel>> GetProvincesAsync(string? lang = null)
+        {
+            try
+            {
+                var url = ApiEndpoints.System.AdministrativeDivisions.Provinces;
+                if (!string.IsNullOrEmpty(lang)) url += $"?lang={lang}";
+
+                var response = await _httpClient.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var list = apiResponse?.Data ?? new List<LookupModel>();
+                    foreach (var item in list) if (!string.IsNullOrEmpty(item.Code)) _codeToIdMap[item.Code] = item.Id;
+                    return list;
+                }
+            }
+            catch { }
+            return new List<LookupModel>();
+        }
+
+        public async Task<List<LookupModel>> GetDistrictsAsync(string provinceId, string? lang = null)
+        {
+            try
+            {
+                string finalId = provinceId;
+                if (int.TryParse(provinceId, out _) && _codeToIdMap.TryGetValue(provinceId, out var mappedId))
+                {
+                    finalId = mappedId;
+                }
+
+                var url = ApiEndpoints.System.AdministrativeDivisions.Districts(finalId);
+                if (!string.IsNullOrEmpty(lang)) url += $"?lang={lang}";
+
+                Console.WriteLine($"[MasterDataService] Fetching districts from: {url}");
+                var response = await _httpClient.GetAsync(url);
+                Console.WriteLine($"[MasterDataService] Response status: {response.StatusCode} for {url}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var list = apiResponse?.Data ?? new List<LookupModel>();
+                    foreach (var item in list) if (!string.IsNullOrEmpty(item.Code)) _codeToIdMap[item.Code] = item.Id;
+                    return list;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[MasterDataService] Error detail: {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[MasterDataService] EXCEPTION in GetDistrictsAsync: {ex.Message}");
+            }
+            return new List<LookupModel>();
+        }
+
+        public async Task<List<LookupModel>> GetWardsAsync(string? districtId = null, string? provinceId = null, string? lang = null)
+        {
+            try
+            {
+                string? finalDistrictId = districtId;
+                string? finalProvinceId = provinceId;
+
+                // Nếu districtId là số, thử map sang string ID
+                if (!string.IsNullOrEmpty(districtId) && int.TryParse(districtId, out _) && _codeToIdMap.TryGetValue(districtId, out var dId))
+                {
+                    finalDistrictId = dId;
+                }
+
+                // Nếu provinceId là số, thử map sang string ID
+                if (!string.IsNullOrEmpty(provinceId) && int.TryParse(provinceId, out _) && _codeToIdMap.TryGetValue(provinceId, out var pId))
+                {
+                    finalProvinceId = pId;
+                }
+
+                string url;
+                if (!string.IsNullOrEmpty(finalDistrictId))
+                {
+                    url = ApiEndpoints.System.AdministrativeDivisions.Wards(finalDistrictId);
+                }
+                else if (!string.IsNullOrEmpty(finalProvinceId))
+                {
+                    url = ApiEndpoints.System.AdministrativeDivisions.WardsByProvince(finalProvinceId);
+                }
+                else
+                {
+                    return new List<LookupModel>();
+                }
+
+                if (!string.IsNullOrEmpty(lang)) url += $"?lang={lang}";
+
+                var fullUrl = new Uri(_httpClient.BaseAddress!, url);
+                Console.WriteLine($"[MasterDataService] Fetching wards from: {fullUrl}");
+                var response = await _httpClient.GetAsync(url);
+                Console.WriteLine($"[MasterDataService] Response status: {response.StatusCode} for {url}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var list = apiResponse?.Data ?? new List<LookupModel>();
+                    foreach (var item in list) if (!string.IsNullOrEmpty(item.Code)) _codeToIdMap[item.Code] = item.Id;
+                    return list;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[MasterDataService] Error content: {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[MasterDataService] Exception in GetWardsAsync: {ex.Message}");
+            }
+            return new List<LookupModel>();
+        }
+
+        // Int overloads: dùng khi ID là số nguyên (SQL/API mới)
+        public async Task<List<LookupModel>> GetDistrictsAsync(int provinceId, string? lang = null)
+        {
+            try
+            {
+                // Mapping: Chuyển từ int code sang string ID của MongoDB để gọi API
+                string codeStr = provinceId.ToString();
+                if (!_codeToIdMap.TryGetValue(codeStr, out var stringId))
+                {
+                    // Nếu chưa có trong map, nạp lại Provinces
+                    var provinces = await GetProvincesAsync();
+                    stringId = provinces.FirstOrDefault(p => p.Code == codeStr)?.Id;
+                }
+
+                if (string.IsNullOrEmpty(stringId))
+                {
+                    Console.WriteLine($"[MasterDataService] Cannot find string ID for Province Code: {provinceId}");
+                    return new List<LookupModel>();
+                }
+
+                var url = ApiEndpoints.System.AdministrativeDivisions.Districts(stringId);
+                if (!string.IsNullOrEmpty(lang)) url += $"?lang={lang}";
+
+                Console.WriteLine($"[MasterDataService] Fetching districts for Code {provinceId} using ID {stringId} from: {url}");
+                var response = await _httpClient.GetAsync(url);
+                Console.WriteLine($"[MasterDataService] Response status: {response.StatusCode} for {url}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var list = apiResponse?.Data ?? new List<LookupModel>();
+                    foreach (var item in list) if (!string.IsNullOrEmpty(item.Code)) _codeToIdMap[item.Code] = item.Id;
+                    return list;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[MasterDataService] Error detail: {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[MasterDataService] EXCEPTION in GetDistrictsAsync(int): {ex.Message}");
+            }
+            return new List<LookupModel>();
+        }
+
+        public async Task<List<LookupModel>> GetWardsAsync(int districtId, string? lang = null)
+        {
+            try
+            {
+                // Mapping: Chuyển từ int code sang string ID của MongoDB để gọi API
+                string codeStr = districtId.ToString();
+                if (!_codeToIdMap.TryGetValue(codeStr, out var stringId))
+                {
+                    // Ghi chú: Case này hiếm vì thường load district trước đó đã fill map rồi
+                    Console.WriteLine($"[MasterDataService] Warning: Code {districtId} not found in map, attempt to load may fail if API doesn't support numeric code.");
+                    stringId = codeStr; 
+                }
+
+                var url = ApiEndpoints.System.AdministrativeDivisions.Wards(stringId);
+                if (!string.IsNullOrEmpty(lang)) url += $"?lang={lang}";
+
+                Console.WriteLine($"[MasterDataService] Fetching wards for Code {districtId} using ID {stringId} from: {url}");
+                var response = await _httpClient.GetAsync(url);
+                Console.WriteLine($"[MasterDataService] Response status: {response.StatusCode} for {url}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var list = apiResponse?.Data ?? new List<LookupModel>();
+                    foreach (var item in list) if (!string.IsNullOrEmpty(item.Code)) _codeToIdMap[item.Code] = item.Id;
+                    return list;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[MasterDataService] Error content: {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[MasterDataService] Exception in GetWardsAsync(int): {ex.Message}");
+            }
+            return new List<LookupModel>();
+        }
+
+        public async Task<List<LookupModel>> GetStreetsAsync(string? provinceId = null, string? wardId = null, string? lang = null)
+        {
+            try
+            {
+                string? finalProvinceId = provinceId;
+                string? finalWardId = wardId;
+
+                if (!string.IsNullOrEmpty(provinceId) && int.TryParse(provinceId, out _) && _codeToIdMap.TryGetValue(provinceId, out var pId))
+                    finalProvinceId = pId;
+                
+                if (!string.IsNullOrEmpty(wardId) && int.TryParse(wardId, out _) && _codeToIdMap.TryGetValue(wardId, out var wId))
+                    finalWardId = wId;
+
+                var queryParams = new List<string>();
+                if (!string.IsNullOrEmpty(finalProvinceId)) queryParams.Add($"provinceId={finalProvinceId}");
+                if (!string.IsNullOrEmpty(finalWardId)) queryParams.Add($"wardId={finalWardId}");
+                if (!string.IsNullOrEmpty(lang)) queryParams.Add($"lang={lang}");
+
+                var url = $"{ApiEndpoints.System.AdministrativeDivisions.Base}/streets";
+                if (queryParams.Any()) url += "?" + string.Join("&", queryParams);
+
+                var response = await _httpClient.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    return apiResponse?.Data ?? new List<LookupModel>();
+                }
+            }
+            catch { }
+            return new List<LookupModel>();
         }
     }
 
@@ -297,6 +534,51 @@ namespace TTL.HR.Application.Modules.Common.Services
                 ApiResponse<bool>? apiResponse = null;
                 try { apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>(); } catch { }
                 return apiResponse ?? new ApiResponse<bool> { Success = response.IsSuccessStatusCode, Message = "Đặt lại mật khẩu thất bại" };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<bool> { Success = false, Message = $"Lỗi kết nối: {ex.Message}" };
+            }
+        }
+        
+        public async Task<ApiResponse<bool>> UpdateProfileAsync(UserDto request)
+        {
+            try
+            {
+                var command = new
+                {
+                    FullName = request.FullName,
+                    Email = request.Email,
+                    Phone = request.Phone,
+                    IdCardNumber = request.IdCardNumber,
+                    JobTitle = request.JobTitle,
+                    Hometown = request.Hometown,
+                    CountryId = request.CountryId,
+                    ProvinceId = request.ProvinceId,
+                    DistrictId = request.DistrictId,
+                    WardId = request.WardId,
+                    Street = request.Street,
+                    BankName = request.BankName,
+                    BankAccount = request.BankAccount,
+                    AvatarUrl = request.AvatarUrl
+                };
+                
+                var response = await _httpClient.PutAsJsonAsync(ApiEndpoints.Auth.UpdateProfile, command);
+                ApiResponse<bool>? apiResponse = null;
+                try { apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>(); } catch { }
+                
+                if (response.IsSuccessStatusCode && apiResponse?.Success == true)
+                {
+                    _currentUser = request;
+                    await _jsRuntime.InvokeVoidAsync("localStorage.setItem", UserKey, System.Text.Json.JsonSerializer.Serialize(_currentUser));
+                }
+                
+                if (apiResponse != null && !apiResponse.Success && apiResponse.Errors != null && apiResponse.Errors.Any())
+                {
+                    apiResponse.Message = string.Join(". ", apiResponse.Errors);
+                }
+                
+                return apiResponse ?? new ApiResponse<bool> { Success = response.IsSuccessStatusCode, Message = "Cập nhật hồ sơ thất bại" };
             }
             catch (Exception ex)
             {

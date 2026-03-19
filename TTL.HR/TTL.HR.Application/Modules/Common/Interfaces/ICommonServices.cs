@@ -30,6 +30,14 @@ namespace TTL.HR.Application.Modules.Common.Interfaces
         Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetCachedLookupsAsync(string type, string? lang = null);
         Task<List<TTL.HR.Application.Modules.Common.Models.CountryModel>> GetCountriesAsync(string? lang = null);
         Task<List<TTL.HR.Application.Modules.Common.Models.CountryModel>> GetCachedCountriesAsync(string? lang = null);
+        Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetProvincesAsync(string? lang = null);
+        // String overloads (legacy)
+        Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetDistrictsAsync(string provinceId, string? lang = null);
+        Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetWardsAsync(string? districtId = null, string? provinceId = null, string? lang = null);
+        // Int overloads (numeric ID)
+        Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetDistrictsAsync(int provinceId, string? lang = null);
+        Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetWardsAsync(int districtId, string? lang = null);
+        Task<List<TTL.HR.Application.Modules.Common.Models.LookupModel>> GetStreetsAsync(string? provinceId = null, string? wardId = null, string? lang = null);
     }
 
     public interface IAuthService
@@ -42,6 +50,7 @@ namespace TTL.HR.Application.Modules.Common.Interfaces
         Task<TTL.HR.Application.Modules.Common.Models.ApiResponse<bool>> ConfirmEmailAsync(string token);
         Task<TTL.HR.Application.Modules.Common.Models.ApiResponse<bool>> RequestPasswordResetAsync(string email);
         Task<TTL.HR.Application.Modules.Common.Models.ApiResponse<bool>> ResetPasswordAsync(string token, string newPassword);
+        Task<TTL.HR.Application.Modules.Common.Models.ApiResponse<bool>> UpdateProfileAsync(TTL.HR.Application.Modules.Common.Models.UserDto request);
         Task InitializeAsync();
     }
 

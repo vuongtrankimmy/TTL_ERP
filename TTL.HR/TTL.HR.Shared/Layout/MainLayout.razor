@@ -1,4 +1,4 @@
-﻿@using TTL.HR.Shared.Layout.Component.Footer
+@using TTL.HR.Shared.Layout.Component.Footer
 @using TTL.HR.Shared.Layout.Component.Header
 @using TTL.HR.Shared.Layout.Component.Sidebar
 @inherits LayoutComponentBase
@@ -20,34 +20,52 @@
 
 <!--begin::Theme mode setup on page load-->
 <script>
-    var defaultThemeMode = "light"; 
-    var themeMode; 
-    if ( document.documentElement ) { 
-        if ( document.documentElement.hasAttribute("data-bs-theme-mode")) { 
-            themeMode = document.documentElement.getAttribute("data-bs-theme-mode"); 
-        } else { 
-            if ( localStorage.getItem("data-bs-theme") !== null ) { 
-                themeMode = localStorage.getItem("data-bs-theme"); 
-            } else { 
-                themeMode = defaultThemeMode; 
-            } 
-        } 
-        if (themeMode === "system") { 
-            themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; 
-        } 
-        document.documentElement.setAttribute("data-bs-theme", themeMode); 
-    }
-    
-    // Initialize sidebar state
+    // Initialize theme and sidebar state via helper
     if (window.LayoutHelper && typeof window.LayoutHelper.initSidebar === 'function') {
         window.LayoutHelper.initSidebar();
     } else {
+        // Fallback for early loading
+        const themeMode = localStorage.getItem("data-bs-theme") || "light";
+        document.documentElement.setAttribute("data-bs-theme", themeMode);
+        
         const savedState = localStorage.getItem('kt_app_sidebar_minimize');
         if (savedState) {
             document.body.setAttribute('data-kt-app-sidebar-minimize', savedState);
         }
     }
 </script>
+
+<style>
+    /* Sidebar Structural Fixes */
+    .app-sidebar {
+        height: 100vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* Fixed Layout Fixes */
+    [data-kt-app-sidebar-minimize="on"] .app-sidebar-user-info { display: none !important; }
+    
+    /* Logo Visibility Safeguard */
+    [data-kt-app-sidebar-minimize="off"] .app-sidebar-logo-minimize { display: none !important; }
+    [data-kt-app-sidebar-minimize="on"] .app-sidebar-logo-default { display: none !important; }
+    [data-kt-app-sidebar-minimize="on"] .app-sidebar-logo-minimize { display: block !important; }
+
+    /* Theme visibility helpers */
+    [data-bs-theme="light"] .theme-dark-show { display: none !important; }
+    [data-bs-theme="dark"] .theme-light-show { display: none !important; }
+
+    /* Button Polish for Dark Mode */
+    [data-bs-theme="dark"] .btn-active-light-primary:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+    }
+    
+    /* Ensure scrollbar looks good in dark mode */
+    [data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+    }
+</style>
 <!--end::Theme mode setup on page load-->
 
 @if (!_isInitialized)
