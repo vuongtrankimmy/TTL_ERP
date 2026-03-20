@@ -23,7 +23,7 @@ jobs:
       run: dotnet workload install wasm-tools
 
     - name: Restore dependencies
-      run: dotnet restore TTL.HR.slnx
+      run: dotnet restore TTL.HR/TTL.HR.Wasm/TTL.HR.Wasm.csproj
 
     - name: Publish Blazor WASM
       run: dotnet publish TTL.HR/TTL.HR.Wasm/TTL.HR.Wasm.csproj -c Release -o release --nologo
