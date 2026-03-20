@@ -940,14 +940,14 @@ public class MockHttpMessageHandler : HttpMessageHandler
             if (path.Contains("/Attendance/timesheets"))
             {
                 var qParams = ParseQueryString(query);
-                var page = qParams.TryGetValue("pageIndex", out var pIdxStr) && int.TryParse(pIdxStr, out var p) ? p : 1;
-                var pageSize = qParams.TryGetValue("pageSize", out var pSizeStr) && int.TryParse(pSizeStr, out var ps) ? ps : 10;
+                var tsPage = qParams.TryGetValue("pageIndex", out var pIdxStr) && int.TryParse(pIdxStr, out var p) ? p : 1;
+                var tsPageSize = qParams.TryGetValue("pageSize", out var pSizeStr) && int.TryParse(pSizeStr, out var ps) ? ps : 10;
                 
                 var allAttendances = _mockDataProvider.GetCollection<object>("attendances");
                 var allEmployees = _mockDataProvider.GetCollection<object>("employees");
                 
-                var total = allAttendances.Count;
-                var pagedItems = allAttendances.Skip((page - 1) * pageSize).Take(pageSize).Select(a => {
+                var tsTotal = allAttendances.Count;
+                var tsPagedItems = allAttendances.Skip((tsPage - 1) * tsPageSize).Take(tsPageSize).Select(a => {
                     var item = JObject.FromObject(TransformItem(a));
                     
                     // Link Avatar from Employees if missing
@@ -967,18 +967,18 @@ public class MockHttpMessageHandler : HttpMessageHandler
                     {
                         item["TotalWorkingHours"] = item["WorkingHours"];
                     }
-                    return item;
-                }).Cast<object>().ToList();
+                    return (object)item;
+                }).ToList();
 
-                var pagedResult = new PagedResult<object>
+                var tsPagedResult = new PagedResult<object>
                 {
-                    Items = pagedItems,
-                    PageIndex = page,
-                    PageSize = pageSize,
-                    TotalCount = total
+                    Items = tsPagedItems,
+                    PageIndex = tsPage,
+                    PageSize = tsPageSize,
+                    TotalCount = tsTotal
                 };
                 
-                return CreateSuccessResponse(new ApiResponse<PagedResult<object>> { Success = true, Data = pagedResult, Message = "Success" });
+                return CreateSuccessResponse(new ApiResponse<PagedResult<object>> { Success = true, Data = tsPagedResult, Message = "Success" });
             }
 
             if (path.Contains("/Leave/balance/", StringComparison.OrdinalIgnoreCase))
@@ -1159,30 +1159,30 @@ public class MockHttpMessageHandler : HttpMessageHandler
             // Generic Summary handler for any collection ending in /summary
             if (path.EndsWith("/summary", StringComparison.OrdinalIgnoreCase))
             {
-                var allData = GetAllItems(collectionName);
-                int pending = 0, approved = 0, rejected = 1, withdrawn = 0, total = allData.Count;
+                var summaryAllData = GetAllItems(collectionName);
+                int sPending = 0, sApproved = 0, sRejected = 0, sWithdrawn = 0, sTotal = summaryAllData.Count;
 
-                foreach (var item in allData)
+                foreach (var item in summaryAllData)
                 {
                     var status = GetProperty(item, "Status")?.ToString() ?? "Pending";
-                    if (status == "Pending" || status == "1") pending++;
-                    else if (status == "Approved" || status == "2") approved++;
-                    else if (status == "Rejected" || status == "3") rejected++;
-                    else if (status == "Withdrawn" || status == "4" || status == "Cancelled") withdrawn++;
+                    if (status == "Pending" || status == "1") sPending++;
+                    else if (status == "Approved" || status == "2") sApproved++;
+                    else if (status == "Rejected" || status == "3") sRejected++;
+                    else if (status == "Withdrawn" || status == "4" || status == "Cancelled") sWithdrawn++;
                 }
 
                 // Create a generic summary object that fits common summary models
-                var summary = new
+                var summaryObj = new
                 {
-                    PendingCount = pending,
-                    ApprovedCount = approved,
-                    RejectedCount = rejected,
-                    WithdrawnCount = withdrawn,
-                    CancelledCount = withdrawn, // Map to same for compatibility
-                    TotalCount = total
+                    PendingCount = sPending,
+                    ApprovedCount = sApproved,
+                    RejectedCount = sRejected,
+                    WithdrawnCount = sWithdrawn,
+                    CancelledCount = sWithdrawn, // Map to same for compatibility
+                    TotalCount = sTotal
                 };
 
-                return CreateSuccessResponse(new ApiResponse<object> { Success = true, Data = summary, Message = "Success" });
+                return CreateSuccessResponse(new ApiResponse<object> { Success = true, Data = summaryObj, Message = "Success" });
             }
 
             // Check for ID in path (e.g., /Employees/{id})
