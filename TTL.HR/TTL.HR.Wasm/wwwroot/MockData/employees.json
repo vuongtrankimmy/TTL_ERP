@@ -285,6 +285,7 @@
       "GenderId": 1
     },
     "Phone": "0907654321",
+    "AvatarUrl": "_content/TTL.HR.Shared/assets/media/avatars/300-11.jpg",
     "PositionId": "65bf0b2f0000000000000004",
     "ReportToId": "65bf0c300000000000000101",
     "Roles": [
@@ -304,6 +305,7 @@
     "IsDeleted": false,
     "JoinDate": "2022-06-01T00:00:00.000Z",
     "Phone": "0908887776",
+    "AvatarUrl": "_content/TTL.HR.Shared/assets/media/avatars/300-11.jpg",
     "PositionId": "65bf0b2f0000000000000002",
     "Salary": 15000000,
     "StatusId": 1

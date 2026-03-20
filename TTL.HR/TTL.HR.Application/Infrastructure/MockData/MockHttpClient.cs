@@ -939,9 +939,46 @@ public class MockHttpMessageHandler : HttpMessageHandler
 
             if (path.Contains("/Attendance/timesheets"))
             {
-                var attendances = _mockDataProvider.GetCollection<object>("attendances")
-                    .ToList();
-                return CreateSuccessResponse(new ApiResponse<List<object>> { Success = true, Data = attendances, Message = "Success" });
+                var qParams = ParseQueryString(query);
+                var page = qParams.TryGetValue("pageIndex", out var pIdxStr) && int.TryParse(pIdxStr, out var p) ? p : 1;
+                var pageSize = qParams.TryGetValue("pageSize", out var pSizeStr) && int.TryParse(pSizeStr, out var ps) ? ps : 10;
+                
+                var allAttendances = _mockDataProvider.GetCollection<object>("attendances");
+                var allEmployees = _mockDataProvider.GetCollection<object>("employees");
+                
+                var total = allAttendances.Count;
+                var pagedItems = allAttendances.Skip((page - 1) * pageSize).Take(pageSize).Select(a => {
+                    var item = JObject.FromObject(TransformItem(a));
+                    
+                    // Link Avatar from Employees if missing
+                    if (item["Avatar"] == null || string.IsNullOrEmpty(item["Avatar"].ToString()))
+                    {
+                        var empId = item["EmployeeId"]?.ToString();
+                        var employee = allEmployees.FirstOrDefault(e => MatchId(e, "_id", "id", empId));
+                        if (employee != null)
+                        {
+                            var empObj = JObject.FromObject(employee);
+                            item["Avatar"] = empObj["AvatarUrl"] ?? empObj["avatarUrl"] ?? "";
+                        }
+                    }
+
+                    // Map WorkingHours to TotalWorkingHours for AttendanceModel
+                    if (item["WorkingHours"] != null && item["TotalWorkingHours"] == null)
+                    {
+                        item["TotalWorkingHours"] = item["WorkingHours"];
+                    }
+                    return item;
+                }).Cast<object>().ToList();
+
+                var pagedResult = new PagedResult<object>
+                {
+                    Items = pagedItems,
+                    PageIndex = page,
+                    PageSize = pageSize,
+                    TotalCount = total
+                };
+                
+                return CreateSuccessResponse(new ApiResponse<PagedResult<object>> { Success = true, Data = pagedResult, Message = "Success" });
             }
 
             if (path.Contains("/Leave/balance/", StringComparison.OrdinalIgnoreCase))
