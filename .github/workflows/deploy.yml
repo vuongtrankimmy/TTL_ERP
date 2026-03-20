@@ -46,6 +46,10 @@ jobs:
       # Prevents GitHub from ignoring files starting with underscores (like Blazor's _framework)
       run: touch release/wwwroot/.nojekyll
 
+    - name: Add CNAME for custom domain
+      # Required for GitHub Pages to serve from custom domain erp.tantanloc.xo.je
+      run: echo "erp.tantanloc.xo.je" > release/wwwroot/CNAME
+
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
