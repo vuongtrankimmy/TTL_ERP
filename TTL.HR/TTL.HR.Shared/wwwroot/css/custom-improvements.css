@@ -1,0 +1,308 @@
+/* ===================================
+   TTL.HR - UI IMPROVEMENTS
+   Created: 2026-03-18
+   Purpose: Logo alignment, Avatar spacing, Toggle button design
+   =================================== */
+
+/* ===================================
+   1. LOGO CONTAINER ALIGNMENT
+   =================================== */
+.app-sidebar-logo {
+    min-height: 80px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease;
+}
+
+.app-sidebar-logo a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.app-sidebar-logo img {
+    transition: all 0.3s ease;
+}
+
+/* Logo khi sidebar minimize */
+[data-kt-app-sidebar-minimize="on"] .app-sidebar-logo {
+    min-height: 70px !important;
+}
+
+/* ===================================
+   2. AVATAR FOOTER SPACING
+   =================================== */
+.app-sidebar-footer {
+    margin-top: auto !important;
+    margin-bottom: 1.5rem !important; /* 24px extra space from taskbar/bottom */
+    padding-bottom: 2.5rem !important; /* 40px - increased from 32px */
+    padding-top: 1.5rem !important; /* 24px */
+    border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+    transition: all 0.3s ease;
+}
+
+/* Dark mode support */
+[data-bs-theme="dark"] .app-sidebar-footer {
+    border-top-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Avatar container enhancement */
+.app-sidebar-footer .symbol {
+    transition: transform 0.2s ease;
+}
+
+.app-sidebar-footer .symbol:hover {
+    transform: scale(1.05);
+}
+
+/* User info hover effect */
+.app-sidebar-footer [data-kt-menu-trigger]:hover {
+    background-color: rgba(var(--bs-primary-rgb), 0.08);
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+/* ===================================
+   3. SIDEBAR TOGGLE BUTTON - PROFESSIONAL STYLE
+   =================================== */
+.sidebar-toggle-professional {
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle-professional button {
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar-toggle-professional button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.25) !important;
+}
+
+.sidebar-toggle-professional button:active {
+    transform: scale(0.98);
+}
+
+/* Toggle icon animation */
+.sidebar-icon-toggle {
+    transition: transform 0.3s ease;
+}
+
+[data-kt-app-sidebar-minimize="on"] .sidebar-icon-toggle {
+    transform: rotate(180deg);
+}
+
+/* Ripple effect on click */
+.sidebar-toggle-professional button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+}
+
+.sidebar-toggle-professional button:active::after {
+    width: 100%;
+    height: 100%;
+}
+
+/* ===================================
+   4. SMOOTH TRANSITIONS
+   =================================== */
+.app-sidebar {
+    transition: width 0.3s ease, transform 0.3s ease;
+}
+
+.app-sidebar-menu {
+    transition: opacity 0.2s ease;
+}
+
+/* Menu wrapper smooth scroll */
+.app-sidebar-wrapper {
+    transition: all 0.3s ease;
+}
+
+/* ===================================
+   5. THEME SWITCHER ENHANCEMENT
+   =================================== */
+.app-sidebar-footer .btn-icon:hover {
+    background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+    transform: rotate(180deg);
+    transition: transform 0.4s ease, background-color 0.2s ease;
+}
+
+/* ===================================
+   6. USER INFO TEXT TRUNCATE
+   =================================== */
+.app-sidebar-user-info span {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+/* ===================================
+   7. MINIMIZE STATE ENHANCEMENTS
+   =================================== */
+[data-kt-app-sidebar-minimize="on"] .app-sidebar-footer {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    justify-content: center !important;
+}
+
+[data-kt-app-sidebar-minimize="on"] .app-sidebar-footer .flex-stack {
+    justify-content: center !important;
+    width: auto !important;
+}
+
+/* Hide user info when minimized */
+[data-kt-app-sidebar-minimize="on"] .app-sidebar-user-info {
+    display: none !important;
+}
+
+/* Hide theme switcher when minimized */
+[data-kt-app-sidebar-minimize="on"] .app-sidebar-footer .ms-auto {
+    display: none !important;
+}
+
+/* ===================================
+   8. RESPONSIVE ADJUSTMENTS
+   =================================== */
+@media (max-width: 991.98px) {
+    .app-sidebar-logo {
+        min-height: 65px !important;
+    }
+
+    .app-sidebar-footer {
+        padding-bottom: 2rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    /* Hide toggle button on mobile */
+    .sidebar-toggle-professional {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .app-sidebar-logo {
+        min-height: 60px !important;
+    }
+}
+
+/* ===================================
+   9. ACCESSIBILITY IMPROVEMENTS
+   =================================== */
+.sidebar-toggle-professional button:focus-visible {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+}
+
+.app-sidebar a:focus-visible,
+.app-sidebar button:focus-visible {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+}
+
+/* ===================================
+   10. LOADING STATE (OPTIONAL)
+   =================================== */
+.app-sidebar.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* ===================================
+   11. MENU HOVER EFFECTS
+   =================================== */
+.app-sidebar-menu .menu-item .menu-link:hover {
+    transition: all 0.2s ease;
+}
+
+/* Active menu item enhancement */
+.app-sidebar-menu .menu-item .menu-link.active {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    color: var(--bs-primary);
+    font-weight: 600;
+}
+
+/* ===================================
+   12. SCROLLBAR STYLING
+   =================================== */
+.app-sidebar-wrapper::-webkit-scrollbar {
+    width: 5px;
+}
+
+.app-sidebar-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.app-sidebar-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.app-sidebar-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+[data-bs-theme="dark"] .app-sidebar-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+[data-bs-theme="dark"] .app-sidebar-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ===================================
+   13. ANIMATION KEYFRAMES
+   =================================== */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.app-sidebar-menu .menu-item {
+    animation: slideIn 0.3s ease forwards;
+}
+
+/* ===================================
+   14. PERFORMANCE OPTIMIZATIONS
+   =================================== */
+.app-sidebar {
+    will-change: transform, width;
+}
+
+.sidebar-toggle-professional button {
+    will-change: transform;
+}
+
+/* ===================================
+   15. PRINT STYLES
+   =================================== */
+@media print {
+    .app-sidebar,
+    .sidebar-toggle-professional {
+        display: none !important;
+    }
+}
+
+/* ===================================
+   END OF CUSTOM IMPROVEMENTS
+   =================================== */
