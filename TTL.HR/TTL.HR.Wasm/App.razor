@@ -1,0 +1,20 @@
+@using Microsoft.AspNetCore.Components.Routing
+@using TTL.HR.Shared.Layout
+
+<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[] { typeof(TTL.HR.Shared.Layout.MainLayout).Assembly }">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <div class="d-flex flex-column flex-center p-10 h-100">
+                <img src="assets/media/illustrations/sigma-1/18.png" class="mw-100 mb-10 h-200px" alt="" />
+                <h1 class="fw-bolder fs-2qx text-gray-800 mb-7">Trang không tồn tại</h1>
+                <div class="fw-bold fs-3 text-muted mb-15">Rất tiếc, chúng tôi không tìm thấy nội dung bạn yêu cầu.</div>
+                <a href="./" class="btn btn-primary">Quay lại trang chủ</a>
+            </div>
+        </LayoutView>
+    </NotFound>
+</Router>

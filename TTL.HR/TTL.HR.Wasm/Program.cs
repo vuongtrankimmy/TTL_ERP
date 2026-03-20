@@ -8,8 +8,8 @@ using ApexCharts;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-// Note: Root component is App from the Shared library!
-builder.RootComponents.Add<TTL.HR.Shared.App>("#app");
+// Note: Root component is App from THIS project!
+builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // Mock Mode is default for WASM on GitHub Pages
@@ -26,17 +26,18 @@ try
     {
         foreach (var stat in statistics)
         {
+            string? collection = null;
             try
             {
                 var statObject = stat as Newtonsoft.Json.Linq.JObject;
-                string? collection = statObject?["collection"]?.ToString();
+                collection = statObject?["collection"]?.ToString();
                 if (string.IsNullOrEmpty(collection)) continue;
                 var json = await tempClient.GetStringAsync($"MockData/{collection}.json");
                 mockProvider.AddCollection(collection, json);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"⚠️ [MOCK] Lỗi khi nạp collection {collection} từ HTTP: {ex.Message}");
+                Console.WriteLine($"⚠️ [MOCK] Lỗi khi nạp collection {collection ?? "unknown"} từ HTTP: {ex.Message}");
             }
         }
         mockProvider.SetLoaded(true);
