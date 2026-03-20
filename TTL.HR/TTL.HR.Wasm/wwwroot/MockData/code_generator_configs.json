@@ -1,0 +1,47 @@
+[
+  {
+    "Id": "cfg1",
+    "EntityType": "Employee",
+    "Name": "Số hiệu cán bộ (NV)",
+    "Prefix": "NV",
+    "Suffix": "",
+    "Separator": "-",
+    "GenerationType": "Numeric",
+    "IncludeDate": false,
+    "DateFormat": "",
+    "Length": 6,
+    "CurrentSequence": 100,
+    "ResetCondition": "None",
+    "IsActive": true
+  },
+  {
+    "Id": "cfg2",
+    "EntityType": "Candidate",
+    "Name": "Mã ứng viên (UV)",
+    "Prefix": "UV",
+    "Suffix": "",
+    "Separator": "",
+    "GenerationType": "Numeric",
+    "IncludeDate": true,
+    "DateFormat": "yy",
+    "Length": 5,
+    "CurrentSequence": 42,
+    "ResetCondition": "Yearly",
+    "IsActive": true
+  },
+  {
+    "Id": "cfg3",
+    "EntityType": "Asset",
+    "Name": "Mã tài sản (TS)",
+    "Prefix": "TS",
+    "Suffix": "",
+    "Separator": ".",
+    "GenerationType": "Numeric",
+    "IncludeDate": false,
+    "DateFormat": "",
+    "Length": 8,
+    "CurrentSequence": 5,
+    "ResetCondition": "None",
+    "IsActive": true
+  }
+]

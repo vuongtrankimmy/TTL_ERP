@@ -1,0 +1,162 @@
+[
+  {
+    "_id": "69a479bac6f3661387e9193e",
+    "BenefitId": "69a479bac6f3661387e9193c",
+    "EmployeeId": "65bf0c300000000000000001",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e9193f",
+    "BenefitId": "69a479bac6f3661387e9193d",
+    "EmployeeId": "65bf0c300000000000000001",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e91940",
+    "BenefitId": "69a479bac6f3661387e9193c",
+    "EmployeeId": "65bf0c300000000000000002",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e91941",
+    "BenefitId": "69a479bac6f3661387e9193d",
+    "EmployeeId": "65bf0c300000000000000002",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e91942",
+    "BenefitId": "69a479bac6f3661387e9193c",
+    "EmployeeId": "65bf0c300000000000000003",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e91943",
+    "BenefitId": "69a479bac6f3661387e9193d",
+    "EmployeeId": "65bf0c300000000000000003",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e91944",
+    "BenefitId": "69a479bac6f3661387e9193c",
+    "EmployeeId": "65bf0c300000000000000004",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e91945",
+    "BenefitId": "69a479bac6f3661387e9193d",
+    "EmployeeId": "65bf0c300000000000000004",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e91946",
+    "BenefitId": "69a479bac6f3661387e9193c",
+    "EmployeeId": "65bf0c300000000000000005",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e91947",
+    "BenefitId": "69a479bac6f3661387e9193d",
+    "EmployeeId": "65bf0c300000000000000005",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e91948",
+    "BenefitId": "69a479bac6f3661387e9193c",
+    "EmployeeId": "65bf0c300000000000000101",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e91949",
+    "BenefitId": "69a479bac6f3661387e9193d",
+    "EmployeeId": "65bf0c300000000000000101",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e9194a",
+    "BenefitId": "69a479bac6f3661387e9193c",
+    "EmployeeId": "65bf0c300000000000000102",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e9194b",
+    "BenefitId": "69a479bac6f3661387e9193d",
+    "EmployeeId": "65bf0c300000000000000102",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e9194c",
+    "BenefitId": "69a479bac6f3661387e9193c",
+    "EmployeeId": "65bf0c300000000000000103",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  },
+  {
+    "_id": "69a479bac6f3661387e9194d",
+    "BenefitId": "69a479bac6f3661387e9193d",
+    "EmployeeId": "65bf0c300000000000000103",
+    "Status": 61,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.340Z",
+    "UpdatedAt": "2026-03-01T17:39:06.340Z"
+  }
+]

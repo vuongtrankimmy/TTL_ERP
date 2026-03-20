@@ -1,0 +1,10 @@
+[
+  {
+    "_id": "65fc5b5b0000000000000000",
+    "Code": "VN",
+    "Name": "Vietnam",
+    "PhoneCode": "+84",
+    "IsActive": true,
+    "CountryId": 704
+  }
+]

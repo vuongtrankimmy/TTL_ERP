@@ -1,0 +1,1418 @@
+[
+  {
+    "_id": "65dae2f30000000000000201",
+    "Type": "ContractType",
+    "Code": "Probation",
+    "Name": "Hợp đồng thử việc",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000202",
+    "Type": "ContractType",
+    "Code": "Official_12M",
+    "Name": "Hợp đồng 12 tháng",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000203",
+    "Type": "ContractType",
+    "Code": "Official_24M",
+    "Name": "Hợp đồng 24 tháng",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000204",
+    "Type": "ContractType",
+    "Code": "Official_36M",
+    "Name": "Hợp đồng 36 tháng",
+    "LookupID": 4,
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000205",
+    "Type": "ContractType",
+    "Code": "Indefinite",
+    "Name": "Hợp đồng không xác định thời hạn",
+    "LookupID": 5,
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000206",
+    "Type": "ContractType",
+    "Code": "Internship",
+    "Name": "Hợp đồng thực tập",
+    "LookupID": 6,
+    "Order": 6,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000207",
+    "Type": "ContractType",
+    "Code": "NDA",
+    "Name": "Thỏa thuận bảo mật (NDA)",
+    "LookupID": 7,
+    "Order": 7,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000208",
+    "Type": "ContractType",
+    "Code": "Collaborator",
+    "Name": "Hợp đồng cộng tác viên",
+    "LookupID": 8,
+    "Order": 8,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000209",
+    "Type": "ContractType",
+    "Code": "Appendix",
+    "Name": "Phụ lục hợp đồng",
+    "LookupID": 9,
+    "Order": 9,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000210",
+    "Type": "ContractType",
+    "Code": "Commitment",
+    "Name": "Bản cam kết",
+    "LookupID": 10,
+    "Order": 10,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000301",
+    "Type": "ContractStatus",
+    "Code": "Draft",
+    "Name": "Dự thảo",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000302",
+    "Type": "ContractStatus",
+    "Code": "Signed",
+    "Name": "Đã ký kết",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000303",
+    "Type": "ContractStatus",
+    "Code": "Active",
+    "Name": "Đang hiệu lực",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000304",
+    "Type": "ContractStatus",
+    "Code": "Completed",
+    "Name": "Đã hoàn thành",
+    "LookupID": 4,
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000305",
+    "Type": "ContractStatus",
+    "Code": "Terminated",
+    "Name": "Đã chấm dứt",
+    "LookupID": 5,
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000306",
+    "Type": "ContractStatus",
+    "Code": "Expired",
+    "Name": "Hết hạn",
+    "LookupID": 6,
+    "Order": 6,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000401",
+    "Type": "TemplateStatus",
+    "Code": "Active",
+    "Name": "Đang sử dụng",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000402",
+    "Type": "TemplateStatus",
+    "Code": "Draft",
+    "Name": "Bản nháp",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000403",
+    "Type": "TemplateStatus",
+    "Code": "Inactive",
+    "Name": "Ngừng sử dụng",
+    "LookupID": 4,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000501",
+    "Type": "EmployeeStatus",
+    "Code": "Active",
+    "Name": "Chính thức",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000502",
+    "Type": "EmployeeStatus",
+    "Code": "Probation",
+    "Name": "Thử việc",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000503",
+    "Type": "EmployeeStatus",
+    "Code": "MaternityLeave",
+    "Name": "Nghỉ thai sản",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000504",
+    "Type": "EmployeeStatus",
+    "Code": "Resigned",
+    "Name": "Đã thôi việc",
+    "LookupID": 4,
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000601",
+    "Type": "Workplace",
+    "Code": "HCM_OFFICE",
+    "Name": "Văn phòng Hồ Chí Minh",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000602",
+    "Type": "Workplace",
+    "Code": "HN_OFFICE",
+    "Name": "Văn phòng Hà Nội",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000603",
+    "Type": "Workplace",
+    "Code": "BD_WAREHOUSE",
+    "Name": "Kho Bình Dương",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000604",
+    "Type": "Workplace",
+    "Code": "LA_FACTORY",
+    "Name": "Nhà máy Long An",
+    "LookupID": 4,
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000701",
+    "Type": "AttendanceStatus",
+    "Code": "Normal",
+    "Name": "Đi làm bình thường",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true,
+    "Color": "info"
+  },
+  {
+    "_id": "65dae2f30000000000000702",
+    "Type": "AttendanceStatus",
+    "Code": "Late",
+    "Name": "Đi trễ",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true,
+    "Color": "warning"
+  },
+  {
+    "_id": "65dae2f30000000000000703",
+    "Type": "AttendanceStatus",
+    "Code": "EarlyLeave",
+    "Name": "Về sớm",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true,
+    "Color": "warning"
+  },
+  {
+    "_id": "65dae2f30000000000000704",
+    "Type": "AttendanceStatus",
+    "Code": "LateAndEarly",
+    "Name": "Trễ & Sớm",
+    "LookupID": 4,
+    "Order": 4,
+    "IsActive": true,
+    "Color": "warning"
+  },
+  {
+    "_id": "65dae2f30000000000000705",
+    "Type": "AttendanceStatus",
+    "Code": "Absent",
+    "Name": "Nghỉ không phép",
+    "LookupID": 5,
+    "Order": 5,
+    "IsActive": true,
+    "Color": "danger"
+  },
+  {
+    "_id": "65dae2f30000000000000706",
+    "Type": "AttendanceStatus",
+    "Code": "MissingCheckIn",
+    "Name": "Quên vân tay vào",
+    "LookupID": 6,
+    "Order": 6,
+    "IsActive": true,
+    "Color": "danger"
+  },
+  {
+    "_id": "65dae2f30000000000000707",
+    "Type": "AttendanceStatus",
+    "Code": "MissingCheckOut",
+    "Name": "Quên vân tay ra",
+    "LookupID": 7,
+    "Order": 7,
+    "IsActive": true,
+    "Color": "danger"
+  },
+  {
+    "_id": "65dae2f30000000000000708",
+    "Type": "AttendanceStatus",
+    "Code": "Holiday",
+    "Name": "Nghỉ lễ",
+    "LookupID": 8,
+    "Order": 8,
+    "IsActive": true,
+    "Color": "primary"
+  },
+  {
+    "_id": "65dae2f30000000000000709",
+    "Type": "AttendanceStatus",
+    "Code": "Leave",
+    "Name": "Nghỉ có phép",
+    "LookupID": 9,
+    "Order": 9,
+    "IsActive": true,
+    "Color": "primary"
+  },
+  {
+    "_id": "65dae2f30000000000000710",
+    "Type": "AttendanceStatus",
+    "Code": "Weekend",
+    "Name": "Nghỉ cuối tuần",
+    "LookupID": 10,
+    "Order": 10,
+    "IsActive": true,
+    "Color": "secondary"
+  },
+  {
+    "_id": "65dae2f30000000000000801",
+    "Type": "LeaveStatus",
+    "Code": "Pending",
+    "Name": "Chờ duyệt",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true,
+    "Color": "warning"
+  },
+  {
+    "_id": "65dae2f30000000000000802",
+    "Type": "LeaveStatus",
+    "Code": "Approved",
+    "Name": "Đã duyệt",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true,
+    "Color": "success"
+  },
+  {
+    "_id": "65dae2f30000000000000803",
+    "Type": "LeaveStatus",
+    "Code": "Rejected",
+    "Name": "Từ chối",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true,
+    "Color": "danger"
+  },
+  {
+    "_id": "65dae2f30000000000000804",
+    "Type": "LeaveStatus",
+    "Code": "Cancelled",
+    "Name": "Đã hủy",
+    "LookupID": 4,
+    "Order": 4,
+    "IsActive": true,
+    "Color": "secondary"
+  },
+  {
+    "_id": "65dae2f30000000000000805",
+    "Type": "LeaveStatus",
+    "Code": "PartiallyApproved",
+    "Name": "Chờ duyệt cấp 2",
+    "LookupID": 5,
+    "Order": 5,
+    "IsActive": true,
+    "Color": "primary"
+  },
+  {
+    "_id": "65dae2f30000000000000806",
+    "Type": "LeaveStatus",
+    "Code": "Draft",
+    "Name": "Bản nháp",
+    "LookupID": 6,
+    "Order": 6,
+    "IsActive": true,
+    "Color": "secondary"
+  },
+  {
+    "_id": "65dae2f30000000000000807",
+    "Type": "LeaveStatus",
+    "Code": "Invalid",
+    "Name": "Không hợp lệ",
+    "LookupID": 7,
+    "Order": 7,
+    "IsActive": true,
+    "Color": "danger"
+  },
+  {
+    "_id": "65dae2f30000000000000808",
+    "Type": "LeaveStatus",
+    "Code": "Withdrawn",
+    "Name": "Đã rút đơn",
+    "LookupID": 8,
+    "Order": 8,
+    "IsActive": true,
+    "Color": "secondary"
+  },
+  {
+    "_id": "65dae2f30000000000002201",
+    "Type": "Gender",
+    "Code": "Male",
+    "Name": "Nam",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000002202",
+    "Type": "Gender",
+    "Code": "Female",
+    "Name": "Nữ",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000002203",
+    "Type": "Gender",
+    "Code": "Other",
+    "Name": "Khác",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000002301",
+    "Type": "MaritalStatus",
+    "Code": "Single",
+    "Name": "Độc thân",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000002302",
+    "Type": "MaritalStatus",
+    "Code": "Married",
+    "Name": "Đã kết hôn",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000002303",
+    "Type": "MaritalStatus",
+    "Code": "Divorced",
+    "Name": "Ly hôn",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000002304",
+    "Type": "MaritalStatus",
+    "Code": "Widowed",
+    "Name": "Góa",
+    "LookupID": 4,
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000002401",
+    "Type": "JobStatus",
+    "Code": "Published",
+    "Name": "Đang hoạt động",
+    "LookupID": 81,
+    "Order": 1,
+    "IsActive": true,
+    "Color": "primary"
+  },
+  {
+    "_id": "65dae2f30000000000002402",
+    "Type": "JobStatus",
+    "Code": "Draft",
+    "Name": "Bản nháp",
+    "LookupID": 82,
+    "Order": 2,
+    "IsActive": true,
+    "Color": "secondary"
+  },
+  {
+    "_id": "65dae2f30000000000002403",
+    "Type": "JobStatus",
+    "Code": "Closed",
+    "Name": "Đã đóng",
+    "LookupID": 83,
+    "Order": 3,
+    "IsActive": true,
+    "Color": "danger"
+  },
+  {
+    "_id": "65dae2f30000000000002404",
+    "Type": "JobStatus",
+    "Code": "OnHold",
+    "Name": "Tạm dừng",
+    "LookupID": 84,
+    "Order": 4,
+    "IsActive": true,
+    "Color": "warning"
+  },
+  {
+    "_id": "65dae2f30000000000002405",
+    "Type": "JobStatus",
+    "Code": "Completed",
+    "Name": "Hoàn tất",
+    "LookupID": 85,
+    "Order": 5,
+    "IsActive": true,
+    "Color": "success"
+  },
+  {
+    "_id": "65dae2f30000000000002501",
+    "Type": "JobType",
+    "Code": "Full-time",
+    "Name": "Toàn thời gian",
+    "LookupID": 2,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000002502",
+    "Type": "JobType",
+    "Code": "Part-time",
+    "Name": "Bán thời gian",
+    "LookupID": 3,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000002503",
+    "Type": "JobType",
+    "Code": "Contract",
+    "Name": "Hợp đồng",
+    "LookupID": 4,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000002504",
+    "Type": "JobType",
+    "Code": "Internship",
+    "Name": "Thực tập",
+    "LookupID": 5,
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000901",
+    "Type": "AssetStatus",
+    "Code": "Available",
+    "Name": "Sẵn dùng",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000902",
+    "Type": "AssetStatus",
+    "Code": "Assigned",
+    "Name": "Đã bàn giao",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000903",
+    "Type": "AssetStatus",
+    "Code": "Maintenance",
+    "Name": "Đang bảo trì",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000904",
+    "Type": "AssetStatus",
+    "Code": "Broken",
+    "Name": "Đã hỏng",
+    "LookupID": 4,
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000000905",
+    "Type": "AssetStatus",
+    "Code": "Lost",
+    "Name": "Đã mất",
+    "LookupID": 5,
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000001401",
+    "Type": "AssetCondition",
+    "Code": "New",
+    "Name": "Mới 100%",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000001402",
+    "Type": "AssetCondition",
+    "Code": "Good",
+    "Name": "Đang dùng tốt",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000001403",
+    "Type": "AssetCondition",
+    "Code": "Old",
+    "Name": "Cũ / Xước nhẹ",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912bfe",
+    "Type": "Language",
+    "Code": "vi-VN",
+    "Name": "Tiếng Việt",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912bff",
+    "Type": "Language",
+    "Code": "en-US",
+    "Name": "English",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c00",
+    "Type": "TimeZone",
+    "Code": "SE Asia Standard Time",
+    "Name": "(GMT+07:00) Bangkok, Hanoi, Jakarta",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c01",
+    "Type": "TimeZone",
+    "Code": "Asia/Ho_Chi_Minh",
+    "Name": "(GMT+07:00) Hồ Chí Minh",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c02",
+    "Type": "TimeZone",
+    "Code": "UTC",
+    "Name": "Universal Coordinated Time (UTC)",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c03",
+    "Type": "Currency",
+    "Code": "VND",
+    "Name": "Việt Nam Đồng (VNĐ)",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c04",
+    "Type": "Currency",
+    "Code": "USD",
+    "Name": "US Dollar ($)",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c05",
+    "Type": "ThousandSeparator",
+    "Code": ",",
+    "Name": "Dấu phẩy (,)",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c06",
+    "Type": "ThousandSeparator",
+    "Code": ".",
+    "Name": "Dấu chấm (.)",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c07",
+    "Type": "ThousandSeparator",
+    "Code": " ",
+    "Name": "Khoảng trắng ( )",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c08",
+    "Type": "DecimalSeparator",
+    "Code": ".",
+    "Name": "Dấu chấm (.)",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c09",
+    "Type": "DecimalSeparator",
+    "Code": ",",
+    "Name": "Dấu phẩy (,)",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c0a",
+    "Type": "CodeSeparator",
+    "Code": "",
+    "Name": "Không có",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c0b",
+    "Type": "CodeSeparator",
+    "Code": "-",
+    "Name": "Gạch ngang (-)",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c0c",
+    "Type": "CodeSeparator",
+    "Code": "/",
+    "Name": "Gạch chéo (/)",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c0d",
+    "Type": "CodeSeparator",
+    "Code": ".",
+    "Name": "Dấu chấm (.)",
+    "LookupID": 4,
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c0e",
+    "Type": "CodeSeparator",
+    "Code": "_",
+    "Name": "Gạch dưới (_)",
+    "LookupID": 5,
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c0f",
+    "Type": "CodeDateFormat",
+    "Code": "yyyy",
+    "Name": "Năm (2026)",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c10",
+    "Type": "CodeDateFormat",
+    "Code": "yy",
+    "Name": "Năm rút gọn (26)",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c11",
+    "Type": "CodeDateFormat",
+    "Code": "yyyyMM",
+    "Name": "Năm Tháng (202602)",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c12",
+    "Type": "CodeDateFormat",
+    "Code": "yyMM",
+    "Name": "Năm Tháng rút gọn (2602)",
+    "LookupID": 4,
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c13",
+    "Type": "CodeDateFormat",
+    "Code": "yyyyMMdd",
+    "Name": "Ngày Tháng Năm (20260221)",
+    "LookupID": 5,
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000003101",
+    "Type": "DocumentType",
+    "Code": "CCCD",
+    "Name": "CMND / CCCD",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000003102",
+    "Type": "DocumentType",
+    "Code": "DegreeUniversity",
+    "Name": "Bằng Đại học / Sau Đại học",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000003103",
+    "Type": "DocumentType",
+    "Code": "Certificate",
+    "Name": "Chứng chỉ / Chứng nhận",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000003104",
+    "Type": "DocumentType",
+    "Code": "HealthCertificate",
+    "Name": "Giấy khám sức khỏe",
+    "LookupID": 4,
+    "Order": 4,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000003105",
+    "Type": "DocumentType",
+    "Code": "CV",
+    "Name": "Sơ yếu lý lịch",
+    "LookupID": 5,
+    "Order": 5,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000003106",
+    "Type": "DocumentType",
+    "Code": "BirthCertificate",
+    "Name": "Giấy khai sinh",
+    "LookupID": 6,
+    "Order": 6,
+    "IsActive": true
+  },
+  {
+    "_id": "65dae2f30000000000003107",
+    "Type": "DocumentType",
+    "Code": "MarriageCertificate",
+    "Name": "Giấy đăng ký kết hôn",
+    "Order": 7,
+    "IsActive": true,
+    "LookupID": 7
+  },
+  {
+    "_id": "65dae2f30000000000003108",
+    "Type": "DocumentType",
+    "Code": "HouseholdBook",
+    "Name": "Sổ hộ khẩu",
+    "Order": 8,
+    "IsActive": true,
+    "LookupID": 8
+  },
+  {
+    "_id": "65dae2f30000000000003109",
+    "Type": "DocumentType",
+    "Code": "Other",
+    "Name": "Tài liệu khác",
+    "Order": 9,
+    "IsActive": true,
+    "LookupID": 9
+  },
+  {
+    "_id": "65dae2f30000000000003201",
+    "Type": "DocumentStatus",
+    "Code": "Pending",
+    "Name": "Chờ duyệt",
+    "Color": "warning",
+    "Order": 1,
+    "IsActive": true,
+    "LookupID": 1
+  },
+  {
+    "_id": "65dae2f30000000000003202",
+    "Type": "DocumentStatus",
+    "Code": "Verified",
+    "Name": "Đã xác thực",
+    "Color": "success",
+    "Order": 2,
+    "IsActive": true,
+    "LookupID": 2
+  },
+  {
+    "_id": "65dae2f30000000000003203",
+    "Type": "DocumentStatus",
+    "Code": "Rejected",
+    "Name": "Từ chối",
+    "Color": "danger",
+    "Order": 3,
+    "IsActive": true,
+    "LookupID": 3
+  },
+  {
+    "_id": "69af6b2a395f73545e912c14",
+    "Type": "PayrollStatus",
+    "Code": "Draft",
+    "Name": "Dự thảo",
+    "LookupID": 1,
+    "Order": 1,
+    "Color": "warning",
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c15",
+    "Type": "PayrollStatus",
+    "Code": "Pending",
+    "Name": "Chờ duyệt",
+    "LookupID": 2,
+    "Order": 2,
+    "Color": "warning",
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c16",
+    "Type": "PayrollStatus",
+    "Code": "Approved",
+    "Name": "Đã duyệt",
+    "LookupID": 3,
+    "Order": 3,
+    "Color": "primary",
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c17",
+    "Type": "PayrollStatus",
+    "Code": "Closed",
+    "Name": "Đã chốt",
+    "LookupID": 4,
+    "Order": 4,
+    "Color": "success",
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c18",
+    "Type": "PayrollStatus",
+    "Code": "Disputed",
+    "Name": "Khiếu nại",
+    "LookupID": 5,
+    "Order": 5,
+    "Color": "danger",
+    "IsActive": true
+  },
+  {
+    "_id": "69af6b2a395f73545e912c19",
+    "Type": "PayrollStatus",
+    "Code": "ReviewRequired",
+    "Name": "Cần kiểm tra",
+    "LookupID": 6,
+    "Order": 6,
+    "Color": "info",
+    "IsActive": true
+  },
+  {
+    "_id": "65fc5b5b0000000000001901",
+    "Type": "Ethnicity",
+    "Code": "Kinh",
+    "Name": "Kinh",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65fc5b5b0000000000001902",
+    "Type": "Ethnicity",
+    "Code": "Tay",
+    "Name": "Tày",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65fc5b5b0000000000001903",
+    "Type": "Ethnicity",
+    "Code": "Thai",
+    "Name": "Thái",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65fc5b5b0000000000002001",
+    "Type": "Religion",
+    "Code": "None",
+    "Name": "Không",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65fc5b5b0000000000002002",
+    "Type": "Religion",
+    "Code": "Buddha",
+    "Name": "Phật giáo",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65fc5b5b0000000000002003",
+    "Type": "Religion",
+    "Code": "Christian",
+    "Name": "Công giáo",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "65fc5b5b0000000000002101",
+    "Type": "Nationality",
+    "Code": "VN",
+    "Name": "Việt Nam",
+    "LookupID": 1,
+    "Order": 1,
+    "IsActive": true
+  },
+  {
+    "_id": "65fc5b5b0000000000002102",
+    "Type": "Nationality",
+    "Code": "US",
+    "Name": "Mỹ",
+    "LookupID": 2,
+    "Order": 2,
+    "IsActive": true
+  },
+  {
+    "_id": "65fc5b5b0000000000002103",
+    "Type": "Nationality",
+    "Code": "JP",
+    "Name": "Nhật Bản",
+    "LookupID": 3,
+    "Order": 3,
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96ba",
+    "CreatedAt": "2026-03-10T02:19:49.224Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "PeriodStatus",
+    "Code": "Open",
+    "Name": "Đang mở",
+    "LookupID": 1,
+    "Order": 1,
+    "Color": "primary",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96bb",
+    "CreatedAt": "2026-03-10T02:19:49.230Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "PeriodStatus",
+    "Code": "Closed",
+    "Name": "Đã chốt",
+    "LookupID": 2,
+    "Order": 2,
+    "Color": "success",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96ce",
+    "CreatedAt": "2026-03-10T02:19:49.247Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "PayrollStatus",
+    "Code": "Completed",
+    "Name": "Đã tính toán",
+    "LookupID": 7,
+    "Order": 7,
+    "Color": "secondary",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96d9",
+    "CreatedAt": "2026-03-10T02:19:49.261Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "JobType",
+    "Code": "Project-based",
+    "Name": "Theo dự án",
+    "LookupID": 1,
+    "Order": 0,
+    "Color": "",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96da",
+    "CreatedAt": "2026-03-10T02:19:49.263Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "CandidateStatus",
+    "Code": "Applied",
+    "Name": "Mới ứng tuyển",
+    "LookupID": 101,
+    "Order": 1,
+    "Color": "info",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96db",
+    "CreatedAt": "2026-03-10T02:19:49.264Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "CandidateStatus",
+    "Code": "Screening",
+    "Name": "Sơ loại CV",
+    "LookupID": 102,
+    "Order": 2,
+    "Color": "primary",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96dc",
+    "CreatedAt": "2026-03-10T02:19:49.265Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "CandidateStatus",
+    "Code": "Interview",
+    "Name": "Phỏng vấn",
+    "LookupID": 103,
+    "Order": 3,
+    "Color": "warning",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96dd",
+    "CreatedAt": "2026-03-10T02:19:49.266Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "CandidateStatus",
+    "Code": "Offered",
+    "Name": "Mời nhận việc",
+    "LookupID": 104,
+    "Order": 4,
+    "Color": "success",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96de",
+    "CreatedAt": "2026-03-10T02:19:49.267Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "CandidateStatus",
+    "Code": "Hired",
+    "Name": "Đã nhận việc",
+    "LookupID": 105,
+    "Order": 5,
+    "Color": "success",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96df",
+    "CreatedAt": "2026-03-10T02:19:49.268Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "CandidateStatus",
+    "Code": "Rejected",
+    "Name": "Từ chối",
+    "LookupID": 106,
+    "Order": 6,
+    "Color": "danger",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96e0",
+    "CreatedAt": "2026-03-10T02:19:49.270Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "CourseStatus",
+    "Code": "Draft",
+    "Name": "Bản nháp",
+    "LookupID": 4,
+    "Order": 0,
+    "Color": "secondary",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96e1",
+    "CreatedAt": "2026-03-10T02:19:49.271Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "CourseStatus",
+    "Code": "Active",
+    "Name": "Đang mở",
+    "LookupID": 1,
+    "Order": 0,
+    "Color": "success",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96e2",
+    "CreatedAt": "2026-03-10T02:19:49.271Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "CourseStatus",
+    "Code": "Closed",
+    "Name": "Đã đóng",
+    "LookupID": 2,
+    "Order": 0,
+    "Color": "danger",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96e3",
+    "CreatedAt": "2026-03-10T02:19:49.272Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "CourseStatus",
+    "Code": "Completed",
+    "Name": "Hoàn thành",
+    "LookupID": 3,
+    "Order": 0,
+    "Color": "primary",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96e4",
+    "CreatedAt": "2026-03-10T02:19:49.273Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "TrainingCategory",
+    "Code": "General",
+    "Name": "Kỹ năng cơ bản",
+    "LookupID": 1,
+    "Order": 0,
+    "Color": "",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96e5",
+    "CreatedAt": "2026-03-10T02:19:49.273Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "TrainingCategory",
+    "Code": "Technical",
+    "Name": "Kỹ thuật chuyên môn",
+    "LookupID": 5,
+    "Order": 0,
+    "Color": "",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96e6",
+    "CreatedAt": "2026-03-10T02:19:49.274Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "TrainingCategory",
+    "Code": "Soft Skills",
+    "Name": "Kỹ năng mềm",
+    "LookupID": 4,
+    "Order": 0,
+    "Color": "",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96e7",
+    "CreatedAt": "2026-03-10T02:19:49.275Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "TrainingCategory",
+    "Code": "Management",
+    "Name": "Quản lý / Lãnh đạo",
+    "LookupID": 2,
+    "Order": 0,
+    "Color": "",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96e8",
+    "CreatedAt": "2026-03-10T02:19:49.275Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "TrainingCategory",
+    "Code": "Onboarding",
+    "Name": "Hội nhập nhân viên mới",
+    "LookupID": 3,
+    "Order": 0,
+    "Color": "",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96e9",
+    "CreatedAt": "2026-03-10T02:19:49.276Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "TrainingLevel",
+    "Code": "Beginner",
+    "Name": "Cơ bản",
+    "LookupID": 2,
+    "Order": 0,
+    "Color": "",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96ea",
+    "CreatedAt": "2026-03-10T02:19:49.277Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "TrainingLevel",
+    "Code": "Intermediate",
+    "Name": "Trung cấp",
+    "LookupID": 3,
+    "Order": 0,
+    "Color": "",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96eb",
+    "CreatedAt": "2026-03-10T02:19:49.278Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "TrainingLevel",
+    "Code": "Advanced",
+    "Name": "Nâng cao",
+    "LookupID": 1,
+    "Order": 0,
+    "Color": "",
+    "IsActive": true
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96ee",
+    "CreatedAt": "2026-03-10T02:19:49.281Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Type": "TemplateStatus",
+    "Code": "Archived",
+    "Name": "Đã lưu trữ",
+    "LookupID": 3,
+    "Order": 3,
+    "Color": "danger",
+    "IsActive": true
+  }
+]
