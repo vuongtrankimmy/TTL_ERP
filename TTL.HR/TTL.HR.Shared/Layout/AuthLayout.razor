@@ -1,6 +1,20 @@
 @inherits LayoutComponentBase
 @inject ISettingsService SettingsService
 
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        try 
+        {
+            await SettingsService.InitializeAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error initializing settings in AuthLayout: {ex.Message}");
+        }
+    }
+}
+
 
 <div class="d-flex flex-column flex-root" id="kt_app_root">
     <!--begin::Authentication - Sign-in -->

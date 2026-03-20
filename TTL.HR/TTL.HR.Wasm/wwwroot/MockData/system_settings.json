@@ -7,10 +7,10 @@
     "DeletedAt": null,
     "Key": "General",
     "CompanyName": "CÔNG TY TNHH NHÂN TÀI TTL",
-    "CompanyAddress": "",
+    "CompanyAddress": "Tòa nhà Bitexco, Q.1, TP. Hồ Chí Minh",
     "Headquarters": "Tầng 12, Tòa nhà Bitexco, Q1, TP.HCM",
-    "CompanyPhone": "",
-    "CompanyEmail": "",
+    "CompanyPhone": "028.3821.8888",
+    "CompanyEmail": "contact@tantanloc.com",
     "TaxCode": "0312345678",
     "Website": "https://orga-x.com",
     "AdminEmail": "",
@@ -47,7 +47,7 @@
     "BreakStartTime": "12:00",
     "BreakEndTime": "13:30",
     "LateGracePeriodMinutes": 15,
-    "WorkDays": [],
+    "WorkDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     "AllowFlexibleHours": false,
     "AutoApproveLeaveDaysThreshold": 3,
     "AutoSendThankYouEmail": true,
@@ -58,12 +58,8 @@
     "AutoEnrollOnboarding": true,
     "CertificateExpiryWarningDays": 30,
     "EnableFeedback": true,
-    "MaxBudgetPerEmployee": {
-      "$numberDecimal": "5000000"
-    },
-    "StandardWorkDaysPerMonth": {
-      "$numberDecimal": "26"
-    },
+    "MaxBudgetPerEmployee": 5000000,
+    "StandardWorkDaysPerMonth": 26,
     "PayDay": 5,
     "OvertimeRateWeekday": 1.5,
     "OvertimeRateWeekend": 2,
@@ -76,29 +72,15 @@
     "UnemploymentInsurancePercentCompany": 1,
     "InsurancePercentEmployee": 10.5,
     "InsurancePercentCompany": 21.5,
-    "DefaultPersonalDeduction": {
-      "$numberDecimal": "11000000"
-    },
-    "DefaultDependentDeduction": {
-      "$numberDecimal": "4400000"
-    },
+    "DefaultPersonalDeduction": 11000000,
+    "DefaultDependentDeduction": 4400000,
     "PitSteps": [],
     "PitExplanation": "Giải thích: Thuế TNCN được tính theo công thức lũy tiến từng phần.\nCông thức: Thuế = (Thu nhập tính thuế * Thuế suất) - Số trừ cố định.\nVí dụ Bậc 2: Thu nhập từ 5.000.000 đến 10.000.000, Thuế suất 10%, Số trừ 250.000.\nCấu hình: Ngưỡng > 5.000.000, Thuế suất 0.1, Số trừ 250.000.",
-    "StatutoryPayRate": {
-      "$numberDecimal": "2340000"
-    },
-    "Region1MinimumSalary": {
-      "$numberDecimal": "4680000"
-    },
-    "Region2MinimumSalary": {
-      "$numberDecimal": "4160000"
-    },
-    "Region3MinimumSalary": {
-      "$numberDecimal": "3640000"
-    },
-    "Region4MinimumSalary": {
-      "$numberDecimal": "3250000"
-    },
+    "StatutoryPayRate": 2340000,
+    "Region1MinimumSalary": 4680000,
+    "Region2MinimumSalary": 4160000,
+    "Region3MinimumSalary": 3640000,
+    "Region4MinimumSalary": 3250000,
     "PasswordMinLength": 8,
     "PasswordRequireSpecialChar": true,
     "PasswordRequireDigit": true,
@@ -225,13 +207,5 @@
         "TitleKey": "Menu_Banks"
       }
     ]
-  },
-  {
-    "_id": "65bf0a1e0000000000000999",
-    "BaseSalary": 2340000,
-    "CompanyName": "CÔNG TY TNHH TÂN TẤN LỘC",
-    "MinimumSalaryV1": 4680000,
-    "TaxExemptionDefault": 4400000,
-    "UpdatedAt": "2026-03-10T00:51:54.426Z"
   }
 ]

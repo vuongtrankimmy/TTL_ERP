@@ -103,7 +103,7 @@ public class MockHttpMessageHandler : HttpMessageHandler
             { "core/Attendance/me/attendance", "attendances" },
             { "core/Attendance/timesheets", "attendances" },
             { "core/Attendance/schedules", "work_schedules" },
-            { "core/Attendance/requests", "shift_change_requests" },
+            { "core/Attendance/shift-requests", "shift_change_requests" },
             { "core/Attendance/shifts", "work_shifts" },
             { "core/Attendance/overtime", "overtime_requests" },
             { "core/Attendance/employee", "attendances" },
@@ -1154,6 +1154,35 @@ public class MockHttpMessageHandler : HttpMessageHandler
             if (string.IsNullOrEmpty(collectionName))
             {
                 return CreateErrorResponse($"Không tìm thấy collection cho endpoint: {endpoint}");
+            }
+
+            // Generic Summary handler for any collection ending in /summary
+            if (path.EndsWith("/summary", StringComparison.OrdinalIgnoreCase))
+            {
+                var allData = GetAllItems(collectionName);
+                int pending = 0, approved = 0, rejected = 1, withdrawn = 0, total = allData.Count;
+
+                foreach (var item in allData)
+                {
+                    var status = GetProperty(item, "Status")?.ToString() ?? "Pending";
+                    if (status == "Pending" || status == "1") pending++;
+                    else if (status == "Approved" || status == "2") approved++;
+                    else if (status == "Rejected" || status == "3") rejected++;
+                    else if (status == "Withdrawn" || status == "4" || status == "Cancelled") withdrawn++;
+                }
+
+                // Create a generic summary object that fits common summary models
+                var summary = new
+                {
+                    PendingCount = pending,
+                    ApprovedCount = approved,
+                    RejectedCount = rejected,
+                    WithdrawnCount = withdrawn,
+                    CancelledCount = withdrawn, // Map to same for compatibility
+                    TotalCount = total
+                };
+
+                return CreateSuccessResponse(new ApiResponse<object> { Success = true, Data = summary, Message = "Success" });
             }
 
             // Check for ID in path (e.g., /Employees/{id})
