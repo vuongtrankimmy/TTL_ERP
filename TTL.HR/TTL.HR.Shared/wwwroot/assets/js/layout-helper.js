@@ -78,6 +78,26 @@ window.LayoutHelper = {
             
             return { Brightness: Math.round(avg), Rating: rating };
         } catch { return { Brightness: 0, Rating: "ERROR" }; }
+    },
+    toggleTheme: () => {
+        const themeMode = document.documentElement.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-bs-theme", themeMode);
+        localStorage.setItem("data-bs-theme", themeMode);
+    },
+    toggleSidebar: () => {
+        const sidebar = document.body.getAttribute('data-kt-app-sidebar-minimize');
+        const newState = sidebar === 'on' ? 'off' : 'on';
+        document.body.setAttribute('data-kt-app-sidebar-minimize', newState);
+        localStorage.setItem('kt_app_sidebar_minimize', newState);
+    },
+    initSidebar: () => {
+        const themeMode = localStorage.getItem("data-bs-theme") || "light";
+        document.documentElement.setAttribute("data-bs-theme", themeMode);
+        
+        const savedState = localStorage.getItem('kt_app_sidebar_minimize');
+        if (savedState) {
+            document.body.setAttribute('data-kt-app-sidebar-minimize', savedState);
+        }
     }
 };
 
