@@ -442,33 +442,59 @@ namespace TTL.HR.Shared.Pages.Employees
 
         private async Task ScanCCCD()
         {
-            var scannedData = await cccdScanner.ScanAsync();
+            var scannedData = await cccdScanner.ShowAsync();
             
             if (scannedData != null)
             {
+                // Set both legacy and new properties to ensure UI visibility
                 newEmployee.Name = scannedData.Name;
-                newEmployee.Code = "NV" + new Random().Next(100, 999);
-                newEmployee.IdCard = scannedData.IdCard;
-                newEmployee.DOB = scannedData.DOB ?? DateTime.Now;
-                newEmployee.Address = scannedData.Address;
-                newEmployee.Hometown = scannedData.Hometown;
-                newEmployee.Gender = scannedData.Gender;
-                newEmployee.Nationality = scannedData.Nationality;
-                newEmployee.Ethnicity = scannedData.Ethnicity;
-                newEmployee.Religion = scannedData.Religion;
-                newEmployee.CccdIssueDate = DateTime.TryParse(scannedData.IssueDate, out var iDate) ? iDate : null;
-                newEmployee.CccdIssuePlace = scannedData.IssuePlace;
-                newEmployee.PlaceOfOrigin = scannedData.Hometown;
-                newEmployee.Residence = scannedData.Address;
+                newEmployee.FullName = scannedData.Name;
                 
-                // Tự sinh email và điện thoại demo
+                newEmployee.IdCard = scannedData.IdCard;
+                if (newEmployee.PersonalDetails == null) newEmployee.PersonalDetails = new();
+                newEmployee.PersonalDetails.IdCardNumber = scannedData.IdCard;
+                newEmployee.PersonalDetails.IdCard = scannedData.IdCard;
+
+                newEmployee.DOB = scannedData.DOB ?? DateTime.Now;
+                newEmployee.PersonalDetails.DOB = scannedData.DOB;
+
+                newEmployee.Address = scannedData.Address;
+                newEmployee.PersonalDetails.Address = scannedData.Address;
+                newEmployee.Residence = scannedData.Address;
+                newEmployee.PersonalDetails.Residence = scannedData.Address;
+
+                newEmployee.Hometown = scannedData.Hometown;
+                newEmployee.PersonalDetails.Hometown = scannedData.Hometown;
+                newEmployee.PlaceOfOrigin = scannedData.Hometown;
+                newEmployee.PersonalDetails.PlaceOfOrigin = scannedData.Hometown;
+
+                newEmployee.Gender = scannedData.Gender;
+                newEmployee.PersonalDetails.Gender = scannedData.Gender;
+
+                newEmployee.Nationality = scannedData.Nationality;
+                newEmployee.PersonalDetails.Nationality = scannedData.Nationality;
+
+                newEmployee.Ethnicity = scannedData.Ethnicity;
+                newEmployee.PersonalDetails.Ethnicity = scannedData.Ethnicity;
+
+                newEmployee.Religion = scannedData.Religion;
+                newEmployee.PersonalDetails.Religion = scannedData.Religion;
+
+                newEmployee.CccdIssueDate = DateTime.TryParse(scannedData.IssueDate, out var iDate) ? iDate : null;
+                newEmployee.PersonalDetails.IdCardIssueDate = newEmployee.CccdIssueDate;
+                newEmployee.CccdIssuePlace = scannedData.IssuePlace;
+                newEmployee.PersonalDetails.IdCardPlace = scannedData.IssuePlace;
+                
+                // Format & Generate dynamic data
                 newEmployee.Name = FormatService.FormatFullName(scannedData.Name);
+                newEmployee.FullName = newEmployee.Name;
                 newEmployee.Email = FormatService.FormatEmail(newEmployee.Name.Replace(" ", ".")) + "@gmail.com";
                 
-                var rawPhone = "0" + new Random().Next(900000000, 999999999).ToString();
-                newEmployee.Phone = FormatService.FormatPhone(rawPhone);
-                
-                // Pre-fill username from name (normalized)
+                if (string.IsNullOrEmpty(newEmployee.Code))
+                {
+                    newEmployee.Code = "NV" + new Random().Next(1000, 9999);
+                }
+
                 if (string.IsNullOrEmpty(newEmployee.Username))
                 {
                     newEmployee.Username = FormatService.FormatEmail(newEmployee.Name.Replace(" ", ""));
@@ -476,7 +502,7 @@ namespace TTL.HR.Shared.Pages.Employees
                 
                 await JSRuntime.InvokeVoidAsync("Swal.fire", new {
                     title = "Thành công!",
-                    text = "Dữ liệu đã được điền tự động vào biểu mẫu.",
+                    text = "Dữ liệu đã được đồng bộ hóa toàn diện vào hồ sơ.",
                     icon = "success",
                     timer = 1500,
                     showConfirmButton = false

@@ -42,8 +42,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link py-4 px-8 me-0 @(activeTab == "overtime" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("overtime")'>
-                    <i class="bi bi-clock-history me-2"></i>Cấu hình Tăng ca
+                <a class="nav-link py-4 px-8 me-0 @(activeTab == "formulas" ? "active" : "")" href="javascript:void(0)" @onclick='() => SetActiveTab("formulas")'>
+                    <i class="bi bi-cpu me-2"></i>Công thức tính Lương & OT
                 </a>
             </li>
         </ul>
@@ -262,148 +262,227 @@
             @if (activeTab == "allowances")
             {
                 <div class="tab-pane fade show active">
-                    <div class="card card-flush shadow-xs border mb-8">
-                        <div class="card-body p-20 text-center">
-                            <i class="bi bi-gift-fill fs-5x text-light-primary mb-5"></i>
-                            <h3 class="fw-bolder text-gray-800">Quản lý Phụ cấp & Phúc lợi</h3>
-                            <p class="text-muted fs-6">Vui lòng sử dụng mô-đun <a href="/payroll/allowances" class="fw-bold text-primary">Danh mục phụ cấp</a> để cấu hình chi tiết cho từng loại.</p>
+                    <div class="card card-flush shadow-xs border">
+                        <div class="card-header pt-7">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bolder text-gray-800">Danh mục Phụ cấp mặc định (Global)</span>
+                                <span class="text-muted mt-1 fw-bold fs-7">Thiết lập mức phụ cấp chung áp dụng cho toàn thể nhân viên (nếu không có cấu hình riêng lẻ)</span>
+                            </h3>
+                        </div>
+                        <div class="card-body pt-5">
+                            <div class="table-responsive">
+                                <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-6">
+                                    <thead>
+                                        <tr class="fw-bolder text-muted bg-light text-uppercase fs-9">
+                                            <th class="ps-4 min-w-300px">Tên phụ cấp</th>
+                                            <th class="min-w-150px">Giá trị (VNĐ)</th>
+                                            <th class="min-w-200px">Phân loại / Ghi chú</th>
+                                            <th class="min-w-100px text-end pe-4">Trạng thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-30px me-3"><span class="symbol-label bg-light-primary text-primary"><i class="bi bi-egg-fried"></i></span></div>
+                                                    <div class="d-flex flex-column"><span class="text-gray-800 fw-bolder fs-7">Phụ cấp Ăn trưa / Ăn ca</span><span class="text-muted fs-9">Miễn thuế TNCN tối đa 730.000đ/tháng</span></div>
+                                                </div>
+                                            </td>
+                                            <td><input type="number" step="10000" class="form-control form-control-solid h-30px w-120px fs-7" @bind="Model.DefaultMealAllowance" /></td>
+                                            <td><span class="badge badge-light-success fw-bold">Thu nhập không chịu thuế</span></td>
+                                            <td class="text-end pe-4"><span class="badge badge-light-primary fs-9">Đang áp dụng</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-30px me-3"><span class="symbol-label bg-light-success text-success"><i class="bi bi-truck"></i></span></div>
+                                                    <div class="d-flex flex-column"><span class="text-gray-800 fw-bolder fs-7">Phụ cấp Xăng xe / Đi lại</span><span class="text-muted fs-9">Hỗ trợ chi phí di chuyển</span></div>
+                                                </div>
+                                            </td>
+                                            <td><input type="number" step="10000" class="form-control form-control-solid h-30px w-120px fs-7" @bind="Model.DefaultTravelAllowance" /></td>
+                                            <td><span class="badge badge-light-info fw-bold">Thu nhập chịu thuế</span></td>
+                                            <td class="text-end pe-4"><span class="badge badge-light-primary fs-9">Đang áp dụng</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-30px me-3"><span class="symbol-label bg-light-info text-info"><i class="bi bi-telephone"></i></span></div>
+                                                    <div class="d-flex flex-column"><span class="text-gray-800 fw-bolder fs-7">Phụ cấp Điện thoại</span><span class="text-muted fs-9">Theo quy chế công ty</span></div>
+                                                </div>
+                                            </td>
+                                            <td><input type="number" step="10000" class="form-control form-control-solid h-30px w-120px fs-7" @bind="Model.DefaultPhoneAllowance" /></td>
+                                            <td><span class="badge badge-light-info fw-bold">Thu nhập chịu thuế</span></td>
+                                            <td class="text-end pe-4"><span class="badge badge-light-primary fs-9">Đang áp dụng</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-30px me-3"><span class="symbol-label bg-light-warning text-warning"><i class="bi bi-star-fill"></i></span></div>
+                                                    <div class="d-flex flex-column"><span class="text-gray-800 fw-bolder fs-7">Phụ cấp Chuyên cần</span><span class="text-muted fs-9">Thưởng đi làm đầy đủ 100%</span></div>
+                                                </div>
+                                            </td>
+                                            <td><input type="number" step="10000" class="form-control form-control-solid h-30px w-120px fs-7" @bind="Model.DefaultDiligenceAllowance" /></td>
+                                            <td><span class="badge badge-light-info fw-bold">Thu nhập chịu thuế</span></td>
+                                            <td class="text-end pe-4"><span class="badge badge-light-primary fs-9">Đang áp dụng</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-30px me-3"><span class="symbol-label bg-light-danger text-danger"><i class="bi bi-shield-lock"></i></span></div>
+                                                    <div class="d-flex flex-column"><span class="text-gray-800 fw-bolder fs-7">Phụ cấp Trách nhiệm / Quản lý</span><span class="text-muted fs-9">Dành cho cấp Leader/Manager</span></div>
+                                                </div>
+                                            </td>
+                                            <td><input type="number" step="10000" class="form-control form-control-solid h-30px w-120px fs-7" @bind="Model.DefaultResponsibilityAllowance" /></td>
+                                            <td><span class="badge badge-light-dark fw-bold">Tùy biến theo vị trí</span></td>
+                                            <td class="text-end pe-4"><span class="badge badge-light-secondary fs-9">Mặc định 0</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer py-5 bg-light-gray">
+                            <i class="bi bi-info-circle text-primary me-2"></i>
+                            <span class="fs-8 fw-bold text-muted">Lưu ý: Các giá trị này sẽ được cung cấp dưới dạng các biến <code>MealAllow</code>, <code>TravelAllow</code>, <code>PhoneAllow</code>... trong bộ Script tính lương.</span>
                         </div>
                     </div>
                 </div>
             }
 
-            @if (activeTab == "overtime")
+            @if (activeTab == "formulas")
             {
                 <div class="tab-pane fade show active">
-                    <div class="row g-7 mb-8">
-                        <div class="col-md-8">
-                            <div class="card card-flush shadow-xs border h-100">
+                    <div class="row g-7">
+                        <div class="col-md-7">
+                            <!-- Salary Script Card -->
+                            <div class="card card-flush shadow-xs border mb-7">
                                 <div class="card-header pt-7">
                                     <h3 class="card-title align-items-start flex-column">
-                                        <span class="card-label fw-bolder text-gray-800">Cấu hình & Công thức tính Tăng ca (OT)</span>
-                                        <span class="text-muted mt-1 fw-bold fs-7">Thiết lập cách hệ thống tính toán tiền làm thêm giờ</span>
+                                        <span class="card-label fw-bolder text-gray-800">Công thức tính Lương chính</span>
+                                        <span class="text-muted mt-1 fw-bold fs-7">Xác định cách lương Net được tính toán từ các biến đầu vào</span>
                                     </h3>
+                                    <div class="card-toolbar">
+                                        <span class="badge badge-light-primary fs-9 mb-1">C# Syntax</span>
+                                    </div>
                                 </div>
                                 <div class="card-body pt-5">
-                                    <div class="mb-10">
-                                        <label class="form-label fw-bold fs-6 mb-2">Phương thức xác định giờ tăng ca</label>
-                                        <div class="row g-9" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button='true']">
-                                            <div class="col-4">
-                                                <label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex text-start p-6 @(Model.OvertimeCalculationMethod == "Auto" ? "active" : "")" data-kt-button="true">
-                                                    <span class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1">
-                                                        <input class="form-check-input" type="radio" name="ot_method" value="Auto" checked="@(Model.OvertimeCalculationMethod == "Auto")" @onchange='() => Model.OvertimeCalculationMethod = "Auto"' />
-                                                    </span>
-                                                    <span class="ms-5">
-                                                        <span class="fs-6 fw-bold text-gray-800 d-block">Tự động (Auto)</span>
-                                                        <span class="fw-semibold fs-8 text-muted">Dựa trên giờ ra/vào thực tế so với ca</span>
-                                                    </span>
-                                                </label>
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex text-start p-6 @(Model.OvertimeCalculationMethod == "ApprovedOnly" ? "active" : "")" data-kt-button="true">
-                                                    <span class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1">
-                                                        <input class="form-check-input" type="radio" name="ot_method" value="ApprovedOnly" checked="@(Model.OvertimeCalculationMethod == "ApprovedOnly")" @onchange='() => Model.OvertimeCalculationMethod = "ApprovedOnly"' />
-                                                    </span>
-                                                    <span class="ms-5">
-                                                        <span class="fs-6 fw-bold text-gray-800 d-block">Chỉ từ Giấy phép</span>
-                                                        <span class="fw-semibold fs-8 text-muted">Phải có đơn tăng ca được duyệt</span>
-                                                    </span>
-                                                </label>
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex text-start p-6 @(Model.OvertimeCalculationMethod == "Hybrid" ? "active" : "")" data-kt-button="true">
-                                                    <span class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1">
-                                                        <input class="form-check-input" type="radio" name="ot_method" value="Hybrid" checked="@(Model.OvertimeCalculationMethod == "Hybrid")" @onchange='() => Model.OvertimeCalculationMethod = "Hybrid"' />
-                                                    </span>
-                                                    <span class="ms-5">
-                                                        <span class="fs-6 fw-bold text-gray-800 d-block">Kết hợp (Hybrid)</span>
-                                                        <span class="fw-semibold fs-8 text-muted">Lấy giá trị nhỏ hơn giữa thực tế & đơn</span>
-                                                    </span>
-                                                </label>
-                                            </div>
+                                    <div class="bg-gray-900 rounded p-5 position-relative mb-3">
+                                        <textarea class="form-control bg-transparent border-0 text-success fw-bold fs-7 font-monospace" rows="12" style="resize: none;" @bind="Model.SalaryCode"></textarea>
+                                    </div>
+                                    <div class="rounded border border-dashed border-primary p-4 bg-light-primary">
+                                        <div class="fs-7 fw-bold text-primary mb-2">Biến khả dụng:</div>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <code class="px-2 py-1 bg-white rounded border">BasicSalary</code>
+                                            <code class="px-2 py-1 bg-white rounded border">ActualWorkDays</code>
+                                            <code class="px-2 py-1 bg-white rounded border">StandardWorkDays</code>
+                                            <code class="px-2 py-1 bg-white rounded border">MealAllow</code>
+                                            <code class="px-2 py-1 bg-white rounded border">TravelAllow</code>
+                                            <code class="px-2 py-1 bg-white rounded border">PhoneAllow</code>
+                                            <code class="px-2 py-1 bg-white rounded border">DiligenceAllow</code>
+                                            <code class="px-2 py-1 bg-white rounded border">Insurance</code>
+                                            <code class="px-2 py-1 bg-white rounded border">TaxAmt</code>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
 
-                                    <div class="separator separator-dashed my-8"></div>
-
-                                    <div class="mb-5">
-                                        <label class="form-label fw-bold fs-6 text-gray-700 mb-3">Công thức áp dụng (Scripting)</label>
-                                        <div class="bg-gray-900 rounded p-5 position-relative">
-                                            <div class="d-flex position-absolute top-0 end-0 mt-3 me-3">
-                                                <span class="badge badge-light-dark fs-9">C# Syntax</span>
-                                            </div>
-                                            <textarea class="form-control bg-transparent border-0 text-success fw-bold fs-7 font-monospace" rows="8" style="resize: none;" @bind="Model.OvertimeCode" placeholder="// Enter custom formula here..."></textarea>
-                                        </div>
-                                        <div class="text-muted fs-8 mt-3">
-                                            <i class="bi bi-info-circle me-1"></i> Biến khả dụng: <code>ActualHours</code>, <code>ShiftHours</code>, <code>Rate</code>, <code>IsWeekend</code>, <code>IsHoliday</code>
+                            <!-- Overtime Script Card -->
+                            <div class="card card-flush shadow-xs border">
+                                <div class="card-header pt-7">
+                                    <h3 class="card-title align-items-start flex-column">
+                                        <span class="card-label fw-bolder text-gray-800">Công thức tính Tăng ca (OT)</span>
+                                        <span class="text-muted mt-1 fw-bold fs-7">Tùy biến cách thức nhân hệ số cho giờ làm thêm</span>
+                                    </h3>
+                                    <div class="card-toolbar">
+                                        <span class="badge badge-light-success fs-9 mb-1">C# Syntax</span>
+                                    </div>
+                                </div>
+                                <div class="card-body pt-5">
+                                    <div class="bg-gray-900 rounded p-5 position-relative mb-3">
+                                        <textarea class="form-control bg-transparent border-0 text-warning fw-bold fs-7 font-monospace" rows="12" style="resize: none;" @bind="Model.OvertimeCode"></textarea>
+                                    </div>
+                                    <div class="rounded border border-dashed border-success p-4 bg-light-success">
+                                        <div class="fs-7 fw-bold text-success mb-2">Biến khả dụng:</div>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <code class="px-2 py-1 bg-white rounded border">ActualHours</code>
+                                            <code class="px-2 py-1 bg-white rounded border">RatePerByHour</code>
+                                            <code class="px-2 py-1 bg-white rounded border">IsWeekend</code>
+                                            <code class="px-2 py-1 bg-white rounded border">IsHoliday</code>
+                                            <code class="px-2 py-1 bg-white rounded border">IsOvernight</code>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="card card-flush shadow-xs border mb-8">
+                        <div class="col-md-5">
+                            <!-- Policy Card -->
+                            <div class="card card-flush shadow-xs border mb-7">
                                 <div class="card-header pt-7">
-                                    <h3 class="card-title fw-bolder text-gray-800">Tham số Nhân hệ số</h3>
+                                    <h3 class="card-title fw-bolder text-gray-800">Cấu hình & Quy tắc</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div class="form-group mb-5">
-                                        <label class="form-label fs-7 fw-bold">Ngày thường (Weekday)</label>
-                                        <div class="input-group input-group-solid input-group-sm">
-                                            <span class="input-group-text badge-light-primary">x</span>
-                                            <input type="number" step="0.1" class="form-control" @bind="Model.OvertimeRateWeekday" />
-                                        </div>
+                                    <div class="mb-8">
+                                        <label class="form-label fw-bold fs-7 text-gray-700">Phương thức xác định OT</label>
+                                        <select class="form-select form-select-solid form-select-sm" @bind="Model.OvertimeCalculationMethod">
+                                            <option value="Auto">Tự động (Dựa trên check-in/out)</option>
+                                            <option value="ApprovedOnly">Chỉ từ Đơn phê duyệt</option>
+                                            <option value="Hybrid">Kết hợp (Lấy giá trị nhỏ nhất)</option>
+                                        </select>
                                     </div>
-                                    <div class="form-group mb-5">
-                                        <label class="form-label fs-7 fw-bold">Cuối tuần (Weekend)</label>
-                                        <div class="input-group input-group-solid input-group-sm">
-                                            <span class="input-group-text badge-light-success">x</span>
-                                            <input type="number" step="0.1" class="form-control" @bind="Model.OvertimeRateWeekend" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-5">
-                                        <label class="form-label fs-7 fw-bold">Ngày lễ (Holiday)</label>
-                                        <div class="input-group input-group-solid input-group-sm">
-                                            <span class="input-group-text badge-light-danger">x</span>
-                                            <input type="number" step="0.1" class="form-control" @bind="Model.OvertimeRateHoliday" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label fs-7 fw-bold">Làm ca đêm (Overnight)</label>
-                                        <div class="input-group input-group-solid input-group-sm">
-                                            <span class="input-group-text badge-light-warning">x</span>
-                                            <input type="number" step="0.1" class="form-control" @bind="Model.OvertimeOvernightRate" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="card card-flush shadow-xs border">
-                                <div class="card-header pt-7">
-                                    <h3 class="card-title fw-bolder text-gray-800">Quy tắc bổ sung</h3>
-                                </div>
-                                <div class="card-body">
+                                    <div class="row mb-8">
+                                        <div class="col-6">
+                                            <label class="form-label fs-8 fw-bold">Ngày thường x</label>
+                                            <input type="number" step="0.1" class="form-control form-control-sm form-control-solid" @bind="Model.OvertimeRateWeekday" />
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label fs-8 fw-bold">Cuối tuần x</label>
+                                            <input type="number" step="0.1" class="form-control form-control-sm form-control-solid" @bind="Model.OvertimeRateWeekend" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-8">
+                                        <div class="col-6">
+                                            <label class="form-label fs-8 fw-bold">Ngày lễ x</label>
+                                            <input type="number" step="0.1" class="form-control form-control-sm form-control-solid" @bind="Model.OvertimeRateHoliday" />
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label fs-8 fw-bold">Ca đêm x</label>
+                                            <input type="number" step="0.1" class="form-control form-control-sm form-control-solid" @bind="Model.OvertimeOvernightRate" />
+                                        </div>
+                                    </div>
+
+                                    <div class="separator separator-dashed my-6"></div>
+
                                     <div class="d-flex flex-stack mb-5">
                                         <div class="me-5">
                                             <label class="fs-7 fw-bold">Bắt buộc duyệt đơn</label>
-                                            <div class="fs-9 text-muted italic">Yêu cầu workflow phê duyệt</div>
                                         </div>
                                         <div class="form-check form-switch form-check-custom form-check-solid">
                                             <input class="form-check-input h-20px w-35px" type="checkbox" @bind="Model.RequireOvertimeApproval" />
                                         </div>
                                     </div>
-                                    
-                                    <div class="separator separator-dashed my-5"></div>
 
-                                    <div class="form-group">
-                                        <label class="form-label fs-7 fw-bold">Số phút tối thiểu được tính OT</label>
+                                    <div class="form-group mb-0">
+                                        <label class="form-label fs-7 fw-bold">Phút tối thiểu tính OT</label>
                                         <div class="input-group input-group-solid input-group-sm">
                                             <input type="number" class="form-control" @bind="Model.MinOvertimeMinutes" />
                                             <span class="input-group-text">phút</span>
                                         </div>
-                                        <span class="fs-9 text-muted mt-1 d-block">Làm dưới mức này sẽ không được tính OT.</span>
                                     </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Documentation Card -->
+                            <div class="card bg-light-info border-info border border-dashed p-7">
+                                <h4 class="text-info fw-bolder mb-4"><i class="bi bi-journal-text me-2"></i>Hướng dẫn Scripting</h4>
+                                <div class="fs-7 text-gray-700">
+                                    <p class="mb-3">Sử dụng ngôn ngữ <strong>C#</strong> để viết kịch bản tính toán. Kết quả cuối cùng phải được trả về bằng lệnh <code>return</code>.</p>
+                                    <ul class="ps-5 mb-0">
+                                        <li class="mb-2"><strong>Dữ liệu:</strong> Mọi biến số được cung cấp trực tiếp vào context thực thi.</li>
+                                        <li class="mb-2"><strong>Lưu ý:</strong> Đảm bảo xử lý các trường hợp giá trị NULL để tránh lỗi runtime.</li>
+                                        <li><strong>Gợi ý:</strong> Nên dùng kiểu <code>decimal</code> cho tiền tệ và <code>double</code> cho hệ số.</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>

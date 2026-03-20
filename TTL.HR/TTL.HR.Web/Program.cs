@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents()
+    .AddHubOptions(options => options.MaximumReceiveMessageSize = 10 * 1024 * 1024); // Expand to 10MB for AI high-res images
 builder.Services.AddLocalization();
 
 // Mock Data Settings
@@ -87,6 +88,7 @@ builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IPdfServ
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.INavigationService, TTL.HR.Application.Modules.Common.Services.NavigationService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IBankService, TTL.HR.Application.Modules.Common.Services.BankService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.INotificationService, TTL.HR.Application.Modules.Common.Services.NotificationService>();
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IOcrService, TTL.HR.Application.Infrastructure.Services.LocalOcrService>();
 builder.Services.AddApexCharts();
 
 

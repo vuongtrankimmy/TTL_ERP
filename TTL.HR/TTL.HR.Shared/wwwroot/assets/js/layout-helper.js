@@ -1,87 +1,137 @@
 window.LayoutHelper = {
-    toggleSidebar: function () {
-        console.log("Toggle Sidebar clicked");
-        const body = document.body;
-        const attributeName = 'data-kt-app-sidebar-minimize';
-        const isMinimized = body.getAttribute(attributeName) === 'on';
-
-        if (isMinimized) {
-            body.setAttribute(attributeName, 'off');
-            localStorage.setItem('kt_app_sidebar_minimize', 'off');
-        } else {
-            body.setAttribute(attributeName, 'on');
-            localStorage.setItem('kt_app_sidebar_minimize', 'on');
-        }
-    },
-    initSidebar: function () {
-        const savedState = localStorage.getItem('kt_app_sidebar_minimize');
-        if (savedState) {
-            document.body.setAttribute('data-kt-app-sidebar-minimize', savedState);
-        }
-        this.initTheme();
-    },
-    toggleTheme: function () {
-        let themeMode = document.documentElement.getAttribute("data-bs-theme");
-        const newTheme = themeMode === "dark" ? "light" : "dark";
-        
-        document.documentElement.setAttribute("data-bs-theme", newTheme);
-        localStorage.setItem("data-bs-theme", newTheme);
-    },
-    initTheme: function () {
-        let themeMode = localStorage.getItem("data-bs-theme") || "light";
-        document.documentElement.setAttribute("data-bs-theme", themeMode);
-    },
-    getCoordinatesFromAddress: async function (address) {
-        if (!address) return null;
+    startWebcam: async (elementId) => {
         try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`, {
-                headers: {
-                    'Accept-Language': 'vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7'
+            const video = document.getElementById(elementId);
+            if (!video) return false;
+            
+            // Try environment first, but fallback to any camera if it fails
+            const constraints = {
+                video: {
+                    facingMode: 'environment', // Try back camera
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 }
+                }
+            };
+            
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = stream;
+                video.play();
+                return true;
+            } catch (innerErr) {
+                console.warn("Back camera fail, trying default camera...", innerErr);
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                video.play();
+                return true;
+            }
+        } catch (err) {
+            console.error("Webcam Error:", err);
+            return false;
+        }
+    },
+    stopWebcam: async () => {
+        try {
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                if (video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                    video.srcObject = null;
                 }
             });
-            const data = await response.json();
-            if (data && data.length > 0) {
-                return {
-                    lat: parseFloat(data[0].lat),
-                    lon: parseFloat(data[0].lon)
-                };
+            return true;
+        } catch (err) { return false; }
+    },
+    captureSnapshot: async (elementId) => {
+        try {
+            const video = document.getElementById(elementId);
+            if (!video) return null;
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            return canvas.toDataURL('image/jpeg', 0.9);
+        } catch (err) { return null; }
+    },
+    checkImageQuality: async (elementId) => {
+        try {
+            const video = document.getElementById(elementId);
+            if (!video) return { Brightness: 0, Rating: "ERROR" };
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = 100; // Small sample is enough
+            canvas.height = 100;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, 100, 100);
+            
+            const imageData = ctx.getImageData(0, 0, 100, 100);
+            const data = imageData.data;
+            let total = 0;
+            for (let i = 0; i < data.length; i += 4) {
+                total += (data[i] + data[i+1] + data[i+2]) / 3;
             }
-        } catch (error) {
-            console.error("Geocoding error:", error);
-        }
-        return null;
-    },
-    downloadFile: function (fileName, contentType, content) {
-        const blazorStream = new Uint8Array(content);
-        const file = new File([blazorStream], fileName, { type: contentType });
-        const exportUrl = URL.createObjectURL(file);
-        const a = document.createElement("a");
-        document.body.appendChild(a);
-        a.href = exportUrl;
-        a.download = fileName;
-        a.target = "_self";
-        a.click();
-        URL.revokeObjectURL(exportUrl);
-        document.body.removeChild(a);
-    },
-    scrollToElement: function (elementId) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.focus();
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const avg = total / (data.length / 4);
+            
+            let rating = "GOOD";
+            if (avg < 40) rating = "DARK";
+            if (avg > 210) rating = "BRIGHT";
+            
+            return { Brightness: Math.round(avg), Rating: rating };
+        } catch { return { Brightness: 0, Rating: "ERROR" }; }
+    }
+};
 
-            // For TTLInput which uses custom layout, we might need to highlight the parent fv-row
-            const container = element.closest('.fv-row') || element.closest('.row');
-            if (container) {
-                container.classList.add('pulse', 'pulse-danger');
-                setTimeout(() => container.classList.remove('pulse', 'pulse-danger'), 3000);
+window.OcrHelper = {
+    recognize: async (imageBytes) => {
+        try {
+            // Wait for OpenCV if needed
+            if (typeof cv === 'undefined' || !cv.Mat) {
+                await new Promise(resolve => setTimeout(resolve, 500));
             }
-        }
-    },
-    syncInputValue: function (elementId, value) {
-        const el = document.getElementById(elementId);
-        if (el) {
-            el.value = value;
+
+            const blob = new Blob([new Uint8Array(imageBytes)], { type: 'image/jpeg' });
+            const imageUrl = URL.createObjectURL(blob);
+            
+            const img = await new Promise((resolve) => {
+                const i = new Image();
+                i.onload = () => resolve(i);
+                i.src = imageUrl;
+            });
+
+            const procCanvas = document.createElement('canvas');
+            const ctx = procCanvas.getContext('2d');
+            procCanvas.width = img.width;
+            procCanvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+
+            let wasOptimized = false;
+            if (typeof cv !== 'undefined' && cv.imread) {
+                try {
+                    console.log("AI CV Optimizer: Start");
+                    let src = cv.imread(procCanvas);
+                    let dst = new cv.Mat();
+                    cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+                    cv.adaptiveThreshold(src, dst, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2);
+                    cv.imshow(procCanvas, dst);
+                    src.delete(); dst.delete();
+                    wasOptimized = true;
+                    console.log("AI CV Optimizer: Success");
+                } catch (e) { console.warn("CV Optimization error:", e); }
+            }
+            
+            const processedUrl = wasOptimized ? procCanvas.toDataURL('image/png') : imageUrl;
+            const result = await Tesseract.recognize(processedUrl, 'vie+eng', {
+                logger: m => console.log("AI Engine:", m.status, Math.round(m.progress * 100) + "%")
+            });
+            
+            return {
+                Success: true,
+                Text: result.data.text,
+                Confidence: result.data.confidence
+            };
+        } catch (error) {
+            console.error("OCR Error:", error);
+            return { Success: false, Error: error.message };
         }
     }
 };

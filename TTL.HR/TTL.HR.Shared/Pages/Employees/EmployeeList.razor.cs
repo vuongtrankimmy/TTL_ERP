@@ -605,7 +605,7 @@ namespace TTL.HR.Shared.Pages.Employees
             var target = selectedEmployee;
             if (target == null) return;
 
-            var scannedData = await cccdScanner.ScanAsync();
+            var scannedData = await cccdScanner.ShowAsync();
             
             if (scannedData != null)
             {

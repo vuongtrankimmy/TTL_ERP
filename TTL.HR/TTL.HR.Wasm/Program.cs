@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using TTL.HR.Shared;
 using TTL.HR.Application.Infrastructure.MockData;
+using TTL.HR.Application.Infrastructure.Services;
 using ApexCharts;
 
 // Removed redundant/incorrect namespace using
@@ -88,6 +89,8 @@ builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IPdfServ
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.INavigationService, TTL.HR.Application.Modules.Common.Services.NavigationService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IBankService, TTL.HR.Application.Modules.Common.Services.BankService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.INotificationService, TTL.HR.Application.Modules.Common.Services.NotificationService>();
+// builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IOcrService, TTL.HR.Application.Modules.Common.Services.MockOcrService>(); // Legacy Mock
+builder.Services.AddScoped<TTL.HR.Application.Modules.Common.Interfaces.IOcrService, LocalOcrService>(); // NEW: Local OCR for Research & Learning
 builder.Services.AddApexCharts();
 
 builder.Services.AddScoped<TTL.HR.Application.Modules.Recruitment.IRecruitmentApplication, TTL.HR.Application.Modules.Recruitment.RecruitmentApplication>();

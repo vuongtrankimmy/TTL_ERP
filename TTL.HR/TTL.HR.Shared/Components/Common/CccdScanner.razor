@@ -1,106 +1,374 @@
 @using Microsoft.JSInterop
 @using Newtonsoft.Json
+@using Microsoft.Extensions.Configuration
 @using TTL.HR.Application.Modules.HumanResource.Models
-
 @inject IJSRuntime JSRuntime
+@inject IConfiguration Configuration
+@inject TTL.HR.Application.Modules.Common.Interfaces.IOcrService OcrService
+
+<style>
+    :root {
+        --ai-neon-green: #00ff00;
+        --ai-amber: #ffc107;
+        --ai-danger: #f1416c;
+        --ai-success: #50cd89;
+        --ai-glass-dark: rgba(0, 0, 0, 0.75);
+    }
+
+    .scanner-container {
+        font-family: 'Inter', -apple-system, system-ui, sans-serif;
+        letter-spacing: -0.01em;
+    }
+
+    .scanner-laser {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(to right, transparent, var(--ai-neon-green), #fff, var(--ai-neon-green), transparent);
+        box-shadow: 0 0 20px var(--ai-neon-green);
+        z-index: 5;
+        animation: scan-loop 2.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    }
+
+    @@keyframes scan-loop {
+        0% { top: 5%; opacity: 0; }
+        15% { opacity: 1; }
+        85% { opacity: 1; }
+        100% { top: 95%; opacity: 0; }
+    }
+
+    .pulse-scanner {
+        animation: pulse-border 2s ease-in-out infinite;
+    }
+
+    @@keyframes pulse-border {
+        0% { border-color: rgba(0, 255, 0, 0.4); box-shadow: 0 0 0px rgba(0, 255, 0, 0); }
+        50% { border-color: var(--ai-neon-green); box-shadow: 0 0 25px rgba(0, 255, 0, 0.3); }
+        100% { border-color: rgba(0, 255, 0, 0.4); box-shadow: 0 0 0px rgba(0, 255, 0, 0); }
+    }
+
+    .ai-status-pulse {
+        animation: status-pulse 1.2s infinite alternate;
+    }
+
+    @@keyframes status-pulse {
+        from { opacity: 0.7; transform: scale(0.98); }
+        to { opacity: 1; transform: scale(1.02); }
+    }
+
+    .glass-overlay {
+        background: var(--ai-glass-dark);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .field-searching-pulse {
+        position: relative;
+        overflow: hidden;
+        animation: searching-pulse 2s infinite;
+    }
+
+    @@keyframes searching-pulse {
+        0% { opacity: 0.7; border-color: rgba(0, 158, 247, 0.3); }
+        50% { opacity: 1; border-color: var(--ai-amber); background: rgba(255, 193, 7, 0.05); }
+        100% { opacity: 0.7; border-color: rgba(0, 158, 247, 0.3); }
+    }
+
+    .field-shimmer::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: field-shine 3s infinite;
+    }
+
+    @@keyframes field-shine {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) rotate(45deg); }
+    }
+
+    .data-value-high {
+        font-size: 1.15rem;
+        letter-spacing: 0.05em;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        font-weight: 800 !important;
+    }
+
+    .flash-effect {
+        animation: flash-white 0.4s ease-out;
+    }
+
+    @@keyframes flash-white {
+        0% { background: rgba(255, 255, 255, 0.9); }
+        100% { background: transparent; }
+    }
+
+    .shadow-warning-glow {
+        box-shadow: 0 0 30px rgba(255, 193, 7, 0.2);
+    }
+
+    .border-pulsing-danger {
+        animation: border-danger-pulse 1s infinite alternate;
+    }
+
+    @@keyframes border-danger-pulse {
+        from { border-color: var(--ai-danger); box-shadow: 0 0 10px rgba(241, 65, 108, 0.2); }
+        to { border-color: #ff0000; box-shadow: 0 0 25px rgba(241, 65, 108, 0.5); }
+    }
+
+    .ai-eye-box {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        width: 150px;
+        border: 2px solid #009ef7;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 158, 247, 0.5);
+    }
+
+    .glow-btn {
+        box-shadow: 0 0 20px rgba(0, 158, 247, 0.4);
+        transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .glow-btn:hover {
+        box-shadow: 0 0 35px rgba(0, 158, 247, 0.7);
+        transform: translateY(-4px) scale(1.05);
+        border-color: #fff;
+    }
+
+    .field-locked-glow {
+        box-shadow: 0 0 20px rgba(80, 205, 137, 0.2);
+        border-color: var(--ai-success) !important;
+        background: rgba(80, 205, 137, 0.05) !important;
+    }
+</style>
 
 @if (isVisible)
 {
-    <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 1200px;">
-            <div class="modal-content rounded-3">
-                <div class="modal-body p-10">
-                    <!-- Header -->
-                    <div class="d-flex justify-content-between align-items-center border-bottom pb-4 mb-5">
-                        <div>
-                            <h2 class="fw-bold m-0" style="font-size: 1.25rem; color: #181C32;">Xác nhận thông tin quét CCCD</h2>
-                            <div class="text-muted fs-7 mt-1">Vui lòng kiểm tra và đối soát thông tin bóc tách từ hình ảnh thẻ căn cước.</div>
-                        </div>
-                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="CloseModal">
-                            <span class="svg-icon svg-icon-1"><i class="bi bi-x-lg fs-2"></i></span>
-                        </div>
-                    </div>
+    <script src="https://docs.opencv.org/4.5.2/opencv.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
-                    <!-- Content -->
-                    <div class="row">
-                        <!-- Left Column: Image -->
-                        <div class="col-md-5 border-end pe-5">
-                            <h6 class="fw-bolder text-gray-800 mb-3"><i class="bi bi-image me-2 text-primary"></i>ẢNH CĂN CƯỚC ĐàTẢI LÊN</h6>
-                            
-                            <div class="bg-light rounded-3 d-flex align-items-center justify-content-center border border-dashed border-gray-300 mb-4 position-relative" style="height: 350px;">
-                                    <img src="/assets/media/misc/cccd_sample.jpg" 
-                                         onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/e/e9/Stylized_Vietnamese_Citizen_Identity_Card_sample.jpg';" 
-                                         class="img-fluid rounded" style="max-height: 100%; width: auto; object-fit: contain;" />
-                                    <div class="position-absolute top-0 end-0 m-2">
-                                    <span class="badge badge-success shadow-sm">Đã tải lên</span>
+    <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 9999;">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 1400px;">
+            <div class="modal-content rounded-4 shadow-lg border-0 overflow-hidden bg-white">
+                <div class="modal-body p-0">
+                    <div class="d-flex flex-column h-100">
+                        <!-- AI Command Center Header -->
+                        <div class="bg-dark p-8 d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-25 shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <div class="symbol symbol-60px me-6">
+                                    <div class="symbol-label bg-light-primary ai-status-pulse rounded-circle border-2 border border-primary shadow-sm">
+                                        <i class="bi bi-cpu-fill text-primary fs-2x"></i>
                                     </div>
-                            </div>
-                            
-                            <div class="d-flex justify-content-center gap-3">
-                                <button type="button" class="btn btn-sm btn-light-primary w-100"><i class="bi bi-camera me-1"></i> Thử lại</button>
-                                <button type="button" class="btn btn-sm btn-light w-100"><i class="bi bi-arrow-repeat me-1"></i> Xoay ảnh</button>
-                            </div>
-
-                                <div class="alert alert-dismissible bg-light-primary border border-primary border-dashed d-flex flex-column flex-sm-row w-100 p-3 mt-4 mb-0">
-                                <i class="bi bi-info-circle-fill text-primary me-2 fs-5"></i>
-                                <div class="d-flex flex-column pe-0 pe-sm-10">
-                                    <span class="fw-bold text-primary">Lưu ý</span>
-                                    <span class="text-gray-700 fs-8">Độ chính xác đạt 99.8%. Vui lòng kiểm tra kỹ lại các trường thông tin bên phải.</span>
                                 </div>
+                                <div>
+                                    <h2 class="text-white fw-bolder m-0 uppercase tracking-widest fs-1">NEURAL CORE IDENTIFIER</h2>
+                                    <div class="text-primary fs-8 tracking-widest uppercase fw-bold opacity-75">Autonomous Perception Hub | <span class="text-success">SYSTEM ONLINE</span></div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-6">
+                                <div class="px-6 py-4 bg-light-dark rounded-pill border border-secondary border-dashed d-flex align-items-center">
+                                    <span class="fs-9 text-muted uppercase fw-bolder me-4 tracking-wider">ENGINE PERMISSION</span>
+                                    <span class="badge @(isAuthorized ? "badge-success" : "badge-light-danger") fw-bolder px-5 py-2 fs-8 shadow-sm">
+                                        <i class="bi @(isAuthorized ? "bi-shield-check" : "bi-shield-lock") me-1"></i> 
+                                        @(isAuthorized ? "GRANTED" : "LOCKED")
+                                    </span>
+                                </div>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary rounded-circle" @onclick="CloseModal"><i class="bi bi-x-lg text-white fs-3"></i></button>
                             </div>
                         </div>
 
-                        <!-- Right Column: Form Data -->
-                        <div class="col-md-7 ps-5">
-                            <h6 class="fw-bolder text-gray-800 mb-4"><i class="bi bi-file-earmark-text me-2 text-primary"></i>DỮ LIỆU BÓC TÁCH (AI-OCR)</h6>
+                        <div class="p-10 scanner-container">
+                            <div class="row g-12">
+                                <!-- AI SENSOR VIEWPORT (LEFT PANEL) -->
+                                <div class="col-md-5 border-end border-gray-200 pe-10">
+                                    @if (!isAuthorized)
+                                    {
+                                        <div class="bg-light rounded-4 d-flex flex-column align-items-center justify-content-center p-15 h-500px border border-dashed border-primary shadow-sm">
+                                            <div class="symbol symbol-150px mb-12 shadow-lg">
+                                                <div class="symbol-label bg-white ai-status-pulse rounded-circle border border-primary border-8">
+                                                    <i class="bi bi-unlock-fill text-primary fs-4hx"></i>
+                                                </div>
+                                            </div>
+                                            <h1 class="fw-bolder text-gray-900 mb-4 fs-2x">INITIALIZE NEURAL LOOP</h1>
+                                            <p class="text-gray-500 text-center fs-6 mb-12 px-10">
+                                                Grant AI Permission to start hardware stream and begin autonomous card pattern mapping.
+                                            </p>
+                                            <button class="btn btn-primary btn-lg w-100 h-80px fs-2 fw-bolder rounded-pill glow-btn" @onclick="AuthorizeAi">
+                                                <i class="bi bi-power me-2"></i> ACTIVATE CORE SYSTEM
+                                            </button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @* VISUAL SCANNER FRAME (STATE-DRIVEN) *@
+                                        <div class="position-relative @(isOcrProcessing ? "border-warning" : (!string.IsNullOrEmpty(ocrErrorMessage) ? "border-danger border-pulsing-danger" : "border-success")) border border-3 border-dashed rounded-4 overflow-hidden mb-8 @(isContinuousScanning && !isOcrProcessing && string.IsNullOrEmpty(ocrErrorMessage) ? "pulse-scanner" : "")" 
+                                             style="height: 520px; background: #000; transition: all 0.5s cubic-bezier(0.45, 0.05, 0.55, 0.95); box-shadow: 0 0 50px rgba(0,0,0,0.6);">
+                                            
+                                            @if (string.IsNullOrEmpty(previewUrl))
+                                            {
+                                                <video id="webcamCapture" class="w-100 h-100" style="object-fit: cover; filter: brightness(1.05) contrast(1.1);"></video>
+                                                
+                                                @* NEURAL INDICATORS *@
+                                                <div class="position-absolute top-0 left-0 w-100 p-6 d-flex justify-content-between align-items-start" style="z-index: 10;">
+                                                    <div class="badge badge-light-success fw-bolder px-4 py-2 border border-success border-opacity-25 glass-overlay">
+                                                        <span class="bullet bullet-dot bg-success me-2 ai-status-pulse"></span> SEEKING PATTERN TARGET
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <div class="text-white fs-9 fw-bold opacity-50 uppercase tracking-widest mb-1">Lux Rating</div>
+                                                        <div class="badge badge-light-@(brightnessRating == "GOOD" ? "success" : "warning") fw-bolder fs-9 px-3">@brightnessRating</div>
+                                                    </div>
+                                                </div>
 
-                            <div class="mb-4">
-                                <label class="form-label fs-7 fw-bolder text-gray-600">HỌ VÀ TÊN <span class="text-danger">*</span></label>
-                                <div class="position-relative">
-                                    <input type="text" class="form-control form-control-solid fw-bolder text-gray-800" style="background-color: #f5f8fa;" value="@scannedData?.Name" readonly />
-                                        <i class="bi bi-check-circle-fill text-success position-absolute top-50 end-0 translate-middle-y me-3 fs-3" data-bs-toggle="tooltip" title="Đã xác thực"></i>
+                                                <div class="scanner-laser"></div>
+
+                                                @* AI EYE PREVIEW *@
+                                                @if (!string.IsNullOrEmpty(aiDebugCapture))
+                                                {
+                                                    <div class="ai-eye-box overflow-hidden border-primary border-opacity-50">
+                                                        <div class="bg-primary p-2 fs-10 text-white fw-bold uppercase text-center opacity-75">AI EYE</div>
+                                                        <img src="@aiDebugCapture" class="w-100" style="filter: grayscale(1) contrast(1.5);" />
+                                                    </div>
+                                                }
+
+                                                <!-- SCAN BUTTON OVERLAY -->
+                                                <div class="position-absolute bottom-0 left-0 w-100 p-8 d-flex justify-content-center" style="z-index: 10;">
+                                                    <button class="btn btn-icon btn-custom btn-circle btn-primary w-80px h-80px shadow-lg glow-btn" @onclick="CaptureWebcam" disabled="@isOcrProcessing">
+                                                        <i class="bi bi-camera-fill fs-2x"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="position-relative w-100 h-100">
+                                                    <img src="@previewUrl" class="w-100 h-100" style="object-fit: cover;" />
+                                                    <div class="position-absolute top-0 right-0 p-4">
+                                                        <button class="btn btn-icon btn-circle btn-light-danger btn-sm shadow-sm" @onclick="() => previewUrl = null">
+                                                            <i class="bi bi-x-lg"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            @* CAMERA FLASH *@
+                                            @if (showFlash) { <div class="position-absolute inset-0 w-100 h-100 flash-effect" style="z-index: 12;"></div> }
+
+                                            @* LOADING OVERLAY *@
+                                            @if (isOcrProcessing)
+                                            {
+                                                <div class="position-absolute inset-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center glass-overlay" style="z-index: 20;">
+                                                    <div class="spinner-border text-warning w-50px h-50px border-4 mb-6" role="status"></div>
+                                                    <div class="text-warning fw-bolder fs-4 tracking-widest text-uppercase">Neural Mapping...</div>
+                                                    <div class="w-200px h-4px bg-white bg-opacity-10 rounded-pill mt-4 overflow-hidden">
+                                                        <div class="h-100 bg-warning ai-status-pulse" style="width: 70%;"></div>
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            @* ERROR OVERLAY *@
+                                            @if (!string.IsNullOrEmpty(ocrErrorMessage))
+                                            {
+                                                <div class="position-absolute inset-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-danger bg-opacity-75 backdrop-blur" style="z-index: 20; backdrop-filter: blur(5px);">
+                                                    <i class="bi bi-exclamation-triangle-fill text-white fs-4hx mb-6 ai-status-pulse"></i>
+                                                    <div class="text-white fw-bolder fs-3 tracking-widest text-uppercase mb-2">Neural Link Blocked</div>
+                                                    <div class="text-white text-opacity-75 fs-7 px-10 text-center mb-8">@ocrErrorMessage</div>
+                                                    <button class="btn btn-white btn-lg fw-bolder px-12 rounded-pill shadow-lg" @onclick="ResetAndRetry">
+                                                        <i class="bi bi-lightning-charge-fill me-2"></i> RE-IGNITE VISION HUB
+                                                    </button>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+
+                                    <div class="bg-light-dark p-6 rounded-4 border border-secondary border-opacity-10">
+                                        <div class="d-flex align-items-center mb-4">
+                                            <i class="bi bi-info-circle-fill text-primary me-3 fs-3"></i>
+                                            <span class="text-white fw-bolder tracking-widest uppercase fs-8">Intelligence Hub Settings</span>
+                                        </div>
+                                        <p class="text-muted fs-8 m-0 leading-relaxed px-2">
+                                            The Vision Core uses <span class="text-primary fw-bold">OpenAI GPT-4o Autonomy</span> to map physical card patterns into structured enterprise identities. For maximum precision, ensure the identity card is aligned within the neon frame and illuminated clearly.
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="mb-4">
-                                <label class="form-label fs-7 fw-bolder text-gray-600">SỐ CCCD/CMND <span class="text-danger">*</span></label>
-                                <div class="position-relative">
-                                    <input type="text" class="form-control form-control-solid fw-bolder text-gray-800" style="background-color: #f5f8fa;" value="@scannedData?.IdCard" readonly />
-                                        <span class="position-absolute top-50 end-0 translate-middle-y me-3 badge badge-light-warning fw-bold border border-warning border-dashed">⚠️ Cảnh báo trùng</span>
+                                <!-- DATA DISCOVERY CONSOLE (RIGHT PANEL) -->
+                                <div class="col-md-7">
+                                    <div class="d-flex align-items-center mb-8 justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-40px bg-light-success rounded-circle me-4">
+                                                <div class="symbol-label">
+                                                    <i class="bi bi-file-earmark-person-fill text-success fs-2"></i>
+                                                </div>
+                                            </div>
+                                            <h3 class="fw-bolder text-gray-900 m-0 fs-3">DATA DISCOVERY CONSOLE</h3>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(scannedData.IdCard))
+                                        {
+                                            <div class="badge badge-light-success fw-bolder fs-8 px-4 py-2 border border-success border-opacity-10">
+                                                <i class="bi bi-shield-check me-2"></i> TARGET LOCKED
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <div class="row g-6">
+                                        <div class="col-md-12">
+                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Identity Pattern (IdCard)</label>
+                                            <div class="position-relative">
+                                                <input class="form-control form-control-solid fs-2 fw-bolder py-5 px-6 @(isOcrProcessing ? "field-searching-pulse" : (string.IsNullOrEmpty(scannedData.IdCard) ? "" : "field-locked-glow"))" 
+                                                       @bind="scannedData.IdCard" placeholder="PENDING ANALYSYS..." style="border-radius: 12px;" />
+                                                @if(isOcrProcessing) { <div class="field-shimmer"></div> }
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Full Legal Name</label>
+                                            <div class="position-relative">
+                                                <input class="form-control form-control-solid data-value-high py-5 px-6 @(isOcrProcessing ? "field-searching-pulse" : (string.IsNullOrEmpty(scannedData.Name) ? "" : "field-locked-glow text-success"))" 
+                                                       @bind="scannedData.Name" placeholder="MAPPING IDENTITY..." style="border-radius: 12px; font-family: 'Outfit', sans-serif;" />
+                                                @if(isOcrProcessing) { <div class="field-shimmer"></div> }
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Birth Origin (DOB)</label>
+                                            <input class="form-control form-control-solid py-4 @(isOcrProcessing ? "field-searching-pulse" : "")" @bind="scannedData.DOB" type="date" style="border-radius: 10px;" />
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Gender Core</label>
+                                            <select class="form-select form-select-solid py-4 @(isOcrProcessing ? "field-searching-pulse" : "")" @bind="scannedData.Gender" style="border-radius: 10px;">
+                                                <option value="">Awaiting Mapping...</option>
+                                                <option value="Nam">Nam (Male)</option>
+                                                <option value="Nữ">Nữ (Female)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Hometown Foundation</label>
+                                            <input class="form-control form-control-solid py-4 @(isOcrProcessing ? "field-searching-pulse" : "")" @bind="scannedData.Hometown" placeholder="Seeking location pattern..." style="border-radius: 10px;" />
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Primary Residence Registry</label>
+                                            <textarea class="form-control form-control-solid py-4 @(isOcrProcessing ? "field-searching-pulse" : "")" @bind="scannedData.Address" rows="2" placeholder="Seeking address pattern..." style="border-radius: 10px;"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- ACTION HUB -->
+                                    <div class="d-flex justify-content-end gap-5 mt-12 bg-light p-6 rounded-4 border border-dashed border-gray-300">
+                                        <button class="btn btn-outline btn-outline-dashed btn-outline-default px-10 py-4 fw-bolder fs-6 rounded-pill" @onclick="CloseModal">DISCARD HUB</button>
+                                        <button class="btn btn-primary px-12 py-4 fw-bolder fs-6 rounded-pill glow-btn" @onclick="ConfirmScan" disabled="@(string.IsNullOrEmpty(scannedData.IdCard) || isOcrProcessing)">
+                                            <i class="bi bi-check-circle-fill me-2"></i> INTEGRATE IDENTITY
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="form-text text-warning fs-9 mt-1"><i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>Số CCCD này đã tồn tại trong hệ thống (Hồ sơ cũ: NV092)</div>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col-6">
-                                    <label class="form-label fs-7 fw-bolder text-gray-600">NGÀY SINH</label>
-                                    <input type="text" class="form-control form-control-solid fw-bold text-gray-800" value="@scannedData?.DOB?.ToString("dd/MM/yyyy")" readonly />
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label fs-7 fw-bolder text-gray-600">GIỚI TÍNH</label>
-                                    <select class="form-select form-select-solid fw-bold text-gray-800" disabled>
-                                        <option selected>@scannedData?.Gender</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label fs-7 fw-bolder text-gray-600">QUÊ QUÁN</label>
-                                <input type="text" class="form-control form-control-solid text-gray-800" value="@scannedData?.Hometown" readonly />
-                            </div>
-
-                            <div class="mb-0">
-                                <label class="form-label fs-7 fw-bolder text-gray-600">NƠI THƯỜNG TRÚ</label>
-                                <textarea class="form-control form-control-solid text-gray-800" rows="2" readonly>@scannedData?.Address</textarea>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Footer -->
-                <div class="modal-footer border-0 pt-0 pb-10 pe-10">
-                    <button type="button" class="btn btn-active-light btn-color-gray-500 fw-bold px-6" @onclick="CloseModal">Hủy, quay lại</button>
-                    <button type="button" class="btn btn-primary fw-bold px-6" @onclick="ConfirmScan">Xác nhận & Điền mẫu form</button>
                 </div>
             </div>
         </div>
@@ -108,87 +376,146 @@
 }
 
 @code {
+    [Parameter] public EventCallback<CccdData> OnDataScanned { get; set; }
     private bool isVisible = false;
-    private CccdData? scannedData;
-    private TaskCompletionSource<CccdData?>? tcs;
+    private bool isAuthorized = false;
+    private bool isWebcamActive = false;
+    private bool isContinuousScanning = false;
+    private bool isOcrProcessing = false;
+    private bool showFlash = false;
+    private string? previewUrl;
+    private string? aiDebugCapture;
+    private string ocrErrorMessage = "";
+    private string brightnessRating = "GOOD";
+    private CccdData scannedData = new();
+    private TaskCompletionSource<CccdData>? tcs;
 
-    public async Task<CccdData?> ScanAsync()
-    {
-        try 
-        {
-            // Reset task completion source
-            tcs = new TaskCompletionSource<CccdData?>();
+    public async Task<CccdData> ShowAsync() {
+        isVisible = true;
+        isAuthorized = false;
+        scannedData = new();
+        ocrErrorMessage = "";
+        aiDebugCapture = null;
+        previewUrl = null;
+        tcs = new TaskCompletionSource<CccdData>();
+        StateHasChanged();
+        return await tcs.Task;
+    }
 
-            // Bước 1: Hiển thị trạng thái đang quét (vẫn dùng Swal cho loading giả lập vì nó đẹp)
-            await JSRuntime.InvokeVoidAsync("Swal.fire", new
-            {
-                title = "Đang quét CCCD...",
-                text = "Hệ thống AI đang kết nối thiết bị và bóc tách dữ liệu thẻ chip. Vui lòng đợi...",
-                allowOutsideClick = false,
-                showConfirmButton = false,
-                timer = 15000, 
-                didOpen = new { }
-            });
-            await JSRuntime.InvokeVoidAsync("Swal.showLoading");
-            
-            // Bước 2: Giả lập quét dữ liệu
-            await Task.Delay(2500); 
+    private async Task AuthorizeAi() {
+        isAuthorized = true;
+        await StartWebcam();
+    }
 
-            // Initialize fake data matching the user provided sample
-            scannedData = new CccdData {
-                Name = "LÊ THỊ HƯƠNG", 
-                IdCard = "034199008899",
-                DOB = new DateTime(1999, 2, 20),
-                Gender = "Nữ",
-                Hometown = "Phú Lương, Đông Hưng, Thái Bình",
-                Address = "Thôn Quảng Hợp, xã Quảng Sơn, huyện Đắk Glong, tỉnh Đắk Nông",
-                Nationality = "Việt Nam",
-                Ethnicity = "Kinh",
-                Religion = "Không",
-                IssueDate = "20/01/2021",
-                IssuePlace = "Cục Cảnh sát QLHC về TTXH"
-            };
+    private async Task StartWebcam() {
+        isWebcamActive = true;
+        isContinuousScanning = true;
+        ocrErrorMessage = "";
+        previewUrl = null;
+        StateHasChanged();
+        
+        await JSRuntime.InvokeVoidAsync("cccdScanner.initWebcam", "webcamCapture");
+        
+        _ = Task.Run(async () => {
+            while (isContinuousScanning && isWebcamActive) {
+                if (!isOcrProcessing && string.IsNullOrEmpty(ocrErrorMessage)) {
+                    await InvokeAsync(CaptureAndProcessAutonomous);
+                }
+                await Task.Delay(3000);
+            }
+        });
+    }
 
-            // Close loading alert
-            await JSRuntime.InvokeVoidAsync("Swal.close");
+    private async Task CaptureAndProcessAutonomous() {
+        if (isOcrProcessing || !string.IsNullOrEmpty(ocrErrorMessage)) return;
 
-            // Bước 3: Show Modal
-            isVisible = true;
+        try {
+            var imageBase64 = await JSRuntime.InvokeAsync<string>("cccdScanner.captureFrame", "webcamCapture");
+            if (string.IsNullOrEmpty(imageBase64)) return;
+
+            aiDebugCapture = imageBase64;
             StateHasChanged();
 
-            // Wait for user action
-            return await tcs.Task;
-        } 
-        catch (Exception ex) 
-        {
-            if (ex is TaskCanceledException || ex is JSDisconnectedException) 
-                return null;
+            var buffer = Convert.FromBase64String(imageBase64.Split(',')[1]);
             
-            await JSRuntime.InvokeVoidAsync("Swal.fire", "Thông báo", "Có lỗi xảy ra: " + ex.Message, "error");
-            return null;
+            // Brightness check
+            var brightness = await JSRuntime.InvokeAsync<double>("cccdScanner.getBrightness", "webcamCapture");
+            brightnessRating = brightness < 80 ? "DARK" : (brightness > 220 ? "BRIGHT" : "GOOD");
+            
+            if (brightnessRating == "GOOD") {
+                await ProcessImageBufferInternal(buffer);
+            }
+        }
+        catch (Exception ex) {
+            Console.WriteLine($"[AUTONOMOUS ERROR] {ex.Message}");
         }
     }
 
-    private void CloseModal()
-    {
-        isVisible = false;
-        tcs?.TrySetResult(null); // Return null if cancelled
+    private async Task CaptureWebcam() {
+        showFlash = true;
         StateHasChanged();
+        await Task.Delay(100);
+        showFlash = false;
+        StateHasChanged();
+
+        var imageBase64 = await JSRuntime.InvokeAsync<string>("cccdScanner.captureFrame", "webcamCapture");
+        if (!string.IsNullOrEmpty(imageBase64)) {
+            previewUrl = imageBase64;
+            var buffer = Convert.FromBase64String(imageBase64.Split(',')[1]);
+            await ProcessImageBufferInternal(buffer);
+        }
     }
 
-    private async Task ConfirmScan()
-    {
-        isVisible = false;
-        
-        await JSRuntime.InvokeVoidAsync("Swal.fire", new {
-            title = "Thành công!",
-            text = "Dữ liệu đã được bóc tách và sẵn sàng sử dụng.",
-            icon = "success",
-            timer = 1500,
-            showConfirmButton = false
-        });
+    private async Task ProcessImageBufferInternal(byte[] buffer) {
+        if (isOcrProcessing) return;
 
-        tcs?.TrySetResult(scannedData);
+        isOcrProcessing = true;
+        ocrErrorMessage = "";
+        StateHasChanged();
+
+        try {
+            var result = await OcrService.ProcessCccdAsync(buffer, "webcam_capture.jpg");
+            if (result != null && !string.IsNullOrEmpty(result.IdCard)) {
+                scannedData = result;
+                isContinuousScanning = false;
+            }
+            else {
+                // If manual capture fails, show error
+                if (!string.IsNullOrEmpty(previewUrl)) {
+                    ocrErrorMessage = "PATTERN_MISMATCH: AI could not identify clear ID markers. Please align and retry.";
+                }
+            }
+        }
+        catch (Exception ex) {
+            ocrErrorMessage = $"SYSTEM_EX_FAULT: {ex.Message}";
+            isContinuousScanning = false;
+        }
+        finally {
+            isOcrProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    private void CloseModal() {
+        isContinuousScanning = false;
+        isWebcamActive = false;
+        isVisible = false;
+        tcs?.TrySetCanceled();
+    }
+
+    private async Task ConfirmScan() { 
+        isContinuousScanning = false; 
+        isVisible = false; 
+        tcs?.TrySetResult(scannedData); 
+    }
+
+    private void ResetAndRetry()
+    {
+        ocrErrorMessage = "";
+        isOcrProcessing = false;
+        scannedData = new();
+        isContinuousScanning = true;
+        previewUrl = null;
         StateHasChanged();
     }
 }

@@ -59,7 +59,7 @@
     "Href": "/organization/structure",
     "Permission": null,
     "IsSection": false,
-    "IsActive": true,
+    "IsActive": false,
     "Order": 1,
     "ParentId": 3
   },

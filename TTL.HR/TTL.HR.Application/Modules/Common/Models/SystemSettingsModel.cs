@@ -110,9 +110,24 @@ namespace TTL.HR.Application.Modules.Common.Models
         public int MinOvertimeMinutes { get; set; } = 30;
         public double OvertimeOvernightRate { get; set; } = 2.1;
         public string OvertimeCode { get; set; } = @"
-// Variables: ActualHours, Rate, IsWeekend, IsHoliday
-decimal salary = (decimal)ActualHours * (decimal)Rate;
-return salary;
+// Variables: ActualHours, RatePerByHour, IsWeekend, IsHoliday, IsOvernight
+// Constants: OvertimeRateWeekday, OvertimeRateWeekend, OvertimeRateHoliday, OvertimeOvernightRate
+
+double multiplier = IsHoliday ? 3.0 : (IsWeekend ? 2.0 : 1.5);
+if (IsOvernight) multiplier += 0.3; // VN Law: +30% for night shift
+
+decimal total = (decimal)ActualHours * (decimal)RatePerByHour * (decimal)multiplier;
+return Math.Round(total, 0);
+";
+        public string SalaryCode { get; set; } = @"
+// Variables: BasicSalary, ActualWorkDays, StandardWorkDays, MealAllow, TravelAllow, PhoneAllow, DiligenceAllow, Insurance, TaxAmt
+// Logic: Calculate base salary + standard allowances - deductions
+decimal basePay = (BasicSalary * (decimal)ActualWorkDays) / (decimal)StandardWorkDays;
+decimal totalAllowances = MealAllow + TravelAllow + PhoneAllow + DiligenceAllow;
+decimal gross = basePay + totalAllowances;
+decimal net = gross - Insurance - TaxAmt;
+
+return Math.Round(net, 0);
 ";
         
         // Insurance Breakdown
@@ -136,6 +151,14 @@ return salary;
         public decimal Region2MinimumSalary { get; set; } = 4160000;
         public decimal Region3MinimumSalary { get; set; } = 3640000;
         public decimal Region4MinimumSalary { get; set; } = 3250000;
+
+        // Global Allowances (Default amounts if not specified per employee)
+        public decimal DefaultMealAllowance { get; set; } = 730000;
+        public decimal DefaultTravelAllowance { get; set; } = 500000;
+        public decimal DefaultPhoneAllowance { get; set; } = 300000;
+        public decimal DefaultResponsibilityAllowance { get; set; } = 0;
+        public decimal DefaultSeniorityAllowance { get; set; } = 0;
+        public decimal DefaultDiligenceAllowance { get; set; } = 200000;
 
         // Security Config
         public int PasswordMinLength { get; set; } = 8;
