@@ -19,14 +19,16 @@ var tempClient = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.
 try
 {
     var metadataString = await tempClient.GetStringAsync("MockData/metadata.json");
-    var metadata = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(metadataString);
-    if (metadata?.statistics != null)
+    var metadataObject = Newtonsoft.Json.Linq.JObject.Parse(metadataString);
+    var statistics = metadataObject["statistics"] as Newtonsoft.Json.Linq.JArray;
+    if (statistics != null)
     {
-        foreach (var stat in metadata.statistics)
+        foreach (var stat in statistics)
         {
             try
             {
-                string collection = stat.collection;
+                string? collection = stat["collection"]?.ToString();
+                if (string.IsNullOrEmpty(collection)) continue;
                 var json = await tempClient.GetStringAsync($"MockData/{collection}.json");
                 mockProvider.AddCollection(collection, json);
             }
