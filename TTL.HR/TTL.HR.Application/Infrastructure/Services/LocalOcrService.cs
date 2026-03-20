@@ -1,29 +1,27 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.JSInterop;
 using Microsoft.Extensions.Configuration;
 using TTL.HR.Application.Modules.Common.Interfaces;
 using TTL.HR.Application.Modules.HumanResource.Models;
+using TTL.HR.Application.Modules.Common.Services;
 
 namespace TTL.HR.Application.Infrastructure.Services
 {
     /**
-     * LocalOcrService - The Neural Failover Hub
-     * Triple-Core Resilience: OpenAI GPT-4o -> Hugging Face (Florence-2) -> Ollama (LLaVA)
-     * Automatic Engine Selection based on Quota, Availability, and Cost.
+     * LocalOcrService - Vietnamese Specialized AI Hub
+     * Tiered resilience using Vietnam's top AI providers: FPT AI -> VNPT AI
+     * High accuracy for CCCD/ID Card patterns.
      */
     public class LocalOcrService : IOcrService
     {
-        private readonly GptOcrService _gptService;
-        private readonly HuggingFaceOcrService _hfService;
-        private readonly OllamaOcrService _ollamaService;
+        private readonly FptOcrService _fptService;
+        private readonly VnptOcrService _vnptService;
         private readonly string _preferredEngine;
 
         public LocalOcrService(IConfiguration configuration)
         {
-            _gptService = new GptOcrService(configuration);
-            _hfService = new HuggingFaceOcrService(configuration);
-            _ollamaService = new OllamaOcrService(configuration);
+            _fptService = new FptOcrService(configuration);
+            _vnptService = new VnptOcrService(configuration);
             _preferredEngine = configuration["OcrSettings:PreferredEngine"] ?? "Auto";
         }
 
@@ -34,10 +32,9 @@ namespace TTL.HR.Application.Infrastructure.Services
                 // 1. SELECT NEURAL ENGINE
                 return _preferredEngine switch
                 {
-                    "GPT" => await _gptService.ExtractWithGptVisionAsync(imageBytes),
-                    "HF" => await _hfService.ExtractWithFlorenceAsync(imageBytes),
-                    "Ollama" => await _ollamaService.ExtractWithOllamaAsync(imageBytes),
-                    _ => await ExecuteFailoverChainAsync(imageBytes) // "Auto" Mode
+                    "FPT" => await _fptService.ProcessCccdAsync(imageBytes, fileName),
+                    "VNPT" => await _vnptService.ProcessCccdAsync(imageBytes, fileName),
+                    _ => await ExecuteFailoverChainAsync(imageBytes, fileName) // "Auto" Mode
                 };
             }
             catch (Exception ex)
@@ -47,21 +44,27 @@ namespace TTL.HR.Application.Infrastructure.Services
             }
         }
 
-        private async Task<CccdData?> ExecuteFailoverChainAsync(byte[] imageBytes)
+        private async Task<CccdData?> ExecuteFailoverChainAsync(byte[] imageBytes, string fileName)
         {
-            // TIER 1: GPT-4o VISION (PREMIUM)
-            Console.WriteLine("[NEURAL HUB] Attempting Tier-1: GPT-4o Vision...");
-            var gptResult = await _gptService.ExtractWithGptVisionAsync(imageBytes);
-            if (gptResult != null && !string.IsNullOrEmpty(gptResult.IdCard)) return gptResult;
+            // TIER 1: FPT AI (Specialized Vietnam)
+            if (!string.IsNullOrEmpty(_fptService.GetApiKey()) && _fptService.GetApiKey() != "YOUR_FPT_API_KEY")
+            {
+                Console.WriteLine("[NEURAL HUB] Attempting Tier-1: FPT AI OCR...");
+                var fptResult = await _fptService.ProcessCccdAsync(imageBytes, fileName);
+                if (fptResult != null && !string.IsNullOrEmpty(fptResult.IdCard)) return fptResult;
+            }
 
-            // TIER 2: HUGGING FACE (FREE CLOUD - FLORENCE-2)
-            Console.WriteLine("[NEURAL HUB] Quota/Error detected. Calling Tier-2 Backup: Hugging Face...");
-            var hfResult = await _hfService.ExtractWithFlorenceAsync(imageBytes);
-            if (hfResult != null && !string.IsNullOrEmpty(hfResult.IdCard)) return hfResult;
+            // TIER 2: VNPT AI (Specialized Vietnam)
+            if (!string.IsNullOrEmpty(_vnptService.GetToken()) && _vnptService.GetToken() != "YOUR_VNPT_TOKEN")
+            {
+                Console.WriteLine("[NEURAL HUB] Attempting Tier-2: VNPT AI OCR...");
+                var vnptResult = await _vnptService.ProcessCccdAsync(imageBytes, fileName);
+                if (vnptResult != null && !string.IsNullOrEmpty(vnptResult.IdCard)) return vnptResult;
+            }
 
-            // TIER 3: OLLAMA (FREE LOCAL - LLAVA)
-            Console.WriteLine("[NEURAL HUB] Cloud Link Failure. Re-igniting Tier-3: Ollama Local...");
-            return await _ollamaService.ExtractWithOllamaAsync(imageBytes);
+            // TIER 4: MOCK RESEARCH (OFFLINE FALLBACK)
+            Console.WriteLine("[NEURAL HUB] Specialized AI Offline. Engaging Tier-4 Mock Intelligence...");
+            return await new MockOcrService().ProcessCccdAsync(imageBytes, "mock.jpg");
         }
     }
 }

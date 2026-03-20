@@ -2,22 +2,42 @@
 @using Newtonsoft.Json
 @using Microsoft.Extensions.Configuration
 @using TTL.HR.Application.Modules.HumanResource.Models
+@implements IDisposable
 @inject IJSRuntime JSRuntime
 @inject IConfiguration Configuration
 @inject TTL.HR.Application.Modules.Common.Interfaces.IOcrService OcrService
 
 <style>
     :root {
+        --ai-primary: #a288f1;
+        --ai-primary-soft: rgba(162, 136, 241, 0.1);
         --ai-neon-green: #00ff00;
         --ai-amber: #ffc107;
         --ai-danger: #f1416c;
         --ai-success: #50cd89;
-        --ai-glass-dark: rgba(0, 0, 0, 0.75);
+        --ai-glass-dark: rgba(0, 0, 0, 0.85);
+        --ai-bg-light: #f8f9fa;
+        --ai-border: rgba(0,0,0,0.08);
     }
 
     .scanner-container {
-        font-family: 'Inter', -apple-system, system-ui, sans-serif;
+        font-family: 'Inter', 'Outfit', -apple-system, sans-serif;
         letter-spacing: -0.01em;
+    }
+
+    .scanner-viewport {
+        position: relative;
+        height: 520px;
+        background: #000;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 2px dashed rgba(0, 255, 0, 0.3);
+        transition: all 0.5s ease;
+    }
+
+    .scanner-viewport.scanning {
+        border-color: var(--ai-neon-green);
+        box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
     }
 
     .scanner-laser {
@@ -39,207 +59,251 @@
         100% { top: 95%; opacity: 0; }
     }
 
-    .pulse-scanner {
-        animation: pulse-border 2s ease-in-out infinite;
-    }
-
-    @@keyframes pulse-border {
-        0% { border-color: rgba(0, 255, 0, 0.4); box-shadow: 0 0 0px rgba(0, 255, 0, 0); }
-        50% { border-color: var(--ai-neon-green); box-shadow: 0 0 25px rgba(0, 255, 0, 0.3); }
-        100% { border-color: rgba(0, 255, 0, 0.4); box-shadow: 0 0 0px rgba(0, 255, 0, 0); }
-    }
-
-    .ai-status-pulse {
-        animation: status-pulse 1.2s infinite alternate;
-    }
-
-    @@keyframes status-pulse {
-        from { opacity: 0.7; transform: scale(0.98); }
-        to { opacity: 1; transform: scale(1.02); }
-    }
-
-    .glass-overlay {
-        background: var(--ai-glass-dark);
+    .ai-status-badge {
+        background: rgba(0, 0, 0, 0.6);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: white;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 8px 18px;
+        border-radius: 100px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: flex;
+        align-items: center;
     }
 
-    .field-searching-pulse {
-        position: relative;
-        overflow: hidden;
+    .lux-badge {
+        background: #50cd89;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 800;
+        padding: 5px 12px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        box-shadow: 0 0 15px rgba(80, 205, 137, 0.3);
+    }
+
+    .camera-circle-btn {
+        width: 70px;
+        height: 70px;
+        background: var(--ai-primary);
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: 0 0 25px var(--ai-primary);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: pointer;
+    }
+
+    .camera-circle-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 40px var(--ai-primary);
+    }
+
+    .camera-circle-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .ai-input {
+        background: #f1f3f5 !important;
+        border: none !important;
+        border-radius: 12px !important;
+        font-weight: 700 !important;
+        color: #111 !important;
+        padding: 16px 20px !important;
+        transition: all 0.3s ease;
+    }
+
+    .ai-input::placeholder {
+        color: #adb5bd !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.85rem;
+    }
+
+    .ai-input.locked {
+        background: white !important;
+        color: #000 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .ai-input.searching {
         animation: searching-pulse 2s infinite;
+        border: 1px dashed var(--ai-amber) !important;
     }
 
     @@keyframes searching-pulse {
-        0% { opacity: 0.7; border-color: rgba(0, 158, 247, 0.3); }
-        50% { opacity: 1; border-color: var(--ai-amber); background: rgba(255, 193, 7, 0.05); }
-        100% { opacity: 0.7; border-color: rgba(0, 158, 247, 0.3); }
+        0% { opacity: 0.7; transform: scale(0.99); }
+        50% { opacity: 1; transform: scale(1.0); background: #fff8dd !important; }
+        100% { opacity: 0.7; transform: scale(0.99); }
     }
 
-    .field-shimmer::after {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
-        animation: field-shine 3s infinite;
+    .integrate-btn {
+        background: var(--ai-primary);
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 100px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 8px 20px var(--ai-primary-soft);
+        transition: all 0.3s ease;
     }
 
-    @@keyframes field-shine {
-        0% { transform: translateX(-100%) rotate(45deg); }
-        100% { transform: translateX(100%) rotate(45deg); }
+    .integrate-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px var(--ai-primary-soft);
+        background: #9175ec;
     }
 
-    .data-value-high {
-        font-size: 1.15rem;
-        letter-spacing: 0.05em;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        font-weight: 800 !important;
+    .discard-btn {
+        background: transparent;
+        color: #666;
+        border: 1px solid #ddd;
+        padding: 14px 28px;
+        border-radius: 100px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
     }
 
-    .flash-effect {
-        animation: flash-white 0.4s ease-out;
+    .discard-btn:hover {
+        background: #eee;
+        color: #333;
     }
 
-    @@keyframes flash-white {
-        0% { background: rgba(255, 255, 255, 0.9); }
-        100% { background: transparent; }
+    .ai-label {
+        font-size: 0.65rem;
+        font-weight: 800;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 8px;
+        display: block;
     }
 
-    .shadow-warning-glow {
-        box-shadow: 0 0 30px rgba(255, 193, 7, 0.2);
+    .ai-status-pulse {
+        width: 8px;
+        height: 8px;
+        background: var(--ai-neon-green);
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+        box-shadow: 0 0 10px var(--ai-neon-green);
+        animation: pulse-green 1.5s infinite alternate;
     }
 
-    .border-pulsing-danger {
-        animation: border-danger-pulse 1s infinite alternate;
-    }
-
-    @@keyframes border-danger-pulse {
-        from { border-color: var(--ai-danger); box-shadow: 0 0 10px rgba(241, 65, 108, 0.2); }
-        to { border-color: #ff0000; box-shadow: 0 0 25px rgba(241, 65, 108, 0.5); }
-    }
-
-    .ai-eye-box {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        width: 150px;
-        border: 2px solid #009ef7;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 158, 247, 0.5);
-    }
-
-    .glow-btn {
-        box-shadow: 0 0 20px rgba(0, 158, 247, 0.4);
-        transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .glow-btn:hover {
-        box-shadow: 0 0 35px rgba(0, 158, 247, 0.7);
-        transform: translateY(-4px) scale(1.05);
-        border-color: #fff;
-    }
-
-    .field-locked-glow {
-        box-shadow: 0 0 20px rgba(80, 205, 137, 0.2);
-        border-color: var(--ai-success) !important;
-        background: rgba(80, 205, 137, 0.05) !important;
+    @@keyframes pulse-green {
+        from { transform: scale(0.8); opacity: 0.5; }
+        to { transform: scale(1.2); opacity: 1; }
     }
 </style>
 
 @if (isVisible)
 {
-    <script src="https://docs.opencv.org/4.5.2/opencv.js" async></script>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-
     <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 9999;">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 1400px;">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 1300px;">
             <div class="modal-content rounded-4 shadow-lg border-0 overflow-hidden bg-white">
                 <div class="modal-body p-0">
                     <div class="d-flex flex-column h-100">
                         <!-- AI Command Center Header -->
-                        <div class="bg-dark p-8 d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-25 shadow-sm">
+                        <div class="bg-dark p-8 d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-10 shadow-sm">
                             <div class="d-flex align-items-center">
-                                <div class="symbol symbol-60px me-6">
-                                    <div class="symbol-label bg-light-primary ai-status-pulse rounded-circle border-2 border border-primary shadow-sm">
-                                        <i class="bi bi-cpu-fill text-primary fs-2x"></i>
+                                <div class="symbol symbol-50px me-6">
+                                    <div class="symbol-label" style="background: var(--ai-primary-soft); border: 2px solid var(--ai-primary); border-radius: 14px;">
+                                        <i class="bi bi-cpu-fill" style="color: var(--ai-primary); font-size: 1.8rem;"></i>
                                     </div>
                                 </div>
                                 <div>
-                                    <h2 class="text-white fw-bolder m-0 uppercase tracking-widest fs-1">NEURAL CORE IDENTIFIER</h2>
-                                    <div class="text-primary fs-8 tracking-widest uppercase fw-bold opacity-75">Autonomous Perception Hub | <span class="text-success">SYSTEM ONLINE</span></div>
+                                    <h2 class="text-white fw-bolder m-0 tracking-widest fs-1" style="font-family: 'Outfit', sans-serif;">NEURAL CORE IDENTIFIER</h2>
+                                    <div class="text-primary fs-9 tracking-widest uppercase fw-bold opacity-75">Autonomous Perception Hub | <span class="text-success">SYSTEM ONLINE</span></div>
                                 </div>
                             </div>
-                            <div class="d-flex gap-6">
-                                <div class="px-6 py-4 bg-light-dark rounded-pill border border-secondary border-dashed d-flex align-items-center">
-                                    <span class="fs-9 text-muted uppercase fw-bolder me-4 tracking-wider">ENGINE PERMISSION</span>
-                                    <span class="badge @(isAuthorized ? "badge-success" : "badge-light-danger") fw-bolder px-5 py-2 fs-8 shadow-sm">
+                            <div class="d-flex align-items-center gap-6">
+                                <div class="px-5 py-3 bg-white bg-opacity-5 rounded-pill border border-secondary border-opacity-20 d-flex align-items-center">
+                                    <span class="fs-10 text-muted uppercase fw-bolder me-4 tracking-wider">ENGINE PERMISSION</span>
+                                    <span class="badge @(isAuthorized ? "badge-success" : "badge-light-danger") fw-bolder px-4 py-1 fs-9">
                                         <i class="bi @(isAuthorized ? "bi-shield-check" : "bi-shield-lock") me-1"></i> 
                                         @(isAuthorized ? "GRANTED" : "LOCKED")
                                     </span>
                                 </div>
-                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary rounded-circle" @onclick="CloseModal"><i class="bi bi-x-lg text-white fs-3"></i></button>
+                                <button type="button" class="btn btn-icon btn-sm btn-active-light-primary rounded-circle" @onclick="CloseModal">
+                                    <i class="bi bi-x-lg text-white fs-3"></i>
+                                </button>
                             </div>
                         </div>
 
                         <div class="p-10 scanner-container">
                             <div class="row g-12">
                                 <!-- AI SENSOR VIEWPORT (LEFT PANEL) -->
-                                <div class="col-md-5 border-end border-gray-200 pe-10">
+                                <div class="col-md-5">
                                     @if (!isAuthorized)
                                     {
-                                        <div class="bg-light rounded-4 d-flex flex-column align-items-center justify-content-center p-15 h-500px border border-dashed border-primary shadow-sm">
-                                            <div class="symbol symbol-150px mb-12 shadow-lg">
-                                                <div class="symbol-label bg-white ai-status-pulse rounded-circle border border-primary border-8">
-                                                    <i class="bi bi-unlock-fill text-primary fs-4hx"></i>
+                                        <div class="scanner-viewport d-flex flex-column align-items-center justify-content-center p-15">
+                                            <div class="symbol symbol-100px mb-10">
+                                                <div class="symbol-label bg-white bg-opacity-5 rounded-circle border border-primary border-dashed">
+                                                    <i class="bi bi-unlock-fill text-primary fs-3hx"></i>
                                                 </div>
                                             </div>
-                                            <h1 class="fw-bolder text-gray-900 mb-4 fs-2x">INITIALIZE NEURAL LOOP</h1>
-                                            <p class="text-gray-500 text-center fs-6 mb-12 px-10">
+                                            <h2 class="fw-bolder text-white mb-4">INITIALIZE NEURAL LOOP</h2>
+                                            <p class="text-muted text-center fs-7 mb-10 px-10">
                                                 Grant AI Permission to start hardware stream and begin autonomous card pattern mapping.
                                             </p>
-                                            <button class="btn btn-primary btn-lg w-100 h-80px fs-2 fw-bolder rounded-pill glow-btn" @onclick="AuthorizeAi">
+                                            <button class="btn btn-primary btn-lg rounded-pill px-10 py-5 fw-bolder" @onclick="AuthorizeAi"
+                                                    style="background: var(--ai-primary); border: none; box-shadow: 0 0 20px var(--ai-primary-soft);">
                                                 <i class="bi bi-power me-2"></i> ACTIVATE CORE SYSTEM
                                             </button>
                                         </div>
                                     }
                                     else
                                     {
-                                        @* VISUAL SCANNER FRAME (STATE-DRIVEN) *@
-                                        <div class="position-relative @(isOcrProcessing ? "border-warning" : (!string.IsNullOrEmpty(ocrErrorMessage) ? "border-danger border-pulsing-danger" : "border-success")) border border-3 border-dashed rounded-4 overflow-hidden mb-8 @(isContinuousScanning && !isOcrProcessing && string.IsNullOrEmpty(ocrErrorMessage) ? "pulse-scanner" : "")" 
-                                             style="height: 520px; background: #000; transition: all 0.5s cubic-bezier(0.45, 0.05, 0.55, 0.95); box-shadow: 0 0 50px rgba(0,0,0,0.6);">
-                                            
+                                        <div class="scanner-viewport @(isContinuousScanning && !isOcrProcessing ? "scanning" : "") mb-8">
                                             @if (string.IsNullOrEmpty(previewUrl))
                                             {
-                                                <video id="webcamCapture" class="w-100 h-100" style="object-fit: cover; filter: brightness(1.05) contrast(1.1);"></video>
+                                                <video id="webcamCapture" class="w-100 h-100" autoplay muted playsinline style="object-fit: cover;"></video>
                                                 
-                                                @* NEURAL INDICATORS *@
                                                 <div class="position-absolute top-0 left-0 w-100 p-6 d-flex justify-content-between align-items-start" style="z-index: 10;">
-                                                    <div class="badge badge-light-success fw-bolder px-4 py-2 border border-success border-opacity-25 glass-overlay">
-                                                        <span class="bullet bullet-dot bg-success me-2 ai-status-pulse"></span> SEEKING PATTERN TARGET
+                                                    <div class="ai-status-badge">
+                                                        <span class="ai-status-pulse"></span> SEEKING PATTERN TARGET
                                                     </div>
                                                     <div class="text-end">
-                                                        <div class="text-white fs-9 fw-bold opacity-50 uppercase tracking-widest mb-1">Lux Rating</div>
-                                                        <div class="badge badge-light-@(brightnessRating == "GOOD" ? "success" : "warning") fw-bolder fs-9 px-3">@brightnessRating</div>
+                                                        <div class="text-white fs-10 fw-bold opacity-50 uppercase tracking-widest mb-1">Lux Rating</div>
+                                                        <div class="lux-badge">@brightnessRating</div>
                                                     </div>
                                                 </div>
 
                                                 <div class="scanner-laser"></div>
 
-                                                @* AI EYE PREVIEW *@
-                                                @if (!string.IsNullOrEmpty(aiDebugCapture))
-                                                {
-                                                    <div class="ai-eye-box overflow-hidden border-primary border-opacity-50">
-                                                        <div class="bg-primary p-2 fs-10 text-white fw-bold uppercase text-center opacity-75">AI EYE</div>
-                                                        <img src="@aiDebugCapture" class="w-100" style="filter: grayscale(1) contrast(1.5);" />
+                                                <div class="position-absolute bottom-0 left-0 w-100 p-8 d-flex flex-column align-items-center gap-4" style="z-index: 10;">
+                                                    <div class="d-flex align-items-center gap-6">
+                                                        <button class="camera-circle-btn" @onclick="CaptureWebcam" disabled="@isOcrProcessing">
+                                                            <i class="bi bi-camera-fill"></i>
+                                                        </button>
+                                                        
+                                                        <button class="btn btn-icon btn-outline-white btn-circle btn-lg border-2" 
+                                                                style="width: 50px; height: 50px; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);"
+                                                                onclick="document.getElementById('cccd-upload-input').click()"
+                                                                title="Inject image pattern from file">
+                                                            <i class="bi bi-file-earmark-image fs-2"></i>
+                                                        </button>
                                                     </div>
-                                                }
-
-                                                <!-- SCAN BUTTON OVERLAY -->
-                                                <div class="position-absolute bottom-0 left-0 w-100 p-8 d-flex justify-content-center" style="z-index: 10;">
-                                                    <button class="btn btn-icon btn-custom btn-circle btn-primary w-80px h-80px shadow-lg glow-btn" @onclick="CaptureWebcam" disabled="@isOcrProcessing">
-                                                        <i class="bi bi-camera-fill fs-2x"></i>
-                                                    </button>
+                                                    
+                                                    <InputFile id="cccd-upload-input" OnChange="HandleFileSelected" accept=".jpg,.jpeg,.png" style="display:none" />
+                                                    
+                                                    <div class="text-white text-opacity-50 fs-10 uppercase tracking-widest fw-bold">
+                                                        Manual Frame Injection Available
+                                                    </div>
                                                 </div>
                                             }
                                             else
@@ -254,43 +318,37 @@
                                                 </div>
                                             }
 
-                                            @* CAMERA FLASH *@
-                                            @if (showFlash) { <div class="position-absolute inset-0 w-100 h-100 flash-effect" style="z-index: 12;"></div> }
+                                            @if (showFlash) { <div class="position-absolute inset-0 w-100 h-100" style="z-index: 12; background: white;"></div> }
 
-                                            @* LOADING OVERLAY *@
                                             @if (isOcrProcessing)
                                             {
-                                                <div class="position-absolute inset-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center glass-overlay" style="z-index: 20;">
-                                                    <div class="spinner-border text-warning w-50px h-50px border-4 mb-6" role="status"></div>
-                                                    <div class="text-warning fw-bolder fs-4 tracking-widest text-uppercase">Neural Mapping...</div>
-                                                    <div class="w-200px h-4px bg-white bg-opacity-10 rounded-pill mt-4 overflow-hidden">
-                                                        <div class="h-100 bg-warning ai-status-pulse" style="width: 70%;"></div>
-                                                    </div>
+                                                <div class="position-absolute inset-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center" 
+                                                     style="z-index: 20; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                                                    <div class="spinner-border text-white w-40px h-40px mb-6" role="status"></div>
+                                                    <div class="text-white fw-bolder fs-5 tracking-widest text-uppercase">Neural Mapping...</div>
                                                 </div>
                                             }
 
-                                            @* ERROR OVERLAY *@
                                             @if (!string.IsNullOrEmpty(ocrErrorMessage))
                                             {
-                                                <div class="position-absolute inset-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-danger bg-opacity-75 backdrop-blur" style="z-index: 20; backdrop-filter: blur(5px);">
-                                                    <i class="bi bi-exclamation-triangle-fill text-white fs-4hx mb-6 ai-status-pulse"></i>
-                                                    <div class="text-white fw-bolder fs-3 tracking-widest text-uppercase mb-2">Neural Link Blocked</div>
-                                                    <div class="text-white text-opacity-75 fs-7 px-10 text-center mb-8">@ocrErrorMessage</div>
-                                                    <button class="btn btn-white btn-lg fw-bolder px-12 rounded-pill shadow-lg" @onclick="ResetAndRetry">
-                                                        <i class="bi bi-lightning-charge-fill me-2"></i> RE-IGNITE VISION HUB
-                                                    </button>
+                                                <div class="position-absolute inset-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center px-10" 
+                                                     style="z-index: 25; background: rgba(241, 65, 108, 0.9); backdrop-filter: blur(8px);">
+                                                    <i class="bi bi-exclamation-triangle-fill text-white fs-3x mb-4"></i>
+                                                    <div class="text-white fw-bolder fs-4 uppercase mb-2">Neural Link Blocked</div>
+                                                    <div class="text-white text-opacity-80 fs-8 text-center mb-8">@ocrErrorMessage</div>
+                                                    <button class="btn btn-white btn-sm fw-bolder rounded-pill px-8" @onclick="ResetAndRetry">RE-SCAN</button>
                                                 </div>
                                             }
                                         </div>
                                     }
 
-                                    <div class="bg-light-dark p-6 rounded-4 border border-secondary border-opacity-10">
+                                    <div class="bg-light p-6 rounded-4 border border-dashed border-gray-300">
                                         <div class="d-flex align-items-center mb-4">
                                             <i class="bi bi-info-circle-fill text-primary me-3 fs-3"></i>
-                                            <span class="text-white fw-bolder tracking-widest uppercase fs-8">Intelligence Hub Settings</span>
+                                            <span class="text-dark fw-bolder uppercase fs-8 tracking-wider">Intelligence Hub Settings</span>
                                         </div>
-                                        <p class="text-muted fs-8 m-0 leading-relaxed px-2">
-                                            The Vision Core uses <span class="text-primary fw-bold">OpenAI GPT-4o Autonomy</span> to map physical card patterns into structured enterprise identities. For maximum precision, ensure the identity card is aligned within the neon frame and illuminated clearly.
+                                        <p class="text-muted m-0 leading-relaxed px-1" style="font-size: 0.8rem !important; line-height: 1.6;">
+                                            The Vision Core uses <span class="text-primary fw-bold">OpenAI GPT-4o Autonomy</span> to map physical card patterns into structured enterprise identities. For maximum precision, ensure the identity card is aligned clearly within the viewport.
                                         </p>
                                     </div>
                                 </div>
@@ -299,16 +357,16 @@
                                 <div class="col-md-7">
                                     <div class="d-flex align-items-center mb-8 justify-content-between">
                                         <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-40px bg-light-success rounded-circle me-4">
-                                                <div class="symbol-label">
+                                            <div class="symbol symbol-40px me-4">
+                                                <div class="symbol-label" style="background: rgba(80, 205, 137, 0.1); border-radius: 10px;">
                                                     <i class="bi bi-file-earmark-person-fill text-success fs-2"></i>
                                                 </div>
                                             </div>
-                                            <h3 class="fw-bolder text-gray-900 m-0 fs-3">DATA DISCOVERY CONSOLE</h3>
+                                            <h3 class="fw-bold text-gray-900 m-0 fs-3" style="font-family: 'Outfit', sans-serif;">DATA DISCOVERY CONSOLE</h3>
                                         </div>
                                         @if (!string.IsNullOrEmpty(scannedData.IdCard))
                                         {
-                                            <div class="badge badge-light-success fw-bolder fs-8 px-4 py-2 border border-success border-opacity-10">
+                                            <div class="badge badge-light-success fw-bolder fs-9 px-4 py-2">
                                                 <i class="bi bi-shield-check me-2"></i> TARGET LOCKED
                                             </div>
                                         }
@@ -316,31 +374,25 @@
 
                                     <div class="row g-6">
                                         <div class="col-md-12">
-                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Identity Pattern (IdCard)</label>
-                                            <div class="position-relative">
-                                                <input class="form-control form-control-solid fs-2 fw-bolder py-5 px-6 @(isOcrProcessing ? "field-searching-pulse" : (string.IsNullOrEmpty(scannedData.IdCard) ? "" : "field-locked-glow"))" 
-                                                       @bind="scannedData.IdCard" placeholder="PENDING ANALYSYS..." style="border-radius: 12px;" />
-                                                @if(isOcrProcessing) { <div class="field-shimmer"></div> }
-                                            </div>
+                                            <span class="ai-label">Identity Pattern (IdCard)</span>
+                                            <input class="form-control ai-input ai-input-lg @(isOcrProcessing ? "searching" : (!string.IsNullOrEmpty(scannedData.IdCard) ? "locked" : ""))" 
+                                                   @bind="scannedData.IdCard" placeholder="PENDING ANALYSYS..." />
                                         </div>
 
                                         <div class="col-md-12">
-                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Full Legal Name</label>
-                                            <div class="position-relative">
-                                                <input class="form-control form-control-solid data-value-high py-5 px-6 @(isOcrProcessing ? "field-searching-pulse" : (string.IsNullOrEmpty(scannedData.Name) ? "" : "field-locked-glow text-success"))" 
-                                                       @bind="scannedData.Name" placeholder="MAPPING IDENTITY..." style="border-radius: 12px; font-family: 'Outfit', sans-serif;" />
-                                                @if(isOcrProcessing) { <div class="field-shimmer"></div> }
-                                            </div>
+                                            <span class="ai-label">Full Legal Name</span>
+                                            <input class="form-control ai-input @(isOcrProcessing ? "searching" : (!string.IsNullOrEmpty(scannedData.Name) ? "locked" : ""))" 
+                                                   @bind="scannedData.Name" placeholder="MAPPING IDENTITY..." />
                                         </div>
 
                                         <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Birth Origin (DOB)</label>
-                                            <input class="form-control form-control-solid py-4 @(isOcrProcessing ? "field-searching-pulse" : "")" @bind="scannedData.DOB" type="date" style="border-radius: 10px;" />
+                                            <span class="ai-label">Birth Origin (DOB)</span>
+                                            <input class="form-control ai-input @(isOcrProcessing ? "searching" : "")" @bind="scannedData.DOB" type="date" />
                                         </div>
 
                                         <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Gender Core</label>
-                                            <select class="form-select form-select-solid py-4 @(isOcrProcessing ? "field-searching-pulse" : "")" @bind="scannedData.Gender" style="border-radius: 10px;">
+                                            <span class="ai-label">Gender Core</span>
+                                            <select class="form-select ai-input @(isOcrProcessing ? "searching" : "")" @bind="scannedData.Gender">
                                                 <option value="">Awaiting Mapping...</option>
                                                 <option value="Nam">Nam (Male)</option>
                                                 <option value="Nữ">Nữ (Female)</option>
@@ -348,21 +400,21 @@
                                         </div>
 
                                         <div class="col-md-12">
-                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Hometown Foundation</label>
-                                            <input class="form-control form-control-solid py-4 @(isOcrProcessing ? "field-searching-pulse" : "")" @bind="scannedData.Hometown" placeholder="Seeking location pattern..." style="border-radius: 10px;" />
+                                            <span class="ai-label">Hometown Foundation</span>
+                                            <input class="form-control ai-input @(isOcrProcessing ? "searching" : "")" @bind="scannedData.Hometown" placeholder="Seeking location pattern..." />
                                         </div>
 
                                         <div class="col-md-12">
-                                            <label class="form-label text-muted fw-bold fs-8 uppercase tracking-widest mb-3">Primary Residence Registry</label>
-                                            <textarea class="form-control form-control-solid py-4 @(isOcrProcessing ? "field-searching-pulse" : "")" @bind="scannedData.Address" rows="2" placeholder="Seeking address pattern..." style="border-radius: 10px;"></textarea>
+                                            <span class="ai-label">Primary Residence Registry</span>
+                                            <textarea class="form-control ai-input @(isOcrProcessing ? "searching" : "")" @bind="scannedData.Address" rows="3" placeholder="Seeking address pattern..."></textarea>
                                         </div>
                                     </div>
 
                                     <!-- ACTION HUB -->
-                                    <div class="d-flex justify-content-end gap-5 mt-12 bg-light p-6 rounded-4 border border-dashed border-gray-300">
-                                        <button class="btn btn-outline btn-outline-dashed btn-outline-default px-10 py-4 fw-bolder fs-6 rounded-pill" @onclick="CloseModal">DISCARD HUB</button>
-                                        <button class="btn btn-primary px-12 py-4 fw-bolder fs-6 rounded-pill glow-btn" @onclick="ConfirmScan" disabled="@(string.IsNullOrEmpty(scannedData.IdCard) || isOcrProcessing)">
-                                            <i class="bi bi-check-circle-fill me-2"></i> INTEGRATE IDENTITY
+                                    <div class="d-flex justify-content-end gap-4 mt-12 pt-8 border-top border-gray-200">
+                                        <button class="discard-btn" @onclick="CloseModal">DISCARD HUB</button>
+                                        <button class="integrate-btn" @onclick="ConfirmScan" disabled="@(string.IsNullOrEmpty(scannedData.IdCard) || isOcrProcessing)">
+                                            <i class="bi bi-check-circle-fill"></i> INTEGRATE IDENTITY
                                         </button>
                                     </div>
                                 </div>
@@ -388,18 +440,25 @@
     private string ocrErrorMessage = "";
     private string brightnessRating = "GOOD";
     private CccdData scannedData = new();
-    private TaskCompletionSource<CccdData>? tcs;
+    private TaskCompletionSource<CccdData?>? tcs;
 
-    public async Task<CccdData> ShowAsync() {
+    public async Task<CccdData?> ShowAsync() {
         isVisible = true;
         isAuthorized = false;
         scannedData = new();
         ocrErrorMessage = "";
         aiDebugCapture = null;
         previewUrl = null;
-        tcs = new TaskCompletionSource<CccdData>();
+        tcs = new TaskCompletionSource<CccdData?>();
         StateHasChanged();
         return await tcs.Task;
+    }
+
+    public void Dispose()
+    {
+        isWebcamActive = false;
+        isContinuousScanning = false;
+        _ = JSRuntime.InvokeVoidAsync("cccdScanner.stopWebcam", "webcamCapture");
     }
 
     private async Task AuthorizeAi() {
@@ -413,6 +472,9 @@
         ocrErrorMessage = "";
         previewUrl = null;
         StateHasChanged();
+        
+        // Give Blazor a moment to render the <video> tag
+        await Task.Delay(500);
         
         await JSRuntime.InvokeVoidAsync("cccdScanner.initWebcam", "webcamCapture");
         
@@ -496,17 +558,27 @@
         }
     }
 
-    private void CloseModal() {
+    private async Task StopWebcamInternal()
+    {
         isContinuousScanning = false;
         isWebcamActive = false;
+        try {
+            await JSRuntime.InvokeVoidAsync("cccdScanner.stopWebcam", "webcamCapture");
+        } catch {}
+    }
+
+    private async Task CloseModal() {
+        await StopWebcamInternal();
         isVisible = false;
-        tcs?.TrySetCanceled();
+        tcs?.TrySetResult(null);
+        StateHasChanged();
     }
 
     private async Task ConfirmScan() { 
-        isContinuousScanning = false; 
+        await StopWebcamInternal();
         isVisible = false; 
         tcs?.TrySetResult(scannedData); 
+        StateHasChanged();
     }
 
     private void ResetAndRetry()
@@ -517,5 +589,40 @@
         isContinuousScanning = true;
         previewUrl = null;
         StateHasChanged();
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            try
+            {
+                isOcrProcessing = true;
+                ocrErrorMessage = "";
+                StateHasChanged();
+
+                // Read binary data
+                using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10MB max
+                using var ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+                var buffer = ms.ToArray();
+
+                // Set preview
+                previewUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+                
+                // Process
+                await ProcessImageBufferInternal(buffer);
+            }
+            catch (Exception ex)
+            {
+                ocrErrorMessage = $"UPLOAD_FAULT: {ex.Message}";
+            }
+            finally
+            {
+                isOcrProcessing = false;
+                StateHasChanged();
+            }
+        }
     }
 }
