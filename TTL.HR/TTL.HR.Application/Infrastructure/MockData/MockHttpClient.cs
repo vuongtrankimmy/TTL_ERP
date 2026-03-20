@@ -940,8 +940,10 @@ public class MockHttpMessageHandler : HttpMessageHandler
             if (path.Contains("/Attendance/timesheets"))
             {
                 var qParams = ParseQueryString(query);
-                var tsPage = qParams.TryGetValue("pageIndex", out var tsIdxStr) && int.TryParse(tsIdxStr, out var tsP) ? tsP : 1;
-                var tsPageSize = qParams.TryGetValue("pageSize", out var tsSizeStr) && int.TryParse(tsSizeStr, out var tsPs) ? tsPs : 10;
+                int tsP = 1;
+                var tsPage = qParams.TryGetValue("pageIndex", out var tsIdxStr) && int.TryParse(tsIdxStr, out tsP) ? tsP : 1;
+                int tsPs = 10;
+                var tsPageSize = qParams.TryGetValue("pageSize", out var tsSizeStr) && int.TryParse(tsSizeStr, out tsPs) ? tsPs : 10;
                 
                 var qMonth = qParams.TryGetValue("month", out var mStr) && int.TryParse(mStr, out var mVal) ? mVal : DateTime.Now.Month;
                 var qYear = qParams.TryGetValue("year", out var yStr) && int.TryParse(yStr, out var yVal) ? yVal : DateTime.Now.Year;
@@ -954,9 +956,10 @@ public class MockHttpMessageHandler : HttpMessageHandler
                 // 1. Filter logs by Month/Year
                 var monthLogs = allLogs.Where(l => {
                     var dateStr = GetProperty(l, "Date")?.ToString() ?? "";
-                    if (DateTime.TryParse(dateStr, out var date))
+                    DateTime dateVal;
+                    if (DateTime.TryParse(dateStr, out dateVal))
                     {
-                        return date.Month == qMonth && date.Year == qYear;
+                        return dateVal.Month == qMonth && dateVal.Year == qYear;
                     }
                     return false;
                 }).ToList();
@@ -1288,9 +1291,11 @@ public class MockHttpMessageHandler : HttpMessageHandler
 
         // Parse query parameters
         var queryParams = ParseQueryString(query);
-        var page = queryParams.TryGetValue("pageIndex", out var pageStr) && int.TryParse(pageStr, out var pMain) ? pMain : 
-                   queryParams.TryGetValue("page", out var p2Str) && int.TryParse(p2Str, out var p3Main) ? p3Main : 1;
-        var pageSize = queryParams.TryGetValue("pageSize", out var pageSizeStr) && int.TryParse(pageSizeStr, out var psMain) ? psMain : 10;
+        int pM = 1;
+        var page = queryParams.TryGetValue("pageIndex", out var pageStr) && int.TryParse(pageStr, out pM) ? pM : 
+                   queryParams.TryGetValue("page", out var p2Str) && int.TryParse(p2Str, out var p3M) ? p3M : 1;
+        int psM = 10;
+        var pageSize = queryParams.TryGetValue("pageSize", out var pageSizeStr) && int.TryParse(pageSizeStr, out psM) ? psM : 10;
 
         // Filter by common query parameters
         if (queryParams.TryGetValue("type", out var typeValue))
