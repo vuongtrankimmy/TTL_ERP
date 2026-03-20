@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,7 +138,7 @@ namespace TTL.HR.Shared.Layout.Component.Header
                 var json = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "recent_menus");
                 if (!string.IsNullOrEmpty(json))
                 {
-                    _recentMenus = System.Text.Json.JsonSerializer.Deserialize<List<RecentMenuModel>>(json) ?? new();
+                    _recentMenus = JsonConvert.DeserializeObject<List<RecentMenuModel>>(json) ?? new();
                 }
             }
             catch { }
@@ -174,7 +175,7 @@ namespace TTL.HR.Shared.Layout.Component.Header
 
                 try
                 {
-                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "recent_menus", System.Text.Json.JsonSerializer.Serialize(_recentMenus));
+                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "recent_menus", JsonConvert.SerializeObject(_recentMenus));
                 }
                 catch (JSDisconnectedException) { /* Ignore if circuit is already disconnected */ }
                 catch (TaskCanceledException) { /* Ignore if task was canceled */ }

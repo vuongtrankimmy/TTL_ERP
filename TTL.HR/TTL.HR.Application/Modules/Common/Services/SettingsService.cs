@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Net.Http.Json;
 using TTL.HR.Application.Modules.Common.Constants;
 using TTL.HR.Application.Modules.Common.Interfaces;
@@ -62,7 +63,7 @@ namespace TTL.HR.Application.Modules.Common.Services
                 
                 try 
                 {
-                    var apiError = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<bool>>(errorContent, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    var apiError = JsonConvert.DeserializeObject<ApiResponse<bool>>(errorContent);
                     if (apiError != null) return apiError;
                 } 
                 catch { }
@@ -102,7 +103,7 @@ namespace TTL.HR.Application.Modules.Common.Services
                 var errorContent = await response.Content.ReadAsStringAsync();
                 try 
                 {
-                    var apiError = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<bool>>(errorContent, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    var apiError = JsonConvert.DeserializeObject<ApiResponse<bool>>(errorContent);
                     if (apiError != null) return apiError;
                 } 
                 catch { }

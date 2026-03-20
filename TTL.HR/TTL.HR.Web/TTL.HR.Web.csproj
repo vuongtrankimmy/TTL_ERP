@@ -24,6 +24,8 @@
 
   <ItemGroup>
     <PackageReference Include="Blazor-ApexCharts" Version="6.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.0-preview.1.25080.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 

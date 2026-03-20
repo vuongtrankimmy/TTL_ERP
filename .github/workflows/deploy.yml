@@ -1,0 +1,68 @@
+name: TTL ERP - CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build_web:
+    name: Build & Test Web Application
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+        include-prerelease: true
+
+    - name: Restore dependencies
+      run: dotnet restore TTL.HR.slnx
+
+    - name: Build Web Application
+      run: dotnet build TTL.HR/TTL.HR.Web/TTL.HR.Web.csproj --configuration Release --no-restore
+
+    - name: Publish Web Application
+      run: dotnet publish TTL.HR/TTL.HR.Web/TTL.HR.Web.csproj -c Release -o ./publish_web_out
+
+    - name: 📂 Deploy to SmarterASP.net (FTP)
+      # This step only runs on official repository main branch
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.SMARTERASP_FTP_SERVER }}
+        username: ${{ secrets.SMARTERASP_FTP_USER }}
+        password: ${{ secrets.SMARTERASP_FTP_PWD }}
+        local-dir: ./publish_web_out/
+        server-dir: /
+        # We use 'sync' mode to ensure only changed files are uploaded
+        dry-run: false
+
+  # Optional: Build MAUI (Only build, no deploy yet)
+  build_maui_android:
+    name: Build MAUI Android
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+        include-prerelease: true
+        
+    - name: Install MAUI Workloads
+      run: dotnet workload install android
+      
+    - name: Restore
+      run: dotnet restore TTL.HR/TTL.HR/TTL.HR.csproj
+      
+    - name: Build Android
+      run: dotnet build TTL.HR/TTL.HR/TTL.HR.csproj -c Release -f net10.0-android --no-restore

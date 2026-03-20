@@ -188,7 +188,6 @@ namespace TTL.HR.Application.Modules.Common.Services
                     Icon = "ki-outline ki-address-book", 
                     SubItems = new List<NavItem>
                     {
-                        new NavItem { Title = "Menu_OrgChart", Href = "/organization/structure", Permission = "Permissions.OrgChart.View" },
                         new NavItem { Title = "Menu_Departments", Href = "/organization/departments", Permission = "Permissions.Administration.Settings" },
                         new NavItem { Title = "Menu_Positions", Href = "/organization/positions", Permission = "Permissions.Administration.Settings" }
                     }
@@ -279,7 +278,6 @@ namespace TTL.HR.Application.Modules.Common.Services
                         new NavItem { Title = "Menu_RolesAndGroups", Href = "/administration/roles", Permission = "Permissions.Administration.Settings" },
                         new NavItem { Title = "Menu_Permissions", Href = "/permissions", Permission = "Permissions.Administration.Settings" },
                         new NavItem { Title = "Menu_GeneralSettings", Href = "/settings/general", Permission = "Permissions.Administration.Settings" },
-                        new NavItem { Title = "Menu_Localization", Href = "/settings/localization", Permission = "Permissions.Administration.Settings" },
                         new NavItem { Title = "Menu_Banks", Href = "/settings/banks", Permission = "Permissions.Administration.Settings" }
                     }
                 },

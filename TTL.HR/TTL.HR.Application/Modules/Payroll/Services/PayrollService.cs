@@ -7,7 +7,7 @@ using TTL.HR.Application.Modules.Payroll.Interfaces;
 using TTL.HR.Application.Modules.Payroll.Models;
 using TTL.HR.Application.Modules.Common.Models;
 using TTL.HR.Application.Modules.Common.Constants;
-using System.Text.Json;
+using Newtonsoft.Json;
 using System.Linq;
 
 namespace TTL.HR.Application.Modules.Payroll.Services
@@ -22,8 +22,7 @@ namespace TTL.HR.Application.Modules.Payroll.Services
             var url = ApiEndpoints.Payroll.Base;
             if (month.HasValue && year.HasValue) url += $"?month={month}&year={year}";
             
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<PayrollModel>>>(url, options);
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<PayrollModel>>>(url);
             return response?.Data ?? new List<PayrollModel>();
         }
 
@@ -38,8 +37,7 @@ namespace TTL.HR.Application.Modules.Payroll.Services
             
             if (queryParams.Any()) url += "?" + string.Join("&", queryParams);
             
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<PayrollPeriodModel>>>(url, options);
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<PayrollPeriodModel>>>(url);
             return response?.Data ?? new List<PayrollPeriodModel>();
         }
 
@@ -63,11 +61,10 @@ namespace TTL.HR.Application.Modules.Payroll.Services
                 url = $"{ApiEndpoints.Payroll.Periods}/{year}/{month}/detail?{queryString}";
             }
             
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var responseStr = await _httpClient.GetStringAsync(url);
             Console.WriteLine($"[PayrollService] Raw JSON Response: {(responseStr.Length > 500 ? responseStr.Substring(0, 500) + "..." : responseStr)}");
             
-            var response = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<PayrollPeriodDetailModel>>(responseStr, options);
+            var response = JsonConvert.DeserializeObject<ApiResponse<PayrollPeriodDetailModel>>(responseStr);
             return response?.Data;
         }
 
@@ -107,8 +104,7 @@ namespace TTL.HR.Application.Modules.Payroll.Services
             if (!string.IsNullOrEmpty(employeeId)) url += $"&employeeId={employeeId}";
             if (year.HasValue) url += $"&year={year}";
             
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<PayrollModel>>>(url, options);
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<PagedResult<PayrollModel>>>(url);
             return response?.Data ?? new PagedResult<PayrollModel>();
         }
     }

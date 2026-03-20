@@ -1,0 +1,237 @@
+[
+  {
+    "_id": "65fc04b59c9d4b001c8b4610",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "UpdatedAt": "2026-03-10T02:35:22.667Z",
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Key": "General",
+    "CompanyName": "CÔNG TY TNHH NHÂN TÀI TTL",
+    "CompanyAddress": "",
+    "Headquarters": "Tầng 12, Tòa nhà Bitexco, Q1, TP.HCM",
+    "CompanyPhone": "",
+    "CompanyEmail": "",
+    "TaxCode": "0312345678",
+    "Website": "https://orga-x.com",
+    "AdminEmail": "",
+    "LogoUrl": "/assets/media/logos/default-dark.svg",
+    "FaviconUrl": "",
+    "DateFormat": "dd/MM/yyyy",
+    "DefaultLanguage": "vi-VN",
+    "TimeZone": "SE Asia Standard Time",
+    "Currency": "VND",
+    "ThousandSeparator": ",",
+    "DecimalSeparator": ".",
+    "EnableEmailNotifications": true,
+    "SmtpServer": "",
+    "SmtpPort": 587,
+    "SmtpUser": "",
+    "SmtpPassword": "",
+    "NotifyOnLeaveRequest": true,
+    "NotifyOnLeaveApproval": true,
+    "NotifyOnContractExpiry": true,
+    "ContractExpiryWarningDays": 30,
+    "NotifyOnProbationEnd": true,
+    "ProbationEndWarningDays": 7,
+    "NotifyOnBirthday": true,
+    "NotifyOnWorkAnniversary": true,
+    "ContactPersonName": "",
+    "ContactPersonPhone": "",
+    "ContactPersonEmail": "",
+    "WorkStartTime": "08:00",
+    "WorkEndTime": "17:30",
+    "StandardCheckIn": "08:00:00",
+    "StandardCheckOut": "17:30:00",
+    "DefaultAnnualLeaveDays": 12,
+    "ProbationMonths": 2,
+    "BreakStartTime": "12:00",
+    "BreakEndTime": "13:30",
+    "LateGracePeriodMinutes": 15,
+    "WorkDays": [],
+    "AllowFlexibleHours": false,
+    "AutoApproveLeaveDaysThreshold": 3,
+    "AutoSendThankYouEmail": true,
+    "DefaultInterviewLocation": "",
+    "ResumeRetentionDays": 180,
+    "EnableExternalJobBoard": false,
+    "DefaultTrainingDurationHours": 4,
+    "AutoEnrollOnboarding": true,
+    "CertificateExpiryWarningDays": 30,
+    "EnableFeedback": true,
+    "MaxBudgetPerEmployee": {
+      "$numberDecimal": "5000000"
+    },
+    "StandardWorkDaysPerMonth": {
+      "$numberDecimal": "26"
+    },
+    "PayDay": 5,
+    "OvertimeRateWeekday": 1.5,
+    "OvertimeRateWeekend": 2,
+    "OvertimeRateHoliday": 3,
+    "SocialInsurancePercentEmployee": 8,
+    "HealthInsurancePercentEmployee": 1.5,
+    "UnemploymentInsurancePercentEmployee": 1,
+    "SocialInsurancePercentCompany": 17.5,
+    "HealthInsurancePercentCompany": 3,
+    "UnemploymentInsurancePercentCompany": 1,
+    "InsurancePercentEmployee": 10.5,
+    "InsurancePercentCompany": 21.5,
+    "DefaultPersonalDeduction": {
+      "$numberDecimal": "11000000"
+    },
+    "DefaultDependentDeduction": {
+      "$numberDecimal": "4400000"
+    },
+    "PitSteps": [],
+    "PitExplanation": "Giải thích: Thuế TNCN được tính theo công thức lũy tiến từng phần.\nCông thức: Thuế = (Thu nhập tính thuế * Thuế suất) - Số trừ cố định.\nVí dụ Bậc 2: Thu nhập từ 5.000.000 đến 10.000.000, Thuế suất 10%, Số trừ 250.000.\nCấu hình: Ngưỡng > 5.000.000, Thuế suất 0.1, Số trừ 250.000.",
+    "StatutoryPayRate": {
+      "$numberDecimal": "2340000"
+    },
+    "Region1MinimumSalary": {
+      "$numberDecimal": "4680000"
+    },
+    "Region2MinimumSalary": {
+      "$numberDecimal": "4160000"
+    },
+    "Region3MinimumSalary": {
+      "$numberDecimal": "3640000"
+    },
+    "Region4MinimumSalary": {
+      "$numberDecimal": "3250000"
+    },
+    "PasswordMinLength": 8,
+    "PasswordRequireSpecialChar": true,
+    "PasswordRequireDigit": true,
+    "MaxLoginAttempts": 5,
+    "LockoutDurationMinutes": 30,
+    "SessionTimeoutMinutes": 60,
+    "MaxFileSizeMb": 10,
+    "AllowedFileExtensions": ".jpg;.png;.pdf;.docx;.xlsx",
+    "UrlTitleMappings": [
+      {
+        "Segment": "dashboard",
+        "TitleKey": "Menu_Dashboards"
+      },
+      {
+        "Segment": "organization",
+        "TitleKey": "Section_OrgAndPersonnel"
+      },
+      {
+        "Segment": "structure",
+        "TitleKey": "Menu_OrgChart"
+      },
+      {
+        "Segment": "departments",
+        "TitleKey": "Menu_Departments"
+      },
+      {
+        "Segment": "positions",
+        "TitleKey": "Menu_Positions"
+      },
+      {
+        "Segment": "employees",
+        "TitleKey": "Menu_EmployeeList"
+      },
+      {
+        "Segment": "add",
+        "TitleKey": "Menu_Onboarding"
+      },
+      {
+        "Segment": "edit",
+        "TitleKey": "Label_Edit"
+      },
+      {
+        "Segment": "contracts",
+        "TitleKey": "Menu_Contracts"
+      },
+      {
+        "Segment": "attendance",
+        "TitleKey": "Menu_Attendance"
+      },
+      {
+        "Segment": "timesheet",
+        "TitleKey": "Menu_MonthlyTimesheet"
+      },
+      {
+        "Segment": "schedule",
+        "TitleKey": "Menu_WorkSchedule"
+      },
+      {
+        "Segment": "leave",
+        "TitleKey": "Menu_LeaveManagement"
+      },
+      {
+        "Segment": "leave-trip",
+        "TitleKey": "Menu_BusinessTrip"
+      },
+      {
+        "Segment": "approval",
+        "TitleKey": "Menu_ShiftApproval"
+      },
+      {
+        "Segment": "approvals",
+        "TitleKey": "Menu_LeaveApprovals"
+      },
+      {
+        "Segment": "payroll",
+        "TitleKey": "Menu_PayrollAndBenefits"
+      },
+      {
+        "Segment": "periods",
+        "TitleKey": "Menu_PayrollPeriods"
+      },
+      {
+        "Segment": "benefits",
+        "TitleKey": "Menu_Benefits"
+      },
+      {
+        "Segment": "permissions",
+        "TitleKey": "Menu_Permissions"
+      },
+      {
+        "Segment": "administration",
+        "TitleKey": "Menu_AdminAndConfig"
+      },
+      {
+        "Segment": "roles",
+        "TitleKey": "Menu_RolesAndGroups"
+      },
+      {
+        "Segment": "settings",
+        "TitleKey": "Menu_AdminAndConfig"
+      },
+      {
+        "Segment": "general",
+        "TitleKey": "Menu_GeneralSettings"
+      },
+      {
+        "Segment": "payroll-config",
+        "TitleKey": "Menu_PayrollConfig"
+      },
+      {
+        "Segment": "recruitment",
+        "TitleKey": "Label_Recruitment"
+      },
+      {
+        "Segment": "kanban",
+        "TitleKey": "Menu_RecruitmentKanban"
+      },
+      {
+        "Segment": "details",
+        "TitleKey": "Label_Details"
+      },
+      {
+        "Segment": "banks",
+        "TitleKey": "Menu_Banks"
+      }
+    ]
+  },
+  {
+    "_id": "65bf0a1e0000000000000999",
+    "BaseSalary": 2340000,
+    "CompanyName": "CÔNG TY TNHH TÂN TẤN LỘC",
+    "MinimumSalaryV1": 4680000,
+    "TaxExemptionDefault": 4400000,
+    "UpdatedAt": "2026-03-10T00:51:54.426Z"
+  }
+]

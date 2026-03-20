@@ -58,17 +58,24 @@
                 <i class="@Icon position-absolute ms-4 text-gray-500"></i>
             }
             
-            <input type="@(Type == InputDataType.Date ? "date" : InputType)" id="@Id"
-                   class='form-control form-control-solid @CssClass @GetFormatClass() @(Icon != null ? "ps-12" : "") @(IsInvalid ? "is-invalid border-danger" : "")' 
-                   placeholder="@Placeholder" 
-                   value="@(Type == InputDataType.Date ? DateValue?.ToString("yyyy-MM-dd") : Value)" 
-                   @onchange="HandleChange"
-                   @oninput="HandleInput"
-                   maxlength="@GetMaxLength()"
-                   disabled="@Disabled"
-                   readonly="@IsReadOnly"
-                   inputmode="@(IsNumericType ? "numeric" : "text")"
-                   onkeypress="if(event.keyCode === 32 && @((!IsSpaceAllowed).ToString().ToLower())) return false; @(Type == InputDataType.Password ? "if (event.charCode > 126) return false;" : "") @(IsNumericType ? "return event.charCode >= 48 && event.charCode <= 57" : "")" />
+            @if (Type == InputDataType.Select && ChildContent != null)
+            {
+                @ChildContent
+            }
+            else
+            {
+                <input type="@(Type == InputDataType.Date ? "date" : InputType)" id="@Id"
+                       class='form-control form-control-solid @CssClass @GetFormatClass() @(Icon != null ? "ps-12" : "") @(IsInvalid ? "is-invalid border-danger" : "")' 
+                       placeholder="@Placeholder" 
+                       value="@(Type == InputDataType.Date ? DateValue?.ToString("yyyy-MM-dd") : Value)" 
+                       @onchange="HandleChange"
+                       @oninput="HandleInput"
+                       maxlength="@GetMaxLength()"
+                       disabled="@Disabled"
+                       readonly="@IsReadOnly"
+                       inputmode="@(IsNumericType ? "numeric" : "text")"
+                       onkeypress="if(event.keyCode === 32 && @((!IsSpaceAllowed).ToString().ToLower())) return false; @(Type == InputDataType.Password ? "if (event.charCode > 126) return false;" : "") @(IsNumericType ? "return event.charCode >= 48 && event.charCode <= 57" : "")" />
+            }
         }
     </div>
     
@@ -103,6 +110,7 @@
     [Parameter] public bool IsInvalid { get; set; }
     [Parameter] public string? ErrorMessage { get; set; }
     [Parameter] public string? Id { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     private string InputType => Type switch
     {

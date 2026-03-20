@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 namespace PayrollImporter
@@ -62,41 +62,50 @@ namespace PayrollImporter
             var payrollsCol = db.GetCollection<BsonDocument>("payrolls");
             string json = File.ReadAllText(@"d:\MONEY\2026\TAN_TAN_LOC\TTL_ERP\data_seed\payrolls_100.json");
             
-            var payrollsJson = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(json);
+            var payrolls = JArray.Parse(json);
             var docs = new List<BsonDocument>();
 
-            foreach (var p in payrollsJson)
+            foreach (JObject p in payrolls)
             {
                 var doc = new BsonDocument();
                 foreach (var kvp in p)
                 {
-                    if (kvp.Value is JsonElement el)
+                    var key = kvp.Key;
+                    var token = kvp.Value;
+
+                    if (token == null || token.Type == JTokenType.Null) continue;
+
+                    if (token.Type == JTokenType.Integer || token.Type == JTokenType.Float)
                     {
-                        if (el.ValueKind == JsonValueKind.Number)
+                        doc.Add(key, token.Value<double>());
+                    }
+                    else if (token.Type == JTokenType.String)
+                    {
+                        doc.Add(key, token.Value<string>());
+                    }
+                    else if (token.Type == JTokenType.Boolean)
+                    {
+                        doc.Add(key, token.Value<bool>());
+                    }
+                    else if (token.Type == JTokenType.Array)
+                    {
+                        var arr = new BsonArray();
+                        foreach (var item in (JArray)token)
                         {
-                            if (el.TryGetDecimal(out decimal d)) doc.Add(kvp.Key, (double)d);
-                            else doc.Add(kvp.Key, el.GetDouble());
-                        }
-                        else if (el.ValueKind == JsonValueKind.String) doc.Add(kvp.Key, el.GetString());
-                        else if (el.ValueKind == JsonValueKind.True) doc.Add(kvp.Key, true);
-                        else if (el.ValueKind == JsonValueKind.False) doc.Add(kvp.Key, false);
-                        else if (el.ValueKind == JsonValueKind.Array)
-                        {
-                            var arr = new BsonArray();
-                            foreach (var item in el.EnumerateArray())
+                            if (item.Type == JTokenType.Object)
                             {
                                 var subDoc = new BsonDocument();
-                                foreach (var subProp in item.EnumerateObject())
+                                foreach (var subKvp in (JObject)item)
                                 {
-                                    if (subProp.Value.ValueKind == JsonValueKind.Number)
-                                        subDoc.Add(subProp.Name, (double)subProp.Value.GetDecimal());
+                                    if (subKvp.Value?.Type == JTokenType.Integer || subKvp.Value?.Type == JTokenType.Float)
+                                        subDoc.Add(subKvp.Key, subKvp.Value.Value<double>());
                                     else
-                                        subDoc.Add(subProp.Name, subProp.Value.ToString());
+                                        subDoc.Add(subKvp.Key, subKvp.Value?.ToString() ?? string.Empty);
                                 }
                                 arr.Add(subDoc);
                             }
-                            doc.Add(kvp.Key, arr);
                         }
+                        doc.Add(key, arr);
                     }
                 }
                 doc.Add("IsDeleted", false);

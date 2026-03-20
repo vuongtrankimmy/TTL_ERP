@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 
 namespace TTL.HR.Application.Modules.Common.Models
@@ -29,7 +30,8 @@ namespace TTL.HR.Application.Modules.Common.Models
         public string? Module { get; set; }
 
         /// <summary>Trả về ID hiệu quả: nếu LookupID > 0 thì dùng LookupID.ToString(), ngược lại dùng Id string.</summary>
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string EffectiveId => LookupID > 0 ? LookupID.ToString() : Id;
     }
 
@@ -54,42 +56,53 @@ namespace TTL.HR.Application.Modules.Common.Models
         public string PhoneCode { get; set; } = string.Empty;
 
         /// <summary>Trả về ID hiệu quả: nếu IntId > 0 thì dùng IntId.ToString(), ngược lại dùng Id.</summary>
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string EffectiveId => IntId > 0 ? IntId.ToString() : Id;
     }
 
     public class ApiResponse<T>
     {
+        [JsonProperty("success")]
         [JsonPropertyName("success")]
         public bool Success { get; set; }
         
+        [JsonProperty("message")]
         [JsonPropertyName("message")]
         public string Message { get; set; } = string.Empty;
         
+        [JsonProperty("data")]
         [JsonPropertyName("data")]
         public T? Data { get; set; }
         
+        [JsonProperty("errors")]
         [JsonPropertyName("errors")]
         public List<string>? Errors { get; set; }
 
+        [JsonProperty("stackTrace")]
         [JsonPropertyName("stackTrace")]
         public string? StackTrace { get; set; }
     }
 
     public class PagedResult<T>
     {
+        [JsonProperty("items")]
         [JsonPropertyName("items")]
         public List<T> Items { get; set; } = new();
         
+        [JsonProperty("pageIndex")]
         [JsonPropertyName("pageIndex")]
         public int PageIndex { get; set; }
         
+        [JsonProperty("pageSize")]
         [JsonPropertyName("pageSize")]
         public int PageSize { get; set; }
         
+        [JsonProperty("totalCount")]
         [JsonPropertyName("totalCount")]
         public long TotalCount { get; set; }
         
+        [JsonProperty("totalPages")]
         [JsonPropertyName("totalPages")]
         public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
     }

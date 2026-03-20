@@ -1,0 +1,179 @@
+{
+  "exportedAt": "2026-03-19T14:53:15.523Z",
+  "version": "1.0.1",
+  "database": "HR",
+  "statistics": [
+    {
+      "collection": "employees",
+      "count": 11
+    },
+    {
+      "collection": "departments",
+      "count": 10
+    },
+    {
+      "collection": "positions",
+      "count": 10
+    },
+    {
+      "collection": "contracts",
+      "count": 7
+    },
+    {
+      "collection": "contract_templates",
+      "count": 10
+    },
+    {
+      "collection": "attendances",
+      "count": 1722
+    },
+    {
+      "collection": "attendance_logs",
+      "count": 4
+    },
+    {
+      "collection": "monthly_attendance_summaries",
+      "count": 13
+    },
+    {
+      "collection": "attendance_periods",
+      "count": 5
+    },
+    {
+      "collection": "work_schedules",
+      "count": 264
+    },
+    {
+      "collection": "work_shifts",
+      "count": 11
+    },
+    {
+      "collection": "shift_change_requests",
+      "count": 10
+    },
+    {
+      "collection": "leave_requests",
+      "count": 6
+    },
+    {
+      "collection": "leave_types",
+      "count": 7
+    },
+    {
+      "collection": "employee_leave_balances",
+      "count": 8
+    },
+    {
+      "collection": "payrolls",
+      "count": 88
+    },
+    {
+      "collection": "payroll_periods",
+      "count": 11
+    },
+    {
+      "collection": "salary_components",
+      "count": 10
+    },
+    {
+      "collection": "benefits",
+      "count": 3
+    },
+    {
+      "collection": "benefit_allocations",
+      "count": 16
+    },
+    {
+      "collection": "job_postings",
+      "count": 10
+    },
+    {
+      "collection": "courses",
+      "count": 10
+    },
+    {
+      "collection": "course_enrollments",
+      "count": 23
+    },
+    {
+      "collection": "assets",
+      "count": 11
+    },
+    {
+      "collection": "asset_categories",
+      "count": 8
+    },
+    {
+      "collection": "asset_allocations",
+      "count": 13
+    },
+    {
+      "collection": "roles",
+      "count": 9
+    },
+    {
+      "collection": "permissions",
+      "count": 47
+    },
+    {
+      "collection": "lookups",
+      "count": 141
+    },
+    {
+      "collection": "lookups_translate",
+      "count": 80
+    },
+    {
+      "collection": "system_settings",
+      "count": 2
+    },
+    {
+      "collection": "holidays",
+      "count": 12
+    },
+    {
+      "collection": "notifications",
+      "count": 106
+    },
+    {
+      "collection": "audit_logs",
+      "count": 6414
+    },
+    {
+      "collection": "banks",
+      "count": 8
+    },
+    {
+      "collection": "countries",
+      "count": 1
+    },
+    {
+      "collection": "provinces",
+      "count": 63
+    },
+    {
+      "collection": "districts",
+      "count": 696
+    },
+    {
+      "collection": "wards",
+      "count": 10057
+    },
+    {
+      "collection": "streets",
+      "count": 5
+    },
+    {
+      "collection": "navigation_items",
+      "count": 42
+    },
+    {
+      "collection": "language_translations",
+      "count": 84
+    },
+    {
+      "collection": "merchant_memories",
+      "count": 2
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 using ApexCharts;
 using TTL.HR.Web.Components;
+using TTL.HR.Application.Infrastructure.MockData;
+using Microsoft.AspNetCore.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,10 +10,50 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddLocalization();
 
+// Mock Data Settings
+var useMockData = builder.Configuration.GetValue<bool>("MockDataSettings:Enabled");
+
+Console.WriteLine($"===============================================");
+Console.WriteLine($"🚀 TTL HR APPLICATION");
+Console.WriteLine($"📡 Mock Data Mode: {(useMockData ? "ENABLED ✅" : "DISABLED ❌")}");
+Console.WriteLine($"===============================================\n");
 
 // standard-api-setup
 // Client-side services setup (Using API Repository from Application project)
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://gateway.tantanloc.com/") });
+if (useMockData)
+{
+    // MOCK MODE - Sử dụng Mock Data Provider
+    builder.Services.AddSingleton<MockDataProvider>();
+    builder.Services.AddScoped<HttpClient>(sp =>
+    {
+        var mockDataProvider = sp.GetRequiredService<MockDataProvider>();
+
+        // Load mock data nếu chưa load
+        if (!mockDataProvider.IsLoaded)
+        {
+            var loadTask = mockDataProvider.LoadMockDataAsync();
+            loadTask.GetAwaiter().GetResult();
+
+            if (!loadTask.Result)
+            {
+                Console.WriteLine("⚠️  WARNING: Không thể load mock data. Sẽ fallback sang API thật.");
+                return new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://gateway.tantanloc.com/") };
+            }
+        }
+
+        var handler = new MockHttpMessageHandler(mockDataProvider);
+        var client = new HttpClient(handler)
+        {
+            BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://gateway.tantanloc.com/")
+        };
+        return client;
+    });
+}
+else
+{
+    // PRODUCTION MODE - Kết nối API thật
+    builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://gateway.tantanloc.com/") });
+}
 builder.Services.AddScoped(typeof(TTL.HR.Application.Modules.Common.Interfaces.IApiRepository<>), typeof(TTL.HR.Application.Modules.Common.Services.ApiRepository<>));
 builder.Services.AddScoped<TTL.HR.Application.Modules.HumanResource.Interfaces.IEmployeeService, TTL.HR.Application.Modules.HumanResource.Services.EmployeeService>();
 builder.Services.AddScoped<TTL.HR.Application.Modules.HumanResource.Interfaces.IEmployeeImportService, TTL.HR.Application.Modules.HumanResource.Services.EmployeeImportService>();

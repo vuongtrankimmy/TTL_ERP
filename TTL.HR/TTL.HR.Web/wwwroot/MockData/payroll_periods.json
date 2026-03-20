@@ -1,0 +1,317 @@
+[
+  {
+    "_id": "65dae2f30000000000000999",
+    "CreatedAt": "2026-03-06T16:37:52.190Z",
+    "UpdatedAt": "2026-03-10T10:55:06.803Z",
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Bảng lương Tháng 02/2026",
+    "Month": 2,
+    "Year": 2026,
+    "StartDate": "2026-01-31T17:00:00.000Z",
+    "EndDate": "2026-02-27T17:00:00.000Z",
+    "PaymentDate": "0001-01-01T00:00:00.000Z",
+    "StatusId": 4,
+    "TotalNetSalary": {
+      "$numberDecimal": "107816750"
+    },
+    "TotalInsurance": {
+      "$numberDecimal": "8671000"
+    },
+    "TotalInsuranceCompany": {
+      "$numberDecimal": "19305000"
+    },
+    "TotalTax": {
+      "$numberDecimal": "7062250"
+    },
+    "EmployeeCount": 8,
+    "Note": null
+  },
+  {
+    "_id": "69ab0ecc9944e713a10936c0",
+    "CreatedAt": "2026-03-06T17:28:44.375Z",
+    "UpdatedAt": "2026-03-07T07:46:45.144Z",
+    "IsDeleted": true,
+    "DeletedAt": null,
+    "Name": "Bảng lương tháng 01/2026",
+    "Month": 1,
+    "Year": 2026,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "EndDate": "2026-01-30T17:00:00.000Z",
+    "PaymentDate": "0001-01-01T00:00:00.000Z",
+    "StatusId": 1,
+    "Status": null,
+    "TotalNetSalary": {
+      "$numberDecimal": "24879000"
+    },
+    "TotalInsurance": {
+      "$numberDecimal": "8671000"
+    },
+    "TotalInsuranceCompany": {
+      "$numberDecimal": "19305000"
+    },
+    "TotalTax": {
+      "$numberDecimal": "0"
+    },
+    "EmployeeCount": 8,
+    "Note": null
+  },
+  {
+    "_id": "69ab0ed19944e713a109373f",
+    "CreatedAt": "2026-03-06T17:28:49.603Z",
+    "UpdatedAt": "2026-03-07T07:42:49.552Z",
+    "IsDeleted": true,
+    "DeletedAt": null,
+    "Name": "Bảng lương tháng 03/2026",
+    "Month": 3,
+    "Year": 2026,
+    "StartDate": "2026-02-28T17:00:00.000Z",
+    "EndDate": "2026-03-30T17:00:00.000Z",
+    "PaymentDate": "0001-01-01T00:00:00.000Z",
+    "StatusId": 7,
+    "Status": null,
+    "TotalNetSalary": {
+      "$numberDecimal": "24879000"
+    },
+    "TotalInsurance": {
+      "$numberDecimal": "8671000"
+    },
+    "TotalInsuranceCompany": {
+      "$numberDecimal": "19305000"
+    },
+    "TotalTax": {
+      "$numberDecimal": "0"
+    },
+    "EmployeeCount": 8,
+    "Note": null
+  },
+  {
+    "_id": "69abd2d1cc73848eb03624b9",
+    "CreatedAt": "2026-03-07T07:25:05.214Z",
+    "UpdatedAt": "2026-03-07T07:42:47.017Z",
+    "IsDeleted": true,
+    "DeletedAt": null,
+    "Name": "Bảng lương tháng 04/2026",
+    "Month": 4,
+    "Year": 2026,
+    "StartDate": "2026-03-31T17:00:00.000Z",
+    "EndDate": "2026-04-29T17:00:00.000Z",
+    "PaymentDate": "0001-01-01T00:00:00.000Z",
+    "StatusId": 7,
+    "Status": null,
+    "TotalNetSalary": {
+      "$numberDecimal": "33550000"
+    },
+    "TotalInsurance": {
+      "$numberDecimal": "0"
+    },
+    "TotalInsuranceCompany": {
+      "$numberDecimal": "0"
+    },
+    "TotalTax": {
+      "$numberDecimal": "0"
+    },
+    "EmployeeCount": 8,
+    "Note": null
+  },
+  {
+    "_id": "69abd2d4cc73848eb0362540",
+    "CreatedAt": "2026-03-07T07:25:08.240Z",
+    "UpdatedAt": "2026-03-07T07:42:41.872Z",
+    "IsDeleted": true,
+    "DeletedAt": null,
+    "Name": "Bảng lương tháng 06/2026",
+    "Month": 6,
+    "Year": 2026,
+    "StartDate": "2026-05-31T17:00:00.000Z",
+    "EndDate": "2026-06-29T17:00:00.000Z",
+    "PaymentDate": "0001-01-01T00:00:00.000Z",
+    "StatusId": 7,
+    "Status": null,
+    "TotalNetSalary": {
+      "$numberDecimal": "33550000"
+    },
+    "TotalInsurance": {
+      "$numberDecimal": "0"
+    },
+    "TotalInsuranceCompany": {
+      "$numberDecimal": "0"
+    },
+    "TotalTax": {
+      "$numberDecimal": "0"
+    },
+    "EmployeeCount": 8,
+    "Note": null
+  },
+  {
+    "_id": "69abd2d6cc73848eb0362735",
+    "CreatedAt": "2026-03-07T07:25:10.231Z",
+    "UpdatedAt": "2026-03-07T07:42:39.441Z",
+    "IsDeleted": true,
+    "DeletedAt": null,
+    "Name": "Bảng lương tháng 07/2026",
+    "Month": 7,
+    "Year": 2026,
+    "StartDate": "2026-06-30T17:00:00.000Z",
+    "EndDate": "2026-07-30T17:00:00.000Z",
+    "PaymentDate": "0001-01-01T00:00:00.000Z",
+    "StatusId": 7,
+    "Status": null,
+    "TotalNetSalary": {
+      "$numberDecimal": "33550000"
+    },
+    "TotalInsurance": {
+      "$numberDecimal": "0"
+    },
+    "TotalInsuranceCompany": {
+      "$numberDecimal": "0"
+    },
+    "TotalTax": {
+      "$numberDecimal": "0"
+    },
+    "EmployeeCount": 8,
+    "Note": null
+  },
+  {
+    "_id": "69abd2dacc73848eb03627be",
+    "CreatedAt": "2026-03-07T07:25:14.223Z",
+    "UpdatedAt": "2026-03-07T07:42:44.625Z",
+    "IsDeleted": true,
+    "DeletedAt": null,
+    "Name": "Bảng lương tháng 05/2026",
+    "Month": 5,
+    "Year": 2026,
+    "StartDate": "2026-04-30T17:00:00.000Z",
+    "EndDate": "2026-05-30T17:00:00.000Z",
+    "PaymentDate": "0001-01-01T00:00:00.000Z",
+    "StatusId": 7,
+    "Status": null,
+    "TotalNetSalary": {
+      "$numberDecimal": "33550000"
+    },
+    "TotalInsurance": {
+      "$numberDecimal": "0"
+    },
+    "TotalInsuranceCompany": {
+      "$numberDecimal": "0"
+    },
+    "TotalTax": {
+      "$numberDecimal": "0"
+    },
+    "EmployeeCount": 8,
+    "Note": null
+  },
+  {
+    "_id": "69abd2e0cc73848eb0362848",
+    "CreatedAt": "2026-03-07T07:25:20.016Z",
+    "UpdatedAt": "2026-03-07T07:42:35.510Z",
+    "IsDeleted": true,
+    "DeletedAt": null,
+    "Name": "Bảng lương tháng 08/2026",
+    "Month": 8,
+    "Year": 2026,
+    "StartDate": "2026-07-31T17:00:00.000Z",
+    "EndDate": "2026-08-30T17:00:00.000Z",
+    "PaymentDate": "0001-01-01T00:00:00.000Z",
+    "StatusId": 7,
+    "Status": null,
+    "TotalNetSalary": {
+      "$numberDecimal": "33550000"
+    },
+    "TotalInsurance": {
+      "$numberDecimal": "0"
+    },
+    "TotalInsuranceCompany": {
+      "$numberDecimal": "0"
+    },
+    "TotalTax": {
+      "$numberDecimal": "0"
+    },
+    "EmployeeCount": 8,
+    "Note": null
+  },
+  {
+    "_id": "69abd7ac002836cb2f5b8541",
+    "CreatedAt": "2026-03-07T07:45:48.872Z",
+    "UpdatedAt": "2026-03-10T15:32:48.788Z",
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Bảng lương tháng 03/2026",
+    "Month": 3,
+    "Year": 2026,
+    "StartDate": "2026-02-28T17:00:00.000Z",
+    "EndDate": "2026-03-30T17:00:00.000Z",
+    "PaymentDate": "0001-01-01T00:00:00.000Z",
+    "StatusId": 1,
+    "TotalNetSalary": {
+      "$numberDecimal": "33550000"
+    },
+    "TotalInsurance": {
+      "$numberDecimal": "0"
+    },
+    "TotalInsuranceCompany": {
+      "$numberDecimal": "0"
+    },
+    "TotalTax": {
+      "$numberDecimal": "0"
+    },
+    "EmployeeCount": 8,
+    "Note": null
+  },
+  {
+    "_id": "69abd7e7002836cb2f5b870c",
+    "CreatedAt": "2026-03-07T07:46:47.496Z",
+    "UpdatedAt": "2026-03-07T07:46:52.080Z",
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Bảng lương tháng 01/2026",
+    "Month": 1,
+    "Year": 2026,
+    "StartDate": "2025-12-31T17:00:00.000Z",
+    "EndDate": "2026-01-30T17:00:00.000Z",
+    "PaymentDate": "0001-01-01T00:00:00.000Z",
+    "StatusId": 4,
+    "TotalNetSalary": {
+      "$numberDecimal": "33550000"
+    },
+    "TotalInsurance": {
+      "$numberDecimal": "0"
+    },
+    "TotalInsuranceCompany": {
+      "$numberDecimal": "0"
+    },
+    "TotalTax": {
+      "$numberDecimal": "0"
+    },
+    "EmployeeCount": 8,
+    "Note": null
+  },
+  {
+    "_id": "69b78b59d77885cd79e3c410",
+    "CreatedAt": "2026-03-16T04:47:21.014Z",
+    "UpdatedAt": "2026-03-16T04:47:22.318Z",
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Bảng lương tháng 04/2026",
+    "Month": 4,
+    "Year": 2026,
+    "StartDate": "2026-03-31T17:00:00.000Z",
+    "EndDate": "2026-04-29T17:00:00.000Z",
+    "PaymentDate": "0001-01-01T00:00:00.000Z",
+    "StatusId": 1,
+    "TotalNetSalary": {
+      "$numberDecimal": "33550000"
+    },
+    "TotalInsurance": {
+      "$numberDecimal": "0"
+    },
+    "TotalInsuranceCompany": {
+      "$numberDecimal": "0"
+    },
+    "TotalTax": {
+      "$numberDecimal": "0"
+    },
+    "EmployeeCount": 8,
+    "Note": null
+  }
+]

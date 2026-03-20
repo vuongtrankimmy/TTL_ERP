@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -25,12 +26,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
             }
 
             var content = await response.Content.ReadAsStringAsync();
-            var options = new System.Text.Json.JsonSerializerOptions 
-            { 
-                PropertyNameCaseInsensitive = true,
-                NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
-            };
-            var result = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<PagedResult<EmployeeDto>>>(content, options);
+            var result = JsonConvert.DeserializeObject<ApiResponse<PagedResult<EmployeeDto>>>(content);
             return result?.Data?.Items ?? new List<EmployeeDto>();
         }
 
@@ -59,12 +55,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
             }
 
             var content = await response.Content.ReadAsStringAsync();
-            var options = new System.Text.Json.JsonSerializerOptions 
-            { 
-                PropertyNameCaseInsensitive = true,
-                NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
-            };
-            var result = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<PagedResult<EmployeeDto>>>(content, options);
+            var result = JsonConvert.DeserializeObject<ApiResponse<PagedResult<EmployeeDto>>>(content);
             return result?.Data ?? new PagedResult<EmployeeDto>();
         }
         public async Task<EmployeeModel?> GetEmployeeAsync(string id)
@@ -78,12 +69,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
                 {
                     try 
                     {
-                        var options = new System.Text.Json.JsonSerializerOptions 
-                        { 
-                            PropertyNameCaseInsensitive = true,
-                            NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
-                        };
-                        var result = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<EmployeeModel>>(content, options);
+                        var result = JsonConvert.DeserializeObject<ApiResponse<EmployeeModel>>(content);
                         
                         if (result?.Data == null)
                         {
@@ -121,12 +107,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
 
                 if (!httpResponse.IsSuccessStatusCode) return null;
 
-                var options = new System.Text.Json.JsonSerializerOptions 
-                { 
-                    PropertyNameCaseInsensitive = true,
-                    NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
-                };
-                var response = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<EmployeeModel>>(body, options);
+                var response = JsonConvert.DeserializeObject<ApiResponse<EmployeeModel>>(body);
                 Console.WriteLine($"[GetMyEmployee] EmployeeId={response?.Data?.Id}, Name={response?.Data?.FullName}");
                 return response?.Data;
             }
@@ -238,12 +219,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
                 var responseContent = await httpResponse.Content.ReadAsStringAsync();
                 Console.WriteLine($"[DigitalProfile] Raw: {responseContent}");
 
-                var options = new System.Text.Json.JsonSerializerOptions 
-                { 
-                    PropertyNameCaseInsensitive = true,
-                    NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
-                };
-                var response = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<DigitalProfileModel>>(responseContent, options);
+                var response = JsonConvert.DeserializeObject<ApiResponse<DigitalProfileModel>>(responseContent);
                 return response?.Data;
             }
             catch (Exception ex)
@@ -287,8 +263,7 @@ namespace TTL.HR.Application.Modules.HumanResource.Services
                 // Try to parse error message from ApiResponse
                 try
                 {
-                    var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    var errorResponse = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<object>>(responseBody, options);
+                    var errorResponse = JsonConvert.DeserializeObject<ApiResponse<object>>(responseBody);
                     if (!string.IsNullOrEmpty(errorResponse?.Message))
                         return errorResponse.Message;
                 }

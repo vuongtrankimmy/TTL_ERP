@@ -1,4 +1,6 @@
-using System;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+
 
 namespace TTL.HR.Application.Modules.Leave.Models
 {
@@ -6,72 +8,72 @@ namespace TTL.HR.Application.Modules.Leave.Models
     {
         public string Id { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("employeeId")]
+        [JsonProperty("employeeId")]
         public string EmployeeId { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("employeeName")]
+        [JsonProperty("employeeName")]
         public string EmployeeName { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("employeeCode")]
+        [JsonProperty("employeeCode")]
         public string EmployeeCode { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("departmentName")]
+        [JsonProperty("departmentName")]
         public string Department { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("employeeAvatar")]
+        [JsonProperty("employeeAvatar")]
         public string Avatar { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("leaveTypeId")]
+        [JsonProperty("leaveTypeId")]
         public string LeaveTypeId { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("leaveTypeName")]
+        [JsonProperty("leaveTypeName")]
         public string Type { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("leaveTypeColor")]
+        [JsonProperty("leaveTypeColor")]
         public string TypeColor { get; set; } = "primary";
         
         public string SubType { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("startDate")]
+        [JsonProperty("startDate")]
         public DateTime StartDate { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("endDate")]
+        [JsonProperty("endDate")]
         public DateTime EndDate { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("totalDays")]
+        [JsonProperty("totalDays")]
         public double TotalDays { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        [JsonProperty("status")]
         public string Status { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("reason")]
+        [JsonProperty("reason")]
         public string Reason { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("comment")]
+        [JsonProperty("comment")]
         public string? ManagerNote { get; set; }
         
         // Multi-level Approval
-        [System.Text.Json.Serialization.JsonPropertyName("currentLevel")]
+        [JsonProperty("currentLevel")]
         public int CurrentLevel { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("totalLevelsRequired")]
+        [JsonProperty("totalLevelsRequired")]
         public int TotalLevelsRequired { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("pendingApproverId")]
+        [JsonProperty("pendingApproverId")]
         public string? PendingApproverId { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("nextApproverId")]
+        [JsonProperty("nextApproverId")]
         public string? NextApproverId { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("approvalHistory")]
+        [JsonProperty("approvalHistory")]
         public List<LeaveApprovalStepModel> ApprovalHistory { get; set; } = new();
         
-        [System.Text.Json.Serialization.JsonPropertyName("attachments")]
+        [JsonProperty("attachments")]
         public List<LeaveAttachmentModel> Attachments { get; set; } = new();
         
         public bool IsPending => Status == "Pending" || Status == "PartiallyApproved" || Status == "Chờ phê duyệt" || Status == "Chờ duyệt";
         
-        [System.Text.Json.Serialization.JsonPropertyName("statusColor")]
+        [JsonProperty("statusColor")]
         public string StatusColor { get; set; } = "secondary";
 
         public string StatusBadgeClass => $"badge-light-{StatusColor}";
@@ -79,38 +81,55 @@ namespace TTL.HR.Application.Modules.Leave.Models
 
     public class LeaveAttachmentModel
     {
-        [System.Text.Json.Serialization.JsonPropertyName("fileName")]
+        [JsonProperty("fileName")]
         public string FileName { get; set; } = string.Empty;
         
-        [System.Text.Json.Serialization.JsonPropertyName("fileUrl")]
+        [JsonProperty("fileUrl")]
         public string FileUrl { get; set; } = string.Empty;
     }
 
     public class LeaveApprovalStepModel
     {
-        [System.Text.Json.Serialization.JsonPropertyName("level")]
+        [JsonProperty("level")]
         public int Level { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("approverName")]
+        [JsonProperty("approverName")]
         public string ApproverName { get; set; } = string.Empty;
         
-        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        [JsonProperty("status")]
         public string Status { get; set; } = string.Empty;
         
-        [System.Text.Json.Serialization.JsonPropertyName("comment")]
+        [JsonProperty("comment")]
         public string? Comment { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("actionAt")]
+        [JsonProperty("actionAt")]
         public DateTime ActionAt { get; set; }
     }
 
     public class LeaveStateSummaryModel
     {
+        [JsonProperty("pendingCount")]
+        [JsonPropertyName("pendingCount")]
         public int PendingCount { get; set; }
+
+        [JsonProperty("approvedCount")]
+        [JsonPropertyName("approvedCount")]
         public int ApprovedCount { get; set; }
+
+        [JsonProperty("rejectedCount")]
+        [JsonPropertyName("rejectedCount")]
         public int RejectedCount { get; set; }
+
+        [JsonProperty("cancelledCount")]
+        [JsonPropertyName("cancelledCount")]
         public int CancelledCount { get; set; }
+
+        [JsonProperty("assignedToMeCount")]
+        [JsonPropertyName("assignedToMeCount")]
         public int AssignedToMeCount { get; set; }
+
+        [JsonProperty("totalCount")]
+        [JsonPropertyName("totalCount")]
         public int TotalCount { get; set; }
     }
 

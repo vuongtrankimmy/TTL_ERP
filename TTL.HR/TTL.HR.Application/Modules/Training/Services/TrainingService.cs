@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -70,14 +71,14 @@ namespace TTL.HR.Application.Modules.Training.Services
             try
             {
                 // 1. Try standard ApiResponse
-                var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<T>>(content, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var apiResponse = JsonConvert.DeserializeObject<ApiResponse<T>>(content);
                 if (apiResponse != null && (!string.IsNullOrEmpty(apiResponse.Message) || (apiResponse.Errors != null && apiResponse.Errors.Any())))
                 {
                     return apiResponse;
                 }
 
                 // 2. Try standard .NET ValidationProblemDetails
-                var problem = System.Text.Json.JsonSerializer.Deserialize<ValidationProblemDetails>(content, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var problem = JsonConvert.DeserializeObject<ValidationProblemDetails>(content);
                 if (problem != null && problem.Errors != null && problem.Errors.Any())
                 {
                     var errors = new List<string>();

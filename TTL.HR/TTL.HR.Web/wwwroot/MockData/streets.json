@@ -1,0 +1,52 @@
+[
+  {
+    "_id": "69b9270270795eff33ed364d",
+    "Code": "STR001",
+    "Name": "Lê Lợi",
+    "ProvinceId": 79,
+    "ProvinceObjectId": "65fc5b5b0000000000000179",
+    "StreetId": 1,
+    "WardId": 26740,
+    "WardObjectId": "65fc5b5b0000000000026740"
+  },
+  {
+    "_id": "69b9270270795eff33ed364e",
+    "Code": "STR002",
+    "Name": "Nguyễn Huệ",
+    "ProvinceId": 79,
+    "ProvinceObjectId": "65fc5b5b0000000000000179",
+    "StreetId": 2,
+    "WardId": 26740,
+    "WardObjectId": "65fc5b5b0000000000026740"
+  },
+  {
+    "_id": "69b9270270795eff33ed364f",
+    "Code": "STR003",
+    "Name": "Đồng Khởi",
+    "ProvinceId": 79,
+    "ProvinceObjectId": "65fc5b5b0000000000000179",
+    "StreetId": 3,
+    "WardId": 26740,
+    "WardObjectId": "65fc5b5b0000000000026740"
+  },
+  {
+    "_id": "69b9270270795eff33ed3650",
+    "Code": "STR004",
+    "Name": "Lê Thánh Tôn",
+    "ProvinceId": 79,
+    "ProvinceObjectId": "65fc5b5b0000000000000179",
+    "StreetId": 4,
+    "WardId": 26743,
+    "WardObjectId": "65fc5b5b0000000000026743"
+  },
+  {
+    "_id": "69b9270270795eff33ed3651",
+    "Code": "STR005",
+    "Name": "Phan Chu Trinh",
+    "ProvinceId": 79,
+    "ProvinceObjectId": "65fc5b5b0000000000000179",
+    "StreetId": 5,
+    "WardId": 26743,
+    "WardObjectId": "65fc5b5b0000000000026743"
+  }
+]

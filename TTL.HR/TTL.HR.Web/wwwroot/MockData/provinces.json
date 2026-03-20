@@ -1,0 +1,632 @@
+[
+  {
+    "_id": "65fc5b5b0000000000000101",
+    "Code": "01",
+    "Name": "Thành phố Hà Nội",
+    "Type": "thành phố trung ương",
+    "Order": 1,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 1
+  },
+  {
+    "_id": "65fc5b5b0000000000000102",
+    "Code": "02",
+    "Name": "Tỉnh Hà Giang",
+    "Type": "tỉnh",
+    "Order": 2,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 2
+  },
+  {
+    "_id": "65fc5b5b0000000000000104",
+    "Code": "04",
+    "Name": "Tỉnh Cao Bằng",
+    "Type": "tỉnh",
+    "Order": 3,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 4
+  },
+  {
+    "_id": "65fc5b5b0000000000000106",
+    "Code": "06",
+    "Name": "Tỉnh Bắc Kạn",
+    "Type": "tỉnh",
+    "Order": 4,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 6
+  },
+  {
+    "_id": "65fc5b5b0000000000000108",
+    "Code": "08",
+    "Name": "Tỉnh Tuyên Quang",
+    "Type": "tỉnh",
+    "Order": 5,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 8
+  },
+  {
+    "_id": "65fc5b5b0000000000000110",
+    "Code": "10",
+    "Name": "Tỉnh Lào Cai",
+    "Type": "tỉnh",
+    "Order": 6,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 10
+  },
+  {
+    "_id": "65fc5b5b0000000000000111",
+    "Code": "11",
+    "Name": "Tỉnh Điện Biên",
+    "Type": "tỉnh",
+    "Order": 7,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 11
+  },
+  {
+    "_id": "65fc5b5b0000000000000112",
+    "Code": "12",
+    "Name": "Tỉnh Lai Châu",
+    "Type": "tỉnh",
+    "Order": 8,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 12
+  },
+  {
+    "_id": "65fc5b5b0000000000000114",
+    "Code": "14",
+    "Name": "Tỉnh Sơn La",
+    "Type": "tỉnh",
+    "Order": 9,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 14
+  },
+  {
+    "_id": "65fc5b5b0000000000000115",
+    "Code": "15",
+    "Name": "Tỉnh Yên Bái",
+    "Type": "tỉnh",
+    "Order": 10,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 15
+  },
+  {
+    "_id": "65fc5b5b0000000000000117",
+    "Code": "17",
+    "Name": "Tỉnh Hoà Bình",
+    "Type": "tỉnh",
+    "Order": 11,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 17
+  },
+  {
+    "_id": "65fc5b5b0000000000000119",
+    "Code": "19",
+    "Name": "Tỉnh Thái Nguyên",
+    "Type": "tỉnh",
+    "Order": 12,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 19
+  },
+  {
+    "_id": "65fc5b5b0000000000000120",
+    "Code": "20",
+    "Name": "Tỉnh Lạng Sơn",
+    "Type": "tỉnh",
+    "Order": 13,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 20
+  },
+  {
+    "_id": "65fc5b5b0000000000000122",
+    "Code": "22",
+    "Name": "Tỉnh Quảng Ninh",
+    "Type": "tỉnh",
+    "Order": 14,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 22
+  },
+  {
+    "_id": "65fc5b5b0000000000000124",
+    "Code": "24",
+    "Name": "Tỉnh Bắc Giang",
+    "Type": "tỉnh",
+    "Order": 15,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 24
+  },
+  {
+    "_id": "65fc5b5b0000000000000125",
+    "Code": "25",
+    "Name": "Tỉnh Phú Thọ",
+    "Type": "tỉnh",
+    "Order": 16,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 25
+  },
+  {
+    "_id": "65fc5b5b0000000000000126",
+    "Code": "26",
+    "Name": "Tỉnh Vĩnh Phúc",
+    "Type": "tỉnh",
+    "Order": 17,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 26
+  },
+  {
+    "_id": "65fc5b5b0000000000000127",
+    "Code": "27",
+    "Name": "Tỉnh Bắc Ninh",
+    "Type": "tỉnh",
+    "Order": 18,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 27
+  },
+  {
+    "_id": "65fc5b5b0000000000000130",
+    "Code": "30",
+    "Name": "Tỉnh Hải Dương",
+    "Type": "tỉnh",
+    "Order": 19,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 30
+  },
+  {
+    "_id": "65fc5b5b0000000000000131",
+    "Code": "31",
+    "Name": "Thành phố Hải Phòng",
+    "Type": "thành phố trung ương",
+    "Order": 20,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 31
+  },
+  {
+    "_id": "65fc5b5b0000000000000133",
+    "Code": "33",
+    "Name": "Tỉnh Hưng Yên",
+    "Type": "tỉnh",
+    "Order": 21,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 33
+  },
+  {
+    "_id": "65fc5b5b0000000000000134",
+    "Code": "34",
+    "Name": "Tỉnh Thái Bình",
+    "Type": "tỉnh",
+    "Order": 22,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 34
+  },
+  {
+    "_id": "65fc5b5b0000000000000135",
+    "Code": "35",
+    "Name": "Tỉnh Hà Nam",
+    "Type": "tỉnh",
+    "Order": 23,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 35
+  },
+  {
+    "_id": "65fc5b5b0000000000000136",
+    "Code": "36",
+    "Name": "Tỉnh Nam Định",
+    "Type": "tỉnh",
+    "Order": 24,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 36
+  },
+  {
+    "_id": "65fc5b5b0000000000000137",
+    "Code": "37",
+    "Name": "Tỉnh Ninh Bình",
+    "Type": "tỉnh",
+    "Order": 25,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 37
+  },
+  {
+    "_id": "65fc5b5b0000000000000138",
+    "Code": "38",
+    "Name": "Tỉnh Thanh Hóa",
+    "Type": "tỉnh",
+    "Order": 26,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 38
+  },
+  {
+    "_id": "65fc5b5b0000000000000140",
+    "Code": "40",
+    "Name": "Tỉnh Nghệ An",
+    "Type": "tỉnh",
+    "Order": 27,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 40
+  },
+  {
+    "_id": "65fc5b5b0000000000000142",
+    "Code": "42",
+    "Name": "Tỉnh Hà Tĩnh",
+    "Type": "tỉnh",
+    "Order": 28,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 42
+  },
+  {
+    "_id": "65fc5b5b0000000000000144",
+    "Code": "44",
+    "Name": "Tỉnh Quảng Bình",
+    "Type": "tỉnh",
+    "Order": 29,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 44
+  },
+  {
+    "_id": "65fc5b5b0000000000000145",
+    "Code": "45",
+    "Name": "Tỉnh Quảng Trị",
+    "Type": "tỉnh",
+    "Order": 30,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 45
+  },
+  {
+    "_id": "65fc5b5b0000000000000146",
+    "Code": "46",
+    "Name": "Thành phố Huế",
+    "Type": "thành phố trung ương",
+    "Order": 31,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 46
+  },
+  {
+    "_id": "65fc5b5b0000000000000148",
+    "Code": "48",
+    "Name": "Thành phố Đà Nẵng",
+    "Type": "thành phố trung ương",
+    "Order": 32,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 48
+  },
+  {
+    "_id": "65fc5b5b0000000000000149",
+    "Code": "49",
+    "Name": "Tỉnh Quảng Nam",
+    "Type": "tỉnh",
+    "Order": 33,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 49
+  },
+  {
+    "_id": "65fc5b5b0000000000000151",
+    "Code": "51",
+    "Name": "Tỉnh Quảng Ngãi",
+    "Type": "tỉnh",
+    "Order": 34,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 51
+  },
+  {
+    "_id": "65fc5b5b0000000000000152",
+    "Code": "52",
+    "Name": "Tỉnh Bình Định",
+    "Type": "tỉnh",
+    "Order": 35,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 52
+  },
+  {
+    "_id": "65fc5b5b0000000000000154",
+    "Code": "54",
+    "Name": "Tỉnh Phú Yên",
+    "Type": "tỉnh",
+    "Order": 36,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 54
+  },
+  {
+    "_id": "65fc5b5b0000000000000156",
+    "Code": "56",
+    "Name": "Tỉnh Khánh Hòa",
+    "Type": "tỉnh",
+    "Order": 37,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 56
+  },
+  {
+    "_id": "65fc5b5b0000000000000158",
+    "Code": "58",
+    "Name": "Tỉnh Ninh Thuận",
+    "Type": "tỉnh",
+    "Order": 38,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 58
+  },
+  {
+    "_id": "65fc5b5b0000000000000160",
+    "Code": "60",
+    "Name": "Tỉnh Bình Thuận",
+    "Type": "tỉnh",
+    "Order": 39,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 60
+  },
+  {
+    "_id": "65fc5b5b0000000000000162",
+    "Code": "62",
+    "Name": "Tỉnh Kon Tum",
+    "Type": "tỉnh",
+    "Order": 40,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 62
+  },
+  {
+    "_id": "65fc5b5b0000000000000164",
+    "Code": "64",
+    "Name": "Tỉnh Gia Lai",
+    "Type": "tỉnh",
+    "Order": 41,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 64
+  },
+  {
+    "_id": "65fc5b5b0000000000000166",
+    "Code": "66",
+    "Name": "Tỉnh Đắk Lắk",
+    "Type": "tỉnh",
+    "Order": 42,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 66
+  },
+  {
+    "_id": "65fc5b5b0000000000000167",
+    "Code": "67",
+    "Name": "Tỉnh Đắk Nông",
+    "Type": "tỉnh",
+    "Order": 43,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 67
+  },
+  {
+    "_id": "65fc5b5b0000000000000168",
+    "Code": "68",
+    "Name": "Tỉnh Lâm Đồng",
+    "Type": "tỉnh",
+    "Order": 44,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 68
+  },
+  {
+    "_id": "65fc5b5b0000000000000170",
+    "Code": "70",
+    "Name": "Tỉnh Bình Phước",
+    "Type": "tỉnh",
+    "Order": 45,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 70
+  },
+  {
+    "_id": "65fc5b5b0000000000000172",
+    "Code": "72",
+    "Name": "Tỉnh Tây Ninh",
+    "Type": "tỉnh",
+    "Order": 46,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 72
+  },
+  {
+    "_id": "65fc5b5b0000000000000174",
+    "Code": "74",
+    "Name": "Tỉnh Bình Dương",
+    "Type": "tỉnh",
+    "Order": 47,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 74
+  },
+  {
+    "_id": "65fc5b5b0000000000000175",
+    "Code": "75",
+    "Name": "Tỉnh Đồng Nai",
+    "Type": "tỉnh",
+    "Order": 48,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 75
+  },
+  {
+    "_id": "65fc5b5b0000000000000177",
+    "Code": "77",
+    "Name": "Tỉnh Bà Rịa - Vũng Tàu",
+    "Type": "tỉnh",
+    "Order": 49,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 77
+  },
+  {
+    "_id": "65fc5b5b0000000000000179",
+    "Code": "79",
+    "Name": "Thành phố Hồ Chí Minh",
+    "Type": "thành phố trung ương",
+    "Order": 50,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 79
+  },
+  {
+    "_id": "65fc5b5b0000000000000180",
+    "Code": "80",
+    "Name": "Tỉnh Long An",
+    "Type": "tỉnh",
+    "Order": 51,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 80
+  },
+  {
+    "_id": "65fc5b5b0000000000000182",
+    "Code": "82",
+    "Name": "Tỉnh Tiền Giang",
+    "Type": "tỉnh",
+    "Order": 52,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 82
+  },
+  {
+    "_id": "65fc5b5b0000000000000183",
+    "Code": "83",
+    "Name": "Tỉnh Bến Tre",
+    "Type": "tỉnh",
+    "Order": 53,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 83
+  },
+  {
+    "_id": "65fc5b5b0000000000000184",
+    "Code": "84",
+    "Name": "Tỉnh Trà Vinh",
+    "Type": "tỉnh",
+    "Order": 54,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 84
+  },
+  {
+    "_id": "65fc5b5b0000000000000186",
+    "Code": "86",
+    "Name": "Tỉnh Vĩnh Long",
+    "Type": "tỉnh",
+    "Order": 55,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 86
+  },
+  {
+    "_id": "65fc5b5b0000000000000187",
+    "Code": "87",
+    "Name": "Tỉnh Đồng Tháp",
+    "Type": "tỉnh",
+    "Order": 56,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 87
+  },
+  {
+    "_id": "65fc5b5b0000000000000189",
+    "Code": "89",
+    "Name": "Tỉnh An Giang",
+    "Type": "tỉnh",
+    "Order": 57,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 89
+  },
+  {
+    "_id": "65fc5b5b0000000000000191",
+    "Code": "91",
+    "Name": "Tỉnh Kiên Giang",
+    "Type": "tỉnh",
+    "Order": 58,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 91
+  },
+  {
+    "_id": "65fc5b5b0000000000000192",
+    "Code": "92",
+    "Name": "Thành phố Cần Thơ",
+    "Type": "thành phố trung ương",
+    "Order": 59,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 92
+  },
+  {
+    "_id": "65fc5b5b0000000000000193",
+    "Code": "93",
+    "Name": "Tỉnh Hậu Giang",
+    "Type": "tỉnh",
+    "Order": 60,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 93
+  },
+  {
+    "_id": "65fc5b5b0000000000000194",
+    "Code": "94",
+    "Name": "Tỉnh Sóc Trăng",
+    "Type": "tỉnh",
+    "Order": 61,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 94
+  },
+  {
+    "_id": "65fc5b5b0000000000000195",
+    "Code": "95",
+    "Name": "Tỉnh Bạc Liêu",
+    "Type": "tỉnh",
+    "Order": 62,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 95
+  },
+  {
+    "_id": "65fc5b5b0000000000000196",
+    "Code": "96",
+    "Name": "Tỉnh Cà Mau",
+    "Type": "tỉnh",
+    "Order": 63,
+    "CountryObjectId": "65fc5b5b0000000000000000",
+    "CountryId": 704,
+    "ProvinceId": 96
+  }
+]

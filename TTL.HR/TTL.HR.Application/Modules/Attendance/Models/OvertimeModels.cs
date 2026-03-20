@@ -1,71 +1,83 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 
 namespace TTL.HR.Application.Modules.Attendance.Models
 {
     public class OvertimeRequestModel
     {
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("employeeId")]
+        [JsonProperty("employeeId")]
         public string EmployeeId { get; set; } = string.Empty;
 
-        [JsonPropertyName("employeeName")]
+        [JsonProperty("employeeName")]
         public string EmployeeName { get; set; } = string.Empty;
 
-        [JsonPropertyName("employeeCode")]
+        [JsonProperty("employeeCode")]
         public string EmployeeCode { get; set; } = string.Empty;
 
-        [JsonPropertyName("departmentName")]
+        [JsonProperty("departmentName")]
         public string DepartmentName { get; set; } = string.Empty;
 
-        [JsonPropertyName("avatarUrl")]
+        [JsonProperty("avatarUrl")]
         public string AvatarUrl { get; set; } = string.Empty;
 
-        [JsonPropertyName("date")]
+        [JsonProperty("date")]
         public DateTime Date { get; set; }
 
-        [JsonPropertyName("startTime")]
+        [JsonProperty("startTime")]
         public string StartTime { get; set; } = string.Empty;
 
-        [JsonPropertyName("endTime")]
+        [JsonProperty("endTime")]
         public string EndTime { get; set; } = string.Empty;
 
-        [JsonPropertyName("hours")]
+        [JsonProperty("hours")]
         public double Hours { get; set; }
 
-        [JsonPropertyName("reason")]
+        [JsonProperty("reason")]
         public string Reason { get; set; } = string.Empty;
 
-        [JsonPropertyName("status")]
+        [JsonProperty("status")]
         public string Status { get; set; } = "Pending";
 
-        [JsonPropertyName("statusId")]
+        [JsonProperty("statusId")]
         public int StatusId { get; set; } = 1;
 
-        [JsonPropertyName("multiplier")]
+        [JsonProperty("multiplier")]
         public double Multiplier { get; set; } = 1.5;
 
-        [JsonPropertyName("managerNote")]
+        [JsonProperty("managerNote")]
         public string? ManagerNote { get; set; }
 
-        [JsonPropertyName("approvedBy")]
+        [JsonProperty("approvedBy")]
         public string? ApprovedBy { get; set; }
 
-        [JsonPropertyName("approvedAt")]
+        [JsonProperty("approvedAt")]
         public DateTime? ApprovedAt { get; set; }
 
-        [JsonPropertyName("color")]
+        [JsonProperty("color")]
         public string? Color { get; set; }
     }
 
     public class OvertimeSummaryModel
     {
+        [JsonProperty("pendingCount")]
+        [JsonPropertyName("pendingCount")]
         public int PendingCount { get; set; }
+        
+        [JsonProperty("approvedCount")]
+        [JsonPropertyName("approvedCount")]
         public int ApprovedCount { get; set; }
+        
+        [JsonProperty("rejectedCount")]
+        [JsonPropertyName("rejectedCount")]
         public int RejectedCount { get; set; }
+        
+        [JsonProperty("totalHours")]
+        [JsonPropertyName("totalHours")]
         public double TotalHours { get; set; }
     }
 }

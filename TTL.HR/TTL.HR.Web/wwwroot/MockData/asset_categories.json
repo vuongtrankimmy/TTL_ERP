@@ -1,0 +1,66 @@
+[
+  {
+    "_id": "65f3c3c00000000000000001",
+    "Name": "Máy tính xách tay (Laptop)",
+    "Code": "Laptop",
+    "Description": "Thiết bị máy tính xách tay cho nhân viên",
+    "CreatedAt": "2024-03-15T00:00:00Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65f3c3c00000000000000002",
+    "Name": "Máy tính để bàn (PC)",
+    "Code": "Desktop",
+    "Description": "Hệ thống máy tính để bàn (Workstation)",
+    "CreatedAt": "2024-03-15T00:00:00Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65f3c3c00000000000000003",
+    "Name": "Màn hình",
+    "Code": "Monitor",
+    "Description": "Màn hình hiển thị các loại",
+    "CreatedAt": "2024-03-15T00:00:00Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65f3c3c00000000000000004",
+    "Name": "Điện thoại",
+    "Code": "Phone",
+    "Description": "Điện thoại thông minh/Điện thoại bàn",
+    "CreatedAt": "2024-03-15T00:00:00Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65f3c3c00000000000000005",
+    "Name": "Phương tiện đi lại",
+    "Code": "Vehicle",
+    "Description": "Xe máy, ô tô công ty",
+    "CreatedAt": "2024-03-15T00:00:00Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65f3c3c00000000000000006",
+    "Name": "Nội thất văn phòng",
+    "Code": "Furniture",
+    "Description": "Bàn, ghế, tủ hồ sơ",
+    "CreatedAt": "2024-03-15T00:00:00Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65f3c3c00000000000000007",
+    "Name": "Thiết bị văn phòng",
+    "Code": "Office",
+    "Description": "Máy in, máy scan, máy chiếu",
+    "CreatedAt": "2024-03-15T00:00:00Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65f3c3c00000000000000008",
+    "Name": "Khác",
+    "Code": "Other",
+    "Description": "Các loại tài sản khác",
+    "CreatedAt": "2024-03-15T00:00:00Z",
+    "IsDeleted": false
+  }
+]

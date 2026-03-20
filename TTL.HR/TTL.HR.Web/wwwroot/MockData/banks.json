@@ -1,0 +1,106 @@
+[
+  {
+    "id": "65bf12340000000000000001",
+    "FullName": "Ngân hàng TMCP Ngoại thương Việt Nam",
+    "ShortName": "Vietcombank",
+    "Code": "VCB",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Vietcombank.webp",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000002",
+    "FullName": "Ngân hàng TMCP Công Thương Việt Nam",
+    "ShortName": "VietinBank",
+    "Code": "CTG",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/vi/2/2e/Logo_VietinBank.png",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000003",
+    "FullName": "Ngân hàng TMCP Đầu tư và Phát triển Việt Nam",
+    "ShortName": "BIDV",
+    "Code": "BID",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/6/67/BIDV_logo.svg",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000004",
+    "FullName": "Ngân hàng TMCP Á Châu",
+    "ShortName": "ACB",
+    "Code": "ACB",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Logo_ACB.svg",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000005",
+    "FullName": "Ngân hàng TMCP Việt Nam Thịnh Vượng",
+    "ShortName": "VPBank",
+    "Code": "VPB",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/1/18/VPBank_logo.svg",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000006",
+    "FullName": "Ngân hàng TMCP Quân đội",
+    "ShortName": "MB Bank",
+    "Code": "MBB",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/2/24/Logo_MB_Bank.svg",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000007",
+    "FullName": "Ngân hàng TMCP Tiên Phong",
+    "ShortName": "TPBank",
+    "Code": "TPB",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Logo_TPBank.svg",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000008",
+    "FullName": "Ngân hàng TMCP Sài Gòn Thương Tín",
+    "ShortName": "Sacombank",
+    "Code": "STB",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Sacombank_logo.svg",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000009",
+    "FullName": "Ngân hàng TMCP Phát triển Thành phố Hồ Chí Minh",
+    "ShortName": "HDBank",
+    "Code": "HDB",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Logo_HDBank.svg",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000010",
+    "FullName": "Ngân hàng TMCP Quốc tế Việt Nam",
+    "ShortName": "VIB",
+    "Code": "VIB",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/0/07/Logo_VIB.svg",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000011",
+    "FullName": "Ngân hàng TMCP Phương Đông",
+    "ShortName": "OCB",
+    "Code": "OCB",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Logo_OCB.svg",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000012",
+    "FullName": "Ngân hàng TMCP Hàng hải Việt Nam",
+    "ShortName": "MSB",
+    "Code": "MSB",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Logo_MSB.svg",
+    "IsActive": true
+  },
+  {
+    "id": "65bf12340000000000000013",
+    "FullName": "Ngân hàng TMCP Kỹ thương Việt Nam",
+    "ShortName": "Techcombank",
+    "Code": "TCB",
+    "LogoUrl": "https://upload.wikimedia.org/wikipedia/commons/3/30/Logo_Techcombank.svg",
+    "IsActive": true
+  }
+]

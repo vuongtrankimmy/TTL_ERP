@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using TTL.HR.Application.Modules.Common.Interfaces;
 using TTL.HR.Application.Modules.Common.Models;
 using TTL.HR.Application.Modules.Common.Constants;
 using System.Collections.Concurrent;
+using Newtonsoft.Json;
 
 namespace TTL.HR.Application.Modules.Common.Services
 {
@@ -22,7 +23,8 @@ namespace TTL.HR.Application.Modules.Common.Services
                 var response = await _httpClient.GetAsync(endpoint);
                 if (response.IsSuccessStatusCode)
                 {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<T>>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var apiResponse = JsonConvert.DeserializeObject<ApiResponse<List<T>>>(content);
                     return apiResponse?.Data ?? new List<T>();
                 }
             }
@@ -36,7 +38,8 @@ namespace TTL.HR.Application.Modules.Common.Services
                 var response = await _httpClient.GetAsync($"{endpoint}/{id}");
                 if (response.IsSuccessStatusCode)
                 {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<T>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var apiResponse = JsonConvert.DeserializeObject<ApiResponse<T>>(content);
                     return apiResponse?.Data;
                 }
             }
@@ -45,11 +48,19 @@ namespace TTL.HR.Application.Modules.Common.Services
         }
         public async Task<T> CreateAsync(string endpoint, T entity)
         {
-            var response = await _httpClient.PostAsJsonAsync(endpoint, entity);
-            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<T>>();
+            var json = JsonConvert.SerializeObject(entity);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(endpoint, content);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var apiResponse = JsonConvert.DeserializeObject<ApiResponse<T>>(responseContent);
             return apiResponse?.Data!;
         }
-        public async Task UpdateAsync(string endpoint, string id, T entity) => await _httpClient.PutAsJsonAsync($"{endpoint}/{id}", entity);
+        public async Task UpdateAsync(string endpoint, string id, T entity) 
+        {
+            var json = JsonConvert.SerializeObject(entity);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            await _httpClient.PutAsync($"{endpoint}/{id}", content);
+        }
         public async Task DeleteAsync(string endpoint, string id) => await _httpClient.DeleteAsync($"{endpoint}/{id}");
     }
 
@@ -72,7 +83,8 @@ namespace TTL.HR.Application.Modules.Common.Services
                 var response = await _httpClient.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var apiResponse = JsonConvert.DeserializeObject<ApiResponse<List<LookupModel>>>(content);
                     return apiResponse?.Data ?? new List<LookupModel>();
                 }
             }
@@ -100,7 +112,8 @@ namespace TTL.HR.Application.Modules.Common.Services
                 var response = await _httpClient.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<CountryModel>>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var apiResponse = JsonConvert.DeserializeObject<ApiResponse<List<CountryModel>>>(content);
                     return apiResponse?.Data ?? new List<CountryModel>();
                 }
             }
@@ -128,7 +141,8 @@ namespace TTL.HR.Application.Modules.Common.Services
                 var response = await _httpClient.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var apiResponse = JsonConvert.DeserializeObject<ApiResponse<List<LookupModel>>>(content);
                     var list = apiResponse?.Data ?? new List<LookupModel>();
                     foreach (var item in list) if (!string.IsNullOrEmpty(item.Code)) _codeToIdMap[item.Code] = item.Id;
                     return list;
@@ -157,7 +171,8 @@ namespace TTL.HR.Application.Modules.Common.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var apiResponse = JsonConvert.DeserializeObject<ApiResponse<List<LookupModel>>>(content);
                     var list = apiResponse?.Data ?? new List<LookupModel>();
                     foreach (var item in list) if (!string.IsNullOrEmpty(item.Code)) _codeToIdMap[item.Code] = item.Id;
                     return list;
@@ -217,7 +232,8 @@ namespace TTL.HR.Application.Modules.Common.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var apiResponse = JsonConvert.DeserializeObject<ApiResponse<List<LookupModel>>>(content);
                     var list = apiResponse?.Data ?? new List<LookupModel>();
                     foreach (var item in list) if (!string.IsNullOrEmpty(item.Code)) _codeToIdMap[item.Code] = item.Id;
                     return list;
@@ -264,7 +280,8 @@ namespace TTL.HR.Application.Modules.Common.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var apiResponse = JsonConvert.DeserializeObject<ApiResponse<List<LookupModel>>>(content);
                     var list = apiResponse?.Data ?? new List<LookupModel>();
                     foreach (var item in list) if (!string.IsNullOrEmpty(item.Code)) _codeToIdMap[item.Code] = item.Id;
                     return list;
@@ -304,7 +321,8 @@ namespace TTL.HR.Application.Modules.Common.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var apiResponse = JsonConvert.DeserializeObject<ApiResponse<List<LookupModel>>>(content);
                     var list = apiResponse?.Data ?? new List<LookupModel>();
                     foreach (var item in list) if (!string.IsNullOrEmpty(item.Code)) _codeToIdMap[item.Code] = item.Id;
                     return list;
@@ -346,7 +364,8 @@ namespace TTL.HR.Application.Modules.Common.Services
                 var response = await _httpClient.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
-                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<LookupModel>>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var apiResponse = JsonConvert.DeserializeObject<ApiResponse<List<LookupModel>>>(content);
                     return apiResponse?.Data ?? new List<LookupModel>();
                 }
             }
@@ -380,7 +399,7 @@ namespace TTL.HR.Application.Modules.Common.Services
                     var userJson = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", UserKey);
                     if (!string.IsNullOrEmpty(userJson))
                     {
-                        _currentUser = System.Text.Json.JsonSerializer.Deserialize<UserDto>(userJson);
+                        _currentUser = JsonConvert.DeserializeObject<UserDto>(userJson);
                     }
                 }
             }
@@ -391,14 +410,17 @@ namespace TTL.HR.Application.Modules.Common.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Auth.Login, request);
+                var requestJson = JsonConvert.SerializeObject(request);
+                var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(ApiEndpoints.Auth.Login, requestContent);
                 ApiResponse<AuthResponse>? apiResponse = null;
 
                 try
                 {
-                    apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<AuthResponse>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    apiResponse = JsonConvert.DeserializeObject<ApiResponse<AuthResponse>>(content);
                 }
-                catch (System.Text.Json.JsonException)
+                catch (JsonException)
                 {
                     return new ApiResponse<AuthResponse> { Success = false, Message = $"Lỗi máy chủ: {response.StatusCode} ({response.ReasonPhrase})" };
                 }
@@ -413,7 +435,7 @@ namespace TTL.HR.Application.Modules.Common.Services
                         _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                         
                         await _jsRuntime.InvokeVoidAsync("localStorage.setItem", TokenKey, token);
-                        await _jsRuntime.InvokeVoidAsync("localStorage.setItem", UserKey, System.Text.Json.JsonSerializer.Serialize(_currentUser));
+                        await _jsRuntime.InvokeVoidAsync("localStorage.setItem", UserKey, JsonConvert.SerializeObject(_currentUser));
                     }
                     return apiResponse;
                 }
@@ -435,14 +457,17 @@ namespace TTL.HR.Application.Modules.Common.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Auth.Register, request);
+                var requestJson = JsonConvert.SerializeObject(request);
+                var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(ApiEndpoints.Auth.Register, requestContent);
                 ApiResponse<bool>? apiResponse = null;
                 
                 try
                 {
-                    apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    apiResponse = JsonConvert.DeserializeObject<ApiResponse<bool>>(content);
                 }
-                catch (System.Text.Json.JsonException)
+                catch (JsonException)
                 {
                     return new ApiResponse<bool> { Success = false, Message = $"Lỗi máy chủ: {response.StatusCode} ({response.ReasonPhrase})" };
                 }
@@ -458,9 +483,14 @@ namespace TTL.HR.Application.Modules.Common.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Auth.ChangePassword, new { CurrentPassword = currentPassword, NewPassword = newPassword });
+                var requestJson = JsonConvert.SerializeObject(new { CurrentPassword = currentPassword, NewPassword = newPassword });
+                var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(ApiEndpoints.Auth.ChangePassword, requestContent);
                 ApiResponse<bool>? apiResponse = null;
-                try { apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>(); } catch { }
+                try { 
+                    var content = await response.Content.ReadAsStringAsync();
+                    apiResponse = JsonConvert.DeserializeObject<ApiResponse<bool>>(content); 
+                } catch { }
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -502,7 +532,10 @@ namespace TTL.HR.Application.Modules.Common.Services
             {
                 var response = await _httpClient.GetAsync($"{ApiEndpoints.Auth.ConfirmEmail}?token={token}");
                 ApiResponse<bool>? apiResponse = null;
-                try { apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>(); } catch { }
+                try { 
+                    var content = await response.Content.ReadAsStringAsync();
+                    apiResponse = JsonConvert.DeserializeObject<ApiResponse<bool>>(content); 
+                } catch { }
                 return apiResponse ?? new ApiResponse<bool> { Success = response.IsSuccessStatusCode, Message = "Xác thực email thất bại" };
             }
             catch (Exception ex)
@@ -515,9 +548,14 @@ namespace TTL.HR.Application.Modules.Common.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Auth.RequestPasswordReset, new { Email = email });
+                var requestJson = JsonConvert.SerializeObject(new { Email = email });
+                var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(ApiEndpoints.Auth.RequestPasswordReset, requestContent);
                 ApiResponse<bool>? apiResponse = null;
-                try { apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>(); } catch { }
+                try { 
+                    var content = await response.Content.ReadAsStringAsync();
+                    apiResponse = JsonConvert.DeserializeObject<ApiResponse<bool>>(content); 
+                } catch { }
                 return apiResponse ?? new ApiResponse<bool> { Success = response.IsSuccessStatusCode, Message = "Yêu cầu đặt lại mật khẩu thất bại" };
             }
             catch (Exception ex)
@@ -530,9 +568,14 @@ namespace TTL.HR.Application.Modules.Common.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync(ApiEndpoints.Auth.ResetPassword, new { Token = token, NewPassword = newPassword });
+                var requestJson = JsonConvert.SerializeObject(new { Token = token, NewPassword = newPassword });
+                var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(ApiEndpoints.Auth.ResetPassword, requestContent);
                 ApiResponse<bool>? apiResponse = null;
-                try { apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>(); } catch { }
+                try { 
+                    var content = await response.Content.ReadAsStringAsync();
+                    apiResponse = JsonConvert.DeserializeObject<ApiResponse<bool>>(content); 
+                } catch { }
                 return apiResponse ?? new ApiResponse<bool> { Success = response.IsSuccessStatusCode, Message = "Đặt lại mật khẩu thất bại" };
             }
             catch (Exception ex)
@@ -563,14 +606,19 @@ namespace TTL.HR.Application.Modules.Common.Services
                     AvatarUrl = request.AvatarUrl
                 };
                 
-                var response = await _httpClient.PutAsJsonAsync(ApiEndpoints.Auth.UpdateProfile, command);
+                var requestJson = JsonConvert.SerializeObject(command);
+                var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(ApiEndpoints.Auth.UpdateProfile, requestContent);
                 ApiResponse<bool>? apiResponse = null;
-                try { apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>(); } catch { }
+                try { 
+                    var content = await response.Content.ReadAsStringAsync();
+                    apiResponse = JsonConvert.DeserializeObject<ApiResponse<bool>>(content); 
+                } catch { }
                 
                 if (response.IsSuccessStatusCode && apiResponse?.Success == true)
                 {
                     _currentUser = request;
-                    await _jsRuntime.InvokeVoidAsync("localStorage.setItem", UserKey, System.Text.Json.JsonSerializer.Serialize(_currentUser));
+                    await _jsRuntime.InvokeVoidAsync("localStorage.setItem", UserKey, JsonConvert.SerializeObject(_currentUser));
                 }
                 
                 if (apiResponse != null && !apiResponse.Success && apiResponse.Errors != null && apiResponse.Errors.Any())

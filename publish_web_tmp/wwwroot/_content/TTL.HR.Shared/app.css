@@ -121,3 +121,177 @@ h1:focus {
     pointer-events: none;
     border-radius: inherit;
 }
+
+.lowercase {
+    text-transform: lowercase !important;
+}
+
+.uppercase {
+    text-transform: uppercase !important;
+}
+
+.italic {
+    font-style: italic !important;
+}
+
+/* Phone Input & Country Dropdown */
+.phone-dropdown-container {
+    max-height: 250px;
+    overflow-y: auto;
+    width: 280px;
+    z-index: 1060;
+}
+
+.phone-country-code-btn {
+    border-right: 1px solid #eff2f5 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    min-width: 85px;
+}
+
+.phone-input-control {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.country-item {
+    transition: all 0.2s;
+}
+
+.country-item:hover {
+    background-color: #f1faff;
+}
+
+.country-item.active {
+    background-color: #e1f0ff;
+}
+
+/* Premium UI/UX Polish */
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.bg-premium-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Skeleton Premium Polish */
+.skeleton-box {
+    overflow: hidden;
+    background-color: #f2f2f2;
+}
+
+.skeleton-box::after {
+    position: absolute;
+    top: 1;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0) 0,
+            rgba(255, 255, 255, 0.2) 20%,
+            rgba(255, 255, 255, 0.5) 60%,
+            rgba(255, 255, 255, 0));
+    animation: shimmer 2s infinite;
+    content: '';
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Dashboard Premium Charts */
+.chart-container-premium {
+    min-height: 100px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+}
+
+.apexcharts-canvas {
+    margin: 0 auto;
+}
+
+/* ===== Sidebar Toggle Button ===== */
+.sidebar-toggle-btn {
+    position: absolute;
+    top: 50%;
+    right: -14px;
+    transform: translateY(-50%);
+    z-index: 105;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--bs-body-bg, #ffffff);
+    border: 1px solid var(--bs-gray-300, #E1E3EA);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.sidebar-toggle-btn:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    box-shadow: 0 2px 8px rgba(var(--bs-primary-rgb, 27, 132, 255), 0.35);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.sidebar-toggle-btn:hover .sidebar-toggle-icon {
+    color: #ffffff !important;
+}
+
+.sidebar-toggle-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.sidebar-toggle-icon {
+    color: var(--bs-gray-600, #78829D);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    line-height: 1;
+}
+
+/* Rotate icon when sidebar is minimized */
+[data-kt-app-sidebar-minimize="on"] .sidebar-toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Dark mode */
+[data-bs-theme="dark"] .sidebar-toggle-btn {
+    background-color: var(--bs-gray-200, #26272F);
+    border-color: var(--bs-gray-400, #363843);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+[data-bs-theme="dark"] .sidebar-toggle-btn:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}

@@ -361,3 +361,38 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Project specific ignores
+publish_web_tmp/
+publish_core_tmp/
+*.log
+*.txt
+!README.md
+!MOCK_DATA_GUIDE.md
+!MOCK_DATA_README.md
+!QUICK_RUN_GUIDE.md
+node_modules/
+.tempmediaStorage/
+browser/
+data_seed/nul
+TTL.HR/TTL.HR/nul
+nul
+export_mongodb_to_mock.js
+setup_mock_mode.ps1
+current_build.txt
+build_output.txt
+api_runtime.log
+backend_error.log
+auth_output.txt
+current_build.txt
+attendance_*.csv
+*.js
+!*.slnx
+!*.sln
+!*.csproj
+!*.razor
+!*.cs
+!*.json
+!*.md
+!*.yml
+!*.yaml

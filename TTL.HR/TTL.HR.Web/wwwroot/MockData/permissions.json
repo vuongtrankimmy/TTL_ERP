@@ -1,0 +1,425 @@
+[
+  {
+    "_id": "65fc4a4a0000000000000001",
+    "Name": "Truy cập Dashboard",
+    "Code": "SYS_DASHBOARD",
+    "Module": "Hệ thống",
+    "Description": "Xem trang tổng quan",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000002",
+    "Name": "Quản lý Cấu hình hệ thống",
+    "Code": "SYS_CONFIG",
+    "Module": "Hệ thống",
+    "Description": "Sửa thông tin công ty và tham số hệ thống",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000003",
+    "Name": "Quản lý Vai trò & Quyền hạn",
+    "Code": "SYS_ROLES",
+    "Module": "Hệ thống",
+    "Description": "Tạo, sửa, xóa vai trò và phân quyền",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000004",
+    "Name": "Xem Nhật ký kiểm toán",
+    "Code": "SYS_AUDIT",
+    "Module": "Hệ thống",
+    "Description": "Xem lịch sử hoạt động của người dùng",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000010",
+    "Name": "Xem danh sách nhân viên",
+    "Code": "HR_EMP_VIEW",
+    "Module": "Nhân sự",
+    "Description": "Quyền xem hồ sơ nhân sự",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000011",
+    "Name": "Thêm mới nhân viên",
+    "Code": "HR_EMP_CREATE",
+    "Module": "Nhân sự",
+    "Description": "Tạo hồ sơ nhân viên mới",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000012",
+    "Name": "Chỉnh sửa nhân viên",
+    "Code": "HR_EMP_EDIT",
+    "Module": "Nhân sự",
+    "Description": "Cập nhật thông tin nhân viên",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000013",
+    "Name": "Xóa nhân viên",
+    "Code": "HR_EMP_DELETE",
+    "Module": "Nhân sự",
+    "Description": "Xóa hoặc vô hiệu hóa nhân viên",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000014",
+    "Name": "Quản lý Hợp đồng lao động",
+    "Code": "HR_CONTRACT_MANAGE",
+    "Module": "Nhân sự",
+    "Description": "Tạo, ký kết và quản lý hợp đồng lao động",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000015",
+    "Name": "Xem nhân viên bộ phận mình",
+    "Code": "HR_EMP_VIEW_DEPT",
+    "Module": "Nhân sự",
+    "Description": "Chỉ xem nhân viên trong cùng phòng ban",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000020",
+    "Name": "Quản lý Tin tuyển dụng",
+    "Code": "REC_JOB",
+    "Module": "Tuyển dụng",
+    "Description": "Đăng tin, sửa tin tuyển dụng",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000021",
+    "Name": "Quản lý Ứng viên",
+    "Code": "REC_CANDIDATE",
+    "Module": "Tuyển dụng",
+    "Description": "Xem CV, đặt lịch phỏng vấn",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000022",
+    "Name": "Phê duyệt Đề nghị tuyển dụng",
+    "Code": "REC_APPROVE",
+    "Module": "Tuyển dụng",
+    "Description": "Phê duyệt hoặc từ chối đề nghị tuyển dụng",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000030",
+    "Name": "Quản lý Bảng lương",
+    "Code": "PAY_ADMIN",
+    "Module": "Tính lương",
+    "Description": "Tính lương, chốt lương toàn công ty",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000031",
+    "Name": "Xem Lương cá nhân",
+    "Code": "PAY_SELF",
+    "Module": "Tính lương",
+    "Description": "Chỉ xem phiếu lương của chính mình",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000032",
+    "Name": "Xem Lương toàn bộ phận",
+    "Code": "PAY_DEPT",
+    "Module": "Tính lương",
+    "Description": "Xem phiếu lương của nhân viên trong bộ phận",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000033",
+    "Name": "Cấu hình thành phần lương",
+    "Code": "PAY_CONFIG",
+    "Module": "Tính lương",
+    "Description": "Tạo, sửa các thành phần lương (phụ cấp, khấu trừ...)",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000040",
+    "Name": "Quản lý Kho tài sản",
+    "Code": "AST_MANAGE",
+    "Module": "Tài sản",
+    "Description": "Nhập kho, cấp phát thiết bị",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000041",
+    "Name": "Xem Tài sản được cấp phát",
+    "Code": "AST_VIEW",
+    "Module": "Tài sản",
+    "Description": "Xem danh sách tài sản đang được giao quản lý",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000042",
+    "Name": "Yêu cầu Bảo trì tài sản",
+    "Code": "AST_MAINTENANCE",
+    "Module": "Tài sản",
+    "Description": "Tạo yêu cầu bảo trì, sửa chữa tài sản",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000050",
+    "Name": "Quản lý Đào tạo",
+    "Code": "TRN_MANAGE",
+    "Module": "Đào tạo",
+    "Description": "Tạo khóa học, gán nhân viên học",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000051",
+    "Name": "Xem Khóa học được giao",
+    "Code": "TRN_VIEW",
+    "Module": "Đào tạo",
+    "Description": "Xem các khóa học được gán cho bản thân",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000052",
+    "Name": "Phê duyệt Đào tạo",
+    "Code": "TRN_APPROVE",
+    "Module": "Đào tạo",
+    "Description": "Phê duyệt kế hoạch đào tạo, chứng nhận hoàn thành",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000060",
+    "Name": "Xem Phòng ban",
+    "Code": "Permissions.Departments.View",
+    "Module": "Tổ chức",
+    "Description": "Xem danh sách và chi tiết phòng ban",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000061",
+    "Name": "Tạo Phòng ban",
+    "Code": "Permissions.Departments.Create",
+    "Module": "Tổ chức",
+    "Description": "Tạo phòng ban mới",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000062",
+    "Name": "Chỉnh sửa Phòng ban",
+    "Code": "Permissions.Departments.Edit",
+    "Module": "Tổ chức",
+    "Description": "Cập nhật thông tin phòng ban",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000063",
+    "Name": "Xóa Phòng ban",
+    "Code": "Permissions.Departments.Delete",
+    "Module": "Tổ chức",
+    "Description": "Xóa phòng ban khỏi hệ thống",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000070",
+    "Name": "Xem Chức danh",
+    "Code": "Permissions.Positions.View",
+    "Module": "Tổ chức",
+    "Description": "Xem danh sách và chi tiết chức danh",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000071",
+    "Name": "Tạo Chức danh",
+    "Code": "Permissions.Positions.Create",
+    "Module": "Tổ chức",
+    "Description": "Tạo chức danh mới",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000072",
+    "Name": "Chỉnh sửa Chức danh",
+    "Code": "Permissions.Positions.Edit",
+    "Module": "Tổ chức",
+    "Description": "Cập nhật thông tin chức danh",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000073",
+    "Name": "Xóa Chức danh",
+    "Code": "Permissions.Positions.Delete",
+    "Module": "Tổ chức",
+    "Description": "Xóa chức danh khỏi hệ thống",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000080",
+    "Name": "Xem Hợp đồng",
+    "Code": "Permissions.Contracts.View",
+    "Module": "Nhân sự",
+    "Description": "Xem danh sách và chi tiết mẫu hợp đồng",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000081",
+    "Name": "Tạo Hợp đồng",
+    "Code": "Permissions.Contracts.Create",
+    "Module": "Nhân sự",
+    "Description": "Tạo mẫu hợp đồng mới",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000082",
+    "Name": "Chỉnh sửa Hợp đồng",
+    "Code": "Permissions.Contracts.Edit",
+    "Module": "Nhân sự",
+    "Description": "Cập nhật thông tin mẫu hợp đồng",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000083",
+    "Name": "Xóa Hợp đồng",
+    "Code": "Permissions.Contracts.Delete",
+    "Module": "Nhân sự",
+    "Description": "Xóa mẫu hợp đồng khỏi hệ thống",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000090",
+    "Name": "Quản lý Nghỉ phép (Toàn công ty)",
+    "Code": "LEAVE_ADMIN",
+    "Module": "Nghỉ phép",
+    "Description": "Xem, phê duyệt nghỉ phép của toàn bộ nhân viên",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000091",
+    "Name": "Phê duyệt Nghỉ phép bộ phận",
+    "Code": "LEAVE_APPROVE_DEPT",
+    "Module": "Nghỉ phép",
+    "Description": "Phê duyệt đơn nghỉ phép của nhân viên trong bộ phận",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000092",
+    "Name": "Đăng ký Nghỉ phép cá nhân",
+    "Code": "LEAVE_REQUEST",
+    "Module": "Nghỉ phép",
+    "Description": "Tạo và theo dõi đơn xin nghỉ phép của bản thân",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a0000000000000093",
+    "Name": "Cấu hình Loại nghỉ phép",
+    "Code": "LEAVE_CONFIG",
+    "Module": "Nghỉ phép",
+    "Description": "Thiết lập các loại phép, ngày phép theo chính sách công ty",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a00000000000000a0",
+    "Name": "Quản lý Chấm công (Toàn công ty)",
+    "Code": "ATT_ADMIN",
+    "Module": "Chấm công",
+    "Description": "Xem và điều chỉnh dữ liệu chấm công toàn bộ nhân viên",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a00000000000000a1",
+    "Name": "Xem Chấm công bộ phận",
+    "Code": "ATT_VIEW_DEPT",
+    "Module": "Chấm công",
+    "Description": "Xem dữ liệu chấm công của nhân viên trong bộ phận",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a00000000000000a2",
+    "Name": "Xem Chấm công cá nhân",
+    "Code": "ATT_VIEW_SELF",
+    "Module": "Chấm công",
+    "Description": "Xem dữ liệu chấm công của bản thân",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a00000000000000a3",
+    "Name": "Quản lý Ca làm việc",
+    "Code": "ATT_SHIFT_MANAGE",
+    "Module": "Chấm công",
+    "Description": "Tạo, phân công ca làm việc cho nhân viên",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a00000000000000a4",
+    "Name": "Yêu cầu Điều chỉnh chấm công",
+    "Code": "ATT_ADJUST_REQUEST",
+    "Module": "Chấm công",
+    "Description": "Tạo yêu cầu điều chỉnh giờ công bị thiếu",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a00000000000000b0",
+    "Name": "Quản lý Phúc lợi (Toàn công ty)",
+    "Code": "BNF_ADMIN",
+    "Module": "Phúc lợi",
+    "Description": "Tạo và phân bổ gói phúc lợi cho nhân viên",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a00000000000000b1",
+    "Name": "Xem Phúc lợi cá nhân",
+    "Code": "BNF_VIEW_SELF",
+    "Module": "Phúc lợi",
+    "Description": "Xem các phúc lợi của bản thân",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  },
+  {
+    "_id": "65fc4a4a00000000000000b2",
+    "Name": "Đăng ký Phúc lợi cá nhân",
+    "Code": "BNF_ENROLL",
+    "Module": "Phúc lợi",
+    "Description": "Đăng ký tham gia các gói phúc lợi tự nguyện",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "IsDeleted": false
+  }
+]

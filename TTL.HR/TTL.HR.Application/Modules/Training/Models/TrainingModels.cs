@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace TTL.HR.Application.Modules.Training.Models
 {
@@ -35,16 +34,16 @@ namespace TTL.HR.Application.Modules.Training.Models
         public string Id { get; set; } = "";
         public string EmployeeId { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("EmployeeName")]
+        [JsonProperty("EmployeeName")]
         public string FullName { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("EmployeeCode")]
+        [JsonProperty("EmployeeCode")]
         public string Code { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("DepartmentName")]
+        [JsonProperty("DepartmentName")]
         public string Department { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("PositionName")]
+        [JsonProperty("PositionName")]
         public string Position { get; set; } = "";
         
         public string AvatarUrl { get; set; } = "";
@@ -52,7 +51,7 @@ namespace TTL.HR.Application.Modules.Training.Models
         public int? StatusId { get; set; }
         public string Status { get; set; } = "Enrolled"; // Enrolled, InProgress, Completed, Failed
         
-        [System.Text.Json.Serialization.JsonPropertyName("EnrolledDate")]
+        [JsonProperty("EnrolledDate")]
         public DateTime EnrollmentDate { get; set; }
         public DateTime? CompletionDate { get; set; }
         public string? Note { get; set; }

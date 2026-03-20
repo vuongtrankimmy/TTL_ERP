@@ -529,7 +529,7 @@ namespace TTL.HR.Shared.Pages.Employees
                 _ => "Gửi thông tin tài khoản?"
             };
 
-            var confirmElement = await JSRuntime.InvokeAsync<System.Text.Json.JsonElement>("Swal.fire", new
+            var confirmElement = await JSRuntime.InvokeAsync<dynamic>("Swal.fire", new
             {
                 title = "Xác nhận gửi",
                 text = confirmText,
@@ -540,7 +540,7 @@ namespace TTL.HR.Shared.Pages.Employees
                 confirmButtonColor = channel == "ZALO" ? "#0068ff" : (channel == "EMAIL" ? "#009EF7" : "#50CD89")
             });
 
-            if (confirmElement.TryGetProperty("isConfirmed", out var isConfirmed) && isConfirmed.GetBoolean())
+            if (confirmElement != null && confirmElement.isConfirmed == true)
             {
                 _isProcessing = true;
                 StateHasChanged();
@@ -577,7 +577,7 @@ namespace TTL.HR.Shared.Pages.Employees
                 return;
             }
 
-            var confirmElement = await JSRuntime.InvokeAsync<System.Text.Json.JsonElement>("Swal.fire", new
+            var confirmElement = await JSRuntime.InvokeAsync<dynamic>("Swal.fire", new
             {
                 title = "Xác nhận",
                 text = $"Hệ thống sẽ gửi link đặt lại mật khẩu tới email: {newEmployee.Email}. Bạn có chắc chắn muốn thực hiện?",
@@ -587,7 +587,7 @@ namespace TTL.HR.Shared.Pages.Employees
                 cancelButtonText = "Hủy"
             });
 
-            if (confirmElement.TryGetProperty("isConfirmed", out var isConfirmed) && isConfirmed.GetBoolean())
+            if (confirmElement != null && confirmElement.isConfirmed == true)
             {
                 _isProcessing = true;
                 StateHasChanged();

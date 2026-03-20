@@ -1,0 +1,48 @@
+[
+  {
+    "_id": "69a479bac6f3661387e9193c",
+    "CreatedAt": "2026-03-01T17:39:06.339Z",
+    "UpdatedAt": "2026-03-05T09:51:49.261Z",
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Phụ cấp Ăn trưa",
+    "Code": "",
+    "Description": "Hỗ trợ cơm trưa",
+    "Amount": {
+      "$numberDecimal": "730000"
+    },
+    "Type": "Monthly",
+    "Category": "Allowance",
+    "IsActive": true,
+    "IsTaxable": false,
+    "IsInsurancePayment": false
+  },
+  {
+    "_id": "69a479bac6f3661387e9193d",
+    "Name": "Phụ cấp Xăng xe",
+    "Amount": 500000,
+    "Type": "Monthly",
+    "Description": "Hỗ trợ đi lại",
+    "IsDeleted": false,
+    "CreatedAt": "2026-03-01T17:39:06.339Z",
+    "UpdatedAt": "2026-03-01T17:39:06.339Z"
+  },
+  {
+    "_id": "69a948fe9f741d0fff7ea669",
+    "CreatedAt": "2026-03-05T09:12:30.822Z",
+    "UpdatedAt": "2026-03-05T09:48:33.924Z",
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Phụ cấp xăng",
+    "Code": "XA-0023",
+    "Description": "Phụ cấp xăng",
+    "Amount": {
+      "$numberDecimal": "400000"
+    },
+    "Type": "Monthly",
+    "Category": "Allowance",
+    "IsActive": true,
+    "IsTaxable": false,
+    "IsInsurancePayment": false
+  }
+]

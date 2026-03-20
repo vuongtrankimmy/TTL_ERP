@@ -1,0 +1,122 @@
+[
+  {
+    "_id": "65fc1a1a0000000000000001",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Lương Cơ Bản (Gross)",
+    "Code": "SAL-BASE",
+    "Type": 0,
+    "IsFixed": true,
+    "IsTaxable": true
+  },
+  {
+    "_id": "65fc1a1a0000000000000002",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Phụ Cấp Ăn Trưa",
+    "Code": "ALL-LUNCH",
+    "Type": 0,
+    "IsFixed": true,
+    "IsTaxable": false
+  },
+  {
+    "_id": "65fc1a1a0000000000000003",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Phụ Cấp Xăng Xe",
+    "Code": "ALL-FUEL",
+    "Type": 0,
+    "IsFixed": true,
+    "IsTaxable": true
+  },
+  {
+    "_id": "65fc1a1a0000000000000004",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Thưởng Doanh Số (KPI)",
+    "Code": "BONUS-KPI",
+    "Type": 0,
+    "IsFixed": false,
+    "IsTaxable": true
+  },
+  {
+    "_id": "65fc1a1a0000000000000005",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Khấu Trừ BHXH (8%)",
+    "Code": "DED-BHXH",
+    "Type": 1,
+    "IsFixed": false,
+    "IsTaxable": false
+  },
+  {
+    "_id": "65fc1a1a0000000000000006",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Khấu Trừ BHYT (1.5%)",
+    "Code": "DED-BHYT",
+    "Type": 1,
+    "IsFixed": false,
+    "IsTaxable": false
+  },
+  {
+    "_id": "65fc1a1a0000000000000007",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Khấu Trừ BHTN (1%)",
+    "Code": "DED-BHTN",
+    "Type": 1,
+    "IsFixed": false,
+    "IsTaxable": false
+  },
+  {
+    "_id": "65fc1a1a0000000000000008",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Thuế Thu Nhập Cá Nhân (PIT)",
+    "Code": "DED-TAX",
+    "Type": 1,
+    "IsFixed": false,
+    "IsTaxable": false
+  },
+  {
+    "_id": "65fc1a1a0000000000000009",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Công Đoàn Phí",
+    "Code": "DED-UNION",
+    "Type": 1,
+    "IsFixed": true,
+    "IsTaxable": false
+  },
+  {
+    "_id": "65fc1a1a0000000000000010",
+    "CreatedAt": "2024-01-01T00:00:00.000Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "Name": "Tạm Ứng Lương",
+    "Code": "ADV-SALARY",
+    "Type": 1,
+    "IsFixed": false,
+    "IsTaxable": false
+  }
+]

@@ -1,0 +1,842 @@
+[
+  {
+    "_id": "69af817a2d073e88003fe12c",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 1,
+    "LanguageCode": "vi-VN",
+    "Value": "Bảng điều khiển"
+  },
+  {
+    "_id": "69af817a2d073e88003fe12d",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 1,
+    "LanguageCode": "en-US",
+    "Value": "Dashboards"
+  },
+  {
+    "_id": "69af817a2d073e88003fe12e",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 2,
+    "LanguageCode": "vi-VN",
+    "Value": "TỔ CHỨC & NHÂN SỰ"
+  },
+  {
+    "_id": "69af817a2d073e88003fe12f",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 2,
+    "LanguageCode": "en-US",
+    "Value": "ORG & PERSONNEL"
+  },
+  {
+    "_id": "69af817a2d073e88003fe130",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 3,
+    "LanguageCode": "vi-VN",
+    "Value": "Cấu trúc công ty"
+  },
+  {
+    "_id": "69af817a2d073e88003fe131",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 3,
+    "LanguageCode": "en-US",
+    "Value": "Company Structure"
+  },
+  {
+    "_id": "69af817a2d073e88003fe132",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 4,
+    "LanguageCode": "vi-VN",
+    "Value": "Sơ đồ tổ chức"
+  },
+  {
+    "_id": "69af817a2d073e88003fe133",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 4,
+    "LanguageCode": "en-US",
+    "Value": "Org Chart"
+  },
+  {
+    "_id": "69af817a2d073e88003fe134",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 5,
+    "LanguageCode": "vi-VN",
+    "Value": "Phòng ban / Sơ đồ"
+  },
+  {
+    "_id": "69af817a2d073e88003fe135",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 5,
+    "LanguageCode": "en-US",
+    "Value": "Departments"
+  },
+  {
+    "_id": "69af817a2d073e88003fe136",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 6,
+    "LanguageCode": "vi-VN",
+    "Value": "Chức danh / Vị trí"
+  },
+  {
+    "_id": "69af817a2d073e88003fe137",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 6,
+    "LanguageCode": "en-US",
+    "Value": "Positions"
+  },
+  {
+    "_id": "69af817a2d073e88003fe138",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 7,
+    "LanguageCode": "vi-VN",
+    "Value": "Quản lý nhân sự"
+  },
+  {
+    "_id": "69af817a2d073e88003fe139",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 7,
+    "LanguageCode": "en-US",
+    "Value": "Employee Management"
+  },
+  {
+    "_id": "69af817a2d073e88003fe13a",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 8,
+    "LanguageCode": "vi-VN",
+    "Value": "Danh sách nhân viên"
+  },
+  {
+    "_id": "69af817a2d073e88003fe13b",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 8,
+    "LanguageCode": "en-US",
+    "Value": "Employee List"
+  },
+  {
+    "_id": "69af817a2d073e88003fe13c",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 9,
+    "LanguageCode": "vi-VN",
+    "Value": "Tiếp nhận nhân sự"
+  },
+  {
+    "_id": "69af817a2d073e88003fe13d",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 9,
+    "LanguageCode": "en-US",
+    "Value": "Onboarding"
+  },
+  {
+    "_id": "69af817a2d073e88003fe13e",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 10,
+    "LanguageCode": "vi-VN",
+    "Value": "Hồ sơ hợp đồng"
+  },
+  {
+    "_id": "69af817a2d073e88003fe13f",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 10,
+    "LanguageCode": "en-US",
+    "Value": "Contracts"
+  },
+  {
+    "_id": "69af817a2d073e88003fe140",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 11,
+    "LanguageCode": "vi-VN",
+    "Value": "VẬN HÀNH NHÂN SỰ"
+  },
+  {
+    "_id": "69af817a2d073e88003fe141",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 11,
+    "LanguageCode": "en-US",
+    "Value": "HR OPERATIONS"
+  },
+  {
+    "_id": "69af817a2d073e88003fe142",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 12,
+    "LanguageCode": "vi-VN",
+    "Value": "Chấm công & Phân ca"
+  },
+  {
+    "_id": "69af817a2d073e88003fe143",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 12,
+    "LanguageCode": "en-US",
+    "Value": "Attendance"
+  },
+  {
+    "_id": "69af817a2d073e88003fe144",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 13,
+    "LanguageCode": "vi-VN",
+    "Value": "Bảng công tháng"
+  },
+  {
+    "_id": "69af817a2d073e88003fe145",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 13,
+    "LanguageCode": "en-US",
+    "Value": "Monthly Timesheet"
+  },
+  {
+    "_id": "69af817a2d073e88003fe146",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 14,
+    "LanguageCode": "vi-VN",
+    "Value": "Dữ liệu chấm công"
+  },
+  {
+    "_id": "69af817a2d073e88003fe147",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 14,
+    "LanguageCode": "en-US",
+    "Value": "Attendance Data"
+  },
+  {
+    "_id": "69af817a2d073e88003fe148",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 15,
+    "LanguageCode": "vi-VN",
+    "Value": "Nhập dữ liệu máy"
+  },
+  {
+    "_id": "69af817a2d073e88003fe149",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 15,
+    "LanguageCode": "en-US",
+    "Value": "Import Data"
+  },
+  {
+    "_id": "69af817a2d073e88003fe14a",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 16,
+    "LanguageCode": "vi-VN",
+    "Value": "Ca làm việc"
+  },
+  {
+    "_id": "69af817a2d073e88003fe14b",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 16,
+    "LanguageCode": "en-US",
+    "Value": "Shift Management"
+  },
+  {
+    "_id": "69af817a2d073e88003fe14c",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 17,
+    "LanguageCode": "vi-VN",
+    "Value": "Danh mục ca"
+  },
+  {
+    "_id": "69af817a2d073e88003fe14d",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 17,
+    "LanguageCode": "en-US",
+    "Value": "Shift Catalog"
+  },
+  {
+    "_id": "69af817a2d073e88003fe14e",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 18,
+    "LanguageCode": "vi-VN",
+    "Value": "Lịch làm việc"
+  },
+  {
+    "_id": "69af817a2d073e88003fe14f",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 18,
+    "LanguageCode": "en-US",
+    "Value": "Work Schedule"
+  },
+  {
+    "_id": "69af817a2d073e88003fe150",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 19,
+    "LanguageCode": "vi-VN",
+    "Value": "Duyệt đổi ca"
+  },
+  {
+    "_id": "69af817a2d073e88003fe151",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 19,
+    "LanguageCode": "en-US",
+    "Value": "Shift Approval"
+  },
+  {
+    "_id": "69af817a2d073e88003fe152",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 20,
+    "LanguageCode": "vi-VN",
+    "Value": "Nghỉ phép & Vắng mặt"
+  },
+  {
+    "_id": "69af817a2d073e88003fe153",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 20,
+    "LanguageCode": "en-US",
+    "Value": "Leave Management"
+  },
+  {
+    "_id": "69af817a2d073e88003fe154",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 21,
+    "LanguageCode": "vi-VN",
+    "Value": "Đơn nghỉ phép"
+  },
+  {
+    "_id": "69af817a2d073e88003fe155",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 21,
+    "LanguageCode": "en-US",
+    "Value": "Leave Requests"
+  },
+  {
+    "_id": "69af817a2d073e88003fe156",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 22,
+    "LanguageCode": "vi-VN",
+    "Value": "Đơn đi công tác"
+  },
+  {
+    "_id": "69af817a2d073e88003fe157",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 22,
+    "LanguageCode": "en-US",
+    "Value": "Business Trip"
+  },
+  {
+    "_id": "69af817a2d073e88003fe158",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 23,
+    "LanguageCode": "vi-VN",
+    "Value": "Lương & Phúc lợi"
+  },
+  {
+    "_id": "69af817a2d073e88003fe159",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 23,
+    "LanguageCode": "en-US",
+    "Value": "Payroll & Benefits"
+  },
+  {
+    "_id": "69af817a2d073e88003fe15a",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 24,
+    "LanguageCode": "vi-VN",
+    "Value": "Kỳ lương"
+  },
+  {
+    "_id": "69af817a2d073e88003fe15b",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 24,
+    "LanguageCode": "en-US",
+    "Value": "Payroll Periods"
+  },
+  {
+    "_id": "69af817a2d073e88003fe15c",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 25,
+    "LanguageCode": "vi-VN",
+    "Value": "Chế độ & Phúc lợi"
+  },
+  {
+    "_id": "69af817a2d073e88003fe15d",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 25,
+    "LanguageCode": "en-US",
+    "Value": "Benefits"
+  },
+  {
+    "_id": "69af817a2d073e88003fe15e",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 26,
+    "LanguageCode": "vi-VN",
+    "Value": "TUYỂN DỤNG & ĐÀO TẠO"
+  },
+  {
+    "_id": "69af817a2d073e88003fe15f",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 26,
+    "LanguageCode": "en-US",
+    "Value": "RECRUITMENT & TRAINING"
+  },
+  {
+    "_id": "69af817a2d073e88003fe160",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 27,
+    "LanguageCode": "vi-VN",
+    "Value": "Tuyển dụng"
+  },
+  {
+    "_id": "69af817a2d073e88003fe161",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 27,
+    "LanguageCode": "en-US",
+    "Value": "Recruitment"
+  },
+  {
+    "_id": "69af817a2d073e88003fe162",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 28,
+    "LanguageCode": "vi-VN",
+    "Value": "Đào tạo"
+  },
+  {
+    "_id": "69af817a2d073e88003fe163",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 28,
+    "LanguageCode": "en-US",
+    "Value": "Training"
+  },
+  {
+    "_id": "69af817a2d073e88003fe164",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 29,
+    "LanguageCode": "vi-VN",
+    "Value": "TÀI SẢN & THIẾT BỊ"
+  },
+  {
+    "_id": "69af817a2d073e88003fe165",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 29,
+    "LanguageCode": "en-US",
+    "Value": "ASSETS & EQUIPMENT"
+  },
+  {
+    "_id": "69af817a2d073e88003fe166",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 30,
+    "LanguageCode": "vi-VN",
+    "Value": "Quản lý tài sản"
+  },
+  {
+    "_id": "69af817a2d073e88003fe167",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 30,
+    "LanguageCode": "en-US",
+    "Value": "Asset Management"
+  },
+  {
+    "_id": "69af817a2d073e88003fe168",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 31,
+    "LanguageCode": "vi-VN",
+    "Value": "Danh mục tài sản"
+  },
+  {
+    "_id": "69af817a2d073e88003fe169",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 31,
+    "LanguageCode": "en-US",
+    "Value": "Asset Inventory"
+  },
+  {
+    "_id": "69af817a2d073e88003fe16a",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 32,
+    "LanguageCode": "vi-VN",
+    "Value": "Cấp phát tài sản"
+  },
+  {
+    "_id": "69af817a2d073e88003fe16b",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 32,
+    "LanguageCode": "en-US",
+    "Value": "Asset Allocation"
+  },
+  {
+    "_id": "69af817a2d073e88003fe16c",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 33,
+    "LanguageCode": "vi-VN",
+    "Value": "QUẢN TRỊ HỆ THỐNG"
+  },
+  {
+    "_id": "69af817a2d073e88003fe16d",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 33,
+    "LanguageCode": "en-US",
+    "Value": "SYSTEM ADMIN"
+  },
+  {
+    "_id": "69af817a2d073e88003fe16e",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 34,
+    "LanguageCode": "vi-VN",
+    "Value": "Cài đặt & Cấu hình"
+  },
+  {
+    "_id": "69af817a2d073e88003fe16f",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 34,
+    "LanguageCode": "en-US",
+    "Value": "Admin & Config"
+  },
+  {
+    "_id": "69af817a2d073e88003fe170",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 35,
+    "LanguageCode": "vi-VN",
+    "Value": "Phân quyền & Nhóm"
+  },
+  {
+    "_id": "69af817a2d073e88003fe171",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 35,
+    "LanguageCode": "en-US",
+    "Value": "Roles & Groups"
+  },
+  {
+    "_id": "69af817a2d073e88003fe172",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 36,
+    "LanguageCode": "vi-VN",
+    "Value": "Danh mục quyền"
+  },
+  {
+    "_id": "69af817a2d073e88003fe173",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 36,
+    "LanguageCode": "en-US",
+    "Value": "Permissions"
+  },
+  {
+    "_id": "69af817a2d073e88003fe174",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 37,
+    "LanguageCode": "vi-VN",
+    "Value": "Cấu hình chung"
+  },
+  {
+    "_id": "69af817a2d073e88003fe175",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 37,
+    "LanguageCode": "en-US",
+    "Value": "General Settings"
+  },
+  {
+    "_id": "69af817a2d073e88003fe176",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 38,
+    "LanguageCode": "vi-VN",
+    "Value": "Danh mục ngân hàng"
+  },
+  {
+    "_id": "69af817a2d073e88003fe177",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 38,
+    "LanguageCode": "en-US",
+    "Value": "Banks"
+  },
+  {
+    "_id": "69af817a2d073e88003fe178",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 39,
+    "LanguageCode": "vi-VN",
+    "Value": "Cấu hình bảng lương"
+  },
+  {
+    "_id": "69af817a2d073e88003fe179",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 39,
+    "LanguageCode": "en-US",
+    "Value": "Payroll Config"
+  },
+  {
+    "_id": "69af817a2d073e88003fe17a",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 40,
+    "LanguageCode": "vi-VN",
+    "Value": "HỖ TRỢ & TIỆN ÍCH"
+  },
+  {
+    "_id": "69af817a2d073e88003fe17b",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 40,
+    "LanguageCode": "en-US",
+    "Value": "SUPPORT & TOOLS"
+  },
+  {
+    "_id": "69af817a2d073e88003fe17c",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 41,
+    "LanguageCode": "vi-VN",
+    "Value": "Công cụ HR"
+  },
+  {
+    "_id": "69af817a2d073e88003fe17d",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 41,
+    "LanguageCode": "en-US",
+    "Value": "HR Toolkit"
+  },
+  {
+    "_id": "69af817a2d073e88003fe17e",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 42,
+    "LanguageCode": "vi-VN",
+    "Value": "Hướng dẫn sử dụng"
+  },
+  {
+    "_id": "69af817a2d073e88003fe17f",
+    "CreatedAt": "2026-03-10T02:35:22.654Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "NavigationID": 42,
+    "LanguageCode": "en-US",
+    "Value": "User Guide"
+  }
+]

@@ -1,0 +1,538 @@
+[
+  {
+    "_id": "69af6b2a395f73545e912c1a",
+    "LookupId": "65dae2f30000000000003101",
+    "LanguageCode": "vi-VN",
+    "Name": "CMND / CCCD"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c1b",
+    "LookupId": "65dae2f30000000000003101",
+    "LanguageCode": "en-US",
+    "Name": "ID Card / CCCD"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c1c",
+    "LookupId": "65dae2f30000000000003102",
+    "LanguageCode": "vi-VN",
+    "Name": "Bằng Đại học / Sau Đại học"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c1d",
+    "LookupId": "65dae2f30000000000003102",
+    "LanguageCode": "en-US",
+    "Name": "University Degree / Post-graduate"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c1e",
+    "LookupId": "65dae2f30000000000003103",
+    "LanguageCode": "vi-VN",
+    "Name": "Chứng chỉ / Chứng nhận"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c1f",
+    "LookupId": "65dae2f30000000000003103",
+    "LanguageCode": "en-US",
+    "Name": "Certificate"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c20",
+    "LookupId": "65dae2f30000000000003104",
+    "LanguageCode": "vi-VN",
+    "Name": "Giấy khám sức khỏe"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c21",
+    "LookupId": "65dae2f30000000000003104",
+    "LanguageCode": "en-US",
+    "Name": "Health Certificate"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c22",
+    "LookupId": "65dae2f30000000000003105",
+    "LanguageCode": "vi-VN",
+    "Name": "Sơ yếu lý lịch"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c23",
+    "LookupId": "65dae2f30000000000003105",
+    "LanguageCode": "en-US",
+    "Name": "Curriculum Vitae"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c24",
+    "LookupId": "65dae2f30000000000003106",
+    "LanguageCode": "vi-VN",
+    "Name": "Giấy khai sinh"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c25",
+    "LookupId": "65dae2f30000000000003106",
+    "LanguageCode": "en-US",
+    "Name": "Birth Certificate"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c26",
+    "LookupId": "65dae2f30000000000003107",
+    "LanguageCode": "vi-VN",
+    "Name": "Giấy đăng ký kết hôn"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c27",
+    "LookupId": "65dae2f30000000000003107",
+    "LanguageCode": "en-US",
+    "Name": "Marriage Certificate"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c28",
+    "LookupId": "65dae2f30000000000003108",
+    "LanguageCode": "vi-VN",
+    "Name": "Sổ hộ khẩu"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c29",
+    "LookupId": "65dae2f30000000000003108",
+    "LanguageCode": "en-US",
+    "Name": "Household Registration Book"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c2a",
+    "LookupId": "65dae2f30000000000003109",
+    "LanguageCode": "vi-VN",
+    "Name": "Tài liệu khác"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c2b",
+    "LookupId": "65dae2f30000000000003109",
+    "LanguageCode": "en-US",
+    "Name": "Other Documents"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c2c",
+    "LookupId": "65dae2f30000000000003201",
+    "LanguageCode": "vi-VN",
+    "Name": "Chờ duyệt"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c2d",
+    "LookupId": "65dae2f30000000000003201",
+    "LanguageCode": "en-US",
+    "Name": "Pending"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c2e",
+    "LookupId": "65dae2f30000000000003202",
+    "LanguageCode": "vi-VN",
+    "Name": "Đã xác thực"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c2f",
+    "LookupId": "65dae2f30000000000003202",
+    "LanguageCode": "en-US",
+    "Name": "Verified"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c30",
+    "LookupId": "65dae2f30000000000003203",
+    "LanguageCode": "vi-VN",
+    "Name": "Từ chối"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c31",
+    "LookupId": "65dae2f30000000000003203",
+    "LanguageCode": "en-US",
+    "Name": "Rejected"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c32",
+    "LookupId": "660a1b2c3d4e5f6a7b8c9e01",
+    "LanguageCode": "en-US",
+    "Name": "Draft"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c33",
+    "LookupId": "660a1b2c3d4e5f6a7b8c9e01",
+    "LanguageCode": "vi-VN",
+    "Name": "Nháp"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c34",
+    "LookupId": "660a1b2c3d4e5f6a7b8c9e02",
+    "LanguageCode": "en-US",
+    "Name": "Pending"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c35",
+    "LookupId": "660a1b2c3d4e5f6a7b8c9e02",
+    "LanguageCode": "vi-VN",
+    "Name": "Chờ duyệt"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c36",
+    "LookupId": "660a1b2c3d4e5f6a7b8c9e03",
+    "LanguageCode": "en-US",
+    "Name": "Approved"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c37",
+    "LookupId": "660a1b2c3d4e5f6a7b8c9e03",
+    "LanguageCode": "vi-VN",
+    "Name": "Đã duyệt"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c38",
+    "LookupId": "660a1b2c3d4e5f6a7b8c9e04",
+    "LanguageCode": "en-US",
+    "Name": "Closed"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c39",
+    "LookupId": "660a1b2c3d4e5f6a7b8c9e04",
+    "LanguageCode": "vi-VN",
+    "Name": "Đã chốt"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c3a",
+    "LookupId": "660a1b2c3d4e5f6a7b8c9e05",
+    "LanguageCode": "en-US",
+    "Name": "Disputed"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c3b",
+    "LookupId": "660a1b2c3d4e5f6a7b8c9e05",
+    "LanguageCode": "vi-VN",
+    "Name": "Khiếu nại"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c48",
+    "LookupId": "65dae2f30000000000002201",
+    "LanguageCode": "vi-VN",
+    "Name": "Nam"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c49",
+    "LookupId": "65dae2f30000000000002201",
+    "LanguageCode": "en-US",
+    "Name": "Male"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c4a",
+    "LookupId": "65dae2f30000000000002202",
+    "LanguageCode": "vi-VN",
+    "Name": "Nữ"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c4b",
+    "LookupId": "65dae2f30000000000002202",
+    "LanguageCode": "en-US",
+    "Name": "Female"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c4c",
+    "LookupId": "65dae2f30000000000002203",
+    "LanguageCode": "vi-VN",
+    "Name": "Khác"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c4d",
+    "LookupId": "65dae2f30000000000002203",
+    "LanguageCode": "en-US",
+    "Name": "Other"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c4e",
+    "LookupId": "65dae2f30000000000002301",
+    "LanguageCode": "vi-VN",
+    "Name": "Độc thân"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c4f",
+    "LookupId": "65dae2f30000000000002301",
+    "LanguageCode": "en-US",
+    "Name": "Single"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c50",
+    "LookupId": "65dae2f30000000000002302",
+    "LanguageCode": "vi-VN",
+    "Name": "Đã kết hôn"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c51",
+    "LookupId": "65dae2f30000000000002302",
+    "LanguageCode": "en-US",
+    "Name": "Married"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c52",
+    "LookupId": "65dae2f30000000000002303",
+    "LanguageCode": "vi-VN",
+    "Name": "Ly hôn"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c53",
+    "LookupId": "65dae2f30000000000002303",
+    "LanguageCode": "en-US",
+    "Name": "Divorced"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c54",
+    "LookupId": "65dae2f30000000000002304",
+    "LanguageCode": "vi-VN",
+    "Name": "Góa"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c55",
+    "LookupId": "65dae2f30000000000002304",
+    "LanguageCode": "en-US",
+    "Name": "Widowed"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c56",
+    "LookupId": "65dae2f30000000000002401",
+    "LanguageCode": "vi-VN",
+    "Name": "Đang hoạt động"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c57",
+    "LookupId": "65dae2f30000000000002401",
+    "LanguageCode": "en-US",
+    "Name": "Published"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c58",
+    "LookupId": "65dae2f30000000000002402",
+    "LanguageCode": "vi-VN",
+    "Name": "Bản nháp"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c59",
+    "LookupId": "65dae2f30000000000002402",
+    "LanguageCode": "en-US",
+    "Name": "Draft"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c5a",
+    "LookupId": "65dae2f30000000000002403",
+    "LanguageCode": "vi-VN",
+    "Name": "Đã đóng"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c5b",
+    "LookupId": "65dae2f30000000000002403",
+    "LanguageCode": "en-US",
+    "Name": "Closed"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c5c",
+    "LookupId": "65dae2f30000000000002404",
+    "LanguageCode": "vi-VN",
+    "Name": "Tạm dừng"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c5d",
+    "LookupId": "65dae2f30000000000002404",
+    "LanguageCode": "en-US",
+    "Name": "On Hold"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c5e",
+    "LookupId": "65dae2f30000000000002405",
+    "LanguageCode": "vi-VN",
+    "Name": "Hoàn tất"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c5f",
+    "LookupId": "65dae2f30000000000002405",
+    "LanguageCode": "en-US",
+    "Name": "Completed"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c60",
+    "LookupId": "65dae2f30000000000002501",
+    "LanguageCode": "vi-VN",
+    "Name": "Toàn thời gian"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c61",
+    "LookupId": "65dae2f30000000000002501",
+    "LanguageCode": "en-US",
+    "Name": "Full-time"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c62",
+    "LookupId": "65dae2f30000000000002502",
+    "LanguageCode": "vi-VN",
+    "Name": "Bán thời gian"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c63",
+    "LookupId": "65dae2f30000000000002502",
+    "LanguageCode": "en-US",
+    "Name": "Part-time"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c64",
+    "LookupId": "65dae2f30000000000002503",
+    "LanguageCode": "vi-VN",
+    "Name": "Hợp đồng"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c65",
+    "LookupId": "65dae2f30000000000002503",
+    "LanguageCode": "en-US",
+    "Name": "Contract"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c66",
+    "LookupId": "65dae2f30000000000002504",
+    "LanguageCode": "vi-VN",
+    "Name": "Thực tập"
+  },
+  {
+    "_id": "69af6b2a395f73545e912c67",
+    "LookupId": "65dae2f30000000000002504",
+    "LanguageCode": "en-US",
+    "Name": "Internship"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96bd",
+    "CreatedAt": "2026-03-10T02:19:49.235Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c14",
+    "LanguageCode": "vi-VN",
+    "Name": "Dự thảo"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96be",
+    "CreatedAt": "2026-03-10T02:19:49.236Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c14",
+    "LanguageCode": "en-US",
+    "Name": "Draft"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96c0",
+    "CreatedAt": "2026-03-10T02:19:49.238Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c15",
+    "LanguageCode": "vi-VN",
+    "Name": "Chờ duyệt"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96c1",
+    "CreatedAt": "2026-03-10T02:19:49.238Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c15",
+    "LanguageCode": "en-US",
+    "Name": "Pending"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96c3",
+    "CreatedAt": "2026-03-10T02:19:49.239Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c16",
+    "LanguageCode": "vi-VN",
+    "Name": "Đã duyệt"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96c4",
+    "CreatedAt": "2026-03-10T02:19:49.240Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c16",
+    "LanguageCode": "en-US",
+    "Name": "Approved"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96c6",
+    "CreatedAt": "2026-03-10T02:19:49.241Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c17",
+    "LanguageCode": "vi-VN",
+    "Name": "Đã chốt"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96c7",
+    "CreatedAt": "2026-03-10T02:19:49.242Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c17",
+    "LanguageCode": "en-US",
+    "Name": "Closed"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96c9",
+    "CreatedAt": "2026-03-10T02:19:49.243Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c18",
+    "LanguageCode": "vi-VN",
+    "Name": "Khiếu nại"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96ca",
+    "CreatedAt": "2026-03-10T02:19:49.245Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c18",
+    "LanguageCode": "en-US",
+    "Name": "Disputed"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96cc",
+    "CreatedAt": "2026-03-10T02:19:49.246Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c19",
+    "LanguageCode": "vi-VN",
+    "Name": "Cần kiểm tra"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96cd",
+    "CreatedAt": "2026-03-10T02:19:49.246Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af6b2a395f73545e912c19",
+    "LanguageCode": "en-US",
+    "Name": "Review Required"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96cf",
+    "CreatedAt": "2026-03-10T02:19:49.248Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af7fc57f3ef172826e96ce",
+    "LanguageCode": "vi-VN",
+    "Name": "Đã tính toán"
+  },
+  {
+    "_id": "69af7fc57f3ef172826e96d0",
+    "CreatedAt": "2026-03-10T02:19:49.249Z",
+    "UpdatedAt": null,
+    "IsDeleted": false,
+    "DeletedAt": null,
+    "LookupId": "69af7fc57f3ef172826e96ce",
+    "LanguageCode": "en-US",
+    "Name": "Calculated"
+  }
+]

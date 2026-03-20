@@ -268,14 +268,14 @@ else
                     <div class="table-responsive">
                         <table class="table table-row-bordered table-row-gray-300 align-middle gs-9 gy-6">
                             <thead class="bg-light">
-                                <tr class="fw-bold fs-7 text-gray-800 text-uppercase">
-                                    <th class="min-w-100px text-center px-0">Tháng/Năm</th>
-                                    <th class="min-w-125px">Lương cơ bản</th>
-                                    <th class="min-w-125px">Tổng phụ cấp</th>
-                                    <th class="min-w-125px">Thưởng/Khác</th>
-                                    <th class="min-w-125px">Khấu trừ & Thuế</th>
-                                    <th class="min-w-150px">Lương thực nhận</th>
-                                    <th class="min-w-100px text-end">Chi tiết</th>
+                                  <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                                    <th class="min-w-175px"><i class="ki-outline ki-calendar-8 fs-8 me-1"></i>Tháng / Năm</th>
+                                    <th class="min-w-125px text-end"><i class="ki-outline ki-wallet fs-8 me-1"></i>Lương CB</th>
+                                    <th class="min-w-150px text-end text-success"><i class="ki-outline ki-plus-square fs-8 text-success me-1"></i>Phụ cấp & Thưởng</th>
+                                    <th class="min-w-125px text-end text-danger"><i class="ki-outline ki-minus-square fs-8 text-danger me-1"></i>Giảm trừ</th>
+                                    <th class="min-w-125px text-end text-primary"><i class="ki-outline ki-dollar fs-8 text-primary me-1"></i>Thực lĩnh</th>
+                                    <th class="min-w-120px text-center"><i class="ki-outline ki-shield-search fs-8 me-1"></i>Trạng thái</th>
+                                    <th class="text-end min-w-100px ps-4">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -292,21 +292,51 @@ else
                                     @foreach (var payslip in _payrolls.OrderByDescending(x => x.Month))
                                     {
                                         <tr>
-                                            <td class="text-center px-0">
-                                                <span class="badge badge-light-info fs-7 fw-bold px-4 py-3">@payslip.Month / @payslip.Year</span>
-                                            </td>
-                                            <td><span class="text-gray-800 fw-bold">@payslip.BasicSalary.ToString("N0")</span></td>
-                                            <td><span class="text-success fw-bold">+ @payslip.Allowance.ToString("N0")</span></td>
-                                            <td><span class="text-primary fw-bold">+ @payslip.Bonus.ToString("N0")</span></td>
-                                            <td><span class="text-danger fw-bold">- @((payslip.TotalDeduction + payslip.TaxAmount).ToString("N0"))</span></td>
                                             <td>
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-gray-900 fw-bolder fs-5">@payslip.NetSalary.ToString("N0") đ</span>
-                                                    <span class="text-muted fs-8">VAT Included @payslip.StatusName</span>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-40px me-3">
+                                                        <div class="symbol-label bg-light-primary">
+                                                            <i class="ki-outline ki-calendar-8 text-primary fs-2"></i>
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-gray-800 fw-bold fs-6">Tháng @payslip.Month / @payslip.Year</span>
                                                 </div>
                                             </td>
+                                            <td class="text-end fw-bold">
+                                                <i class="ki-outline ki-wallet fs-7 text-gray-400 me-1"></i>
+                                                @payslip.BasicSalary.ToString("N0")
+                                            </td>
+                                            <td class="text-end text-success fw-bold">
+                                                <div class="d-flex flex-column align-items-end">
+                                                    <span>
+                                                        <i class="ki-outline ki-plus-square fs-7 text-success me-1"></i>
+                                                        @payslip.Allowance.ToString("N0")
+                                                    </span>
+                                                    @if (payslip.Bonus > 0)
+                                                    {
+                                                        <span class="fs-9 text-dark">Thưởng: @payslip.Bonus.ToString("N0")</span>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td class="text-end text-danger fw-bold">
+                                                <i class="ki-outline ki-minus-square fs-7 text-danger me-1"></i>
+                                                @((payslip.TotalDeduction + payslip.TaxAmount).ToString("N0"))
+                                            </td>
+                                            <td class="text-end text-primary fs-5 fw-bolder">
+                                                <i class="ki-outline ki-dollar fs-6 text-primary me-1"></i>
+                                                @payslip.NetSalary.ToString("N0")
+                                            </td>
+                                            <td class="text-center">
+                                                @{
+                                                    var isFinalized = payslip.StatusName == "Đã chốt";
+                                                }
+                                                <span class="badge badge-light-@payslip.StatusColor fw-bold px-4 py-2 rounded-pill">
+                                                    <i class="ki-outline @(isFinalized ? "ki-check-circle" : "ki-notepad-edit") fs-7 text-@payslip.StatusColor me-1"></i>
+                                                    @(string.IsNullOrEmpty(payslip.StatusName) ? "Bản nháp" : payslip.StatusName)
+                                                </span>
+                                            </td>
                                             <td class="text-end">
-                                                <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" title="Xem phiếu lương chi tiết">
+                                                <button class="btn btn-sm btn-icon btn-light-primary btn-active-primary me-2 hover-scale" title="Xem chi tiết" @onclick="() => ViewPayrollDetails(payslip)">
                                                     <i class="ki-outline ki-eye fs-2"></i>
                                                 </button>
                                             </td>
@@ -376,11 +406,11 @@ else
                                                     <span class="badge badge-light-@(doc.StatusColor) fw-bold">@doc.StatusName</span>
                                                 </div>
                                                 <div class="fs-6 fw-bold text-gray-800 mb-1">@doc.DocumentTypeName</div>
-                                                <div class="fs-7 fw-semibold text-gray-500 mb-5">@doc.DocumentName (@doc.FileSizeDisplay)</div>
+                                                <div class="fs-7 fw-semibold text-gray-500 mb-5"><a href="javascript:void(0)" class="text-gray-500 text-hover-primary" @onclick="() => ViewDocumentDetails(doc)">@doc.DocumentName (@doc.FileSizeDisplay)</a></div>
                                                 <div class="mt-auto d-flex flex-stack border-top border-gray-200 pt-5">
                                                     <span class="text-gray-400 fs-8 fw-bold">Cập nhật: @doc.CreatedAt.ToString("dd/MM/yyyy")</span>
                                                     <div class="d-flex">
-                                                        <a href="@doc.FileUrl" target="_blank" class="btn btn-icon btn-sm btn-light-primary me-2"><i class="ki-outline ki-eye fs-5"></i></a>
+                                                         <button class="btn btn-icon btn-sm btn-light-primary me-2" @onclick="() => ViewDocumentDetails(doc)" title="Xem chi tiết"><i class="ki-outline ki-eye fs-5"></i></button>
                                                         <a href="@doc.FileUrl" download="@doc.DocumentName" class="btn btn-icon btn-sm btn-light-success"><i class="ki-outline ki-file-down fs-5"></i></a>
                                                     </div>
                                                 </div>
@@ -495,40 +525,42 @@ else
                                     <th class="min-w-100px">Thứ</th>
                                     <th class="min-w-125px">Giờ vào</th>
                                     <th class="min-w-125px">Giờ ra</th>
-                                    <th class="min-w-100px">Công</th>
-                                    <th class="min-w-150px">Ghi chú</th>
+                                    <th class="min-w-100px text-end">Chi tiết</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if (_attendanceDetails == null)
                                 {
-                                    <tr><td colspan="6" class="text-center py-20"><div class="spinner-border text-primary"></div></td></tr>
+                                    <tr><td colspan="5" class="text-center py-20"><div class="spinner-border text-primary"></div></td></tr>
                                 }
                                 else if (!_attendanceDetails.Any())
                                 {
-                                    <tr><td colspan="6" class="text-center py-20 text-gray-500 fs-5">Chưa có dữ liệu chấm công kỳ này.</td></tr>
+                                    <tr><td colspan="5" class="text-center py-20 text-gray-500 fs-5">Chưa có dữ liệu chấm công kỳ này.</td></tr>
                                 }
                                 else
                                 {
                                     @foreach (var log in _attendanceDetails)
                                     {
                                         <tr class="@(log.DayOfWeek == "Sunday" || log.DayOfWeek == "Chủ Nhật" ? "bg-light-danger opacity-75" : "")">
-                                            <td><span class="fw-bold">@log.Date.ToString("dd/MM")</span></td>
-                                            <td><span class="text-muted">@log.DayOfWeek</span></td>
+                                            <td><span class="fw-bold text-gray-800">@log.Date.ToString("dd/MM")</span></td>
+                                            <td><span class="text-muted fs-7">@log.DayOfWeek</span></td>
                                             <td>
                                                 @if (log.CheckIn.HasValue) {
-                                                    <span class="badge badge-light-success fw-bold">@log.CheckIn.Value.ToString("HH:mm")</span>
-                                                    @if (log.LateMinutes > 0) { <span class="badge badge-light-danger ms-1 fs-9">Muộn @(log.LateMinutes)p</span> }
+                                                    <span class="badge badge-light-success fw-bold fs-6">@log.CheckIn.Value.ToString("HH:mm")</span>
+                                                    @if (log.LateMinutes > 0) { <span class="badge badge-light-danger ms-1 fw-bold p-1 fs-9">Muộn</span> }
                                                 } else { <span class="text-gray-300">--:--</span> }
                                             </td>
                                             <td>
                                                 @if (log.CheckOut.HasValue) {
-                                                    <span class="badge badge-light-primary fw-bold">@log.CheckOut.Value.ToString("HH:mm")</span>
-                                                    @if (log.EarlyLeaveMinutes > 0) { <span class="badge badge-light-warning ms-1 fs-9">Về sớm @(log.EarlyLeaveMinutes)p</span> }
+                                                    <span class="badge badge-light-primary fw-bold fs-6">@log.CheckOut.Value.ToString("HH:mm")</span>
+                                                    @if (log.EarlyLeaveMinutes > 0) { <span class="badge badge-light-warning ms-1 fw-bold p-1 fs-9">Sớm</span> }
                                                 } else { <span class="text-gray-300">--:--</span> }
                                             </td>
-                                            <td><span class="badge badge-light-dark fw-bold">@log.WorkValue</span></td>
-                                            <td class="fs-7 text-gray-600">@log.Note</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-icon btn-light-primary btn-sm btn-active-primary" @onclick="() => ViewAttendanceDetails(log)">
+                                                    <i class="ki-outline ki-eye fs-2"></i>
+                                                </button>
+                                            </td>
                                         </tr>
                                     }
                                 }
@@ -836,6 +868,233 @@ else
                              @if (_isSaving) { <span class="spinner-border spinner-border-sm me-2"></span> }
                              Cập nhật mật khẩu
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (isPayrollModalOpen && _selectedPayroll != null)
+    {
+        <div class="modal fade show d-block animate__animated animate__fadeIn" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content shadow-lg border-0">
+                    <div class="modal-header bg-light-primary py-5">
+                        <h3 class="modal-title fw-bolder">Chi tiết phiếu lương Tháng @_selectedPayroll.Month/@_selectedPayroll.Year</h3>
+                        <div class="btn btn-icon btn-sm btn-active-light-primary" @onclick="CloseModals">
+                            <i class="ki-outline ki-cross fs-1"></i>
+                        </div>
+                    </div>
+                    <div class="modal-body p-10">
+                        <div class="row g-5 mb-10">
+                            <div class="col-6">
+                                <div class="bg-gray-100 p-5 rounded-3">
+                                    <div class="text-muted fs-7 fw-bold mb-1">LƯƠNG CƠ BẢN</div>
+                                    <div class="fs-3 fw-bolder text-gray-800">@_selectedPayroll.BasicSalary.ToString("N0") đ</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="bg-light-success p-5 rounded-3 border border-success border-dashed">
+                                    <div class="text-success fs-7 fw-bold mb-1">THỰC NHẬN</div>
+                                    <div class="fs-2 fw-bolder text-success">@_selectedPayroll.NetSalary.ToString("N0") đ</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-10">
+                            <div class="col-md-6">
+                                <h4 class="fw-bold mb-5 text-gray-800 d-flex align-items-center">
+                                    <i class="ki-outline ki-add-item fs-3 me-2 text-primary"></i>Các khoản phụ cấp
+                                </h4>
+                                <div class="table-responsive">
+                                    <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4">
+                                        <thead>
+                                            <tr class="fw-bold fs-8 text-gray-400 text-uppercase">
+                                                <th class="min-w-100px">Khoản phụ cấp</th>
+                                                <th class="text-end">Số tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (_selectedPayroll.AllowanceDetails != null && _selectedPayroll.AllowanceDetails.Any())
+                                            {
+                                                @foreach (var item in _selectedPayroll.AllowanceDetails)
+                                                {
+                                                    <tr>
+                                                        <td class="fs-7 fw-bold text-gray-800">@item.Name</td>
+                                                        <td class="text-end fs-7 fw-bold text-success">+ @item.Amount.ToString("N0")</td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr><td colspan="2" class="text-center text-muted fs-8">Không có phụ cấp chi tiết</td></tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="fw-bold mb-5 text-gray-800 d-flex align-items-center">
+                                    <i class="ki-outline ki-minus-item fs-3 me-2 text-danger"></i>Các khoản khấu trừ
+                                </h4>
+                                <div class="table-responsive">
+                                    <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4">
+                                        <thead>
+                                            <tr class="fw-bold fs-8 text-gray-400 text-uppercase">
+                                                <th class="min-w-100px">Khoản khấu trừ</th>
+                                                <th class="text-end">Số tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (_selectedPayroll.DeductionDetails != null && _selectedPayroll.DeductionDetails.Any())
+                                            {
+                                                @foreach (var item in _selectedPayroll.DeductionDetails)
+                                                {
+                                                    <tr>
+                                                        <td class="fs-7 fw-bold text-gray-800">@item.Name</td>
+                                                        <td class="text-end fs-7 fw-bold text-danger">- @item.Amount.ToString("N0")</td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr><td colspan="2" class="text-center text-muted fs-8">Không có khoản khấu trừ chi tiết</td></tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (isDocumentModalOpen && _selectedDocument != null)
+    {
+        <div class="modal fade show d-block animate__animated animate__fadeIn" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow-lg border-0">
+                    <div class="modal-header border-0 pb-0">
+                        <h3 class="modal-title fw-bolder fs-2 text-gray-900">Chi tiết tài liệu số</h3>
+                        <div class="btn btn-icon btn-sm btn-active-light-primary" @onclick="CloseModals">
+                            <i class="ki-outline ki-cross fs-1"></i>
+                        </div>
+                    </div>
+                    <div class="modal-body py-10">
+                        <div class="d-flex flex-column align-items-center mb-10">
+                            <div class="symbol symbol-100px symbol-circle mb-5 bg-light-primary d-flex flex-center">
+                                <i class="ki-outline ki-file fs-3x text-primary"></i>
+                            </div>
+                            <h4 class="fw-bolder text-gray-900 fs-1 mb-1">@_selectedDocument.DocumentName</h4>
+                            <span class="badge badge-light-primary fw-bold px-4 py-3">@_selectedDocument.DocumentTypeName</span>
+                        </div>
+
+                        <div class="separator separator-dashed my-5"></div>
+
+                        <div class="row g-5">
+                            <div class="col-6">
+                                <div class="fs-7 text-muted fw-bold mb-1">NGÀY TẠO / CẬP NHẬT</div>
+                                <div class="fs-6 fw-bold text-gray-800">@_selectedDocument.CreatedAt.ToString("dd/MM/yyyy")</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="fs-7 text-muted fw-bold mb-1">DUNG LƯỢNG</div>
+                                <div class="fs-6 fw-bold text-gray-800">@_selectedDocument.FileSizeDisplay</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="fs-7 text-muted fw-bold mb-1">TRẠNG THÁI</div>
+                                <span class="badge badge-light-@_selectedDocument.StatusColor fw-bolder">@_selectedDocument.StatusLabel</span>
+                            </div>
+                            <div class="col-6">
+                                <div class="fs-7 text-muted fw-bold mb-1">HẾT HẠN</div>
+                                <div class="fs-6 fw-bold text-@( (_selectedDocument.ExpiryDate < DateTime.Now) ? "danger" : "gray-800" )">
+                                    @(_selectedDocument.ExpiryDate?.ToString("dd/MM/yyyy") ?? "Không thời hạn")
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(_selectedDocument.Note))
+                            {
+                                <div class="col-12">
+                                    <div class="fs-7 text-muted fw-bold mb-1">GHI CHÚ</div>
+                                    <div class="bg-light p-3 rounded fs-7 italic">@_selectedDocument.Note</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0 flex-center">
+                        <a href="@_selectedDocument.FileUrl" target="_blank" class="btn btn-primary fw-bold px-10">
+                            <i class="ki-outline ki-download fs-2 me-2"></i>Tải về ngay
+                        </a>
+                        <button class="btn btn-light-danger fw-bold px-10" @onclick="CloseModals">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (isAttendanceModalOpen && _selectedAttendance != null)
+    {
+        <div class="modal fade show d-block animate__animated animate__fadeIn" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+                <div class="modal-content shadow-lg border-0 border-top border-primary border-4">
+                    <div class="modal-header border-0 pb-0">
+                        <h3 class="modal-title fw-bolder fs-2 text-primary">Chi tiết chấm công</h3>
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @onclick="CloseModals"><i class="ki-outline ki-cross fs-1"></i></div>
+                    </div>
+                    <div class="modal-body py-10">
+                        <div class="text-center mb-8">
+                            <i class="ki-outline ki-calendar-8 fs-3x text-primary mb-3"></i>
+                            <h2 class="fw-bold text-gray-900 mb-1">Ngày @_selectedAttendance.Date.ToString("dd/MM/yyyy")</h2>
+                            <span class="badge badge-light-gray fw-bold fs-7">@_selectedAttendance.DayOfWeek</span>
+                        </div>
+                        
+                        <div class="rounded bg-light-primary p-7 d-flex flex-stack mb-6 border border-primary border-dashed">
+                            <div class="d-flex flex-column align-items-center w-45">
+                                <span class="text-muted fw-bold fs-8 text-uppercase mb-2">Giờ vào</span>
+                                <span class="fs-2 text-success fw-bolder">@(_selectedAttendance.CheckIn?.ToString("HH:mm") ?? "--:--")</span>
+                                @if (_selectedAttendance.LateMinutes > 0) {
+                                    <span class="badge badge-light-danger mt-2 fw-bold">Trễ @_selectedAttendance.LateMinutes p</span>
+                                }
+                            </div>
+                            <div class="bullet bullet-vertical h-40px bg-primary opacity-25"></div>
+                            <div class="d-flex flex-column align-items-center w-45">
+                                <span class="text-muted fw-bold fs-8 text-uppercase mb-2">Giờ ra</span>
+                                <span class="fs-2 text-primary fw-bolder">@(_selectedAttendance.CheckOut?.ToString("HH:mm") ?? "--:--")</span>
+                                @if (_selectedAttendance.EarlyLeaveMinutes > 0) {
+                                    <span class="badge badge-light-warning mt-2 fw-bold">Về sớm @_selectedAttendance.EarlyLeaveMinutes p</span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row g-5">
+                            <div class="col-6">
+                                <div class="bg-gray-100 p-5 rounded-3 h-100">
+                                    <div class="text-muted fw-bold fs-8 text-uppercase mb-1">Công ghi nhận</div>
+                                    <div class="fs-3 fw-bold text-gray-800">@_selectedAttendance.WorkValue.ToString("F1")</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="bg-gray-100 p-5 rounded-3 h-100">
+                                    <div class="text-muted fw-bold fs-8 text-uppercase mb-1">Tăng ca (OT)</div>
+                                    <div class="fs-3 fw-bold text-gray-800">@_selectedAttendance.OvertimeHours.ToString("F1")h</div>
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(_selectedAttendance.Note))
+                            {
+                                <div class="col-12">
+                                    <div class="bg-light-info p-5 rounded-3 border-start border-info border-3">
+                                        <div class="text-info fw-bold fs-8 text-uppercase mb-1">Ghi chú</div>
+                                        <div class="fs-7 text-gray-700 italic">@_selectedAttendance.Note</div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-12">
+                                <div class="fs-9 text-gray-400 mt-2"><i class="ki-outline ki-information-2 fs-9 me-1"></i>Dữ liệu này được ghi nhận từ hệ thống máy chấm công tự động.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0 flex-center">
+                        <button class="btn btn-primary fw-bold px-15" @onclick="CloseModals">Xác nhận</button>
                     </div>
                 </div>
             </div>

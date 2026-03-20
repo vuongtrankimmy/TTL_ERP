@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace TTL.HR.Application.Modules.Attendance.Models
 {
@@ -56,7 +59,7 @@ namespace TTL.HR.Application.Modules.Attendance.Models
     {
         public string Id { get; set; } = "";
         public string EmployeeId { get; set; } = "";
-        [System.Text.Json.Serialization.JsonPropertyName("employeeCode")]
+        [JsonProperty("employeeCode")]
         public string EmployeeCode { get; set; } = "";
         public string EmployeeName { get; set; } = "";
         public string Department { get; set; } = "";
@@ -74,61 +77,61 @@ namespace TTL.HR.Application.Modules.Attendance.Models
     {
         public string Id { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("employeeId")]
+        [JsonProperty("employeeId")]
         public string EmployeeId { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("employeeName")]
+        [JsonProperty("employeeName")]
         public string EmployeeName { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("employeeCode")]
+        [JsonProperty("employeeCode")]
         public string EmployeeCode { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("departmentName")]
+        [JsonProperty("departmentName")]
         public string Department { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("avatarUrl")]
+        [JsonProperty("avatarUrl")]
         public string Avatar { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("fromShiftName")]
+        [JsonProperty("fromShiftName")]
         public string CurrentShift { get; set; } = "";
 
-        [System.Text.Json.Serialization.JsonPropertyName("fromShiftColor")]
+        [JsonProperty("fromShiftColor")]
         public string FromShiftColor { get; set; } = "info";
         
-        [System.Text.Json.Serialization.JsonPropertyName("toShiftName")]
+        [JsonProperty("toShiftName")]
         public string TargetShift { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("toShiftColor")]
+        [JsonProperty("toShiftColor")]
         public string ToShiftColor { get; set; } = "primary";
         
-        [System.Text.Json.Serialization.JsonPropertyName("reason")]
+        [JsonProperty("reason")]
         public string Reason { get; set; } = "";
         
-        [System.Text.Json.Serialization.JsonPropertyName("date")]
+        [JsonProperty("date")]
         public DateTime RequestedDate { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        [JsonProperty("status")]
         public string Status { get; set; } = "Pending";
         
         public bool IsPending => Status != "Approved" && Status != "2" && Status != "Rejected" && Status != "3" && Status != "Withdrawn" && Status != "8" && Status != "Cancelled" && Status != "4";
         
-        [System.Text.Json.Serialization.JsonPropertyName("comment")]
+        [JsonProperty("comment")]
         public string? ManagerNote { get; set; }
 
         // Multi-level Approval
-        [System.Text.Json.Serialization.JsonPropertyName("currentLevel")]
+        [JsonProperty("currentLevel")]
         public int CurrentLevel { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("totalLevelsRequired")]
+        [JsonProperty("totalLevelsRequired")]
         public int TotalLevelsRequired { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("pendingApproverId")]
+        [JsonProperty("pendingApproverId")]
         public string? PendingApproverId { get; set; }
         
-        [System.Text.Json.Serialization.JsonPropertyName("nextApproverId")]
+        [JsonProperty("nextApproverId")]
         public string? NextApproverId { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("statusColor")]
+        [JsonProperty("statusColor")]
         public string StatusColor { get; set; } = "secondary";
     }
     public class EmployeeAttendanceDetailDto
@@ -234,11 +237,28 @@ namespace TTL.HR.Application.Modules.Attendance.Models
 
     public class EmployeeStatsModel
     {
+        [JsonProperty("employeeId")]
+        [JsonPropertyName("employeeId")]
         public string EmployeeId { get; set; } = "";
+        
+        [JsonProperty("totalEntitledLeave")]
+        [JsonPropertyName("totalEntitledLeave")]
         public double TotalEntitledLeave { get; set; }
+        
+        [JsonProperty("usedLeaveYear")]
+        [JsonPropertyName("usedLeaveYear")]
         public double UsedLeaveYear { get; set; }
+        
+        [JsonProperty("usedLeaveMonth")]
+        [JsonPropertyName("usedLeaveMonth")]
         public double UsedLeaveMonth { get; set; }
+        
+        [JsonProperty("remainingLeave")]
+        [JsonPropertyName("remainingLeave")]
         public double RemainingLeave { get; set; }
+        
+        [JsonProperty("totalWorkingHoursMonth")]
+        [JsonPropertyName("totalWorkingHoursMonth")]
         public double TotalWorkingHoursMonth { get; set; }
     }
 }

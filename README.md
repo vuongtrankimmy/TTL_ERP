@@ -259,4 +259,27 @@ Backend ERP cho **Tân Tân Lộc** được thiết kế theo tiêu chuẩn **e
 
 ---
 
+## 14. CI/CD & Deployment
+
+### 14.1 GitHub Actions
+Hệ thống sử dụng **GitHub Actions** để tự động hóa quy trình Build, Test và Deploy. 
+Cấu hình tại: `.github/workflows/deploy.yml`
+
+**Quy trình:**
+1. **Build & Test**: Tự động chạy khi có Push hoặc Pull Request vào nhánh `main`.
+2. **Deploy**: Tự động Publish và FTP SSH lên **SmarterASP.net** khi code được merge vào `main`.
+
+### 14.2 Cấu hình GitHub Secrets
+Để quy trình Deploy hoạt động, cần cấu hình các Repository Secrets sau trên GitHub:
+- `SMARTERASP_FTP_SERVER`: Địa chỉ host FTP (ví dụ: `ftp.smarterasp.net`)
+- `SMARTERASP_FTP_USER`: Tên đăng nhập FTP
+- `SMARTERASP_FTP_PWD`: Mật khẩu FTP
+
+### 14.3 Deployment Target
+- **Environment**: Production
+- **URL**: [http://vuong01-001-site1.ntempurl.com/](http://vuong01-001-site1.ntempurl.com/)
+- **Method**: Web Deploy / FTP Sync
+
+---
+
 📌 *Tài liệu này dùng cho: CTO, Backend Developer, System Architect, DevOps*

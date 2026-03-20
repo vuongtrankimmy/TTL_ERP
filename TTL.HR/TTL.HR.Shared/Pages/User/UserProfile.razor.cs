@@ -84,6 +84,12 @@ namespace TTL.HR.Shared.Pages.User
         private bool _isSaving = false;
         private bool isEditModalOpen = false;
         private bool isPasswordModalOpen = false;
+        private bool isPayrollModalOpen = false;
+        private bool isDocumentModalOpen = false;
+        private bool isAttendanceModalOpen = false;
+        private PayrollModel? _selectedPayroll;
+        private EmployeeDocumentModel? _selectedDocument;
+        private AttendanceDetailModel? _selectedAttendance;
 
         [SupplyParameterFromQuery(Name = "tab")] public string? TabFromUrl { get; set; }
 
@@ -346,6 +352,36 @@ namespace TTL.HR.Shared.Pages.User
         {
             isEditModalOpen = false;
             isPasswordModalOpen = false;
+            isPayrollModalOpen = false;
+            isDocumentModalOpen = false;
+            isAttendanceModalOpen = false;
+            _selectedPayroll = null;
+            _selectedDocument = null;
+            _selectedAttendance = null;
+            _modalError = null;
+            _modalSuccess = null;
+            StateHasChanged();
+        }
+
+        private void ViewPayrollDetails(PayrollModel item)
+        {
+            _selectedPayroll = item;
+            isPayrollModalOpen = true;
+            StateHasChanged();
+        }
+
+        private void ViewDocumentDetails(EmployeeDocumentModel item)
+        {
+            _selectedDocument = item;
+            isDocumentModalOpen = true;
+            StateHasChanged();
+        }
+
+        private void ViewAttendanceDetails(AttendanceDetailModel log)
+        {
+            _selectedAttendance = log;
+            isAttendanceModalOpen = true;
+            StateHasChanged();
         }
 
         private async Task HandleSaveProfile()

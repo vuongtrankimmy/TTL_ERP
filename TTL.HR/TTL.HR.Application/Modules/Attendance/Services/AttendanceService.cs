@@ -112,20 +112,36 @@ namespace TTL.HR.Application.Modules.Attendance.Services
             var response = await _httpClient.GetFromJsonAsync<ApiResponse<EmployeeAttendanceDetailDto>>(url);
             
             // Map Logs to AttendanceDetailModel
-            return response?.Data?.Logs?.Select(l => new AttendanceDetailModel
-            {
-                Date = l.Date,
-                DayOfWeek = l.Date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN")),
-                CheckIn = !string.IsNullOrEmpty(l.CheckIn) ? DateTime.ParseExact(l.CheckIn, "HH:mm", null) : null,
-                CheckOut = !string.IsNullOrEmpty(l.CheckOut) ? DateTime.ParseExact(l.CheckOut, "HH:mm", null) : null,
-                WorkValue = l.WorkUnits,
-                LateMinutes = l.LateMinutes,
-                EarlyLeaveMinutes = l.EarlyLeaveMinutes,
-                OvertimeHours = l.OvertimeHours,
-                Status = l.Status,
-                IsLate = l.Status == "Late" || l.Status == "L",
-                IsEarlyLeave = l.Status == "EarlyLeave" || l.Status == "E",
-                Note = l.Note
+            return response?.Data?.Logs?.Select(l => {
+                
+                DateTime? ParseTime(string? t) {
+                    if (string.IsNullOrEmpty(t)) return null;
+                    try {
+                        // Attempt HH:mm format
+                        if (DateTime.TryParseExact(t, "HH:mm", null, System.Globalization.DateTimeStyles.None, out var res))
+                            return res;
+                        // Fallback to general Parse
+                        if (DateTime.TryParse(t, out var res2))
+                            return res2;
+                    } catch { }
+                    return null;
+                }
+
+                return new AttendanceDetailModel
+                {
+                    Date = l.Date,
+                    DayOfWeek = l.Date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN")),
+                    CheckIn = ParseTime(l.CheckIn),
+                    CheckOut = ParseTime(l.CheckOut),
+                    WorkValue = l.WorkUnits,
+                    LateMinutes = l.LateMinutes,
+                    EarlyLeaveMinutes = l.EarlyLeaveMinutes,
+                    OvertimeHours = l.OvertimeHours,
+                    Status = l.Status,
+                    IsLate = l.Status == "Late" || l.Status == "L",
+                    IsEarlyLeave = l.Status == "EarlyLeave" || l.Status == "E",
+                    Note = l.Note
+                };
             }) ?? new List<AttendanceDetailModel>();
         }
 
