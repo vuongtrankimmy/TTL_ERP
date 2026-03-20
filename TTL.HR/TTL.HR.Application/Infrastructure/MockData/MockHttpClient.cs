@@ -1137,12 +1137,12 @@ public class MockHttpMessageHandler : HttpMessageHandler
             // --- WORK SCHEDULES MATCHING ALL EMPLOYEES ---
             if (path.Contains("/Attendance/work-schedules", StringComparison.OrdinalIgnoreCase))
             {
-                var qDept = queryParams.TryGetValue("departmentId", out var d) ? d : "";
-                var qSearch = queryParams.TryGetValue("searchTerm", out var s) ? s : "";
-                var qStart = queryParams.TryGetValue("startDate", out var st) ? DateTime.Parse(st) : DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1);
-                var qEnd = queryParams.TryGetValue("endDate", out var et) ? DateTime.Parse(et) : qStart.AddDays(6);
-                int pNum = queryParams.TryGetValue("page", out var p) && int.TryParse(p, out var pv) ? pv : 1;
-                int pSize = queryParams.TryGetValue("pageSize", out var ps) && int.TryParse(ps, out var psv) ? psv : 1000;
+                var qDept = queryParams.TryGetValue("departmentId", out var dId) ? dId : "";
+                var qSearch = queryParams.TryGetValue("searchTerm", out var sTerm) ? sTerm : "";
+                var qStart = queryParams.TryGetValue("startDate", out var sDateStr) ? DateTime.Parse(sDateStr) : DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1);
+                var qEnd = queryParams.TryGetValue("endDate", out var eDateStr) ? DateTime.Parse(eDateStr) : qStart.AddDays(6);
+                int pNum = queryParams.TryGetValue("page", out var pNumStr) && int.TryParse(pNumStr, out var pNumV) ? pNumV : 1;
+                int pSize = queryParams.TryGetValue("pageSize", out var pSizeStr) && int.TryParse(pSizeStr, out var pSizeV) ? pSizeV : 1000;
 
                 var allEmps = _mockDataProvider.GetCollection<object>("employees").Select(TransformItem).ToList();
                 var filtered = allEmps.Where(e => {
@@ -1202,10 +1202,10 @@ public class MockHttpMessageHandler : HttpMessageHandler
                     });
                 }
 
-                var paged = scheduleItems.Skip((pNum - 1) * pSize).Take(pSize).ToList();
+                var schedulePaged = scheduleItems.Skip((pNum - 1) * pSize).Take(pSize).ToList();
                 return CreateSuccessResponse(new ApiResponse<object> {
                     Success = true,
-                    Data = new { Items = paged, TotalCount = scheduleItems.Count, PageIndex = pNum, PageSize = pSize },
+                    Data = new { Items = schedulePaged, TotalCount = scheduleItems.Count, PageIndex = pNum, PageSize = pSize },
                     Message = "Success"
                 });
             }
@@ -1213,10 +1213,10 @@ public class MockHttpMessageHandler : HttpMessageHandler
             // --- SHIFT REQUESTS (APPROVALS) MATCHING ALL EMPLOYEES ---
             if (path.Contains("/Attendance/shift-requests", StringComparison.OrdinalIgnoreCase))
             {
-                var qSearch = queryParams.TryGetValue("searchTerm", out var s) ? s : "";
-                var qStatus = queryParams.TryGetValue("status", out var st) ? st : "";
-                int pNum = queryParams.TryGetValue("page", out var p) && int.TryParse(p, out var pv) ? pv : 1;
-                int pSize = queryParams.TryGetValue("pageSize", out var ps) && int.TryParse(ps, out var psv) ? psv : 10;
+                var qSearchS = queryParams.TryGetValue("searchTerm", out var sTermS) ? sTermS : "";
+                var qStatusS = queryParams.TryGetValue("status", out var sStatS) ? sStatS : "";
+                int pNumS = queryParams.TryGetValue("page", out var pNS) && int.TryParse(pNS, out var pNV) ? pNV : 1;
+                int pSizeS = queryParams.TryGetValue("pageSize", out var pSS) && int.TryParse(pSS, out var pSV) ? pSV : 10;
 
                 var allEmps = _mockDataProvider.GetCollection<object>("employees").Select(TransformItem).ToList();
                 var rawRequests = _mockDataProvider.GetCollection<object>("shift_change_requests").Select(TransformItem).ToList();
@@ -1228,10 +1228,10 @@ public class MockHttpMessageHandler : HttpMessageHandler
                     var emp = allEmps.FirstOrDefault(e => MatchId(e, "id", null, GetProperty(req, "EmployeeId")?.ToString() ?? ""));
                     if (emp != null) {
                         var reqClone = (JObject)JObject.FromObject(req);
-                        reqClone["EmployeeName"] = GetProperty(emp, "FullName");
-                        reqClone["EmployeeCode"] = GetProperty(emp, "Code");
-                        reqClone["DepartmentName"] = GetProperty(emp, "DepartmentName");
-                        reqClone["AvatarUrl"] = GetProperty(emp, "AvatarUrl");
+                        reqClone["EmployeeName"] = JToken.FromObject(GetProperty(emp, "FullName") ?? "Unknown");
+                        reqClone["EmployeeCode"] = JToken.FromObject(GetProperty(emp, "Code") ?? "N/A");
+                        reqClone["DepartmentName"] = JToken.FromObject(GetProperty(emp, "DepartmentName") ?? "");
+                        reqClone["AvatarUrl"] = JToken.FromObject(GetProperty(emp, "AvatarUrl") ?? "");
                         matchedRequests.Add(reqClone);
                     }
                 }
@@ -1266,15 +1266,15 @@ public class MockHttpMessageHandler : HttpMessageHandler
                     ).ToList();
                 }
 
-                var total = matchedRequests.Count;
-                var paged = matchedRequests.Skip((pNum - 1) * pSize).Take(pSize).ToList();
+                var shiftTotal = matchedRequests.Count;
+                var shiftPaged = matchedRequests.Skip((pNumS - 1) * pSizeS).Take(pSizeS).ToList();
 
                 // Special case for summary endpoint
                 if (path.EndsWith("/summary", StringComparison.OrdinalIgnoreCase)) {
                     return CreateSuccessResponse(new ApiResponse<object> {
                         Success = true,
                         Data = new {
-                            Total = total,
+                            Total = shiftTotal,
                             Pending = matchedRequests.Count(r => Convert.ToInt32(GetProperty(r, "Status") ?? 0) == 1),
                             Approved = matchedRequests.Count(r => Convert.ToInt32(GetProperty(r, "Status") ?? 0) == 2),
                             Rejected = matchedRequests.Count(r => Convert.ToInt32(GetProperty(r, "Status") ?? 0) == 3)
@@ -1285,7 +1285,7 @@ public class MockHttpMessageHandler : HttpMessageHandler
 
                 return CreateSuccessResponse(new ApiResponse<object> {
                     Success = true,
-                    Data = new { Items = paged, TotalCount = total, PageIndex = pNum, PageSize = pSize },
+                    Data = new { Items = shiftPaged, TotalCount = shiftTotal, PageIndex = pNumS, PageSize = pSizeS },
                     Message = "Success"
                 });
             }
