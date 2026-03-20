@@ -75,7 +75,11 @@ namespace TTL.HR.Shared.Pages.Attendance
             }
             catch (Exception ex)
             {
-                await JS.InvokeVoidAsync("toastr.error", $"Lỗi tải dữ liệu: {ex.Message}");
+                Console.WriteLine($"Error loading attendance data: {ex.Message}");
+                // Only show toastr if we are not in prerendering phase
+                try {
+                    await JS.InvokeVoidAsync("toastr.error", $"Lỗi tải dữ liệu: {ex.Message}");
+                } catch { /* Ignore JS errors during prerender */ }
             }
             finally
             {

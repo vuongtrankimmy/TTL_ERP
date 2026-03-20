@@ -1271,13 +1271,33 @@ public class MockHttpMessageHandler : HttpMessageHandler
 
                 // Special case for summary endpoint
                 if (path.EndsWith("/summary", StringComparison.OrdinalIgnoreCase)) {
+                    var activeRequests = matchedRequests.Where(r => {
+                        var isDeleted = GetProperty(r, "IsDeleted");
+                        return isDeleted == null || (isDeleted is bool b && !b) || (isDeleted.ToString().ToLower() == "false");
+                    }).ToList();
+
                     return CreateSuccessResponse(new ApiResponse<object> {
                         Success = true,
                         Data = new {
-                            Total = shiftTotal,
-                            Pending = matchedRequests.Count(r => Convert.ToInt32(GetProperty(r, "Status") ?? 0) == 1),
-                            Approved = matchedRequests.Count(r => Convert.ToInt32(GetProperty(r, "Status") ?? 0) == 2),
-                            Rejected = matchedRequests.Count(r => Convert.ToInt32(GetProperty(r, "Status") ?? 0) == 3)
+                            Total = activeRequests.Count,
+                            Pending = activeRequests.Count(r => {
+                                var sV = GetProperty(r, "StatusId") ?? GetProperty(r, "Status");
+                                if (sV == null) return false;
+                                var sStr = sV.ToString();
+                                return sStr == "1" || sStr.Equals("Pending", StringComparison.OrdinalIgnoreCase);
+                            }),
+                            Approved = activeRequests.Count(r => {
+                                var sV = GetProperty(r, "StatusId") ?? GetProperty(r, "Status");
+                                if (sV == null) return false;
+                                var sStr = sV.ToString();
+                                return sStr == "2" || sStr.Equals("Approved", StringComparison.OrdinalIgnoreCase);
+                            }),
+                            Rejected = activeRequests.Count(r => {
+                                var sV = GetProperty(r, "StatusId") ?? GetProperty(r, "Status");
+                                if (sV == null) return false;
+                                var sStr = sV.ToString();
+                                return sStr == "3" || sStr.Equals("Rejected", StringComparison.OrdinalIgnoreCase);
+                            })
                         },
                         Message = "Success"
                     });
