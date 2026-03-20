@@ -940,8 +940,8 @@ public class MockHttpMessageHandler : HttpMessageHandler
             if (path.Contains("/Attendance/timesheets"))
             {
                 var qParams = ParseQueryString(query);
-                var tsPage = qParams.TryGetValue("pageIndex", out var pIdxStr) && int.TryParse(pIdxStr, out var p) ? p : 1;
-                var tsPageSize = qParams.TryGetValue("pageSize", out var pSizeStr) && int.TryParse(pSizeStr, out var ps) ? ps : 10;
+                var tsPage = qParams.TryGetValue("pageIndex", out var tsIdxStr) && int.TryParse(tsIdxStr, out var tsP) ? tsP : 1;
+                var tsPageSize = qParams.TryGetValue("pageSize", out var tsSizeStr) && int.TryParse(tsSizeStr, out var tsPs) ? tsPs : 10;
                 
                 var allAttendances = _mockDataProvider.GetCollection<object>("attendances");
                 var allEmployees = _mockDataProvider.GetCollection<object>("employees");
@@ -1229,9 +1229,9 @@ public class MockHttpMessageHandler : HttpMessageHandler
 
         // Parse query parameters
         var queryParams = ParseQueryString(query);
-        var page = queryParams.TryGetValue("pageIndex", out var pageStr) && int.TryParse(pageStr, out var p) ? p : 
-                   queryParams.TryGetValue("page", out var p2) && int.TryParse(p2, out var p3) ? p3 : 1;
-        var pageSize = queryParams.TryGetValue("pageSize", out var pageSizeStr) && int.TryParse(pageSizeStr, out var ps) ? ps : 10;
+        var page = queryParams.TryGetValue("pageIndex", out var pageStr) && int.TryParse(pageStr, out var pMain) ? pMain : 
+                   queryParams.TryGetValue("page", out var p2Str) && int.TryParse(p2Str, out var p3Main) ? p3Main : 1;
+        var pageSize = queryParams.TryGetValue("pageSize", out var pageSizeStr) && int.TryParse(pageSizeStr, out var psMain) ? psMain : 10;
 
         // Filter by common query parameters
         if (queryParams.TryGetValue("type", out var typeValue))
