@@ -19,6 +19,11 @@ namespace TTL.HR.Application.Modules.Common.Services
 
         public async Task<byte[]> GenerateBatchPayslipsPdfAsync(IEnumerable<PayrollModel> payrolls)
         {
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Create("BROWSER")))
+            {
+                throw new System.NotSupportedException("PDF Generation is not supported in the browser environment.");
+            }
+
             var document = Document.Create(container =>
             {
                 foreach (var payroll in payrolls)
@@ -35,6 +40,11 @@ namespace TTL.HR.Application.Modules.Common.Services
 
         public async Task<byte[]> GeneratePayslipPdfAsync(PayrollModel payroll)
         {
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Create("BROWSER")))
+            {
+                throw new System.NotSupportedException("PDF Generation is not supported in the browser environment.");
+            }
+
             var document = Document.Create(container =>
             {
                 container.Page(page =>
@@ -163,6 +173,11 @@ namespace TTL.HR.Application.Modules.Common.Services
 
         public async Task<byte[]> GenerateEmployeeProfilePdfAsync(EmployeeModel employee)
         {
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Create("BROWSER")))
+            {
+                return await Task.FromResult(System.Array.Empty<byte>());
+            }
+
             // Basic implementation for now, can be expanded
             var document = Document.Create(container =>
             {
