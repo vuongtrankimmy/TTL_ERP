@@ -8,16 +8,15 @@ on:
 jobs:
   deploy_to_github_pages:
     name: Build & Deploy Blazor WASM to GitHub Pages
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v4
     
     - name: Cleanup stale files (Fix Ghost Files)
       run: |
-        Get-ChildItem -Recurse -Filter "App_Home.razor.cs" | Remove-Item -Force
-        Get-ChildItem -Recurse -Filter "App_Home.razor" | Remove-Item -Force
-      shell: powershell
+        find . -name "App_Home.razor.cs" -delete
+        find . -name "App_Home.razor" -delete
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -37,16 +36,11 @@ jobs:
     - name: Change base-tag to repository name
       # This is required for GitHub Pages subfolder hosting
       # We change <base href="/" /> to <base href="/TTL_ERP/" />
-      run: |
-        $path = "release/wwwroot/index.html"
-        $content = Get-Content $path
-        $content = $content -replace '<base href="/" />', '<base href="/TTL_ERP/" />'
-        $content | Set-Content $path
-      shell: powershell
+      run: sed -i 's/<base href="\/" \/>/<base href="\/TTL_ERP\/" \/>/g' release/wwwroot/index.html
 
     - name: Add .nojekyll
       # Prevents GitHub from ignoring files starting with underscores (like Blazor's _framework)
-      run: New-Item -ItemType File -Path "release/wwwroot/.nojekyll" -Force
+      run: touch release/wwwroot/.nojekyll
 
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
