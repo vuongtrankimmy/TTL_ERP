@@ -14,7 +14,7 @@
     "TaxCode": "0312345678",
     "Website": "https://orga-x.com",
     "AdminEmail": "",
-    "LogoUrl": "/assets/media/logos/default-dark.svg",
+    "LogoUrl": "_content/TTL.HR.Shared/assets/media/logos/default-dark.svg",
     "FaviconUrl": "",
     "DateFormat": "dd/MM/yyyy",
     "DefaultLanguage": "vi-VN",

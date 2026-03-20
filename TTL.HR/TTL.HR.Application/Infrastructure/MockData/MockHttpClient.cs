@@ -1000,10 +1000,14 @@ public class MockHttpMessageHandler : HttpMessageHandler
 
                     foreach (var log in empGroup)
                     {
-                        actualWork += Convert.ToDouble(GetProperty(log, "WorkingHours") ?? 0);
-                        otHours += Convert.ToDouble(GetProperty(log, "OvertimeHours") ?? 0);
+                        var whVal = GetProperty(log, "WorkingHours");
+                        actualWork += whVal != null ? Convert.ToDouble(whVal) : 0;
                         
-                        var sid = Convert.ToInt32(GetProperty(log, "StatusId") ?? 1);
+                        var otVal = GetProperty(log, "OvertimeHours");
+                        otHours += otVal != null ? Convert.ToDouble(otVal) : 0;
+                        
+                        var sidVal = GetProperty(log, "StatusId");
+                        var sid = sidVal != null ? Convert.ToInt32(sidVal) : 1;
                         if (sid == 3) lateCount++; // Late
                         if (sid == 4) earlyCount++; // Early
                     }
@@ -1344,11 +1348,30 @@ public class MockHttpMessageHandler : HttpMessageHandler
     private object? GetProperty(object? item, string propertyName)
     {
         if (item == null) return null;
-        if (item is JObject jObj) return jObj[propertyName];
-        try {
-            var jObjFromProps = JObject.FromObject(item);
-            return jObjFromProps[propertyName];
-        } catch { return null; }
+        
+        JToken? token = null;
+        if (item is JObject jObj)
+        {
+            token = jObj[propertyName];
+        }
+        else if (item is JToken jt)
+        {
+            token = jt[propertyName];
+        }
+        else
+        {
+            try {
+                var jo = JObject.FromObject(item);
+                token = jo[propertyName];
+            } catch { return null; }
+        }
+        
+        if (token == null || token.Type == JTokenType.Null) return null;
+        
+        // If it's a simple value, return the underlying C# value
+        if (token is JValue jv) return jv.Value;
+        
+        return token;
     }
 
     private bool MatchId(object item, string objectIdField, string numericIdField, string valueToMatch)
