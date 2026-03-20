@@ -1,101 +1,53 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Hosting;
 using System.Collections.Concurrent;
 
 namespace TTL.HR.Application.Infrastructure.MockData;
 
 /// <summary>
-/// Provider để đọc và quản lý Mock Data từ file JSON
+/// Provider để đọc và quản lý Mock Data từ file JSON.
+/// Phiên bản này an toàn cho cả Server và WebAssembly (WASM).
 /// </summary>
 public class MockDataProvider
 {
-    private readonly IWebHostEnvironment _environment;
     private readonly ConcurrentDictionary<string, List<JToken>> _mockData = new();
-    private readonly ConcurrentDictionary<string, object> _locks = new();
     private bool _isLoaded = false;
 
-    public MockDataProvider(IWebHostEnvironment environment)
+    public MockDataProvider()
     {
-        _environment = environment;
     }
 
     /// <summary>
-    /// Load mock data từ file JSON
+    /// Thêm dữ liệu collection từ chuỗi JSON
     /// </summary>
-    public async Task<bool> LoadMockDataAsync()
+    public void AddCollection(string collectionName, string jsonContent)
     {
-        if (_isLoaded) return true;
-
-        var mockDataDir = Path.Combine(_environment.WebRootPath, "MockData");
-
-        // Use Task.CompletedTask to satisfy async signature without overhead
-        await Task.CompletedTask;
-
-        if (!Directory.Exists(mockDataDir))
+        try
         {
-            Console.WriteLine($"❌ [MOCK] Thư mục Mock Data không tồn tại: {mockDataDir}");
-            Console.WriteLine($"   💡 Gợi ý: Hãy đảm bảo thư mục wwwroot/MockData tồn tại trong project Web.");
-            return false;
+            var array = JArray.Parse(jsonContent);
+            var list = new List<JToken>();
+            foreach (var item in array)
+            {
+                list.Add(item.DeepClone());
+            }
+            _mockData[collectionName] = list;
+            _isLoaded = true;
+            Console.WriteLine($"✅ [MOCK] Đã nạp {collectionName}.json ({list.Count} items).");
         }
-
-        var files = Directory.GetFiles(mockDataDir, "*.json");
-        if (files.Length == 0)
+        catch (Exception ex)
         {
-            Console.WriteLine($"⚠️  [MOCK] Thư mục {mockDataDir} trống. Không tìm thấy file .json nào.");
-            return false;
+            Console.WriteLine($"❌ [MOCK] Lỗi khi nạp {collectionName}.json: {ex.Message}");
         }
-
-        _isLoaded = true;
-        Console.WriteLine($"✅ [MOCK] Đã cấu hình Mock Data Mode ({files.Length} files found). Dữ liệu sẽ được load lazy khi cần.");
-        return true;
     }
 
     /// <summary>
-    /// Lấy dữ liệu từ collection
+    /// Lấy toàn bộ dữ liệu từ một collection
     /// </summary>
     public List<T> GetCollection<T>(string collectionName)
     {
-        if (!_isLoaded)
-        {
-            throw new InvalidOperationException("Mock data chưa được cấu hình. Gọi LoadMockDataAsync() trước.");
-        }
-
         if (!_mockData.ContainsKey(collectionName))
         {
-            var collectionLock = _locks.GetOrAdd(collectionName, _ => new object());
-            lock (collectionLock)
-            {
-                if (!_mockData.ContainsKey(collectionName))
-                {
-                    var mockDataPath = Path.Combine(_environment.WebRootPath, "MockData", $"{collectionName}.json");
-                    if (!File.Exists(mockDataPath))
-                    {
-                        Console.WriteLine($"⚠️  File {collectionName}.json không tồn tại trong mock data");
-                        _mockData[collectionName] = new List<JToken>();
-                    }
-                    else
-                    {
-                        try
-                        {
-                            var jsonContent = File.ReadAllText(mockDataPath);
-                            var array = JArray.Parse(jsonContent);
-                            var list = new List<JToken>();
-                            foreach (var item in array)
-                            {
-                                list.Add(item.DeepClone());
-                            }
-                            _mockData[collectionName] = list;
-                            Console.WriteLine($"✅ Lazy load {collectionName}.json thành công ({list.Count} items).");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"❌ Lỗi khi load {collectionName}.json: {ex.Message}");
-                            _mockData[collectionName] = new List<JToken>();
-                        }
-                    }
-                }
-            }
+            return new List<T>();
         }
 
         var items = _mockData[collectionName];
@@ -113,7 +65,7 @@ public class MockDataProvider
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"⚠️  Lỗi deserialize item trong {collectionName}: {ex.Message}");
+                Console.WriteLine($"⚠️  [MOCK] Lỗi deserialize item trong {collectionName}: {ex.Message}");
             }
         }
 
@@ -121,7 +73,7 @@ public class MockDataProvider
     }
 
     /// <summary>
-    /// Lấy item theo ID
+    /// Lấy một item theo ID từ một collection
     /// </summary>
     public T? GetById<T>(string collectionName, string id) where T : class
     {
@@ -133,7 +85,7 @@ public class MockDataProvider
             
             if (item is JObject jObj)
             {
-                // Try various ID fields for JObject
+                // Thử các trường ID phổ biến
                 if (jObj.TryGetValue("_id", out var idToken) || 
                     jObj.TryGetValue("id", out idToken) || 
                     jObj.TryGetValue("Id", out idToken))
@@ -150,7 +102,7 @@ public class MockDataProvider
             }
             else
             {
-                // Use reflection for typed objects
+                // Dùng reflection cho object có kiểu
                 var idProperty = typeof(T).GetProperty("Id") ?? 
                                  typeof(T).GetProperty("id") ?? 
                                  typeof(T).GetProperty("_id");
@@ -177,7 +129,12 @@ public class MockDataProvider
     }
 
     /// <summary>
-    /// Kiểm tra xem mock data đã được load chưa
+    /// Đánh dấu đã hoàn thành việc nạp dữ liệu
+    /// </summary>
+    public void SetLoaded(bool loaded) => _isLoaded = loaded;
+
+    /// <summary>
+    /// Kiểm tra xem mock data đã được nạp chưa
     /// </summary>
     public bool IsLoaded => _isLoaded;
 }

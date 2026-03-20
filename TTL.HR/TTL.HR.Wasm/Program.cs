@@ -12,7 +12,38 @@ builder.RootComponents.Add<TTL.HR.Shared.App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // Mock Mode is default for WASM on GitHub Pages
-builder.Services.AddSingleton<MockDataProvider>();
+var mockProvider = new MockDataProvider();
+
+// Load mock data from metadata.json
+var tempClient = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) };
+try
+{
+    var metadataString = await tempClient.GetStringAsync("MockData/metadata.json");
+    var metadata = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(metadataString);
+    if (metadata?.statistics != null)
+    {
+        foreach (var stat in metadata.statistics)
+        {
+            try
+            {
+                string collection = stat.collection;
+                var json = await tempClient.GetStringAsync($"MockData/{collection}.json");
+                mockProvider.AddCollection(collection, json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"⚠️ [MOCK] Lỗi khi nạp collection {stat.collection} từ HTTP: {ex.Message}");
+            }
+        }
+        mockProvider.SetLoaded(true);
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"⚠️ [MOCK] Lỗi khi nạp metadata.json từ HTTP: {ex.Message}");
+}
+
+builder.Services.AddSingleton(mockProvider);
 builder.Services.AddScoped(sp =>
 {
     var mockDataProvider = sp.GetRequiredService<MockDataProvider>();

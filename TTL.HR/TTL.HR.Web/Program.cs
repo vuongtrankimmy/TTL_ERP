@@ -22,25 +22,31 @@ Console.WriteLine($"===============================================\n");
 // Client-side services setup (Using API Repository from Application project)
 if (useMockData)
 {
-    // MOCK MODE - Sử dụng Mock Data Provider
-    builder.Services.AddSingleton<MockDataProvider>();
+    // MOCK MODE - Khởi tạo và nạp dữ liệu từ disk (Server-side)
+    var mockProvider = new MockDataProvider();
+    try
+    {
+        var mockPath = Path.Combine(builder.Environment.WebRootPath, "MockData");
+        if (Directory.Exists(mockPath))
+        {
+            foreach (var file in Directory.GetFiles(mockPath, "*.json"))
+            {
+                var collectionName = Path.GetFileNameWithoutExtension(file);
+                if (collectionName.Equals("metadata", StringComparison.OrdinalIgnoreCase)) continue;
+                mockProvider.AddCollection(collectionName, File.ReadAllText(file));
+            }
+            mockProvider.SetLoaded(true);
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"⚠️ [MOCK] Không thể nạp dữ liệu từ disk: {ex.Message}");
+    }
+
+    builder.Services.AddSingleton(mockProvider);
     builder.Services.AddScoped<HttpClient>(sp =>
     {
         var mockDataProvider = sp.GetRequiredService<MockDataProvider>();
-
-        // Load mock data nếu chưa load
-        if (!mockDataProvider.IsLoaded)
-        {
-            var loadTask = mockDataProvider.LoadMockDataAsync();
-            loadTask.GetAwaiter().GetResult();
-
-            if (!loadTask.Result)
-            {
-                Console.WriteLine("⚠️  WARNING: Không thể load mock data. Sẽ fallback sang API thật.");
-                return new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "http://gateway.tantanloc.com/") };
-            }
-        }
-
         var handler = new MockHttpMessageHandler(mockDataProvider);
         var client = new HttpClient(handler)
         {
