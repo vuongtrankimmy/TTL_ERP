@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using TTL.HR.Application.Modules.Common.Models;
+using TTL.HR.Application.Modules.Dashboard.Models;
 
 namespace TTL.HR.Application.Infrastructure.MockData;
 
@@ -214,6 +215,8 @@ public class MockHttpMessageHandler : HttpMessageHandler
 
         path = path.TrimStart('/');
         var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var qString = query; // Use local query variable
+        var queryParams = ParseQueryString(qString); // Centralized for all handlers
         var endpoint = ExtractEndpoint(path);
         
         Console.WriteLine($"   📍 Path: {path}");
@@ -1048,6 +1051,7 @@ public class MockHttpMessageHandler : HttpMessageHandler
                         StatusColor = "success"
                     });
                 }
+                // (tsTotal and tsPagedItems already unique enough)
 
                 var tsTotal = summaryList.Count;
                 var tsPagedItems = summaryList.OrderBy(s => GetProperty(s, "EmployeeCode")).Skip((tsPage - 1) * tsPageSize).Take(tsPageSize).ToList();
@@ -1065,7 +1069,6 @@ public class MockHttpMessageHandler : HttpMessageHandler
 
             if (path.Contains("/Payroll/periods/") && path.EndsWith("/detail", StringComparison.OrdinalIgnoreCase))
             {
-                var queryParams = ParseQueryString(query);
                 var tsSearch = queryParams.TryGetValue("searchTerm", out var s) ? s : "";
                 var tsDeptId = queryParams.TryGetValue("departmentId", out var d) ? d : "";
                 int tsPage = queryParams.TryGetValue("page", out var p1) && int.TryParse(p1, out var pageVal) ? pageVal : 1;
@@ -1110,8 +1113,8 @@ public class MockHttpMessageHandler : HttpMessageHandler
                     });
                 }
 
-                var total = payrollItems.Count;
-                var pagedItems = payrollItems.Skip((tsPage - 1) * tsPageSize).Take(tsPageSize).ToList();
+                var payTotal = payrollItems.Count;
+                var payPagedItems = payrollItems.Skip((tsPage - 1) * tsPageSize).Take(tsPageSize).ToList();
 
                 var detail = new {
                     PeriodId = segments.Length >= 4 ? segments[3] : "65dae2f30000000000000999",
@@ -1119,10 +1122,10 @@ public class MockHttpMessageHandler : HttpMessageHandler
                     Status = 1,
                     StatusName = "Draft",
                     TotalAmount = payrollItems.Sum(p => (double)GetProperty(p, "NetSalary")!),
-                    TotalEmployees = total,
+                    TotalEmployees = payTotal,
                     PayrollList = new {
-                        Items = pagedItems,
-                        TotalCount = total,
+                        Items = payPagedItems,
+                        TotalCount = payTotal,
                         PageIndex = tsPage,
                         PageSize = tsPageSize
                     }
@@ -1533,8 +1536,7 @@ public class MockHttpMessageHandler : HttpMessageHandler
             items = enrichedItems;
         }
 
-        // Parse query parameters
-        var queryParams = ParseQueryString(query);
+        // (Already centralized above)
         int pM = 1;
         var page = queryParams.TryGetValue("pageIndex", out var pageStr) && int.TryParse(pageStr, out pM) ? pM : 
                    queryParams.TryGetValue("page", out var p2Str) && int.TryParse(p2Str, out var p3M) ? p3M : 1;
