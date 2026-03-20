@@ -36,11 +36,11 @@ jobs:
       run: dotnet publish TTL.HR/TTL.HR.Wasm/TTL.HR.Wasm.csproj -c Release -o release --nologo
 
     - name: Change base-tag to repository name
-      # This is required for GitHub Pages subfolder hosting
-      # We change any variation of <base href="..." /> to <base href="/TTL_ERP/" />
+      # This is required for custom domain erp.tantanloc.xo.je
+      # We change any variation of <base href="..." /> to <base href="/" />
       run: |
-        sed -i 's|<base href="[^"]*" />|<base href="/TTL_ERP/" />|g' release/wwwroot/index.html
-        sed -i 's|<base href="[^"]*" />|<base href="/TTL_ERP/" />|g' release/wwwroot/404.html || true
+        sed -i 's|<base href="[^"]*" />|<base href="/" />|g' release/wwwroot/index.html
+        sed -i 's|<base href="[^"]*" />|<base href="/" />|g' release/wwwroot/404.html || true
 
     - name: Add .nojekyll
       # Prevents GitHub from ignoring files starting with underscores (like Blazor's _framework)
