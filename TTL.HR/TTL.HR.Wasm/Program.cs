@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using TTL.HR.Shared;
 using TTL.HR.Application.Infrastructure.MockData;
 using ApexCharts;
-using TTL.HR.Wasm;
+
+// Removed redundant/incorrect namespace using
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
