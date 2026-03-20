@@ -9,7 +9,7 @@ using ApexCharts;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 // Note: Root component is App from THIS project!
-builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<TTL.HR.Wasm.App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // Mock Mode is default for WASM on GitHub Pages
