@@ -36,6 +36,20 @@
 </script>
 
 <style>
+    /* Robust Logo Visibility Logic - TTL Custom Centralized */
+    .ttl-logo-default-container { display: block !important; }
+    .ttl-logo-minimize-container { display: none !important; }
+
+    /* Strict exclusivity - toggle based on Metronic body attribute */
+    body[data-kt-app-sidebar-minimize="on"] .ttl-logo-default-container { display: none !important; }
+    body[data-kt-app-sidebar-minimize="on"] .ttl-logo-minimize-container { display: block !important; }
+    
+    /* Responsive overrides */
+    @media (max-width: 991px) {
+        .app-sidebar .ttl-logo-default-container, 
+        .app-sidebar .ttl-logo-minimize-container { display: none !important; }
+    }
+
     /* Sidebar Structural Fixes */
     .app-sidebar {
         height: 100vh !important;
@@ -43,13 +57,7 @@
         flex-direction: column !important;
     }
 
-    /* Fixed Layout Fixes */
     [data-kt-app-sidebar-minimize="on"] .app-sidebar-user-info { display: none !important; }
-    
-    /* Logo Visibility Safeguard */
-    [data-kt-app-sidebar-minimize="off"] .app-sidebar-logo-minimize { display: none !important; }
-    [data-kt-app-sidebar-minimize="on"] .app-sidebar-logo-default { display: none !important; }
-    [data-kt-app-sidebar-minimize="on"] .app-sidebar-logo-minimize { display: block !important; }
 
     /* Theme visibility helpers */
     [data-bs-theme="light"] .theme-dark-show { display: none !important; }

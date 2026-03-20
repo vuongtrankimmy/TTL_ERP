@@ -1,25 +1,31 @@
 @inject IStringLocalizer<SharedResource> L
 
-
-
 <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
 	<!--begin::Logo-->
 	<div class="app-sidebar-logo px-6 d-flex align-items-center justify-content-center border-bottom border-gray-300" id="kt_app_sidebar_logo" style="height: var(--bs-app-header-height, 100px); flex-shrink: 0;">
 		<!--begin::Logo image-->
-		<a href="/dashboard" class="d-flex align-items-center justify-content-center w-100">
+		<a href="/dashboard" class="d-flex align-items-center justify-content-center w-100 h-100">
             @if (!string.IsNullOrEmpty(SettingsService.CachedSettings?.LogoUrl))
             {
-                <img alt="Logo" src="@SettingsService.CachedSettings.LogoUrl" class="app-sidebar-logo-default" style="max-height: 45px; max-width: 180px; object-fit: contain;" />
-                <img alt="Logo" src="@SettingsService.CachedSettings.LogoUrl" class="app-sidebar-logo-minimize" style="max-height: 35px; max-width: 45px; object-fit: contain;" />
+                <div class="ttl-logo-default-container">
+                    <img alt="Logo" src="@SettingsService.CachedSettings.LogoUrl" class="ttl-logo-default h-45px" style="object-fit: contain;" />
+                </div>
+                <div class="ttl-logo-minimize-container">
+                    <img alt="Logo" src="@SettingsService.CachedSettings.LogoUrl" class="ttl-logo-minimize h-30px" style="object-fit: contain;" />
+                </div>
             }
             else
             {
-                <img alt="Logo" src="_content/TTL.HR.Shared/assets/media/logos/default.svg" class="h-35px app-sidebar-logo-default" />
-                <img alt="Logo" src="_content/TTL.HR.Shared/assets/media/logos/default-small.svg" class="h-25px app-sidebar-logo-minimize" />
+                <div class="ttl-logo-default-container">
+                    <img alt="Logo" src="assets/media/logos/default.svg" class="ttl-logo-default h-35px" />
+                </div>
+                <div class="ttl-logo-minimize-container">
+                    <img alt="Logo" src="assets/media/logos/default-small.svg" class="ttl-logo-minimize h-25px" />
+                </div>
             }
 		</a>
-
 		<!--end::Logo image-->
+
 		<!--begin::Sidebar toggle-->
 		<div id="kt_app_sidebar_toggle" class="sidebar-toggle-btn"
 			 data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="app-sidebar-minimize"
@@ -41,7 +47,6 @@
              data-kt-scroll-wrappers="#kt_app_sidebar_menu_wrapper" data-kt-scroll-offset="5px">
 			<!--begin::Menu-->
 			<div class="menu menu-column menu-rounded menu-sub-indention px-3" id="kt_app_sidebar_menu" data-kt-menu="true">
-				
                 @foreach (var item in _menuItems)
                 {
                     if (item.IsSection)
@@ -95,7 +100,7 @@
 	<!--end::sidebar menu-->
 
 	<!--begin::Footer-->
-	<div class="app-sidebar-footer d-flex align-items-center px-8 pb-6 pt-6 flex-column-auto border-top border-gray-300" id="kt_app_sidebar_footer" style="margin-top: auto;">
+	<div class="app-sidebar-footer d-flex align-items-center px-8 pb-10 pt-6 flex-column-auto border-top border-gray-300" id="kt_app_sidebar_footer" style="margin-top: auto;">
 		<div class="d-flex flex-stack w-100">
 			<!--begin::User info-->
 			<div class="d-flex align-items-center cursor-pointer me-3" 
@@ -134,13 +139,6 @@
             </div>
             <!--end::Theme Switcher-->
 
-			<style>
-				[data-kt-app-sidebar-minimize="on"] .app-sidebar-user-info { display: none !important; }
-                [data-kt-app-sidebar-minimize="on"] .app-sidebar-footer { padding-left: 0 !important; padding-right: 0 !important; justify-content: center !important; }
-                [data-kt-app-sidebar-minimize="on"] .app-sidebar-footer .flex-stack { justify-content: center !important; }
-                [data-kt-app-sidebar-minimize="on"] .app-sidebar-footer .ms-auto { display: none !important; }
-			</style>
-			
 			<!--begin::User menu-->
 			<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px" data-kt-menu="true">
 				<div class="menu-item px-3">
@@ -177,12 +175,10 @@
 				<div class="menu-item px-5">
 					<a href="/auth/logout" class="menu-link px-5">@L["Label_Logout"]</a>
 				</div>
-
 			</div>
 			<!--end::User menu-->
 		</div>
 	</div>
 	<!--end::Footer-->
 </div>
-
 

@@ -22,7 +22,6 @@ public class MockHttpMessageHandler : HttpMessageHandler
         _mockDataProvider = mockDataProvider;
         _jsonSettings = new JsonSerializerSettings
         {
-            ContractResolver = new CamelCasePropertyNamesContractResolver(),
             NullValueHandling = NullValueHandling.Ignore
         };
 
@@ -316,22 +315,43 @@ public class MockHttpMessageHandler : HttpMessageHandler
                     InterviewsThisWeek = 5,
                     RecentlyHired = 2
                 },
-                DepartmentDistribution = departments.Select(d => new {
-                    DepartmentName = GetProperty(d, "Name")?.ToString() ?? "Unknown",
-                    EmployeeCount = employees.Count(e => GetProperty(e, "DepartmentId")?.ToString() == GetProperty(d, "id")?.ToString())
-                }).Take(5).ToList(),
-                UpcomingTrainings = new List<object>(),
-                PendingApprovals = new List<object>(),
-                ExpiringContracts = new List<object>(),
+                DepartmentDistribution = departments.Select(d => {
+                    var dId = GetProperty(d, "id")?.ToString() ?? "";
+                    return new DepartmentStat {
+                        DepartmentName = GetProperty(d, "Name")?.ToString() ?? "Unknown",
+                        EmployeeCount = 3 // Standardize to 3 for better visibility in mock charts
+                    };
+                }).OrderByDescending(d => d.EmployeeCount).Take(5).ToList(),
+                UpcomingTrainings = new List<object> {
+                    new { Title = "Kỹ năng giao tiếp chuyên nghiệp", Trainer = "Lê Hồng Nhung", DurationHours = 4, Status = "Sắp diễn ra" },
+                    new { Title = "Quy trình ISO 9001:2015", Trainer = "Trần Văn Nam", DurationHours = 8, Status = "Đang thực hiện" }
+                },
+                PendingApprovals = new List<object> {
+                    new { Title = "Đơn nghỉ phép - Nguyễn Văn A", Type = "Leave", Date = DateTime.Today.AddDays(-1), Status = "Pending" },
+                    new { Title = "Đơn đổi ca - Trần Thị B", Type = "Shift", Date = DateTime.Today.AddDays(-2), Status = "Pending" }
+                },
+                ExpiringContracts = new List<object> {
+                    new { EmployeeName = "Phạm Thị Thùy", Department = "Hành chính", ExpiryDate = DateTime.Today.AddDays(15) },
+                    new { EmployeeName = "Hoàng Văn Thái", Department = "Sản xuất", ExpiryDate = DateTime.Today.AddDays(22) }
+                },
                 AttendanceToday = new {
-                    Present = 92.0,
-                    Absent = 5.0,
-                    Late = 3.0,
+                    Present = 92,
+                    Absent = 5,
+                    Late = 3,
                     Total = employees.Count
                 },
-                PendingAssetClearances = new List<object>(),
-                BirthdayAlerts = new List<object>(),
-                PayrollTrend = new List<object>()
+                PendingAssetClearances = new List<object> {
+                    new { EmployeeName = "Nguyễn Hùng Anh", AssetName = "Laptop Dell Precision", AssetCode = "LP-001", DepartureDate = DateTime.Today.AddDays(-5) }
+                },
+                BirthdayAlerts = new List<object> {
+                    new { EmployeeName = "Nguyễn Minh Tuấn", DOB = DateTime.Today, DaysUntilBirthday = 0 },
+                    new { EmployeeName = "Trần Thu Hà", DOB = DateTime.Today.AddDays(3), DaysUntilBirthday = 3 }
+                },
+                PayrollTrend = new List<object> {
+                    new { Month = "01/2026", Amount = 1420000000 },
+                    new { Month = "02/2026", Amount = 1480000000 },
+                    new { Month = "03/2026", Amount = 1500000000 }
+                }
             };
             return CreateSuccessResponse(new ApiResponse<object> { Success = true, Data = stats, Message = "Success" });
         }
@@ -964,41 +984,37 @@ public class MockHttpMessageHandler : HttpMessageHandler
                     return false;
                 }).ToList();
 
-                // 2. Group by EmployeeId
-                var grouped = monthLogs.GroupBy(l => GetProperty(l, "EmployeeId")?.ToString() ?? "unknown");
+                // 1. Get All Employees and filter them
+                var filteredEmployees = allEmployees.Where(e => {
+                    if (!string.IsNullOrEmpty(qDept) && qDept != "all") {
+                        if (!MatchId(e, "DepartmentObjectId", "DepartmentId", qDept)) return false;
+                    }
+                    if (!string.IsNullOrEmpty(qSearch)) {
+                        var name = GetProperty(e, "FullName")?.ToString() ?? "";
+                        var code = GetProperty(e, "EmployeeCode")?.ToString() ?? "";
+                        if (!name.Contains(qSearch, StringComparison.OrdinalIgnoreCase) && 
+                            !code.Contains(qSearch, StringComparison.OrdinalIgnoreCase)) return false;
+                    }
+                    return true;
+                }).ToList();
 
-                // 3. Prepare summary list
+                // 2. Aggregate logs per employee
                 var summaryList = new List<object>();
-
-                foreach (var empGroup in grouped)
+                foreach (var emp in filteredEmployees)
                 {
-                    var empId = empGroup.Key;
-                    var emp = allEmployees.FirstOrDefault(e => GetProperty(e, "_id")?.ToString() == empId);
-                    if (emp == null) continue;
-
-                    // Filter by department if needed
-                    if (!string.IsNullOrEmpty(qDept))
-                    {
-                        var empDeptId = GetProperty(emp, "DepartmentId")?.ToString() ?? "";
-                        if (empDeptId != qDept) continue;
-                    }
-
+                    var empId = GetProperty(emp, "_id")?.ToString();
                     var empName = GetProperty(emp, "FullName")?.ToString() ?? "Unknown";
-                    var empCode = GetProperty(emp, "EmployeeCode")?.ToString() ?? "";
-                    
-                    // Filter by search term
-                    if (!string.IsNullOrEmpty(qSearch))
-                    {
-                        if (!empName.ToLower().Contains(qSearch) && !empCode.ToLower().Contains(qSearch)) continue;
-                    }
+                    var empCode = GetProperty(emp, "EmployeeCode")?.ToString() ?? "N/A";
 
+                    var empLogs = monthLogs.Where(l => MatchId(l, "EmployeeId", null, empId)).ToList();
+                    
                     // Calculate stats from logs
                     double actualWork = 0;
                     double otHours = 0;
                     int lateCount = 0;
                     int earlyCount = 0;
 
-                    foreach (var log in empGroup)
+                    foreach (var log in empLogs)
                     {
                         var whVal = GetProperty(log, "WorkingHours");
                         actualWork += whVal != null ? Convert.ToDouble(whVal) : 0;
@@ -1018,8 +1034,8 @@ public class MockHttpMessageHandler : HttpMessageHandler
                         EmployeeCode = empCode,
                         EmployeeName = empName,
                         Avatar = GetProperty(emp, "AvatarUrl")?.ToString() ?? "",
-                        Department = GetProperty(emp, "Department")?.ToString() ?? "Phòng Hành chính - Nhân sự",
-                        Role = GetProperty(emp, "Position")?.ToString() ?? "Nhân viên",
+                        Department = GetProperty(emp, "DepartmentName")?.ToString() ?? "Phòng Hành chính - Nhân sự",
+                        Role = GetProperty(emp, "PositionName")?.ToString() ?? "Nhân viên",
                         StandardWork = 26.0,
                         ActualWork = actualWork / 8.0,
                         OvertimeHours = otHours,
@@ -1034,7 +1050,7 @@ public class MockHttpMessageHandler : HttpMessageHandler
                 }
 
                 var tsTotal = summaryList.Count;
-                var tsPagedItems = summaryList.Skip((tsPage - 1) * tsPageSize).Take(tsPageSize).ToList();
+                var tsPagedItems = summaryList.OrderBy(s => GetProperty(s, "EmployeeCode")).Skip((tsPage - 1) * tsPageSize).Take(tsPageSize).ToList();
 
                 var tsPagedResult = new {
                     Items = tsPagedItems,
@@ -1045,6 +1061,230 @@ public class MockHttpMessageHandler : HttpMessageHandler
                 };
                 
                 return CreateSuccessResponse(new ApiResponse<object> { Success = true, Data = tsPagedResult, Message = "Success" });
+            }
+
+            if (path.Contains("/Payroll/periods/") && path.EndsWith("/detail", StringComparison.OrdinalIgnoreCase))
+            {
+                var queryParams = ParseQueryString(query);
+                var tsSearch = queryParams.TryGetValue("searchTerm", out var s) ? s : "";
+                var tsDeptId = queryParams.TryGetValue("departmentId", out var d) ? d : "";
+                int tsPage = queryParams.TryGetValue("page", out var p1) && int.TryParse(p1, out var pageVal) ? pageVal : 1;
+                int tsPageSize = queryParams.TryGetValue("pageSize", out var ps1) && int.TryParse(ps1, out var psVal) ? psVal : 10;
+
+                // 1. Get All Employees and filter them
+                var allEmployees = _mockDataProvider.GetCollection<object>("employees")
+                    .Select(TransformItem).ToList();
+                
+                var filteredEmployees = allEmployees.Where(e => {
+                    if (!string.IsNullOrEmpty(tsDeptId) && tsDeptId != "all") {
+                        if (!MatchId(e, "DepartmentObjectId", "DepartmentId", tsDeptId)) return false;
+                    }
+                    if (!string.IsNullOrEmpty(tsSearch)) {
+                        var name = GetProperty(e, "FullName")?.ToString() ?? "";
+                        var code = GetProperty(e, "Code")?.ToString() ?? "";
+                        if (!name.Contains(tsSearch, StringComparison.OrdinalIgnoreCase) && 
+                            !code.Contains(tsSearch, StringComparison.OrdinalIgnoreCase)) return false;
+                    }
+                    return true;
+                }).ToList();
+
+                var payrollItems = new List<object>();
+                foreach (var emp in filteredEmployees)
+                {
+                    var empId = GetProperty(emp, "id")?.ToString();
+                    var basicSalary = Convert.ToDouble(GetProperty(emp, "BasicSalary") ?? 15000000.0);
+                    
+                    payrollItems.Add(new {
+                        Id = Guid.NewGuid().ToString(),
+                        EmployeeId = empId,
+                        EmployeeCode = GetProperty(emp, "Code"),
+                        EmployeeName = GetProperty(emp, "FullName"),
+                        DepartmentName = GetProperty(emp, "DepartmentName"),
+                        PositionName = GetProperty(emp, "PositionName"),
+                        BasicSalary = basicSalary,
+                        ActualWorkDays = 26.0,
+                        GrossSalary = basicSalary,
+                        NetSalary = basicSalary * 0.9, // Simulate tax/insurance
+                        StatusName = "Draft",
+                        StatusColor = "warning"
+                    });
+                }
+
+                var total = payrollItems.Count;
+                var pagedItems = payrollItems.Skip((tsPage - 1) * tsPageSize).Take(tsPageSize).ToList();
+
+                var detail = new {
+                    PeriodId = segments.Length >= 4 ? segments[3] : "65dae2f30000000000000999",
+                    PeriodName = "Bảng lương tháng 03/2026",
+                    Status = 1,
+                    StatusName = "Draft",
+                    TotalAmount = payrollItems.Sum(p => (double)GetProperty(p, "NetSalary")!),
+                    TotalEmployees = total,
+                    PayrollList = new {
+                        Items = pagedItems,
+                        TotalCount = total,
+                        PageIndex = tsPage,
+                        PageSize = tsPageSize
+                    }
+                };
+
+                return CreateSuccessResponse(new ApiResponse<object> { Success = true, Data = detail, Message = "Success" });
+            }
+
+            // --- WORK SCHEDULES MATCHING ALL EMPLOYEES ---
+            if (path.Contains("/Attendance/work-schedules", StringComparison.OrdinalIgnoreCase))
+            {
+                var qDept = queryParams.TryGetValue("departmentId", out var d) ? d : "";
+                var qSearch = queryParams.TryGetValue("searchTerm", out var s) ? s : "";
+                var qStart = queryParams.TryGetValue("startDate", out var st) ? DateTime.Parse(st) : DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1);
+                var qEnd = queryParams.TryGetValue("endDate", out var et) ? DateTime.Parse(et) : qStart.AddDays(6);
+                int pNum = queryParams.TryGetValue("page", out var p) && int.TryParse(p, out var pv) ? pv : 1;
+                int pSize = queryParams.TryGetValue("pageSize", out var ps) && int.TryParse(ps, out var psv) ? psv : 1000;
+
+                var allEmps = _mockDataProvider.GetCollection<object>("employees").Select(TransformItem).ToList();
+                var filtered = allEmps.Where(e => {
+                    if (!string.IsNullOrEmpty(qDept) && qDept != "all") {
+                        if (!MatchId(e, "DepartmentObjectId", "DepartmentId", qDept)) return false;
+                    }
+                    if (!string.IsNullOrEmpty(qSearch)) {
+                        var name = GetProperty(e, "FullName")?.ToString() ?? "";
+                        var code = GetProperty(e, "Code")?.ToString() ?? "";
+                        if (!name.Contains(qSearch, StringComparison.OrdinalIgnoreCase) && 
+                            !code.Contains(qSearch, StringComparison.OrdinalIgnoreCase)) return false;
+                    }
+                    return true;
+                }).ToList();
+
+                var scheduleItems = new List<object>();
+                var shifts = _mockDataProvider.GetCollection<object>("work_shifts").Select(TransformItem).ToList();
+                var rawSchedules = _mockDataProvider.GetCollection<object>("work_schedules").Select(TransformItem).ToList();
+
+                foreach (var emp in filtered)
+                {
+                    var empId = GetProperty(emp, "id")?.ToString();
+                    var empSchedules = new List<object>();
+                    
+                    for (var date = qStart.Date; date <= qEnd.Date; date = date.AddDays(1))
+                    {
+                        var existing = rawSchedules.FirstOrDefault(s => 
+                            MatchId(s, "EmployeeId", null, empId!) && 
+                            Convert.ToDateTime(GetProperty(s, "Date") ?? date).Date == date);
+                        
+                        if (existing != null) {
+                            empSchedules.Add(existing);
+                        } else {
+                            // Default to a shift based on day of week for mock variety
+                            var isWeekend = date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+                            var shiftIndex = (Math.Abs(empId!.GetHashCode()) + date.Day) % (shifts.Count > 0 ? shifts.Count : 1);
+                            var shift = shifts.Count > 0 ? shifts[shiftIndex] : null;
+
+                            empSchedules.Add(new {
+                                Date = date,
+                                ShiftId = isWeekend ? "" : (GetProperty(shift, "id")?.ToString() ?? ""),
+                                ShiftName = isWeekend ? "Nghỉ" : (GetProperty(shift, "Name")?.ToString() ?? "Ca HC"),
+                                ShiftCode = isWeekend ? "OFF" : (GetProperty(shift, "Code")?.ToString() ?? "HC"),
+                                ShiftColor = isWeekend ? "secondary" : (GetProperty(shift, "Color")?.ToString() ?? "primary"),
+                                Status = isWeekend ? "Off" : "Assigned"
+                            });
+                        }
+                    }
+
+                    scheduleItems.Add(new {
+                        EmployeeId = empId,
+                        EmployeeCode = GetProperty(emp, "Code"),
+                        EmployeeName = GetProperty(emp, "FullName"),
+                        Department = GetProperty(emp, "DepartmentName"),
+                        AvatarUrl = GetProperty(emp, "AvatarUrl"),
+                        Schedules = empSchedules
+                    });
+                }
+
+                var paged = scheduleItems.Skip((pNum - 1) * pSize).Take(pSize).ToList();
+                return CreateSuccessResponse(new ApiResponse<object> {
+                    Success = true,
+                    Data = new { Items = paged, TotalCount = scheduleItems.Count, PageIndex = pNum, PageSize = pSize },
+                    Message = "Success"
+                });
+            }
+
+            // --- SHIFT REQUESTS (APPROVALS) MATCHING ALL EMPLOYEES ---
+            if (path.Contains("/Attendance/shift-requests", StringComparison.OrdinalIgnoreCase))
+            {
+                var qSearch = queryParams.TryGetValue("searchTerm", out var s) ? s : "";
+                var qStatus = queryParams.TryGetValue("status", out var st) ? st : "";
+                int pNum = queryParams.TryGetValue("page", out var p) && int.TryParse(p, out var pv) ? pv : 1;
+                int pSize = queryParams.TryGetValue("pageSize", out var ps) && int.TryParse(ps, out var psv) ? psv : 10;
+
+                var allEmps = _mockDataProvider.GetCollection<object>("employees").Select(TransformItem).ToList();
+                var rawRequests = _mockDataProvider.GetCollection<object>("shift_change_requests").Select(TransformItem).ToList();
+
+                var matchedRequests = new List<object>();
+                
+                // First include real mock requests
+                foreach (var req in rawRequests) {
+                    var emp = allEmps.FirstOrDefault(e => MatchId(e, "id", null, GetProperty(req, "EmployeeId")?.ToString() ?? ""));
+                    if (emp != null) {
+                        var reqClone = (JObject)JObject.FromObject(req);
+                        reqClone["EmployeeName"] = GetProperty(emp, "FullName");
+                        reqClone["EmployeeCode"] = GetProperty(emp, "Code");
+                        reqClone["DepartmentName"] = GetProperty(emp, "DepartmentName");
+                        reqClone["AvatarUrl"] = GetProperty(emp, "AvatarUrl");
+                        matchedRequests.Add(reqClone);
+                    }
+                }
+
+                // If few requests, add simulated ones for other employees to ensure variety
+                if (matchedRequests.Count < 5) {
+                    var otherEmps = allEmps.Where(e => !matchedRequests.Any(r => MatchId(r, "EmployeeId", null, GetProperty(e, "id")?.ToString() ?? ""))).Take(10).ToList();
+                    foreach (var emp in otherEmps) {
+                        matchedRequests.Add(new {
+                            Id = Guid.NewGuid().ToString(),
+                            EmployeeId = GetProperty(emp, "id"),
+                            EmployeeCode = GetProperty(emp, "Code"),
+                            EmployeeName = GetProperty(emp, "FullName"),
+                            DepartmentName = GetProperty(emp, "DepartmentName"),
+                            AvatarUrl = GetProperty(emp, "AvatarUrl"),
+                            RequestDate = DateTime.Today.AddDays(-1),
+                            ShiftId = "HC",
+                            ShiftName = "Hành chính",
+                            Reason = "Lý do cá nhân",
+                            Status = 1,
+                            StatusName = "Chờ duyệt",
+                            StatusColor = "warning"
+                        });
+                    }
+                }
+
+                // Apply search
+                if (!string.IsNullOrEmpty(qSearch)) {
+                    matchedRequests = matchedRequests.Where(r => 
+                        (GetProperty(r, "EmployeeName")?.ToString() ?? "").Contains(qSearch, StringComparison.OrdinalIgnoreCase) ||
+                        (GetProperty(r, "EmployeeCode")?.ToString() ?? "").Contains(qSearch, StringComparison.OrdinalIgnoreCase)
+                    ).ToList();
+                }
+
+                var total = matchedRequests.Count;
+                var paged = matchedRequests.Skip((pNum - 1) * pSize).Take(pSize).ToList();
+
+                // Special case for summary endpoint
+                if (path.EndsWith("/summary", StringComparison.OrdinalIgnoreCase)) {
+                    return CreateSuccessResponse(new ApiResponse<object> {
+                        Success = true,
+                        Data = new {
+                            Total = total,
+                            Pending = matchedRequests.Count(r => Convert.ToInt32(GetProperty(r, "Status") ?? 0) == 1),
+                            Approved = matchedRequests.Count(r => Convert.ToInt32(GetProperty(r, "Status") ?? 0) == 2),
+                            Rejected = matchedRequests.Count(r => Convert.ToInt32(GetProperty(r, "Status") ?? 0) == 3)
+                        },
+                        Message = "Success"
+                    });
+                }
+
+                return CreateSuccessResponse(new ApiResponse<object> {
+                    Success = true,
+                    Data = new { Items = paged, TotalCount = total, PageIndex = pNum, PageSize = pSize },
+                    Message = "Success"
+                });
             }
 
             if (path.Contains("/Leave/balance/", StringComparison.OrdinalIgnoreCase))

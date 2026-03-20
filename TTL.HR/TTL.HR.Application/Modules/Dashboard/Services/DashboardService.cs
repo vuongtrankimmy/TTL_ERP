@@ -30,7 +30,8 @@ namespace TTL.HR.Application.Modules.Dashboard.Services
                 throw new System.Exception(errorMessage);
             }
             
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<DashboardOverviewModel>>();
+            var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<DashboardOverviewModel>>(options);
             return result?.Data ?? new DashboardOverviewModel();
         }
     }
