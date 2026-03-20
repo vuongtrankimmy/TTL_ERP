@@ -37,8 +37,10 @@ jobs:
 
     - name: Change base-tag to repository name
       # This is required for GitHub Pages subfolder hosting
-      # We change <base href="/" /> to <base href="/TTL_ERP/" />
-      run: sed -i 's/<base href="\/" \/>/<base href="\/TTL_ERP\/" \/>/g' release/wwwroot/index.html
+      # We change any variation of <base href="..." /> to <base href="/TTL_ERP/" />
+      run: |
+        sed -i 's|<base href="[^"]*" />|<base href="/TTL_ERP/" />|g' release/wwwroot/index.html
+        sed -i 's|<base href="[^"]*" />|<base href="/TTL_ERP/" />|g' release/wwwroot/404.html || true
 
     - name: Add .nojekyll
       # Prevents GitHub from ignoring files starting with underscores (like Blazor's _framework)
