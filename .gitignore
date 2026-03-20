@@ -387,6 +387,7 @@ auth_output.txt
 current_build.txt
 attendance_*.csv
 *.js
+!**/wwwroot/**/*.js
 !*.slnx
 !*.sln
 !*.csproj
