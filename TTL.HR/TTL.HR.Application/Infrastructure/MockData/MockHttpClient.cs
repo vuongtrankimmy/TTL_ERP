@@ -1259,10 +1259,10 @@ public class MockHttpMessageHandler : HttpMessageHandler
                 }
 
                 // Apply search
-                if (!string.IsNullOrEmpty(qSearch)) {
+                if (!string.IsNullOrEmpty(qSearchS)) {
                     matchedRequests = matchedRequests.Where(r => 
-                        (GetProperty(r, "EmployeeName")?.ToString() ?? "").Contains(qSearch, StringComparison.OrdinalIgnoreCase) ||
-                        (GetProperty(r, "EmployeeCode")?.ToString() ?? "").Contains(qSearch, StringComparison.OrdinalIgnoreCase)
+                        (GetProperty(r, "EmployeeName")?.ToString() ?? "").Contains(qSearchS, StringComparison.OrdinalIgnoreCase) ||
+                        (GetProperty(r, "EmployeeCode")?.ToString() ?? "").Contains(qSearchS, StringComparison.OrdinalIgnoreCase)
                     ).ToList();
                 }
 
