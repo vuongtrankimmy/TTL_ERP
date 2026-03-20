@@ -1,68 +1,50 @@
-name: TTL ERP - CI/CD Pipeline
+name: TTL ERP - GitHub Pages Deployment
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  build_web:
-    name: Build & Test Web Application
+  deploy_to_github_pages:
+    name: Build & Deploy Blazor WASM to GitHub Pages
     runs-on: windows-latest
     
     steps:
     - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '10.0.x'
         include-prerelease: true
+
+    - name: Install WASM Workload
+      run: dotnet workload install wasm-tools
 
     - name: Restore dependencies
       run: dotnet restore TTL.HR.slnx
 
-    - name: Build Web Application
-      run: dotnet build TTL.HR/TTL.HR.Web/TTL.HR.Web.csproj --configuration Release --no-restore
+    - name: Publish Blazor WASM
+      run: dotnet publish TTL.HR/TTL.HR.Wasm/TTL.HR.Wasm.csproj -c Release -o release --nologo
 
-    - name: Publish Web Application
-      run: dotnet publish TTL.HR/TTL.HR.Web/TTL.HR.Web.csproj -c Release -o ./publish_web_out
+    - name: Change base-tag to repository name
+      # This is required for GitHub Pages subfolder hosting
+      # We change <base href="/" /> to <base href="/TTL_ERP/" />
+      run: |
+        $path = "release/wwwroot/index.html"
+        $content = Get-Content $path
+        $content = $content -replace '<base href="/" />', '<base href="/TTL_ERP/" />'
+        $content | Set-Content $path
+      shell: powershell
 
-    - name: 📂 Deploy to SmarterASP.net (FTP)
-      # This step only runs on official repository main branch
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+    - name: Add .nojekyll
+      # Prevents GitHub from ignoring files starting with underscores (like Blazor's _framework)
+      run: New-Item -ItemType File -Path "release/wwwroot/.nojekyll" -Force
+
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
-        server: ${{ secrets.SMARTERASP_FTP_SERVER }}
-        username: ${{ secrets.SMARTERASP_FTP_USER }}
-        password: ${{ secrets.SMARTERASP_FTP_PWD }}
-        local-dir: ./publish_web_out/
-        server-dir: /
-        # We use 'sync' mode to ensure only changed files are uploaded
-        dry-run: false
-
-  # Optional: Build MAUI (Only build, no deploy yet)
-  build_maui_android:
-    name: Build MAUI Android
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '10.0.x'
-        include-prerelease: true
-        
-    - name: Install MAUI Workloads
-      run: dotnet workload install android
-      
-    - name: Restore
-      run: dotnet restore TTL.HR/TTL.HR/TTL.HR.csproj
-      
-    - name: Build Android
-      run: dotnet build TTL.HR/TTL.HR/TTL.HR.csproj -c Release -f net10.0-android --no-restore
+        branch: gh-pages
+        folder: release/wwwroot
+        clean: true

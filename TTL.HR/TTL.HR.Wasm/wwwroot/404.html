@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>TTL HR Redirect</title>
+    <script type="text/javascript">
+        // Single Page Apps for GitHub Pages
+        // https://github.com/rafrex/spa-github-pages
+        // This script runs on every path, redirects back to index.html with the path in query params
+        var l = window.location;
+        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            l.pathname.split('/').slice(0, 1 + (l.pathname.split('/')[1] === 'TTL_ERP' ? 1 : 0)).join('/') + '/?p=' +
+            l.pathname.replace(/&/g, '~and~').split('/').slice(1 + (l.pathname.split('/')[1] === 'TTL_ERP' ? 1 : 0)).join('/') +
+            l.search.replace(/&/g, '~and~') + l.hash);
+    </script>
+</head>
+<body>
+</body>
+</html>
