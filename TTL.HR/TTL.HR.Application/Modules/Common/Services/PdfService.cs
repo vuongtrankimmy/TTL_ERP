@@ -11,11 +11,7 @@ namespace TTL.HR.Application.Modules.Common.Services
 {
     public class PdfService : IPdfService
     {
-        static PdfService()
-        {
-            // Set QuestPDF license to Community
-            QuestPDF.Settings.License = LicenseType.Community;
-        }
+        // Static constructor removed to prevent QuestPDF initialization on WASM
 
         public async Task<byte[]> GenerateBatchPayslipsPdfAsync(IEnumerable<PayrollModel> payrolls)
         {
