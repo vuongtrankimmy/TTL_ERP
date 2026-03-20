@@ -9,6 +9,8 @@ jobs:
   deploy_to_github_pages:
     name: Build & Deploy Blazor WASM to GitHub Pages
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     
     steps:
     - uses: actions/checkout@v4
