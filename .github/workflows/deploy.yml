@@ -12,6 +12,12 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Cleanup stale files (Fix Ghost Files)
+      run: |
+        Get-ChildItem -Recurse -Filter "App_Home.razor.cs" | Remove-Item -Force
+        Get-ChildItem -Recurse -Filter "App_Home.razor" | Remove-Item -Force
+      shell: powershell
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4

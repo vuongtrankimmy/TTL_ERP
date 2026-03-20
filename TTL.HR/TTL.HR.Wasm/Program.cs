@@ -28,14 +28,15 @@ try
         {
             try
             {
-                string? collection = stat["collection"]?.ToString();
+                var statObject = stat as Newtonsoft.Json.Linq.JObject;
+                string? collection = statObject?["collection"]?.ToString();
                 if (string.IsNullOrEmpty(collection)) continue;
                 var json = await tempClient.GetStringAsync($"MockData/{collection}.json");
                 mockProvider.AddCollection(collection, json);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"⚠️ [MOCK] Lỗi khi nạp collection {stat.collection} từ HTTP: {ex.Message}");
+                Console.WriteLine($"⚠️ [MOCK] Lỗi khi nạp collection {collection} từ HTTP: {ex.Message}");
             }
         }
         mockProvider.SetLoaded(true);
