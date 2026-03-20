@@ -1,4 +1,5 @@
 name: TTL ERP - GitHub Pages Deployment
+# Forced trigger to resume deployment automation
 
 on:
   push:
