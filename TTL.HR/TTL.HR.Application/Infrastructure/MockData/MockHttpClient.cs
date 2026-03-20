@@ -943,42 +943,101 @@ public class MockHttpMessageHandler : HttpMessageHandler
                 var tsPage = qParams.TryGetValue("pageIndex", out var tsIdxStr) && int.TryParse(tsIdxStr, out var tsP) ? tsP : 1;
                 var tsPageSize = qParams.TryGetValue("pageSize", out var tsSizeStr) && int.TryParse(tsSizeStr, out var tsPs) ? tsPs : 10;
                 
-                var allAttendances = _mockDataProvider.GetCollection<object>("attendances");
-                var allEmployees = _mockDataProvider.GetCollection<object>("employees");
-                
-                var tsTotal = allAttendances.Count;
-                var tsPagedItems = allAttendances.Skip((tsPage - 1) * tsPageSize).Take(tsPageSize).Select(a => {
-                    var item = JObject.FromObject(TransformItem(a));
-                    
-                    // Link Avatar from Employees if missing
-                    if (item["Avatar"] == null || string.IsNullOrEmpty(item["Avatar"].ToString()))
-                    {
-                        var empId = item["EmployeeId"]?.ToString();
-                        var employee = allEmployees.FirstOrDefault(e => MatchId(e, "_id", "id", empId));
-                        if (employee != null)
-                        {
-                            var empObj = JObject.FromObject(employee);
-                            item["Avatar"] = empObj["AvatarUrl"] ?? empObj["avatarUrl"] ?? "";
-                        }
-                    }
+                var qMonth = qParams.TryGetValue("month", out var mStr) && int.TryParse(mStr, out var mVal) ? mVal : DateTime.Now.Month;
+                var qYear = qParams.TryGetValue("year", out var yStr) && int.TryParse(yStr, out var yVal) ? yVal : DateTime.Now.Year;
+                var qDept = qParams.TryGetValue("departmentId", out var dId) ? dId : null;
+                var qSearch = qParams.TryGetValue("searchTerm", out var sTerm) ? sTerm.ToLower() : null;
 
-                    // Map WorkingHours to TotalWorkingHours for AttendanceModel
-                    if (item["WorkingHours"] != null && item["TotalWorkingHours"] == null)
+                var allLogs = _mockDataProvider.GetCollection<dynamic>("attendances");
+                var allEmployees = _mockDataProvider.GetCollection<dynamic>("employees");
+                
+                // 1. Filter logs by Month/Year
+                var monthLogs = allLogs.Where(l => {
+                    var dateStr = GetProperty(l, "Date")?.ToString() ?? "";
+                    if (DateTime.TryParse(dateStr, out var date))
                     {
-                        item["TotalWorkingHours"] = item["WorkingHours"];
+                        return date.Month == qMonth && date.Year == qYear;
                     }
-                    return (object)item;
+                    return false;
                 }).ToList();
 
-                var tsPagedResult = new PagedResult<object>
+                // 2. Group by EmployeeId
+                var grouped = monthLogs.GroupBy(l => GetProperty(l, "EmployeeId")?.ToString() ?? "unknown");
+
+                // 3. Prepare summary list
+                var summaryList = new List<object>();
+
+                foreach (var empGroup in grouped)
                 {
+                    var empId = empGroup.Key;
+                    var emp = allEmployees.FirstOrDefault(e => GetProperty(e, "_id")?.ToString() == empId);
+                    if (emp == null) continue;
+
+                    // Filter by department if needed
+                    if (!string.IsNullOrEmpty(qDept))
+                    {
+                        var empDeptId = GetProperty(emp, "DepartmentId")?.ToString() ?? "";
+                        if (empDeptId != qDept) continue;
+                    }
+
+                    var empName = GetProperty(emp, "FullName")?.ToString() ?? "Unknown";
+                    var empCode = GetProperty(emp, "EmployeeCode")?.ToString() ?? "";
+                    
+                    // Filter by search term
+                    if (!string.IsNullOrEmpty(qSearch))
+                    {
+                        if (!empName.ToLower().Contains(qSearch) && !empCode.ToLower().Contains(qSearch)) continue;
+                    }
+
+                    // Calculate stats from logs
+                    double actualWork = 0;
+                    double otHours = 0;
+                    int lateCount = 0;
+                    int earlyCount = 0;
+
+                    foreach (var log in empGroup)
+                    {
+                        actualWork += Convert.ToDouble(GetProperty(log, "WorkingHours") ?? 0);
+                        otHours += Convert.ToDouble(GetProperty(log, "OvertimeHours") ?? 0);
+                        
+                        var sid = Convert.ToInt32(GetProperty(log, "StatusId") ?? 1);
+                        if (sid == 3) lateCount++; // Late
+                        if (sid == 4) earlyCount++; // Early
+                    }
+
+                    summaryList.Add(new {
+                        Id = empId,
+                        EmployeeId = empId,
+                        EmployeeCode = empCode,
+                        EmployeeName = empName,
+                        Avatar = GetProperty(emp, "AvatarUrl")?.ToString() ?? "",
+                        Department = GetProperty(emp, "Department")?.ToString() ?? "Phòng Hành chính - Nhân sự",
+                        Role = GetProperty(emp, "Position")?.ToString() ?? "Nhân viên",
+                        StandardWork = 26.0,
+                        ActualWork = actualWork / 8.0,
+                        OvertimeHours = otHours,
+                        LateCount = lateCount,
+                        EarlyLeaveCount = earlyCount,
+                        LeaveDays = 0,
+                        HolidayDays = 0,
+                        Status = "Đang làm việc",
+                        StatusId = 1,
+                        StatusColor = "success"
+                    });
+                }
+
+                var tsTotal = summaryList.Count;
+                var tsPagedItems = summaryList.Skip((tsPage - 1) * tsPageSize).Take(tsPageSize).ToList();
+
+                var tsPagedResult = new {
                     Items = tsPagedItems,
                     PageIndex = tsPage,
                     PageSize = tsPageSize,
-                    TotalCount = tsTotal
+                    TotalCount = tsTotal,
+                    TotalPages = (int)Math.Ceiling(tsTotal / (double)tsPageSize)
                 };
                 
-                return CreateSuccessResponse(new ApiResponse<PagedResult<object>> { Success = true, Data = tsPagedResult, Message = "Success" });
+                return CreateSuccessResponse(new ApiResponse<object> { Success = true, Data = tsPagedResult, Message = "Success" });
             }
 
             if (path.Contains("/Leave/balance/", StringComparison.OrdinalIgnoreCase))
