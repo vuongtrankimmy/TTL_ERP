@@ -116,19 +116,74 @@
 }
 
 /* ===================================
-   4. SMOOTH TRANSITIONS
+   4. SIDEBAR THEME SYNCHRONIZATION (LIGHT/DARK)
    =================================== */
-.app-sidebar {
-    transition: width 0.3s ease, transform 0.3s ease;
+
+/* LIGHT MODE COLORS */
+[data-bs-theme="light"] .app-sidebar {
+    background-color: #ffffff !important;
+    border-right: 1px solid #f1f1f2 !important;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.02);
 }
 
-.app-sidebar-menu {
-    transition: opacity 0.2s ease;
+[data-bs-theme="light"] .menu-title {
+    color: #3f4254 !important; /* Dark Gray for light mode */
 }
 
-/* Menu wrapper smooth scroll */
-.app-sidebar-wrapper {
-    transition: all 0.3s ease;
+[data-bs-theme="light"] .menu-icon i {
+    color: #a1a5b7 !important;
+}
+
+[data-bs-theme="light"] .menu-item.here .menu-link, 
+[data-bs-theme="light"] .menu-item.show .menu-link {
+    background-color: #f9f9f9 !important;
+}
+
+/* DARK MODE COLORS */
+[data-bs-theme="dark"] .app-sidebar {
+    background-color: #1e1e2d !important;
+    border-right: 1px solid #1e1e2d !important;
+    box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+}
+
+[data-bs-theme="dark"] .menu-title {
+    color: #9899ac !important; /* Light Gray for dark mode */
+}
+
+[data-bs-theme="dark"] .menu-icon i {
+    color: #494b74 !important;
+}
+
+[data-bs-theme="dark"] .menu-item.here .menu-link, 
+[data-bs-theme="dark"] .menu-item.show .menu-link {
+    background-color: #1b1b28 !important;
+}
+
+/* Global Text Sync */
+[data-bs-theme="dark"] .page-heading {
+    color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .breadcrumb-item, 
+[data-bs-theme="dark"] .breadcrumb-item a {
+    color: #4b4b64 !important;
+}
+
+[data-bs-theme="dark"] .text-dark {
+    color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .card {
+    background-color: #1e1e2d !important;
+}
+
+/* Common Sidebar Polish */
+.app-sidebar-logo {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-bs-theme="dark"] .app-sidebar-logo {
+    border-bottom-color: rgba(255, 255, 255, 0.04) !important;
 }
 
 /* ===================================
